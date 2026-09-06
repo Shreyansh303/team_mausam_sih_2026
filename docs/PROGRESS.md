@@ -8,6 +8,17 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked (say why 
 3. Spawn the next phase whose box is not `[x]`, following the order in 07. A1 ∥ B0 may run in parallel; so may A2 ∥ B1 and A3 ∥ B2.
 4. Implementation agents run on the Opus model. The orchestrator only plans, reviews reports, and commits.
 
+## Recovery after an interrupted agent (usage limit, crash)
+An interrupted agent loses its conversation, not its files. To resume a phase that is `[~]` or has
+unticked items but files present:
+1. `git status` — uncommitted files are partial work from the interrupted run; keep them, do not
+   assume they are complete.
+2. Trust the tree and the tests over this checklist: run the phase's verification commands
+   (pytest / flutter analyze+test+build) and read the existing files before writing anything.
+3. Finish only what is missing; tick items here as you verify them; commit + push per milestone.
+4. Spawn prompt for the resuming agent: "Resume phase <id>: read CLAUDE.md, docs/07_PHASES.md §<id>,
+   docs/PROGRESS.md; inspect the tree; run the verification; complete the remaining items."
+
 ## Phase status
 - [ ] A1 backend data layer
 - [ ] A2 engine + home + auth + events + i18n
