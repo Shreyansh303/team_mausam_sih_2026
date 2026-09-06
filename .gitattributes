@@ -1,0 +1,19 @@
+# Shell scripts must keep LF endings or bash chokes on the trailing \r
+# (e.g. `source scripts/flutter_env.sh` would export PATH entries ending in CR).
+*.sh text eol=lf
+gradlew text eol=lf
+
+# Windows-only scripts keep CRLF
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ttf binary
+*.otf binary
+*.zip binary
+*.keystore binary
+*.jar binary
