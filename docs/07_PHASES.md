@@ -76,7 +76,14 @@ per persona to `docs/screenshots/`. Commit: `phase(B2): full card system`.
 Requires A3 + B2. Run backend locally; fix any contract mismatches (update 04 if the backend is right
 and the app wrong, or vice-versa — record in PROGRESS Deviations); WS reorder demo works in the web
 build; `flutter build apk --release` (debug signing ok) → `app/build/app/outputs/flutter-apk/`; GitHub
-Actions workflow building the APK artifact; README app section (run on device, set backend URL).
+Actions workflow building the APK artifact; README "Run it yourself" section written for a
+first-time Flutter user: (a) Chrome: `flutter run -d chrome`; (b) real Android phone over USB
+(enable USB debugging, `flutter devices`, `flutter run`); (c) install the APK directly; (d) optional
+emulator via `scripts/setup_android_emulator.ps1` (sdkmanager installs `emulator` +
+`system-images;android-35;google_apis;x86_64`, avdmanager creates AVD `mausam_pixel`, explains the
+one-time admin step of enabling Windows Hypervisor Platform / virtualization) and
+`scripts/run_emulator.ps1`; (e) iOS builds/simulators need macOS; (f) set the backend URL in
+Settings to the laptop's LAN IP when testing on a phone.
 Commit: `phase(B3): integration + apk`.
 
 ## C1 · End-to-end QA against the judge demo script  (owner: both)
