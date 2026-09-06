@@ -79,9 +79,16 @@ ARB for chrome; backend localizes card content via `lang`. Locale persisted in s
 refetches home. Devanagari font bundled (Noto Sans Devanagari) for web; Android uses system fonts.
 
 ## Android config
-`applicationId com.teammausam.mausam_app`, label "Mausam Personalized", minSdk 23, permissions:
+`applicationId com.teammausam.mausam_app`, label "Mausam Personalized", `minSdk = flutter.minSdkVersion`
+(= **24**, Android 7.0, on Flutter 3.47 — see the note below; this section originally said 23), permissions:
 INTERNET, ACCESS_COARSE/FINE_LOCATION; `usesCleartextTraffic=true` (demo http backends); adaptive
 icon (simple cloud/sun glyph in IMD blue, generated as PNG in repo — no IMD logo).
+
+> **minSdk note (B0).** Flutter 3.47 runs `MinSdkVersionMigration` on every Android build, which
+> rewrites any hardcoded `minSdk` of 16–23 back to `minSdk = flutter.minSdkVersion`. A pinned 23
+> therefore cannot survive a build. `flutter.minSdkVersion` is 24 and Flutter warns below 24
+> (`warnMinSdkVersion = 24`, `errorMinSdkVersion = 23`), so the app targets **Android 7.0+**.
+> Do not re-pin 23 — it will be silently reverted. Recorded in `docs/PROGRESS.md` > Deviations.
 
 ## Definition of done for the app
 `flutter analyze` (no errors), `flutter test` green, `flutter build web` ok, `flutter build apk --debug`

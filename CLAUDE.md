@@ -56,6 +56,11 @@ scripts/                  setup + run scripts (Windows-first)
 8. **Windows host.** Git Bash and PowerShell 5.1 are available; Python 3.13 at `C:\Python313\python.exe`;
    Node 22. Assume **no admin rights**. Toolchains install under `D:\sdk\`.
    Env changes made with `setx` do not apply to the current shell — use absolute paths.
+   **Gradle/APK builds must run with the tool sandbox disabled** (Bash/PowerShell tool parameter
+   `dangerouslyDisableSandbox: true`): inside the sandbox Java NIO `Selector.open()`/`Pipe.open()`
+   fail with `java.io.IOException: Unable to establish loopback connection`, so any `flutter build
+   apk`, `flutter run` on Android, or `gradlew` call fails. `flutter build web`, `flutter analyze`,
+   `flutter test`, Python and curl are fine inside the sandbox. A normal user terminal is unaffected.
 9. **Don't impersonate IMD.** App id `com.teammausam.mausam_app`, display name
    "Mausam Personalized (Team Mausam prototype)". Use IMD colour conventions, not IMD logos.
 10. **Final report format (keep it short):** Done / Verified (commands + output tail) /

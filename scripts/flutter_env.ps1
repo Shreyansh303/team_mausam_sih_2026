@@ -28,6 +28,13 @@ $env:JAVA_HOME        = $javaHome
 $env:ANDROID_HOME     = $androidHome
 $env:ANDROID_SDK_ROOT = $androidHome
 
+# The Gradle wrapper downloads its distribution over java.net.HttpURLConnection, which has no
+# IPv6->IPv4 fallback; a black-holed IPv6 route to services.gradle.org makes the first
+# `flutter build apk` hang and then fail. Harmless where IPv6 works. See docs/SETUP_WINDOWS.md §7.10.
+$ipv4Flag = '-Djava.net.preferIPv4Stack=true'
+if ([string]::IsNullOrWhiteSpace($env:GRADLE_OPTS)) { $env:GRADLE_OPTS = $ipv4Flag }
+elseif ($env:GRADLE_OPTS -notlike "*$ipv4Flag*") { $env:GRADLE_OPTS = $env:GRADLE_OPTS.Trim() + ' ' + $ipv4Flag }
+
 $binDirs = @(
     (Join-Path $flutterHome 'bin'),
     (Join-Path $javaHome 'bin'),

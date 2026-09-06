@@ -95,6 +95,14 @@ unticked items but files present:
 
 ## Notes for next phase
 
+### B0/B1/B2/B3 — Gradle inside the agent sandbox (orchestrator note, 2026-09-07 01:55)
+`flutter build apk --debug` failed with `java.io.IOException: Unable to establish loopback connection`.
+Verified cause: inside the tool sandbox Java NIO `Selector.open()` and `Pipe.open()` fail while plain
+sockets work, so Gradle (and the Kotlin daemon) cannot start. **Run every Gradle/APK/`flutter run`
+-on-Android command with `dangerouslyDisableSandbox: true`.** Web build, analyze and test are fine
+sandboxed. Toolchain on disk is complete: Flutter 3.47.2 stable, JDK 17, Android SDK (platform-tools,
+platforms, build-tools, licenses) under `D:\sdk`; `app/build/web` was produced successfully.
+
 ### A2 (engine + /home) — what A1 hands you
 **Get a Snapshot:**
 ```python

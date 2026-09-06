@@ -352,6 +352,23 @@ Add-UserPathEntries -Entries @(
     (Join-Path $cmdlineDir 'bin')
 )
 
+# The Gradle wrapper downloads its distribution with plain java.net.HttpURLConnection, which -
+# unlike curl - has no Happy Eyeballs fallback. On hosts whose IPv6 route to
+# services.gradle.org is black-holed the very first `flutter build apk` dies with
+# "java.net.ConnectException: Connection timed out". Forcing the JVM onto IPv4 fixes it and is
+# harmless where IPv6 works. Appended, never overwritten, so an existing GRADLE_OPTS survives.
+$ipv4Flag = '-Djava.net.preferIPv4Stack=true'
+$gradleOpts = [Environment]::GetEnvironmentVariable('GRADLE_OPTS', 'User')
+if ([string]::IsNullOrWhiteSpace($gradleOpts)) {
+    Set-UserEnvVar -Name 'GRADLE_OPTS' -Value $ipv4Flag
+}
+elseif ($gradleOpts -like "*$ipv4Flag*") {
+    Write-Skip "GRADLE_OPTS already contains $ipv4Flag"
+}
+else {
+    Set-UserEnvVar -Name 'GRADLE_OPTS' -Value ($gradleOpts.Trim() + ' ' + $ipv4Flag)
+}
+
 # --------------------------------------------------------------------------------------
 Write-Step 'Android SDK packages'
 # --------------------------------------------------------------------------------------

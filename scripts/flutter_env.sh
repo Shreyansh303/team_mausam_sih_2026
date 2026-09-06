@@ -24,6 +24,15 @@ export JAVA_HOME="${_mausam_sdk_root_win}\\jdk-17"
 export ANDROID_HOME="${_mausam_sdk_root_win}\\android"
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
 
+# The Gradle wrapper downloads its distribution over java.net.HttpURLConnection, which has no
+# IPv6->IPv4 fallback; a black-holed IPv6 route to services.gradle.org makes the first
+# `flutter build apk` hang and then fail. Harmless where IPv6 works. docs/SETUP_WINDOWS.md §7.10.
+case "${GRADLE_OPTS:-}" in
+  *-Djava.net.preferIPv4Stack=true*) ;;
+  '') export GRADLE_OPTS='-Djava.net.preferIPv4Stack=true' ;;
+  *)  export GRADLE_OPTS="$GRADLE_OPTS -Djava.net.preferIPv4Stack=true" ;;
+esac
+
 _mausam_bins="
 ${_mausam_sdk_root_posix}/flutter/bin
 ${_mausam_sdk_root_posix}/jdk-17/bin
