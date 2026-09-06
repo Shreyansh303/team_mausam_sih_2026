@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+backend/data/*.db
+backend/data/*.db-journal
+.env
+.env.local
+
+# Flutter / Dart / Android
+app/.dart_tool/
+app/.packages
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+app/build/
+app/.idea/
+app/*.iml
+app/android/.gradle/
+app/android/local.properties
+app/android/key.properties
+app/android/app/.cxx/
+app/android/**/*.keystore
+app/ios/Pods/
+app/ios/.symlinks/
+app/ios/Flutter/ephemeral/
+app/ios/Flutter/Flutter.podspec
+app/macos/Flutter/ephemeral/
+app/windows/flutter/ephemeral/
+app/linux/flutter/ephemeral/
+app/.metadata
+
+# Node
+node_modules/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+*.log
+
+# SDK downloads (never inside repo)
+sdk/
+*.zip
