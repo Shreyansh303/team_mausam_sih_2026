@@ -301,7 +301,11 @@ else {
 }
 
 $env:JAVA_HOME = $jdkDir
-$jdkVersionLine = (& $javaExe -version 2>&1 | Select-Object -First 1)
+# NOTE: `java -version` prints to stderr. Do NOT write `& $javaExe -version 2>&1` here:
+# in PowerShell 5.1 redirecting a native command's stderr wraps each line in an ErrorRecord
+# (NativeCommandError) which, with $ErrorActionPreference = 'Stop', aborts the whole script.
+# Letting cmd.exe do the merge keeps the text on PowerShell's stdout stream.
+$jdkVersionLine = @(& cmd.exe /c "`"$javaExe`" -version 2>&1")[0]
 Write-Info "java: $jdkVersionLine"
 
 # --------------------------------------------------------------------------------------
@@ -394,7 +398,7 @@ else {
 # --------------------------------------------------------------------------------------
 Write-Step 'Wire Flutter to the Android SDK / JDK'
 # --------------------------------------------------------------------------------------
-& $flutterExe config --no-analytics 2>&1 | Out-Null
+& $flutterExe config --no-analytics | Out-Null
 & $flutterExe config --android-sdk $androidDir
 & $flutterExe config --jdk-dir $jdkDir
 Write-Ok "flutter config --android-sdk $androidDir --jdk-dir $jdkDir"
