@@ -43,8 +43,11 @@ scripts/                  setup + run scripts (Windows-first)
    did not run.
 4. **Checkpoint often.** After each milestone: `git add <your paths> && git commit -m "phase(<id>): <what>"`.
    If `.git/index.lock` exists, wait 5 s and retry (another agent may be committing). Never
-   `git add -A` from the repo root; never rewrite history; never push. No attribution lines in
-   commit messages.
+   `git add -A` from the repo root; never rewrite history. **After every commit, push:**
+   `git push origin main`; if rejected, `git pull --rebase origin main` then push again. Commit
+   small and often (each milestone, not one giant commit). **No attribution lines of any kind**
+   in commit messages (no Co-Authored-By, no "Generated with", no tool names) — the author is the
+   repo's configured git user only.
 5. **Progress file.** Tick items in `docs/PROGRESS.md` as you complete them and add
    "Notes for next phase" (gotchas, versions, anything a cold-start agent needs).
 6. **Honest data.** Anything modelled/estimated (tides, pollen, traffic) must carry
