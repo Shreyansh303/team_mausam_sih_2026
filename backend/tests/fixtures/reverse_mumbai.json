@@ -1,0 +1,132 @@
+{
+ "url": "https://api.bigdatacloud.net/data/reverse-geocode-client",
+ "params": {
+  "latitude": 19.08,
+  "longitude": 72.88,
+  "localityLanguage": "en"
+ },
+ "status": 200,
+ "recorded_at": "2026-09-06T20:06:16+00:00",
+ "json": {
+  "latitude": 19.08,
+  "lookupSource": "coordinates",
+  "longitude": 72.88,
+  "localityLanguageRequested": "en",
+  "continent": "Asia",
+  "continentCode": "AS",
+  "countryName": "India",
+  "countryCode": "IN",
+  "principalSubdivision": "Maharashtra",
+  "principalSubdivisionCode": "IN-MH",
+  "city": "Mumbai",
+  "locality": "Mumbai",
+  "postcode": "",
+  "plusCode": "7JFJ3VJJ+22",
+  "localityInfo": {
+   "administrative": [
+    {
+     "name": "India",
+     "description": "country in South Asia",
+     "isoName": "India",
+     "order": 3,
+     "adminLevel": 2,
+     "isoCode": "IN",
+     "wikidataId": "Q668",
+     "geonameId": 1269750
+    },
+    {
+     "name": "Maharashtra",
+     "description": "state in the western and central peninsular region of India",
+     "isoName": "Maharashtra",
+     "order": 7,
+     "adminLevel": 4,
+     "isoCode": "IN-MH",
+     "wikidataId": "Q1191",
+     "geonameId": 1264418
+    },
+    {
+     "name": "Mumbai Metropolitan Region",
+     "description": "metropolitan area in Maharashtra, India",
+     "order": 10,
+     "adminLevel": 7,
+     "wikidataId": "Q3621720"
+    },
+    {
+     "name": "Mumbai",
+     "description": "capital city in Maharashtra, India",
+     "order": 12,
+     "adminLevel": 5,
+     "wikidataId": "Q1156",
+     "geonameId": 1275339
+    },
+    {
+     "name": "Mumbai Suburban district",
+     "description": "district of Maharashtra in India",
+     "order": 13,
+     "adminLevel": 5,
+     "wikidataId": "Q2085374",
+     "geonameId": 8347322
+    },
+    {
+     "name": "Mumbai Zone 5",
+     "order": 14,
+     "adminLevel": 9,
+     "wikidataId": "Q119170724"
+    },
+    {
+     "name": "L Ward",
+     "order": 15,
+     "adminLevel": 10
+    }
+   ],
+   "informative": [
+    {
+     "name": "Asia",
+     "description": "terrestrial continent, mainly in the northeastern quadrant",
+     "isoName": "Asia",
+     "order": 1,
+     "isoCode": "AS",
+     "wikidataId": "Q48",
+     "geonameId": 6255147
+    },
+    {
+     "name": "Asia/Kolkata",
+     "description": "time zone",
+     "order": 2
+    },
+    {
+     "name": "Indian subcontinent",
+     "description": "physiographical region in South Asia",
+     "order": 4,
+     "wikidataId": "Q60140",
+     "geonameId": 6269134
+    },
+    {
+     "name": "Mainland India",
+     "order": 5
+    },
+    {
+     "name": "Western Zonal Council",
+     "order": 6
+    },
+    {
+     "name": "Central Railway",
+     "order": 8
+    },
+    {
+     "name": "Konkan division",
+     "description": "administrative division of Maharashtra, India",
+     "order": 9,
+     "wikidataId": "Q6268840"
+    },
+    {
+     "name": "Salsette",
+     "description": "island in India; home to Mumbai",
+     "order": 11,
+     "wikidataId": "Q117196",
+     "geonameId": 1257592
+    }
+   ]
+  }
+ }
+}

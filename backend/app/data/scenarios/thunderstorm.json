@@ -1,0 +1,58 @@
+{
+ "name": "thunderstorm",
+ "description": "Thunderstorm with lightning and squally winds — orange warning.",
+ "overrides": {
+  "current": {
+   "temp_c": 27.0,
+   "feels_like_c": 30.0,
+   "humidity_pct": 84,
+   "dew_point_c": 24.0,
+   "wind_kph": 38.0,
+   "gust_kph": 68.0,
+   "cloud_pct": 95,
+   "precip_mm": 8.0,
+   "visibility_km": 3.0,
+   "uv_index": 1.0,
+   "condition_code": 95
+  },
+  "hourly_all": {
+   "temp_c": 27.0,
+   "feels_like_c": 30.0,
+   "humidity_pct": 84,
+   "precip_prob_pct": 80,
+   "precip_mm": 8.0,
+   "wind_kph": 38.0,
+   "gust_kph": 68.0,
+   "cloud_pct": 95,
+   "visibility_km": 3.0,
+   "condition_code": 95,
+   "uv_index": 1.0
+  },
+  "daily_all": {
+   "tmax_c": 31.0,
+   "tmin_c": 24.0,
+   "precip_prob_max_pct": 85,
+   "precip_sum_mm": 45.0,
+   "condition_code": 95,
+   "gust_max_kph": 72.0
+  }
+ },
+ "warnings": [
+  {
+   "severity": "orange",
+   "hazard": "thunderstorm",
+   "title": "Orange warning: thunderstorm with lightning",
+   "description": "Thunderstorm accompanied by lightning and squally winds (50-70 km/h) very likely. Take shelter indoors.",
+   "radius_km": 75,
+   "valid_hours": 6
+  }
+ ],
+ "nowcast": {
+  "text": "Thunderstorm likely",
+  "severity": "severe",
+  "hazards": [
+   "thunderstorm",
+   "lightning"
+  ]
+ }
+}

@@ -1,0 +1,10 @@
+fastapi>=0.115,<1
+uvicorn[standard]>=0.34,<1
+pydantic>=2.9,<3
+pydantic-settings>=2.6,<3
+httpx>=0.28,<1
+SQLAlchemy>=2.0,<3
+PyJWT>=2.9,<3
+cachetools>=5.5,<7
+python-dotenv>=1.0,<2
+tzdata>=2024.2

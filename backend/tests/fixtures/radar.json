@@ -1,0 +1,71 @@
+{
+ "url": "https://api.rainviewer.com/public/weather-maps.json",
+ "params": {},
+ "status": 200,
+ "recorded_at": "2026-09-06T20:06:18+00:00",
+ "json": {
+  "version": "2.0",
+  "generated": 1788725125,
+  "host": "https://tilecache.rainviewer.com",
+  "radar": {
+   "past": [
+    {
+     "time": 1788717600,
+     "path": "/v2/radar/62e2e0180d3d"
+    },
+    {
+     "time": 1788718200,
+     "path": "/v2/radar/4595dd9b236a"
+    },
+    {
+     "time": 1788718800,
+     "path": "/v2/radar/5a6aecc94530"
+    },
+    {
+     "time": 1788719400,
+     "path": "/v2/radar/5938036d0c24"
+    },
+    {
+     "time": 1788720000,
+     "path": "/v2/radar/095dc9d72ba0"
+    },
+    {
+     "time": 1788720600,
+     "path": "/v2/radar/8fa0ef936d38"
+    },
+    {
+     "time": 1788721200,
+     "path": "/v2/radar/e6683e4b911c"
+    },
+    {
+     "time": 1788721800,
+     "path": "/v2/radar/c5772ba556b5"
+    },
+    {
+     "time": 1788722400,
+     "path": "/v2/radar/ae5c7085d242"
+    },
+    {
+     "time": 1788723000,
+     "path": "/v2/radar/ed24925760ae"
+    },
+    {
+     "time": 1788723600,
+     "path": "/v2/radar/4825181d3a62"
+    },
+    {
+     "time": 1788724200,
+     "path": "/v2/radar/17338c7d4e31"
+    },
+    {
+     "time": 1788724800,
+     "path": "/v2/radar/78707cbfa781"
+    }
+   ],
+   "nowcast": []
+  },
+  "satellite": {
+   "infrared": []
+  }
+ }
+}

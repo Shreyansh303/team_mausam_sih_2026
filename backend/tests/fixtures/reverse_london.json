@@ -1,0 +1,136 @@
+{
+ "url": "https://api.bigdatacloud.net/data/reverse-geocode-client",
+ "params": {
+  "latitude": 51.51,
+  "longitude": -0.13,
+  "localityLanguage": "en"
+ },
+ "status": 200,
+ "recorded_at": "2026-09-06T20:06:17+00:00",
+ "json": {
+  "latitude": 51.51,
+  "lookupSource": "coordinates",
+  "longitude": -0.13,
+  "localityLanguageRequested": "en",
+  "continent": "Europe",
+  "continentCode": "EU",
+  "countryName": "United Kingdom of Great Britain and Northern Ireland",
+  "countryCode": "GB",
+  "principalSubdivision": "England",
+  "principalSubdivisionCode": "GB-ENG",
+  "city": "London",
+  "locality": "City of Westminster",
+  "postcode": "WC2H 7",
+  "plusCode": "9C3XGV6C+22",
+  "localityInfo": {
+   "administrative": [
+    {
+     "name": "United Kingdom of Great Britain and Northern Ireland",
+     "description": "country in Western Europe",
+     "isoName": "United Kingdom of Great Britain and Northern Ireland",
+     "order": 4,
+     "adminLevel": 2,
+     "isoCode": "GB",
+     "wikidataId": "Q145",
+     "geonameId": 2635167
+    },
+    {
+     "name": "England",
+     "description": "home nation of the United Kingdom",
+     "isoName": "England",
+     "order": 6,
+     "adminLevel": 4,
+     "isoCode": "GB-ENG",
+     "wikidataId": "Q21",
+     "geonameId": 6269131
+    },
+    {
+     "name": "London",
+     "description": "capital and largest city of England and the United Kingdom",
+     "order": 7,
+     "adminLevel": 5,
+     "wikidataId": "Q84",
+     "geonameId": 2643743
+    },
+    {
+     "name": "Inner London - West",
+     "order": 11,
+     "adminLevel": 7
+    },
+    {
+     "name": "City of Westminster",
+     "description": "City and borough in London",
+     "order": 12,
+     "adminLevel": 8,
+     "wikidataId": "Q179351",
+     "geonameId": 2634341
+    },
+    {
+     "name": "Westminster",
+     "description": "City and borough in London",
+     "isoName": "Westminster",
+     "order": 13,
+     "adminLevel": 8,
+     "isoCode": "GB-WSM",
+     "wikidataId": "Q179351",
+     "geonameId": 3333218
+    }
+   ],
+   "informative": [
+    {
+     "name": "Europe",
+     "description": "terrestrial continent located in north-western Eurasia",
+     "isoName": "Europe",
+     "order": 1,
+     "isoCode": "EU",
+     "wikidataId": "Q46",
+     "geonameId": 6255148
+    },
+    {
+     "name": "British Isles",
+     "description": "group of islands in northwest Europe",
+     "order": 2,
+     "wikidataId": "Q38272",
+     "geonameId": 2654669
+    },
+    {
+     "name": "Europe/London",
+     "description": "time zone",
+     "order": 3
+    },
+    {
+     "name": "Great Britain",
+     "description": "island in the North Atlantic Ocean off the northwest coast of continental Europe",
+     "order": 5,
+     "wikidataId": "Q23666",
+     "geonameId": 2648147
+    },
+    {
+     "name": "London Fire Brigade",
+     "description": "statutory fire and rescue service for London, England, United Kingdom",
+     "order": 8,
+     "wikidataId": "Q3091309"
+    },
+    {
+     "name": "Greater London",
+     "description": "administrative area and ceremonial county in England",
+     "order": 9,
+     "wikidataId": "Q23306",
+     "geonameId": 2648110
+    },
+    {
+     "name": "Middlesex",
+     "description": "historic county of England",
+     "order": 10,
+     "wikidataId": "Q19186",
+     "geonameId": 2642605
+    },
+    {
+     "name": "WC2H 7",
+     "description": "postal code",
+     "order": 14
+    }
+   ]
+  }
+ }
+}

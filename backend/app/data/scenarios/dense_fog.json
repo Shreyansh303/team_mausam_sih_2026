@@ -1,0 +1,64 @@
+{
+ "name": "dense_fog",
+ "description": "Dense winter fog — visibility 0.2 km, road and flight disruption.",
+ "overrides": {
+  "current": {
+   "temp_c": 9.0,
+   "feels_like_c": 7.0,
+   "humidity_pct": 97,
+   "dew_point_c": 8.5,
+   "wind_kph": 4.0,
+   "gust_kph": 8.0,
+   "cloud_pct": 90,
+   "precip_mm": 0.0,
+   "visibility_km": 0.2,
+   "uv_index": 0.0,
+   "condition_code": 45
+  },
+  "hourly_all": {
+   "temp_c": 9.0,
+   "feels_like_c": 7.0,
+   "humidity_pct": 96,
+   "precip_prob_pct": 0,
+   "precip_mm": 0.0,
+   "wind_kph": 4.0,
+   "gust_kph": 8.0,
+   "cloud_pct": 90,
+   "visibility_km": 0.3,
+   "condition_code": 45,
+   "uv_index": 0.0
+  },
+  "daily_all": {
+   "tmax_c": 15.0,
+   "tmin_c": 7.0,
+   "precip_prob_max_pct": 0,
+   "precip_sum_mm": 0.0,
+   "condition_code": 45,
+   "uv_index_max": 2.0
+  },
+  "air_quality": {
+   "pm2_5": 180.0,
+   "pm10": 290.0,
+   "no2": 70.0,
+   "so2": 22.0,
+   "o3": 30.0
+  }
+ },
+ "warnings": [
+  {
+   "severity": "orange",
+   "hazard": "fog",
+   "title": "Orange warning: dense fog",
+   "description": "Dense to very dense fog with visibility below 200 m. Expect flight and train delays; drive with fog lamps.",
+   "radius_km": 100,
+   "valid_hours": 10
+  }
+ ],
+ "nowcast": {
+  "text": "Dense fog likely to persist through the morning",
+  "severity": "moderate",
+  "hazards": [
+   "fog"
+  ]
+ }
+}

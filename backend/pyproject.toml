@@ -1,0 +1,38 @@
+[project]
+name = "mausam-backend"
+version = "0.1.0"
+description = "Team Mausam (SIH 2026, PS 26076) — personalized homepage backend"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.115,<1",
+    "uvicorn[standard]>=0.34,<1",
+    "pydantic>=2.9,<3",
+    "pydantic-settings>=2.6,<3",
+    "httpx>=0.28,<1",
+    "SQLAlchemy>=2.0,<3",
+    "PyJWT>=2.9,<3",
+    "cachetools>=5.5,<7",
+    "python-dotenv>=1.0,<2",
+    "tzdata>=2024.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3,<9",
+    "pytest-asyncio>=0.24,<2",
+    "respx>=0.22,<1",
+    "anyio>=4.6,<5",
+]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"

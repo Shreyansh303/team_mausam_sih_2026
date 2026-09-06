@@ -1,0 +1,61 @@
+{
+ "name": "monsoon_flood",
+ "description": "Very heavy monsoon rain with urban flooding — orange warning, 22 mm/h.",
+ "overrides": {
+  "current": {
+   "temp_c": 24.0,
+   "feels_like_c": 27.0,
+   "humidity_pct": 96,
+   "dew_point_c": 23.3,
+   "wind_kph": 30.0,
+   "gust_kph": 52.0,
+   "cloud_pct": 100,
+   "precip_mm": 22.0,
+   "visibility_km": 1.8,
+   "uv_index": 0.0,
+   "condition_code": 82
+  },
+  "hourly_all": {
+   "temp_c": 24.0,
+   "feels_like_c": 27.0,
+   "humidity_pct": 96,
+   "precip_prob_pct": 90,
+   "precip_mm": 22.0,
+   "wind_kph": 30.0,
+   "gust_kph": 52.0,
+   "cloud_pct": 100,
+   "visibility_km": 1.8,
+   "condition_code": 82,
+   "uv_index": 0.0,
+   "soil_moisture_surface": 0.45,
+   "soil_moisture_root": 0.42
+  },
+  "daily_all": {
+   "tmax_c": 27.0,
+   "tmin_c": 23.0,
+   "precip_prob_max_pct": 95,
+   "precip_sum_mm": 240.0,
+   "condition_code": 82,
+   "wind_max_kph": 38.0,
+   "gust_max_kph": 60.0
+  }
+ },
+ "warnings": [
+  {
+   "severity": "orange",
+   "hazard": "very_heavy_rain",
+   "title": "Orange warning: very heavy rainfall",
+   "description": "Very heavy rainfall (115-204 mm in 24 h) very likely. Urban flooding and waterlogging expected; avoid underpasses.",
+   "radius_km": 100,
+   "valid_hours": 18
+  }
+ ],
+ "nowcast": {
+  "text": "Very heavy rain continuing — localised flooding likely",
+  "severity": "severe",
+  "hazards": [
+   "very_heavy_rain",
+   "flood"
+  ]
+ }
+}

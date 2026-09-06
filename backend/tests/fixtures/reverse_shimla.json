@@ -1,0 +1,97 @@
+{
+ "url": "https://api.bigdatacloud.net/data/reverse-geocode-client",
+ "params": {
+  "latitude": 31.1,
+  "longitude": 77.17,
+  "localityLanguage": "en"
+ },
+ "status": 200,
+ "recorded_at": "2026-09-06T20:06:16+00:00",
+ "json": {
+  "latitude": 31.1,
+  "lookupSource": "coordinates",
+  "longitude": 77.17,
+  "localityLanguageRequested": "en",
+  "continent": "Asia",
+  "continentCode": "AS",
+  "countryName": "India",
+  "countryCode": "IN",
+  "principalSubdivision": "Himachal Pradesh",
+  "principalSubdivisionCode": "IN-HP",
+  "city": "Shimla",
+  "locality": "Shimla",
+  "postcode": "",
+  "plusCode": "8J3V452C+22",
+  "localityInfo": {
+   "administrative": [
+    {
+     "name": "India",
+     "description": "country in South Asia",
+     "isoName": "India",
+     "order": 3,
+     "adminLevel": 2,
+     "isoCode": "IN",
+     "wikidataId": "Q668",
+     "geonameId": 1269750
+    },
+    {
+     "name": "Himachal Pradesh",
+     "description": "state in northern India",
+     "isoName": "Himachal Pradesh",
+     "order": 6,
+     "adminLevel": 4,
+     "isoCode": "IN-HP",
+     "wikidataId": "Q1177",
+     "geonameId": 1270101
+    },
+    {
+     "name": "Shimla District",
+     "description": "district of Himachal Pradesh in India",
+     "order": 7,
+     "adminLevel": 5,
+     "wikidataId": "Q1921404",
+     "geonameId": 1256238
+    },
+    {
+     "name": "Shimla",
+     "description": "capital of Himachal Pradesh, India",
+     "order": 8,
+     "adminLevel": 6,
+     "wikidataId": "Q83786",
+     "geonameId": 1256237
+    },
+    {
+     "name": "Shimla (Urban) tehsil",
+     "description": "tehsil in Shimla district of Himachal Pradesh, India",
+     "order": 9,
+     "adminLevel": 6,
+     "wikidataId": "Q123265216"
+    }
+   ],
+   "informative": [
+    {
+     "name": "Asia",
+     "description": "terrestrial continent, mainly in the northeastern quadrant",
+     "isoName": "Asia",
+     "order": 1,
+     "isoCode": "AS",
+     "wikidataId": "Q48",
+     "geonameId": 6255147
+    },
+    {
+     "name": "Asia/Kolkata",
+     "description": "time zone",
+     "order": 2
+    },
+    {
+     "name": "Mainland India",
+     "order": 4
+    },
+    {
+     "name": "Northern Railway",
+     "order": 5
+    }
+   ]
+  }
+ }
+}

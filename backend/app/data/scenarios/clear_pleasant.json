@@ -1,0 +1,58 @@
+{
+ "name": "clear_pleasant",
+ "description": "Clear sky, 26 °C, light breeze — the calm baseline for the demo.",
+ "overrides": {
+  "current": {
+   "temp_c": 26.0,
+   "feels_like_c": 26.5,
+   "humidity_pct": 45,
+   "dew_point_c": 13.2,
+   "wind_kph": 8.0,
+   "gust_kph": 14.0,
+   "cloud_pct": 10,
+   "precip_mm": 0.0,
+   "visibility_km": 20.0,
+   "uv_index": 5.0,
+   "condition_code": 0,
+   "pressure_hpa": 1013.0
+  },
+  "hourly_all": {
+   "temp_c": 26.0,
+   "feels_like_c": 26.5,
+   "humidity_pct": 45,
+   "dew_point_c": 13.2,
+   "precip_prob_pct": 5,
+   "precip_mm": 0.0,
+   "wind_kph": 8.0,
+   "gust_kph": 14.0,
+   "cloud_pct": 10,
+   "visibility_km": 20.0,
+   "condition_code": 0,
+   "uv_index": 4.0
+  },
+  "daily_all": {
+   "tmax_c": 29.0,
+   "tmin_c": 19.0,
+   "feels_like_max_c": 29.5,
+   "precip_prob_max_pct": 5,
+   "precip_sum_mm": 0.0,
+   "condition_code": 0,
+   "wind_max_kph": 12.0,
+   "gust_max_kph": 20.0,
+   "uv_index_max": 6.0
+  },
+  "air_quality": {
+   "pm2_5": 22.0,
+   "pm10": 48.0,
+   "o3": 60.0,
+   "no2": 18.0,
+   "so2": 8.0
+  }
+ },
+ "warnings": [],
+ "nowcast": {
+  "text": "No significant weather in next 3 hours",
+  "severity": "none",
+  "hazards": []
+ }
+}

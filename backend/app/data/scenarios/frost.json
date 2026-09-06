@@ -1,0 +1,58 @@
+{
+ "name": "frost",
+ "description": "Clear, calm, sub-zero night — frost risk for standing crops.",
+ "overrides": {
+  "current": {
+   "temp_c": 1.0,
+   "feels_like_c": -2.0,
+   "humidity_pct": 78,
+   "dew_point_c": -2.3,
+   "wind_kph": 4.0,
+   "gust_kph": 7.0,
+   "cloud_pct": 5,
+   "precip_mm": 0.0,
+   "visibility_km": 8.0,
+   "uv_index": 1.0,
+   "condition_code": 0
+  },
+  "hourly_all": {
+   "temp_c": -1.0,
+   "feels_like_c": -4.0,
+   "humidity_pct": 80,
+   "precip_prob_pct": 0,
+   "precip_mm": 0.0,
+   "wind_kph": 4.0,
+   "gust_kph": 7.0,
+   "cloud_pct": 5,
+   "visibility_km": 8.0,
+   "condition_code": 0,
+   "uv_index": 1.0
+  },
+  "daily_all": {
+   "tmax_c": 12.0,
+   "tmin_c": -1.0,
+   "precip_prob_max_pct": 0,
+   "precip_sum_mm": 0.0,
+   "condition_code": 0,
+   "wind_max_kph": 6.0,
+   "uv_index_max": 3.0
+  }
+ },
+ "warnings": [
+  {
+   "severity": "yellow",
+   "hazard": "cold_wave",
+   "title": "Yellow warning: cold wave and ground frost",
+   "description": "Minimum temperature around -1 °C with clear skies and calm winds. Ground frost likely over open fields.",
+   "radius_km": 80,
+   "valid_hours": 14
+  }
+ ],
+ "nowcast": {
+  "text": "Clear and very cold — ground frost likely before dawn",
+  "severity": "moderate",
+  "hazards": [
+   "cold_wave"
+  ]
+ }
+}

@@ -1,0 +1,1664 @@
+{
+ "north": {
+  "1": [
+   {
+    "name": "Wheat",
+    "stage": "irrigate",
+    "action": "Irrigate Wheat — this is a critical moisture stage."
+   },
+   {
+    "name": "Mustard",
+    "stage": "irrigate",
+    "action": "Irrigate Mustard — this is a critical moisture stage."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "harvest",
+    "action": "Harvest Sugarcane at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Potato",
+    "stage": "harvest",
+    "action": "Harvest Potato at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "2": [
+   {
+    "name": "Wheat",
+    "stage": "grow",
+    "action": "Wheat is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Mustard",
+    "stage": "harvest",
+    "action": "Harvest Mustard at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "sow",
+    "action": "Sow Sugarcane now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Maize",
+    "stage": "sow",
+    "action": "Sow Maize now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "3": [
+   {
+    "name": "Wheat",
+    "stage": "harvest",
+    "action": "Harvest Wheat at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Mustard",
+    "stage": "harvest",
+    "action": "Harvest Mustard at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "sow",
+    "action": "Sow Sugarcane now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Maize",
+    "stage": "grow",
+    "action": "Maize is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "4": [
+   {
+    "name": "Wheat",
+    "stage": "harvest",
+    "action": "Harvest Wheat at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "grow",
+    "action": "Sugarcane is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Maize",
+    "stage": "irrigate",
+    "action": "Irrigate Maize — this is a critical moisture stage."
+   }
+  ],
+  "5": [
+   {
+    "name": "Sugarcane",
+    "stage": "irrigate",
+    "action": "Irrigate Sugarcane — this is a critical moisture stage."
+   },
+   {
+    "name": "Maize",
+    "stage": "harvest",
+    "action": "Harvest Maize at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "6": [
+   {
+    "name": "Paddy rice",
+    "stage": "sow",
+    "action": "Sow Paddy rice now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "grow",
+    "action": "Sugarcane is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Maize",
+    "stage": "sow",
+    "action": "Sow Maize now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "7": [
+   {
+    "name": "Paddy rice",
+    "stage": "grow",
+    "action": "Paddy rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "grow",
+    "action": "Sugarcane is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Maize",
+    "stage": "grow",
+    "action": "Maize is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "8": [
+   {
+    "name": "Paddy rice",
+    "stage": "grow",
+    "action": "Paddy rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "grow",
+    "action": "Sugarcane is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Maize",
+    "stage": "grow",
+    "action": "Maize is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "9": [
+   {
+    "name": "Paddy rice",
+    "stage": "irrigate",
+    "action": "Irrigate Paddy rice — this is a critical moisture stage."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "grow",
+    "action": "Sugarcane is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Maize",
+    "stage": "harvest",
+    "action": "Harvest Maize at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "10": [
+   {
+    "name": "Paddy rice",
+    "stage": "harvest",
+    "action": "Harvest Paddy rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Mustard",
+    "stage": "sow",
+    "action": "Sow Mustard now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "harvest",
+    "action": "Harvest Sugarcane at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Potato",
+    "stage": "sow",
+    "action": "Sow Potato now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "11": [
+   {
+    "name": "Wheat",
+    "stage": "sow",
+    "action": "Sow Wheat now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Paddy rice",
+    "stage": "harvest",
+    "action": "Harvest Paddy rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Mustard",
+    "stage": "grow",
+    "action": "Mustard is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "harvest",
+    "action": "Harvest Sugarcane at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "12": [
+   {
+    "name": "Wheat",
+    "stage": "grow",
+    "action": "Wheat is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Mustard",
+    "stage": "grow",
+    "action": "Mustard is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "harvest",
+    "action": "Harvest Sugarcane at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Potato",
+    "stage": "grow",
+    "action": "Potato is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ]
+ },
+ "south": {
+  "1": [
+   {
+    "name": "Paddy rice",
+    "stage": "harvest",
+    "action": "Harvest Paddy rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Groundnut",
+    "stage": "grow",
+    "action": "Groundnut is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Cotton",
+    "stage": "harvest",
+    "action": "Harvest Cotton at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Coconut",
+    "stage": "irrigate",
+    "action": "Irrigate Coconut — this is a critical moisture stage."
+   }
+  ],
+  "2": [
+   {
+    "name": "Paddy rice",
+    "stage": "harvest",
+    "action": "Harvest Paddy rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Groundnut",
+    "stage": "harvest",
+    "action": "Harvest Groundnut at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Coconut",
+    "stage": "irrigate",
+    "action": "Irrigate Coconut — this is a critical moisture stage."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "sow",
+    "action": "Sow Sugarcane now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "3": [
+   {
+    "name": "Groundnut",
+    "stage": "harvest",
+    "action": "Harvest Groundnut at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Coconut",
+    "stage": "irrigate",
+    "action": "Irrigate Coconut — this is a critical moisture stage."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "sow",
+    "action": "Sow Sugarcane now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "4": [
+   {
+    "name": "Coconut",
+    "stage": "irrigate",
+    "action": "Irrigate Coconut — this is a critical moisture stage."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "grow",
+    "action": "Sugarcane is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "5": [
+   {
+    "name": "Coconut",
+    "stage": "protect",
+    "action": "Protect Coconut — scout for pests and shield it from the current weather."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "irrigate",
+    "action": "Irrigate Sugarcane — this is a critical moisture stage."
+   }
+  ],
+  "6": [
+   {
+    "name": "Paddy rice",
+    "stage": "sow",
+    "action": "Sow Paddy rice now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Ragi",
+    "stage": "sow",
+    "action": "Sow Ragi now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Groundnut",
+    "stage": "sow",
+    "action": "Sow Groundnut now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Cotton",
+    "stage": "sow",
+    "action": "Sow Cotton now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "7": [
+   {
+    "name": "Paddy rice",
+    "stage": "grow",
+    "action": "Paddy rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Ragi",
+    "stage": "grow",
+    "action": "Ragi is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Groundnut",
+    "stage": "grow",
+    "action": "Groundnut is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Cotton",
+    "stage": "grow",
+    "action": "Cotton is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "8": [
+   {
+    "name": "Paddy rice",
+    "stage": "grow",
+    "action": "Paddy rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Ragi",
+    "stage": "grow",
+    "action": "Ragi is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Groundnut",
+    "stage": "irrigate",
+    "action": "Irrigate Groundnut — this is a critical moisture stage."
+   },
+   {
+    "name": "Cotton",
+    "stage": "grow",
+    "action": "Cotton is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "9": [
+   {
+    "name": "Paddy rice",
+    "stage": "irrigate",
+    "action": "Irrigate Paddy rice — this is a critical moisture stage."
+   },
+   {
+    "name": "Ragi",
+    "stage": "harvest",
+    "action": "Harvest Ragi at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Groundnut",
+    "stage": "harvest",
+    "action": "Harvest Groundnut at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Cotton",
+    "stage": "grow",
+    "action": "Cotton is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "10": [
+   {
+    "name": "Paddy rice",
+    "stage": "harvest",
+    "action": "Harvest Paddy rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Ragi",
+    "stage": "harvest",
+    "action": "Harvest Ragi at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Cotton",
+    "stage": "harvest",
+    "action": "Harvest Cotton at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Coconut",
+    "stage": "harvest",
+    "action": "Harvest Coconut at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "11": [
+   {
+    "name": "Paddy rice",
+    "stage": "sow",
+    "action": "Sow Paddy rice now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Groundnut",
+    "stage": "sow",
+    "action": "Sow Groundnut now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Cotton",
+    "stage": "harvest",
+    "action": "Harvest Cotton at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Coconut",
+    "stage": "harvest",
+    "action": "Harvest Coconut at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "12": [
+   {
+    "name": "Paddy rice",
+    "stage": "grow",
+    "action": "Paddy rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Groundnut",
+    "stage": "grow",
+    "action": "Groundnut is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Cotton",
+    "stage": "harvest",
+    "action": "Harvest Cotton at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Coconut",
+    "stage": "irrigate",
+    "action": "Irrigate Coconut — this is a critical moisture stage."
+   }
+  ]
+ },
+ "east": {
+  "1": [
+   {
+    "name": "Boro rice",
+    "stage": "grow",
+    "action": "Boro rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Potato",
+    "stage": "grow",
+    "action": "Potato is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Mustard",
+    "stage": "harvest",
+    "action": "Harvest Mustard at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Maize",
+    "stage": "grow",
+    "action": "Maize is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "2": [
+   {
+    "name": "Boro rice",
+    "stage": "grow",
+    "action": "Boro rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Potato",
+    "stage": "harvest",
+    "action": "Harvest Potato at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Mustard",
+    "stage": "harvest",
+    "action": "Harvest Mustard at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Maize",
+    "stage": "irrigate",
+    "action": "Irrigate Maize — this is a critical moisture stage."
+   }
+  ],
+  "3": [
+   {
+    "name": "Boro rice",
+    "stage": "irrigate",
+    "action": "Irrigate Boro rice — this is a critical moisture stage."
+   },
+   {
+    "name": "Jute",
+    "stage": "sow",
+    "action": "Sow Jute now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Potato",
+    "stage": "harvest",
+    "action": "Harvest Potato at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Maize",
+    "stage": "harvest",
+    "action": "Harvest Maize at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "4": [
+   {
+    "name": "Boro rice",
+    "stage": "harvest",
+    "action": "Harvest Boro rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Jute",
+    "stage": "grow",
+    "action": "Jute is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Vegetables",
+    "stage": "protect",
+    "action": "Protect Vegetables — scout for pests and shield it from the current weather."
+   }
+  ],
+  "5": [
+   {
+    "name": "Boro rice",
+    "stage": "harvest",
+    "action": "Harvest Boro rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Jute",
+    "stage": "grow",
+    "action": "Jute is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Vegetables",
+    "stage": "sow",
+    "action": "Sow Vegetables now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "6": [
+   {
+    "name": "Aman rice",
+    "stage": "sow",
+    "action": "Sow Aman rice now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Jute",
+    "stage": "irrigate",
+    "action": "Irrigate Jute — this is a critical moisture stage."
+   },
+   {
+    "name": "Maize",
+    "stage": "sow",
+    "action": "Sow Maize now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Vegetables",
+    "stage": "grow",
+    "action": "Vegetables is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "7": [
+   {
+    "name": "Aman rice",
+    "stage": "grow",
+    "action": "Aman rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Jute",
+    "stage": "harvest",
+    "action": "Harvest Jute at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Maize",
+    "stage": "grow",
+    "action": "Maize is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Vegetables",
+    "stage": "protect",
+    "action": "Protect Vegetables — scout for pests and shield it from the current weather."
+   }
+  ],
+  "8": [
+   {
+    "name": "Aman rice",
+    "stage": "grow",
+    "action": "Aman rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Jute",
+    "stage": "harvest",
+    "action": "Harvest Jute at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Maize",
+    "stage": "grow",
+    "action": "Maize is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Vegetables",
+    "stage": "sow",
+    "action": "Sow Vegetables now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "9": [
+   {
+    "name": "Aman rice",
+    "stage": "irrigate",
+    "action": "Irrigate Aman rice — this is a critical moisture stage."
+   },
+   {
+    "name": "Maize",
+    "stage": "harvest",
+    "action": "Harvest Maize at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Vegetables",
+    "stage": "grow",
+    "action": "Vegetables is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "10": [
+   {
+    "name": "Aman rice",
+    "stage": "harvest",
+    "action": "Harvest Aman rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Mustard",
+    "stage": "sow",
+    "action": "Sow Mustard now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Vegetables",
+    "stage": "harvest",
+    "action": "Harvest Vegetables at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "11": [
+   {
+    "name": "Aman rice",
+    "stage": "harvest",
+    "action": "Harvest Aman rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Potato",
+    "stage": "sow",
+    "action": "Sow Potato now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Mustard",
+    "stage": "grow",
+    "action": "Mustard is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Maize",
+    "stage": "sow",
+    "action": "Sow Maize now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "12": [
+   {
+    "name": "Boro rice",
+    "stage": "sow",
+    "action": "Sow Boro rice now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Potato",
+    "stage": "grow",
+    "action": "Potato is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Mustard",
+    "stage": "grow",
+    "action": "Mustard is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Maize",
+    "stage": "grow",
+    "action": "Maize is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ]
+ },
+ "west": {
+  "1": [
+   {
+    "name": "Cotton",
+    "stage": "harvest",
+    "action": "Harvest Cotton at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Wheat",
+    "stage": "irrigate",
+    "action": "Irrigate Wheat — this is a critical moisture stage."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "harvest",
+    "action": "Harvest Sugarcane at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Onion",
+    "stage": "grow",
+    "action": "Onion is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "2": [
+   {
+    "name": "Wheat",
+    "stage": "harvest",
+    "action": "Harvest Wheat at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "harvest",
+    "action": "Harvest Sugarcane at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Onion",
+    "stage": "irrigate",
+    "action": "Irrigate Onion — this is a critical moisture stage."
+   },
+   {
+    "name": "Mango",
+    "stage": "protect",
+    "action": "Protect Mango — scout for pests and shield it from the current weather."
+   }
+  ],
+  "3": [
+   {
+    "name": "Bajra",
+    "stage": "sow",
+    "action": "Sow Bajra now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Wheat",
+    "stage": "harvest",
+    "action": "Harvest Wheat at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "sow",
+    "action": "Sow Sugarcane now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Onion",
+    "stage": "harvest",
+    "action": "Harvest Onion at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "4": [
+   {
+    "name": "Bajra",
+    "stage": "grow",
+    "action": "Bajra is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "grow",
+    "action": "Sugarcane is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Onion",
+    "stage": "harvest",
+    "action": "Harvest Onion at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Mango",
+    "stage": "harvest",
+    "action": "Harvest Mango at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "5": [
+   {
+    "name": "Bajra",
+    "stage": "harvest",
+    "action": "Harvest Bajra at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "irrigate",
+    "action": "Irrigate Sugarcane — this is a critical moisture stage."
+   },
+   {
+    "name": "Mango",
+    "stage": "harvest",
+    "action": "Harvest Mango at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "6": [
+   {
+    "name": "Cotton",
+    "stage": "sow",
+    "action": "Sow Cotton now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Groundnut",
+    "stage": "sow",
+    "action": "Sow Groundnut now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "grow",
+    "action": "Sugarcane is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Soybean",
+    "stage": "sow",
+    "action": "Sow Soybean now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "7": [
+   {
+    "name": "Cotton",
+    "stage": "grow",
+    "action": "Cotton is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Groundnut",
+    "stage": "grow",
+    "action": "Groundnut is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Bajra",
+    "stage": "sow",
+    "action": "Sow Bajra now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "grow",
+    "action": "Sugarcane is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "8": [
+   {
+    "name": "Cotton",
+    "stage": "grow",
+    "action": "Cotton is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Groundnut",
+    "stage": "irrigate",
+    "action": "Irrigate Groundnut — this is a critical moisture stage."
+   },
+   {
+    "name": "Bajra",
+    "stage": "grow",
+    "action": "Bajra is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "grow",
+    "action": "Sugarcane is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "9": [
+   {
+    "name": "Cotton",
+    "stage": "irrigate",
+    "action": "Irrigate Cotton — this is a critical moisture stage."
+   },
+   {
+    "name": "Groundnut",
+    "stage": "harvest",
+    "action": "Harvest Groundnut at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Bajra",
+    "stage": "harvest",
+    "action": "Harvest Bajra at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "grow",
+    "action": "Sugarcane is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "10": [
+   {
+    "name": "Cotton",
+    "stage": "harvest",
+    "action": "Harvest Cotton at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Groundnut",
+    "stage": "harvest",
+    "action": "Harvest Groundnut at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "grow",
+    "action": "Sugarcane is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Soybean",
+    "stage": "harvest",
+    "action": "Harvest Soybean at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "11": [
+   {
+    "name": "Cotton",
+    "stage": "harvest",
+    "action": "Harvest Cotton at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Wheat",
+    "stage": "sow",
+    "action": "Sow Wheat now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "harvest",
+    "action": "Harvest Sugarcane at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Onion",
+    "stage": "sow",
+    "action": "Sow Onion now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "12": [
+   {
+    "name": "Cotton",
+    "stage": "harvest",
+    "action": "Harvest Cotton at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Wheat",
+    "stage": "grow",
+    "action": "Wheat is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Sugarcane",
+    "stage": "harvest",
+    "action": "Harvest Sugarcane at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Onion",
+    "stage": "grow",
+    "action": "Onion is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ]
+ },
+ "central": {
+  "1": [
+   {
+    "name": "Wheat",
+    "stage": "irrigate",
+    "action": "Irrigate Wheat — this is a critical moisture stage."
+   },
+   {
+    "name": "Gram",
+    "stage": "grow",
+    "action": "Gram is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Cotton",
+    "stage": "harvest",
+    "action": "Harvest Cotton at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Mustard",
+    "stage": "harvest",
+    "action": "Harvest Mustard at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "2": [
+   {
+    "name": "Wheat",
+    "stage": "grow",
+    "action": "Wheat is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Gram",
+    "stage": "harvest",
+    "action": "Harvest Gram at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Mustard",
+    "stage": "harvest",
+    "action": "Harvest Mustard at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "3": [
+   {
+    "name": "Wheat",
+    "stage": "harvest",
+    "action": "Harvest Wheat at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Gram",
+    "stage": "harvest",
+    "action": "Harvest Gram at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Summer moong",
+    "stage": "sow",
+    "action": "Sow Summer moong now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "4": [
+   {
+    "name": "Wheat",
+    "stage": "harvest",
+    "action": "Harvest Wheat at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Summer moong",
+    "stage": "grow",
+    "action": "Summer moong is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Fodder maize",
+    "stage": "sow",
+    "action": "Sow Fodder maize now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "5": [
+   {
+    "name": "Summer moong",
+    "stage": "harvest",
+    "action": "Harvest Summer moong at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Fodder maize",
+    "stage": "grow",
+    "action": "Fodder maize is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "6": [
+   {
+    "name": "Soybean",
+    "stage": "sow",
+    "action": "Sow Soybean now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Paddy rice",
+    "stage": "sow",
+    "action": "Sow Paddy rice now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Cotton",
+    "stage": "sow",
+    "action": "Sow Cotton now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Fodder maize",
+    "stage": "harvest",
+    "action": "Harvest Fodder maize at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "7": [
+   {
+    "name": "Soybean",
+    "stage": "grow",
+    "action": "Soybean is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Paddy rice",
+    "stage": "grow",
+    "action": "Paddy rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Cotton",
+    "stage": "grow",
+    "action": "Cotton is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "8": [
+   {
+    "name": "Soybean",
+    "stage": "grow",
+    "action": "Soybean is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Paddy rice",
+    "stage": "grow",
+    "action": "Paddy rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Cotton",
+    "stage": "grow",
+    "action": "Cotton is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "9": [
+   {
+    "name": "Soybean",
+    "stage": "irrigate",
+    "action": "Irrigate Soybean — this is a critical moisture stage."
+   },
+   {
+    "name": "Paddy rice",
+    "stage": "irrigate",
+    "action": "Irrigate Paddy rice — this is a critical moisture stage."
+   },
+   {
+    "name": "Cotton",
+    "stage": "grow",
+    "action": "Cotton is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "10": [
+   {
+    "name": "Soybean",
+    "stage": "harvest",
+    "action": "Harvest Soybean at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Gram",
+    "stage": "sow",
+    "action": "Sow Gram now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Paddy rice",
+    "stage": "harvest",
+    "action": "Harvest Paddy rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Cotton",
+    "stage": "harvest",
+    "action": "Harvest Cotton at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "11": [
+   {
+    "name": "Wheat",
+    "stage": "sow",
+    "action": "Sow Wheat now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Gram",
+    "stage": "grow",
+    "action": "Gram is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Paddy rice",
+    "stage": "harvest",
+    "action": "Harvest Paddy rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Cotton",
+    "stage": "harvest",
+    "action": "Harvest Cotton at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "12": [
+   {
+    "name": "Wheat",
+    "stage": "grow",
+    "action": "Wheat is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Gram",
+    "stage": "grow",
+    "action": "Gram is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Cotton",
+    "stage": "harvest",
+    "action": "Harvest Cotton at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Mustard",
+    "stage": "grow",
+    "action": "Mustard is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ]
+ },
+ "northeast": {
+  "1": [
+   {
+    "name": "Tea",
+    "stage": "protect",
+    "action": "Protect Tea — scout for pests and shield it from the current weather."
+   },
+   {
+    "name": "Rapeseed",
+    "stage": "harvest",
+    "action": "Harvest Rapeseed at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Potato",
+    "stage": "grow",
+    "action": "Potato is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "2": [
+   {
+    "name": "Tea",
+    "stage": "protect",
+    "action": "Protect Tea — scout for pests and shield it from the current weather."
+   },
+   {
+    "name": "Rapeseed",
+    "stage": "harvest",
+    "action": "Harvest Rapeseed at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Potato",
+    "stage": "harvest",
+    "action": "Harvest Potato at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "3": [
+   {
+    "name": "Ahu rice",
+    "stage": "sow",
+    "action": "Sow Ahu rice now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Tea",
+    "stage": "protect",
+    "action": "Protect Tea — scout for pests and shield it from the current weather."
+   },
+   {
+    "name": "Potato",
+    "stage": "harvest",
+    "action": "Harvest Potato at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "4": [
+   {
+    "name": "Ahu rice",
+    "stage": "grow",
+    "action": "Ahu rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Tea",
+    "stage": "harvest",
+    "action": "Harvest Tea at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Ginger",
+    "stage": "sow",
+    "action": "Sow Ginger now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "5": [
+   {
+    "name": "Ahu rice",
+    "stage": "grow",
+    "action": "Ahu rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Tea",
+    "stage": "harvest",
+    "action": "Harvest Tea at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Ginger",
+    "stage": "grow",
+    "action": "Ginger is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "6": [
+   {
+    "name": "Sali rice",
+    "stage": "sow",
+    "action": "Sow Sali rice now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Ahu rice",
+    "stage": "harvest",
+    "action": "Harvest Ahu rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Tea",
+    "stage": "harvest",
+    "action": "Harvest Tea at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Ginger",
+    "stage": "grow",
+    "action": "Ginger is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "7": [
+   {
+    "name": "Sali rice",
+    "stage": "grow",
+    "action": "Sali rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Ahu rice",
+    "stage": "harvest",
+    "action": "Harvest Ahu rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Tea",
+    "stage": "harvest",
+    "action": "Harvest Tea at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Ginger",
+    "stage": "grow",
+    "action": "Ginger is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "8": [
+   {
+    "name": "Sali rice",
+    "stage": "grow",
+    "action": "Sali rice is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Tea",
+    "stage": "harvest",
+    "action": "Harvest Tea at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Ginger",
+    "stage": "grow",
+    "action": "Ginger is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "9": [
+   {
+    "name": "Sali rice",
+    "stage": "irrigate",
+    "action": "Irrigate Sali rice — this is a critical moisture stage."
+   },
+   {
+    "name": "Tea",
+    "stage": "harvest",
+    "action": "Harvest Tea at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Ginger",
+    "stage": "irrigate",
+    "action": "Irrigate Ginger — this is a critical moisture stage."
+   }
+  ],
+  "10": [
+   {
+    "name": "Sali rice",
+    "stage": "harvest",
+    "action": "Harvest Sali rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Tea",
+    "stage": "harvest",
+    "action": "Harvest Tea at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Rapeseed",
+    "stage": "sow",
+    "action": "Sow Rapeseed now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Ginger",
+    "stage": "harvest",
+    "action": "Harvest Ginger at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "11": [
+   {
+    "name": "Sali rice",
+    "stage": "harvest",
+    "action": "Harvest Sali rice at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Tea",
+    "stage": "protect",
+    "action": "Protect Tea — scout for pests and shield it from the current weather."
+   },
+   {
+    "name": "Rapeseed",
+    "stage": "grow",
+    "action": "Rapeseed is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Potato",
+    "stage": "sow",
+    "action": "Sow Potato now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "12": [
+   {
+    "name": "Tea",
+    "stage": "protect",
+    "action": "Protect Tea — scout for pests and shield it from the current weather."
+   },
+   {
+    "name": "Rapeseed",
+    "stage": "grow",
+    "action": "Rapeseed is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Potato",
+    "stage": "grow",
+    "action": "Potato is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Ginger",
+    "stage": "harvest",
+    "action": "Harvest Ginger at the right grain/fruit moisture and dry before storage."
+   }
+  ]
+ },
+ "hills": {
+  "1": [
+   {
+    "name": "Apple",
+    "stage": "protect",
+    "action": "Protect Apple — scout for pests and shield it from the current weather."
+   },
+   {
+    "name": "Wheat",
+    "stage": "grow",
+    "action": "Wheat is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "2": [
+   {
+    "name": "Apple",
+    "stage": "protect",
+    "action": "Protect Apple — scout for pests and shield it from the current weather."
+   },
+   {
+    "name": "Wheat",
+    "stage": "grow",
+    "action": "Wheat is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "3": [
+   {
+    "name": "Apple",
+    "stage": "grow",
+    "action": "Apple is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Wheat",
+    "stage": "irrigate",
+    "action": "Irrigate Wheat — this is a critical moisture stage."
+   },
+   {
+    "name": "Potato",
+    "stage": "sow",
+    "action": "Sow Potato now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Peas & cabbage",
+    "stage": "sow",
+    "action": "Sow Peas & cabbage now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "4": [
+   {
+    "name": "Apple",
+    "stage": "grow",
+    "action": "Apple is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Wheat",
+    "stage": "harvest",
+    "action": "Harvest Wheat at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Maize",
+    "stage": "sow",
+    "action": "Sow Maize now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Potato",
+    "stage": "grow",
+    "action": "Potato is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "5": [
+   {
+    "name": "Apple",
+    "stage": "grow",
+    "action": "Apple is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Wheat",
+    "stage": "harvest",
+    "action": "Harvest Wheat at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Maize",
+    "stage": "grow",
+    "action": "Maize is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Potato",
+    "stage": "grow",
+    "action": "Potato is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "6": [
+   {
+    "name": "Apple",
+    "stage": "irrigate",
+    "action": "Irrigate Apple — this is a critical moisture stage."
+   },
+   {
+    "name": "Maize",
+    "stage": "grow",
+    "action": "Maize is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Potato",
+    "stage": "irrigate",
+    "action": "Irrigate Potato — this is a critical moisture stage."
+   },
+   {
+    "name": "Rajmash",
+    "stage": "grow",
+    "action": "Rajmash is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "7": [
+   {
+    "name": "Apple",
+    "stage": "grow",
+    "action": "Apple is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Maize",
+    "stage": "grow",
+    "action": "Maize is in vegetative growth — weed and top-dress nitrogen."
+   },
+   {
+    "name": "Potato",
+    "stage": "harvest",
+    "action": "Harvest Potato at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Rajmash",
+    "stage": "grow",
+    "action": "Rajmash is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "8": [
+   {
+    "name": "Apple",
+    "stage": "harvest",
+    "action": "Harvest Apple at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Maize",
+    "stage": "irrigate",
+    "action": "Irrigate Maize — this is a critical moisture stage."
+   },
+   {
+    "name": "Potato",
+    "stage": "harvest",
+    "action": "Harvest Potato at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Rajmash",
+    "stage": "grow",
+    "action": "Rajmash is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ],
+  "9": [
+   {
+    "name": "Apple",
+    "stage": "harvest",
+    "action": "Harvest Apple at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Maize",
+    "stage": "harvest",
+    "action": "Harvest Maize at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Rajmash",
+    "stage": "harvest",
+    "action": "Harvest Rajmash at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Peas & cabbage",
+    "stage": "harvest",
+    "action": "Harvest Peas & cabbage at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "10": [
+   {
+    "name": "Apple",
+    "stage": "harvest",
+    "action": "Harvest Apple at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Wheat",
+    "stage": "sow",
+    "action": "Sow Wheat now — prepare a fine seedbed and treat the seed before sowing."
+   },
+   {
+    "name": "Maize",
+    "stage": "harvest",
+    "action": "Harvest Maize at the right grain/fruit moisture and dry before storage."
+   },
+   {
+    "name": "Rajmash",
+    "stage": "harvest",
+    "action": "Harvest Rajmash at the right grain/fruit moisture and dry before storage."
+   }
+  ],
+  "11": [
+   {
+    "name": "Apple",
+    "stage": "protect",
+    "action": "Protect Apple — scout for pests and shield it from the current weather."
+   },
+   {
+    "name": "Wheat",
+    "stage": "sow",
+    "action": "Sow Wheat now — prepare a fine seedbed and treat the seed before sowing."
+   }
+  ],
+  "12": [
+   {
+    "name": "Apple",
+    "stage": "protect",
+    "action": "Protect Apple — scout for pests and shield it from the current weather."
+   },
+   {
+    "name": "Wheat",
+    "stage": "grow",
+    "action": "Wheat is in vegetative growth — weed and top-dress nitrogen."
+   }
+  ]
+ }
+}

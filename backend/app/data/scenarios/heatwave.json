@@ -1,0 +1,57 @@
+{
+ "name": "heatwave",
+ "description": "Severe heatwave — 45 °C, feels like 49 °C, red IMD heatwave warning.",
+ "overrides": {
+  "current": {
+   "temp_c": 45.0,
+   "feels_like_c": 49.0,
+   "humidity_pct": 25,
+   "dew_point_c": 21.0,
+   "wind_kph": 14.0,
+   "gust_kph": 26.0,
+   "cloud_pct": 5,
+   "precip_mm": 0.0,
+   "visibility_km": 6.0,
+   "uv_index": 11.0,
+   "condition_code": 0
+  },
+  "hourly_all": {
+   "temp_c": 44.0,
+   "feels_like_c": 48.0,
+   "humidity_pct": 22,
+   "precip_prob_pct": 0,
+   "precip_mm": 0.0,
+   "wind_kph": 14.0,
+   "cloud_pct": 5,
+   "visibility_km": 6.0,
+   "uv_index": 10.0,
+   "condition_code": 0
+  },
+  "daily_all": {
+   "tmax_c": 46.0,
+   "tmin_c": 31.0,
+   "feels_like_max_c": 50.0,
+   "precip_prob_max_pct": 0,
+   "precip_sum_mm": 0.0,
+   "condition_code": 0,
+   "uv_index_max": 11.0
+  }
+ },
+ "warnings": [
+  {
+   "severity": "red",
+   "hazard": "heatwave",
+   "title": "Red heatwave warning",
+   "description": "Severe heatwave conditions very likely. Maximum temperature 46 °C, 4-6 °C above normal. Avoid exposure between 11:00 and 16:00.",
+   "radius_km": 120,
+   "valid_hours": 24
+  }
+ ],
+ "nowcast": {
+  "text": "Severe heat through the afternoon — stay indoors",
+  "severity": "severe",
+  "hazards": [
+   "heatwave"
+  ]
+ }
+}

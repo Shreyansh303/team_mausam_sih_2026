@@ -1,0 +1,716 @@
+[
+ {
+  "id": "cp:001",
+  "name": "Koteshwar",
+  "state": "Gujarat",
+  "lat": 23.68,
+  "lon": 68.53
+ },
+ {
+  "id": "cp:002",
+  "name": "Jakhau",
+  "state": "Gujarat",
+  "lat": 23.22,
+  "lon": 68.72
+ },
+ {
+  "id": "cp:003",
+  "name": "Mandvi",
+  "state": "Gujarat",
+  "lat": 22.83,
+  "lon": 69.35
+ },
+ {
+  "id": "cp:004",
+  "name": "Mundra",
+  "state": "Gujarat",
+  "lat": 22.74,
+  "lon": 69.72
+ },
+ {
+  "id": "cp:005",
+  "name": "Kandla",
+  "state": "Gujarat",
+  "lat": 23.03,
+  "lon": 70.22
+ },
+ {
+  "id": "cp:006",
+  "name": "Navlakhi",
+  "state": "Gujarat",
+  "lat": 22.96,
+  "lon": 70.45
+ },
+ {
+  "id": "cp:007",
+  "name": "Jodiya",
+  "state": "Gujarat",
+  "lat": 22.71,
+  "lon": 70.29
+ },
+ {
+  "id": "cp:008",
+  "name": "Okha",
+  "state": "Gujarat",
+  "lat": 22.47,
+  "lon": 69.07
+ },
+ {
+  "id": "cp:009",
+  "name": "Dwarka",
+  "state": "Gujarat",
+  "lat": 22.24,
+  "lon": 68.97
+ },
+ {
+  "id": "cp:010",
+  "name": "Porbandar",
+  "state": "Gujarat",
+  "lat": 21.64,
+  "lon": 69.61
+ },
+ {
+  "id": "cp:011",
+  "name": "Madhavpur",
+  "state": "Gujarat",
+  "lat": 21.29,
+  "lon": 69.97
+ },
+ {
+  "id": "cp:012",
+  "name": "Veraval",
+  "state": "Gujarat",
+  "lat": 20.91,
+  "lon": 70.37
+ },
+ {
+  "id": "cp:013",
+  "name": "Diu",
+  "state": "Dadra and Nagar Haveli and Daman and Diu",
+  "lat": 20.71,
+  "lon": 70.99
+ },
+ {
+  "id": "cp:014",
+  "name": "Jafrabad",
+  "state": "Gujarat",
+  "lat": 20.87,
+  "lon": 71.37
+ },
+ {
+  "id": "cp:015",
+  "name": "Mahuva",
+  "state": "Gujarat",
+  "lat": 21.08,
+  "lon": 71.77
+ },
+ {
+  "id": "cp:016",
+  "name": "Bhavnagar",
+  "state": "Gujarat",
+  "lat": 21.76,
+  "lon": 72.15
+ },
+ {
+  "id": "cp:017",
+  "name": "Khambhat",
+  "state": "Gujarat",
+  "lat": 22.31,
+  "lon": 72.62
+ },
+ {
+  "id": "cp:018",
+  "name": "Dahej",
+  "state": "Gujarat",
+  "lat": 21.7,
+  "lon": 72.58
+ },
+ {
+  "id": "cp:019",
+  "name": "Hazira",
+  "state": "Gujarat",
+  "lat": 21.1,
+  "lon": 72.63
+ },
+ {
+  "id": "cp:020",
+  "name": "Tithal",
+  "state": "Gujarat",
+  "lat": 20.62,
+  "lon": 72.9
+ },
+ {
+  "id": "cp:021",
+  "name": "Daman",
+  "state": "Dadra and Nagar Haveli and Daman and Diu",
+  "lat": 20.4,
+  "lon": 72.83
+ },
+ {
+  "id": "cp:022",
+  "name": "Dahanu",
+  "state": "Maharashtra",
+  "lat": 19.98,
+  "lon": 72.71
+ },
+ {
+  "id": "cp:023",
+  "name": "Vasai",
+  "state": "Maharashtra",
+  "lat": 19.39,
+  "lon": 72.79
+ },
+ {
+  "id": "cp:024",
+  "name": "Mumbai Marine Drive",
+  "state": "Maharashtra",
+  "lat": 18.94,
+  "lon": 72.82
+ },
+ {
+  "id": "cp:025",
+  "name": "Alibag",
+  "state": "Maharashtra",
+  "lat": 18.64,
+  "lon": 72.87
+ },
+ {
+  "id": "cp:026",
+  "name": "Murud",
+  "state": "Maharashtra",
+  "lat": 18.33,
+  "lon": 72.96
+ },
+ {
+  "id": "cp:027",
+  "name": "Shrivardhan",
+  "state": "Maharashtra",
+  "lat": 18.04,
+  "lon": 73.01
+ },
+ {
+  "id": "cp:028",
+  "name": "Harnai",
+  "state": "Maharashtra",
+  "lat": 17.81,
+  "lon": 73.09
+ },
+ {
+  "id": "cp:029",
+  "name": "Ganpatipule",
+  "state": "Maharashtra",
+  "lat": 17.15,
+  "lon": 73.27
+ },
+ {
+  "id": "cp:030",
+  "name": "Ratnagiri",
+  "state": "Maharashtra",
+  "lat": 16.99,
+  "lon": 73.3
+ },
+ {
+  "id": "cp:031",
+  "name": "Vijaydurg",
+  "state": "Maharashtra",
+  "lat": 16.56,
+  "lon": 73.33
+ },
+ {
+  "id": "cp:032",
+  "name": "Malvan",
+  "state": "Maharashtra",
+  "lat": 16.06,
+  "lon": 73.46
+ },
+ {
+  "id": "cp:033",
+  "name": "Vengurla",
+  "state": "Maharashtra",
+  "lat": 15.86,
+  "lon": 73.63
+ },
+ {
+  "id": "cp:034",
+  "name": "Arambol",
+  "state": "Goa",
+  "lat": 15.69,
+  "lon": 73.7
+ },
+ {
+  "id": "cp:035",
+  "name": "Calangute",
+  "state": "Goa",
+  "lat": 15.54,
+  "lon": 73.76
+ },
+ {
+  "id": "cp:036",
+  "name": "Miramar",
+  "state": "Goa",
+  "lat": 15.48,
+  "lon": 73.81
+ },
+ {
+  "id": "cp:037",
+  "name": "Bogmalo",
+  "state": "Goa",
+  "lat": 15.38,
+  "lon": 73.83
+ },
+ {
+  "id": "cp:038",
+  "name": "Colva",
+  "state": "Goa",
+  "lat": 15.28,
+  "lon": 73.92
+ },
+ {
+  "id": "cp:039",
+  "name": "Palolem",
+  "state": "Goa",
+  "lat": 15.01,
+  "lon": 74.02
+ },
+ {
+  "id": "cp:040",
+  "name": "Karwar",
+  "state": "Karnataka",
+  "lat": 14.81,
+  "lon": 74.13
+ },
+ {
+  "id": "cp:041",
+  "name": "Gokarna",
+  "state": "Karnataka",
+  "lat": 14.55,
+  "lon": 74.32
+ },
+ {
+  "id": "cp:042",
+  "name": "Murudeshwar",
+  "state": "Karnataka",
+  "lat": 14.09,
+  "lon": 74.48
+ },
+ {
+  "id": "cp:043",
+  "name": "Bhatkal",
+  "state": "Karnataka",
+  "lat": 13.97,
+  "lon": 74.55
+ },
+ {
+  "id": "cp:044",
+  "name": "Kundapura",
+  "state": "Karnataka",
+  "lat": 13.62,
+  "lon": 74.69
+ },
+ {
+  "id": "cp:045",
+  "name": "Malpe",
+  "state": "Karnataka",
+  "lat": 13.35,
+  "lon": 74.7
+ },
+ {
+  "id": "cp:046",
+  "name": "Mangaluru",
+  "state": "Karnataka",
+  "lat": 12.87,
+  "lon": 74.84
+ },
+ {
+  "id": "cp:047",
+  "name": "Ullal",
+  "state": "Karnataka",
+  "lat": 12.8,
+  "lon": 74.85
+ },
+ {
+  "id": "cp:048",
+  "name": "Kasaragod",
+  "state": "Kerala",
+  "lat": 12.5,
+  "lon": 74.98
+ },
+ {
+  "id": "cp:049",
+  "name": "Kannur",
+  "state": "Kerala",
+  "lat": 11.87,
+  "lon": 75.35
+ },
+ {
+  "id": "cp:050",
+  "name": "Thalassery",
+  "state": "Kerala",
+  "lat": 11.75,
+  "lon": 75.49
+ },
+ {
+  "id": "cp:051",
+  "name": "Kozhikode",
+  "state": "Kerala",
+  "lat": 11.25,
+  "lon": 75.77
+ },
+ {
+  "id": "cp:052",
+  "name": "Ponnani",
+  "state": "Kerala",
+  "lat": 10.77,
+  "lon": 75.92
+ },
+ {
+  "id": "cp:053",
+  "name": "Fort Kochi",
+  "state": "Kerala",
+  "lat": 9.96,
+  "lon": 76.24
+ },
+ {
+  "id": "cp:054",
+  "name": "Alappuzha",
+  "state": "Kerala",
+  "lat": 9.49,
+  "lon": 76.32
+ },
+ {
+  "id": "cp:055",
+  "name": "Kollam",
+  "state": "Kerala",
+  "lat": 8.88,
+  "lon": 76.58
+ },
+ {
+  "id": "cp:056",
+  "name": "Varkala",
+  "state": "Kerala",
+  "lat": 8.73,
+  "lon": 76.71
+ },
+ {
+  "id": "cp:057",
+  "name": "Kovalam",
+  "state": "Kerala",
+  "lat": 8.4,
+  "lon": 76.98
+ },
+ {
+  "id": "cp:058",
+  "name": "Kanyakumari",
+  "state": "Tamil Nadu",
+  "lat": 8.08,
+  "lon": 77.55
+ },
+ {
+  "id": "cp:059",
+  "name": "Tiruchendur",
+  "state": "Tamil Nadu",
+  "lat": 8.49,
+  "lon": 78.12
+ },
+ {
+  "id": "cp:060",
+  "name": "Thoothukudi",
+  "state": "Tamil Nadu",
+  "lat": 8.8,
+  "lon": 78.16
+ },
+ {
+  "id": "cp:061",
+  "name": "Devipattinam",
+  "state": "Tamil Nadu",
+  "lat": 9.47,
+  "lon": 78.9
+ },
+ {
+  "id": "cp:062",
+  "name": "Rameswaram",
+  "state": "Tamil Nadu",
+  "lat": 9.29,
+  "lon": 79.31
+ },
+ {
+  "id": "cp:063",
+  "name": "Nagapattinam",
+  "state": "Tamil Nadu",
+  "lat": 10.77,
+  "lon": 79.85
+ },
+ {
+  "id": "cp:064",
+  "name": "Velankanni",
+  "state": "Tamil Nadu",
+  "lat": 10.68,
+  "lon": 79.85
+ },
+ {
+  "id": "cp:065",
+  "name": "Karaikal",
+  "state": "Puducherry",
+  "lat": 10.92,
+  "lon": 79.84
+ },
+ {
+  "id": "cp:066",
+  "name": "Cuddalore",
+  "state": "Tamil Nadu",
+  "lat": 11.72,
+  "lon": 79.77
+ },
+ {
+  "id": "cp:067",
+  "name": "Puducherry",
+  "state": "Puducherry",
+  "lat": 11.93,
+  "lon": 79.83
+ },
+ {
+  "id": "cp:068",
+  "name": "Mamallapuram",
+  "state": "Tamil Nadu",
+  "lat": 12.62,
+  "lon": 80.19
+ },
+ {
+  "id": "cp:069",
+  "name": "Chennai Marina",
+  "state": "Tamil Nadu",
+  "lat": 13.05,
+  "lon": 80.28
+ },
+ {
+  "id": "cp:070",
+  "name": "Pulicat",
+  "state": "Tamil Nadu",
+  "lat": 13.42,
+  "lon": 80.32
+ },
+ {
+  "id": "cp:071",
+  "name": "Mypadu",
+  "state": "Andhra Pradesh",
+  "lat": 14.35,
+  "lon": 80.15
+ },
+ {
+  "id": "cp:072",
+  "name": "Vodarevu",
+  "state": "Andhra Pradesh",
+  "lat": 15.53,
+  "lon": 80.2
+ },
+ {
+  "id": "cp:073",
+  "name": "Machilipatnam",
+  "state": "Andhra Pradesh",
+  "lat": 16.17,
+  "lon": 81.19
+ },
+ {
+  "id": "cp:074",
+  "name": "Kakinada",
+  "state": "Andhra Pradesh",
+  "lat": 16.94,
+  "lon": 82.26
+ },
+ {
+  "id": "cp:075",
+  "name": "Visakhapatnam",
+  "state": "Andhra Pradesh",
+  "lat": 17.7,
+  "lon": 83.3
+ },
+ {
+  "id": "cp:076",
+  "name": "Bheemunipatnam",
+  "state": "Andhra Pradesh",
+  "lat": 17.89,
+  "lon": 83.45
+ },
+ {
+  "id": "cp:077",
+  "name": "Baruva",
+  "state": "Andhra Pradesh",
+  "lat": 18.87,
+  "lon": 84.6
+ },
+ {
+  "id": "cp:078",
+  "name": "Gopalpur",
+  "state": "Odisha",
+  "lat": 19.26,
+  "lon": 84.92
+ },
+ {
+  "id": "cp:079",
+  "name": "Puri",
+  "state": "Odisha",
+  "lat": 19.79,
+  "lon": 85.82
+ },
+ {
+  "id": "cp:080",
+  "name": "Konark",
+  "state": "Odisha",
+  "lat": 19.89,
+  "lon": 86.1
+ },
+ {
+  "id": "cp:081",
+  "name": "Paradip",
+  "state": "Odisha",
+  "lat": 20.26,
+  "lon": 86.68
+ },
+ {
+  "id": "cp:082",
+  "name": "Dhamra",
+  "state": "Odisha",
+  "lat": 20.79,
+  "lon": 86.97
+ },
+ {
+  "id": "cp:083",
+  "name": "Chandipur",
+  "state": "Odisha",
+  "lat": 21.46,
+  "lon": 87.02
+ },
+ {
+  "id": "cp:084",
+  "name": "Digha",
+  "state": "West Bengal",
+  "lat": 21.62,
+  "lon": 87.53
+ },
+ {
+  "id": "cp:085",
+  "name": "Haldia",
+  "state": "West Bengal",
+  "lat": 22.03,
+  "lon": 88.09
+ },
+ {
+  "id": "cp:086",
+  "name": "Sagar Island",
+  "state": "West Bengal",
+  "lat": 21.65,
+  "lon": 88.06
+ },
+ {
+  "id": "cp:087",
+  "name": "Bakkhali",
+  "state": "West Bengal",
+  "lat": 21.56,
+  "lon": 88.26
+ },
+ {
+  "id": "cp:088",
+  "name": "Gosaba",
+  "state": "West Bengal",
+  "lat": 22.16,
+  "lon": 88.81
+ },
+ {
+  "id": "cp:089",
+  "name": "Port Blair",
+  "state": "Andaman and Nicobar Islands",
+  "lat": 11.62,
+  "lon": 92.73
+ },
+ {
+  "id": "cp:090",
+  "name": "Havelock",
+  "state": "Andaman and Nicobar Islands",
+  "lat": 12.02,
+  "lon": 92.98
+ },
+ {
+  "id": "cp:091",
+  "name": "Neil Island",
+  "state": "Andaman and Nicobar Islands",
+  "lat": 11.83,
+  "lon": 93.05
+ },
+ {
+  "id": "cp:092",
+  "name": "Rangat",
+  "state": "Andaman and Nicobar Islands",
+  "lat": 12.49,
+  "lon": 92.93
+ },
+ {
+  "id": "cp:093",
+  "name": "Mayabunder",
+  "state": "Andaman and Nicobar Islands",
+  "lat": 12.92,
+  "lon": 92.9
+ },
+ {
+  "id": "cp:094",
+  "name": "Diglipur",
+  "state": "Andaman and Nicobar Islands",
+  "lat": 13.26,
+  "lon": 92.98
+ },
+ {
+  "id": "cp:095",
+  "name": "Car Nicobar",
+  "state": "Andaman and Nicobar Islands",
+  "lat": 9.17,
+  "lon": 92.77
+ },
+ {
+  "id": "cp:096",
+  "name": "Campbell Bay",
+  "state": "Andaman and Nicobar Islands",
+  "lat": 7.01,
+  "lon": 93.93
+ },
+ {
+  "id": "cp:097",
+  "name": "Kavaratti",
+  "state": "Lakshadweep",
+  "lat": 10.57,
+  "lon": 72.64
+ },
+ {
+  "id": "cp:098",
+  "name": "Agatti",
+  "state": "Lakshadweep",
+  "lat": 10.85,
+  "lon": 72.19
+ },
+ {
+  "id": "cp:099",
+  "name": "Minicoy",
+  "state": "Lakshadweep",
+  "lat": 8.28,
+  "lon": 73.05
+ },
+ {
+  "id": "cp:100",
+  "name": "Amini",
+  "state": "Lakshadweep",
+  "lat": 11.12,
+  "lon": 72.73
+ },
+ {
+  "id": "cp:101",
+  "name": "Kalpeni",
+  "state": "Lakshadweep",
+  "lat": 10.07,
+  "lon": 73.64
+ },
+ {
+  "id": "cp:102",
+  "name": "Androth",
+  "state": "Lakshadweep",
+  "lat": 10.82,
+  "lon": 73.68
+ }
+]

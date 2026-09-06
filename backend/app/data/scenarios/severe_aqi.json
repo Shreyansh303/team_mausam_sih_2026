@@ -1,0 +1,44 @@
+{
+ "name": "severe_aqi",
+ "description": "Severe air quality episode — PM2.5 320, PM10 480 µg/m³.",
+ "overrides": {
+  "current": {
+   "temp_c": 14.0,
+   "feels_like_c": 13.0,
+   "humidity_pct": 72,
+   "wind_kph": 5.0,
+   "cloud_pct": 40,
+   "visibility_km": 1.2,
+   "condition_code": 45,
+   "uv_index": 2.0
+  },
+  "hourly_all": {
+   "temp_c": 14.0,
+   "feels_like_c": 13.0,
+   "humidity_pct": 72,
+   "wind_kph": 5.0,
+   "precip_prob_pct": 0,
+   "precip_mm": 0.0,
+   "cloud_pct": 40,
+   "visibility_km": 1.2,
+   "condition_code": 45,
+   "uv_index": 2.0
+  },
+  "air_quality": {
+   "pm2_5": 320.0,
+   "pm10": 480.0,
+   "no2": 145.0,
+   "so2": 48.0,
+   "o3": 40.0,
+   "co": 3.2
+  }
+ },
+ "warnings": [],
+ "nowcast": {
+  "text": "Smog and haze — air quality Severe through the day",
+  "severity": "moderate",
+  "hazards": [
+   "haze"
+  ]
+ }
+}

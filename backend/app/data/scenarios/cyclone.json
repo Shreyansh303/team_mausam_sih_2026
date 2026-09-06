@@ -1,0 +1,69 @@
+{
+ "name": "cyclone",
+ "description": "Cyclone approaching the coast — red warning, 4.5 m waves.",
+ "overrides": {
+  "current": {
+   "temp_c": 26.0,
+   "feels_like_c": 30.0,
+   "humidity_pct": 94,
+   "dew_point_c": 25.0,
+   "wind_kph": 85.0,
+   "gust_kph": 120.0,
+   "cloud_pct": 100,
+   "precip_mm": 25.0,
+   "visibility_km": 1.5,
+   "uv_index": 0.0,
+   "condition_code": 82,
+   "pressure_hpa": 984.0
+  },
+  "hourly_all": {
+   "temp_c": 26.0,
+   "feels_like_c": 30.0,
+   "humidity_pct": 94,
+   "precip_prob_pct": 95,
+   "precip_mm": 25.0,
+   "wind_kph": 85.0,
+   "gust_kph": 120.0,
+   "cloud_pct": 100,
+   "visibility_km": 1.5,
+   "condition_code": 82,
+   "uv_index": 0.0
+  },
+  "daily_all": {
+   "tmax_c": 28.0,
+   "tmin_c": 24.0,
+   "precip_prob_max_pct": 95,
+   "precip_sum_mm": 210.0,
+   "condition_code": 82,
+   "wind_max_kph": 95.0,
+   "gust_max_kph": 135.0
+  },
+  "marine": {
+   "wave_height_m": 4.5,
+   "wave_period_s": 11.0,
+   "swell_wave_height_m": 3.8,
+   "swell_height_m": 3.8,
+   "current_kph": 6.5,
+   "sea_state": "Very Rough"
+  }
+ },
+ "warnings": [
+  {
+   "severity": "red",
+   "hazard": "cyclone",
+   "title": "Red warning: cyclonic storm approaching",
+   "description": "Cyclonic storm likely to cross the coast within 24 hours. Wind speed 90-120 km/h. Fishermen advised not to venture into the sea.",
+   "radius_km": 200,
+   "valid_hours": 24
+  }
+ ],
+ "nowcast": {
+  "text": "Cyclonic storm — gale winds and very heavy rain",
+  "severity": "severe",
+  "hazards": [
+   "cyclone",
+   "strong_wind",
+   "very_heavy_rain"
+  ]
+ }
+}

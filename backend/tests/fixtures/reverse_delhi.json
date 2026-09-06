@@ -1,0 +1,112 @@
+{
+ "url": "https://api.bigdatacloud.net/data/reverse-geocode-client",
+ "params": {
+  "latitude": 28.61,
+  "longitude": 77.21,
+  "localityLanguage": "en"
+ },
+ "status": 200,
+ "recorded_at": "2026-09-06T20:06:15+00:00",
+ "json": {
+  "latitude": 28.61,
+  "lookupSource": "coordinates",
+  "longitude": 77.21,
+  "localityLanguageRequested": "en",
+  "continent": "Asia",
+  "continentCode": "AS",
+  "countryName": "India",
+  "countryCode": "IN",
+  "principalSubdivision": "Delhi",
+  "principalSubdivisionCode": "IN-DL",
+  "city": "New Delhi",
+  "locality": "New Delhi",
+  "postcode": "",
+  "plusCode": "7JWVJ666+22",
+  "localityInfo": {
+   "administrative": [
+    {
+     "name": "India",
+     "description": "country in South Asia",
+     "isoName": "India",
+     "order": 3,
+     "adminLevel": 2,
+     "isoCode": "IN",
+     "wikidataId": "Q668",
+     "geonameId": 1269750
+    },
+    {
+     "name": "National Capital Region",
+     "description": "region in India",
+     "order": 7,
+     "adminLevel": 7,
+     "wikidataId": "Q1249481"
+    },
+    {
+     "name": "Delhi",
+     "description": "megacity and union territory of India",
+     "isoName": "Delhi",
+     "order": 8,
+     "adminLevel": 4,
+     "isoCode": "IN-DL",
+     "wikidataId": "Q1353",
+     "geonameId": 1273294
+    },
+    {
+     "name": "National Capital Territory of Delhi",
+     "description": "union territory of India",
+     "order": 9,
+     "adminLevel": 4,
+     "wikidataId": "Q9357528",
+     "geonameId": 1273293
+    },
+    {
+     "name": "New Delhi",
+     "description": "district of Delhi in India",
+     "order": 10,
+     "adminLevel": 5,
+     "wikidataId": "Q8560886",
+     "geonameId": 8347332
+    },
+    {
+     "name": "New Delhi",
+     "description": "capital city of India",
+     "order": 11,
+     "adminLevel": 8,
+     "wikidataId": "Q987",
+     "geonameId": 1261481
+    }
+   ],
+   "informative": [
+    {
+     "name": "Asia",
+     "description": "terrestrial continent, mainly in the northeastern quadrant",
+     "isoName": "Asia",
+     "order": 1,
+     "isoCode": "AS",
+     "wikidataId": "Q48",
+     "geonameId": 6255147
+    },
+    {
+     "name": "Asia/Kolkata",
+     "description": "time zone",
+     "order": 2
+    },
+    {
+     "name": "Indian subcontinent",
+     "description": "physiographical region in South Asia",
+     "order": 4,
+     "wikidataId": "Q60140",
+     "geonameId": 6269134
+    },
+    {
+     "name": "Mainland India",
+     "order": 5
+    },
+    {
+     "name": "Northern Railway",
+     "order": 6
+    }
+   ]
+  }
+ }
+}

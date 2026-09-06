@@ -1,0 +1,58 @@
+{
+ "name": "heavy_rain",
+ "description": "Heavy rain — 12 mm/h, orange heavy-rain warning.",
+ "overrides": {
+  "current": {
+   "temp_c": 25.0,
+   "feels_like_c": 27.0,
+   "humidity_pct": 92,
+   "dew_point_c": 23.6,
+   "wind_kph": 26.0,
+   "gust_kph": 45.0,
+   "cloud_pct": 100,
+   "precip_mm": 12.0,
+   "visibility_km": 2.5,
+   "uv_index": 1.0,
+   "condition_code": 65
+  },
+  "hourly_all": {
+   "temp_c": 25.0,
+   "feels_like_c": 27.0,
+   "humidity_pct": 92,
+   "precip_prob_pct": 85,
+   "precip_mm": 12.0,
+   "wind_kph": 26.0,
+   "gust_kph": 45.0,
+   "cloud_pct": 100,
+   "visibility_km": 2.5,
+   "condition_code": 65,
+   "uv_index": 1.0
+  },
+  "daily_all": {
+   "tmax_c": 28.0,
+   "tmin_c": 24.0,
+   "precip_prob_max_pct": 90,
+   "precip_sum_mm": 110.0,
+   "condition_code": 65,
+   "wind_max_kph": 34.0,
+   "gust_max_kph": 55.0
+  }
+ },
+ "warnings": [
+  {
+   "severity": "orange",
+   "hazard": "heavy_rain",
+   "title": "Orange warning: heavy rain",
+   "description": "Heavy to very heavy rainfall likely at isolated places. Waterlogging expected on low-lying roads.",
+   "radius_km": 90,
+   "valid_hours": 12
+  }
+ ],
+ "nowcast": {
+  "text": "Rain likely to continue for the next 3 hours",
+  "severity": "moderate",
+  "hazards": [
+   "rain"
+  ]
+ }
+}

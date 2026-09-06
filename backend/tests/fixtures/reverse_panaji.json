@@ -1,0 +1,111 @@
+{
+ "url": "https://api.bigdatacloud.net/data/reverse-geocode-client",
+ "params": {
+  "latitude": 15.49,
+  "longitude": 73.83,
+  "localityLanguage": "en"
+ },
+ "status": 200,
+ "recorded_at": "2026-09-06T20:06:15+00:00",
+ "json": {
+  "latitude": 15.49,
+  "lookupSource": "coordinates",
+  "longitude": 73.83,
+  "localityLanguageRequested": "en",
+  "continent": "Asia",
+  "continentCode": "AS",
+  "countryName": "India",
+  "countryCode": "IN",
+  "principalSubdivision": "Goa",
+  "principalSubdivisionCode": "IN-GA",
+  "city": "Panjim",
+  "locality": "Panjim",
+  "postcode": "",
+  "plusCode": "7J7MFRRJ+22",
+  "localityInfo": {
+   "administrative": [
+    {
+     "name": "India",
+     "description": "country in South Asia",
+     "isoName": "India",
+     "order": 4,
+     "adminLevel": 2,
+     "isoCode": "IN",
+     "wikidataId": "Q668",
+     "geonameId": 1269750
+    },
+    {
+     "name": "Goa",
+     "description": "state in western India",
+     "isoName": "Goa",
+     "order": 7,
+     "adminLevel": 4,
+     "isoCode": "IN-GA",
+     "wikidataId": "Q1171",
+     "geonameId": 1271157
+    },
+    {
+     "name": "North Goa district",
+     "description": "district of Goa, India",
+     "order": 8,
+     "adminLevel": 5,
+     "wikidataId": "Q108234",
+     "geonameId": 9255562
+    },
+    {
+     "name": "Panjim",
+     "description": "capital city of Goa",
+     "order": 9,
+     "adminLevel": 6,
+     "wikidataId": "Q214681",
+     "geonameId": 1260607
+    },
+    {
+     "name": "Tiswadi taluk",
+     "description": "subdivision of Goa",
+     "order": 10,
+     "adminLevel": 6,
+     "wikidataId": "Q3291873"
+    }
+   ],
+   "informative": [
+    {
+     "name": "Asia",
+     "description": "terrestrial continent, mainly in the northeastern quadrant",
+     "isoName": "Asia",
+     "order": 1,
+     "isoCode": "AS",
+     "wikidataId": "Q48",
+     "geonameId": 6255147
+    },
+    {
+     "name": "Arabian Sea",
+     "description": "marginal sea of the northern Indian Ocean",
+     "order": 2,
+     "wikidataId": "Q58705",
+     "geonameId": 1158455
+    },
+    {
+     "name": "Asia/Kolkata",
+     "description": "time zone",
+     "order": 3
+    },
+    {
+     "name": "Mainland India",
+     "order": 5
+    },
+    {
+     "name": "Western Zonal Council",
+     "order": 6
+    },
+    {
+     "name": "Goa Island",
+     "description": "Island in Nampula, Mozambique",
+     "order": 11,
+     "wikidataId": "Q107058013",
+     "geonameId": 1045955
+    }
+   ]
+  }
+ }
+}

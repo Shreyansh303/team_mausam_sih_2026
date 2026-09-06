@@ -1,0 +1,11 @@
+{
+ "url": "https://mausam.imd.gov.in/api/current_wx_api.php",
+ "params": {
+  "id": "42182"
+ },
+ "status": 401,
+ "recorded_at": "2026-09-06T20:06:18+00:00",
+ "json": {
+  "_raw": "Your IP/Domain 49.36.188.194 needs to be whitelisted"
+ }
+}
