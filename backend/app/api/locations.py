@@ -19,7 +19,7 @@ async def search(
 
 
 @router.get("/popular", response_model=list[LocationResult])
-async def popular(limit: int = Query(48, ge=1, le=200)) -> list[LocationResult]:
+async def popular(limit: int = Query(120, ge=1, le=300)) -> list[LocationResult]:
     return loc_svc.popular(limit)
 
 

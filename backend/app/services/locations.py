@@ -118,7 +118,7 @@ async def search(q: str, limit: int = 8) -> list[LocationResult]:
     return out[:limit]
 
 
-def popular(limit: int = 48) -> list[LocationResult]:
+def popular(limit: int = 120) -> list[LocationResult]:
     """Curated Indian cities flagged `popular` (04: ≥ 40, includes coastal + hill)."""
     rows = [c for c in cities() if c.get("popular")]
     rows.sort(key=lambda c: -(c.get("population") or 0))

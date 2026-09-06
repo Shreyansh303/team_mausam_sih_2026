@@ -41,7 +41,7 @@ from app.services import (
     warnings as warnings_svc,
     workout,
 )
-from app.services.util import next_hours, vmax, vmin, vals
+from app.services.util import next_hours, vals, vmax
 
 log = logging.getLogger("mausam.snapshot")
 
