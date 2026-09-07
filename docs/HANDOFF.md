@@ -4,13 +4,24 @@ This repo is designed so that any Claude Code session can pick it up cold. The p
 (normative), the rules in `CLAUDE.md` (auto-loaded by Claude Code), and the live state in
 `docs/PROGRESS.md`. Nothing important lives outside git except the local toolchain.
 
-## 1. Where things stand
+## 1. Where things stand (handed off 2026-09-07, commit `27f9d8a`, tree clean, origin in sync)
 See `docs/PROGRESS.md` → "Phase status" (the checkboxes are the truth) and `git log --oneline`.
-Handoff-ready points are phase boundaries with a clean tree. The intended split:
-- **Done by the first owner:** A1–A3 (backend: data layer, personalization engine, `/home`, auth,
-  live alerts, admin console, deploy/CI) and B0–B1 (Flutter toolchain, app foundation).
-- **For the next owner:** B2 (full card system, map, places, WebSocket, events), B3 (integration,
-  APK, CI), C1 (end-to-end QA against the judge demo script), C2 (README, pitch deck), stretch.
+- **Done (first owner):** A1–A3 — backend complete: providers with IMD→Open-Meteo fallback, 33 card
+  builders, personalization engine with explainability + learning, `/home` with every param, auth,
+  saved places, events, en/hi i18n, admin console, WebSocket live alerts, Docker/Render config,
+  GitHub Actions CI; **300 offline tests pass**. B0–B1 — Flutter toolchain script, app foundation
+  (onboarding, home shell, persona chips, banner, cache/offline, 6 renderers + generic fallback,
+  settings, en/hi scaffolding); `flutter analyze` clean, 44 tests pass, web build verified against
+  the live backend (`docs/screenshots/b1_home.png`).
+- **Next (new owner):** H0 (bootstrap your machine) → B2 (the ten pending renderers listed in
+  `PROGRESS.md` "B2 — what B1 hands you", detail pages, re-rank animation, events pipeline,
+  why-sheet actions, places, map, settings, demo sheet, WS client, low-bandwidth, a11y, full
+  en/hi, icon/splash) → B3 (live integration, release APK, Flutter CI, run-it-yourself README) →
+  C1 (QA against the judge demo script) → C2 (README, pitch, pptx) → stretch.
+- Known items for B2 (details in PROGRESS notes): `hourly_forecast.data.hours` currently has the
+  remaining hours of the day (17 in the fixture) rather than a fixed 24; `Card.score` can exceed 1.0
+  when boosts stack — never treat it as 0..1; three card types (`frost_alert`, `heat_alert`,
+  `travel_alerts`) appear in no fixture — use the scenario URLs in PROGRESS to render them.
 
 ## 2. How the work is run (the protocol)
 - **Orchestrator session (Fable or any strong model) never writes code.** It reads
