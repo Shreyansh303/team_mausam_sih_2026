@@ -1,0 +1,7 @@
+# docs/06_MOBILE_SPEC.md §i18n — `flutter gen-l10n` reads this. No build_runner anywhere.
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-localization-file: app_localizations.dart
+output-class: L
+nullable-getter: false
+output-dir: lib/l10n/gen

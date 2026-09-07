@@ -1,0 +1,1458 @@
+{
+  "generated_at": "2026-09-08T07:28:00+05:30",
+  "location": {
+    "id": "city:delhi",
+    "name": "New Delhi",
+    "admin1": "Delhi",
+    "admin2": "New Delhi",
+    "country": "India",
+    "country_code": "IN",
+    "lat": 28.61,
+    "lon": 77.21,
+    "timezone": "Asia/Kolkata",
+    "is_coastal": false,
+    "elevation_m": 216,
+    "population": 16787941
+  },
+  "context": {
+    "now": "2026-09-08T07:30:00+05:30",
+    "daypart": "dawn",
+    "is_weekend": false,
+    "season": "monsoon",
+    "is_coastal": false,
+    "scenario": "live",
+    "active_personas": [
+      "parent",
+      "commuter"
+    ],
+    "warning_count": 1,
+    "lang": "en"
+  },
+  "banner": {
+    "warning_id": "wrn_thunder_delhi_0908",
+    "severity": "orange",
+    "title": "Thunderstorm with gusty winds",
+    "color_hex": "#F28C28"
+  },
+  "pinned": [
+    {
+      "type": "warnings",
+      "instance_id": "warnings",
+      "title": "Weather warnings",
+      "subtitle": "1 active · Orange",
+      "size": "large",
+      "renderer": "warnings",
+      "urgency": 0.8,
+      "severity": "warning",
+      "pinned": true,
+      "score": 0.94,
+      "reasons": [
+        {
+          "code": "urgency:orange_warning",
+          "text": "An orange thunderstorm warning is active"
+        },
+        {
+          "code": "persona:parent",
+          "text": "Because you follow Parent"
+        }
+      ],
+      "insight": {
+        "headline": "Thunderstorm with gusty winds",
+        "detail": "Orange warning for New Delhi, 14:00-20:00 today. Gusts 50-60 km/h with lightning.",
+        "icon": "thunderstorm"
+      },
+      "data": {
+        "warnings": [
+          {
+            "id": "wrn_thunder_delhi_0908",
+            "severity": "orange",
+            "hazard": "thunderstorm",
+            "title": "Thunderstorm with gusty winds",
+            "description": "Thunderstorm accompanied with lightning and gusty winds (50-60 km/h) very likely over Delhi and NCR between 14:00 and 20:00 IST. Take shelter indoors, avoid open grounds and stay away from trees and electric poles.",
+            "issued_at": "2026-09-08T06:15:00+05:30",
+            "valid_from": "2026-09-08T14:00:00+05:30",
+            "valid_to": "2026-09-08T20:00:00+05:30",
+            "district": "New Delhi",
+            "state": "Delhi",
+            "lat": 28.61,
+            "lon": 77.21,
+            "radius_km": 75,
+            "source": "admin",
+            "color_hex": "#F28C28"
+          }
+        ],
+        "district": "New Delhi",
+        "highest_severity": "orange"
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "share",
+          "label": "Share"
+        },
+        {
+          "id": "unpin",
+          "label": "Unpin"
+        },
+        {
+          "id": "hide",
+          "label": "Hide"
+        }
+      ],
+      "personas": [
+        "parent",
+        "commuter"
+      ],
+      "source": "admin",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:20:00+05:30"
+    }
+  ],
+  "hero": {
+    "type": "current_conditions",
+    "instance_id": "current_conditions",
+    "title": "New Delhi",
+    "subtitle": "Cloudy · Feels like 32°",
+    "size": "hero",
+    "renderer": "hero",
+    "urgency": 0.0,
+    "severity": "info",
+    "pinned": false,
+    "score": 1.0,
+    "reasons": [
+      {
+        "code": "base:always",
+        "text": "Always shown first"
+      }
+    ],
+    "insight": {
+      "headline": "Feels like 32°, humid; AQI Moderate",
+      "detail": "Storm expected this afternoon - plan the school run and the commute early.",
+      "icon": "cloud"
+    },
+    "data": {
+      "temp_c": 28.4,
+      "feels_like_c": 32.1,
+      "condition_code": 3,
+      "condition_text": "Overcast",
+      "icon": "cloud",
+      "humidity_pct": 78,
+      "wind_kph": 11.2,
+      "wind_dir": "SE",
+      "uv_index": 1.4,
+      "visibility_km": 3.2,
+      "pressure_hpa": 1001.4,
+      "tmax_c": 35.1,
+      "tmin_c": 25.6,
+      "is_day": true,
+      "aqi": 132,
+      "aqi_category": "Moderate",
+      "sunrise": "2026-09-08T06:04:00+05:30",
+      "sunset": "2026-09-08T18:32:00+05:30",
+      "all_clear": false,
+      "updated_at": "2026-09-08T07:20:00+05:30"
+    },
+    "actions": [
+      {
+        "id": "details",
+        "label": "Details"
+      },
+      {
+        "id": "share",
+        "label": "Share"
+      }
+    ],
+    "personas": [
+      "parent",
+      "commuter"
+    ],
+    "source": "open-meteo",
+    "estimated": false,
+    "updated_at": "2026-09-08T07:20:00+05:30"
+  },
+  "cards": [
+    {
+      "type": "school_commute",
+      "instance_id": "school_commute",
+      "title": "School run",
+      "subtitle": "Morning good · Pickup avoid",
+      "size": "medium",
+      "renderer": "timeline",
+      "urgency": 0.85,
+      "severity": "severe",
+      "pinned": false,
+      "score": 0.89,
+      "reasons": [
+        {
+          "code": "persona:parent",
+          "text": "Because you follow Parent"
+        },
+        {
+          "code": "time:dawn",
+          "text": "It is the morning drop-off window"
+        }
+      ],
+      "insight": {
+        "headline": "Send a raincoat - pickup falls inside the storm window",
+        "detail": "Morning drop is clear. The 13:00-16:00 pickup overlaps an orange thunderstorm warning.",
+        "icon": "school"
+      },
+      "data": {
+        "windows": [
+          {
+            "label": "morning_drop",
+            "start": "2026-09-08T07:00:00+05:30",
+            "end": "2026-09-08T09:00:00+05:30",
+            "verdict": "good",
+            "temp_c": 29.0,
+            "precip_prob_pct": 20,
+            "visibility_km": 3.2,
+            "aqi": 138,
+            "reasons": [
+              "No rain expected",
+              "AQI Moderate"
+            ]
+          },
+          {
+            "label": "afternoon_pickup",
+            "start": "2026-09-08T13:00:00+05:30",
+            "end": "2026-09-08T16:00:00+05:30",
+            "verdict": "avoid",
+            "temp_c": 33.7,
+            "precip_prob_pct": 90,
+            "visibility_km": 1.4,
+            "aqi": 96,
+            "reasons": [
+              "Orange thunderstorm warning 14:00-20:00",
+              "Rain probability 90%",
+              "Gusts up to 46 km/h"
+            ]
+          }
+        ],
+        "overall_verdict": "avoid",
+        "advice": "Plan an indoor wait at pickup or delay it to after 20:00. Pack a raincoat, not an umbrella - gusts will turn it inside out.",
+        "is_school_day": true
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin to top"
+        },
+        {
+          "id": "dismiss",
+          "label": "Show less"
+        },
+        {
+          "id": "hide",
+          "label": "Hide"
+        }
+      ],
+      "personas": [
+        "parent"
+      ],
+      "source": "mixed",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:20:00+05:30"
+    },
+    {
+      "type": "commute_conditions",
+      "instance_id": "commute_conditions",
+      "title": "Your commute",
+      "subtitle": "Morning low · Evening severe",
+      "size": "medium",
+      "renderer": "timeline",
+      "urgency": 0.9,
+      "severity": "severe",
+      "pinned": false,
+      "score": 0.86,
+      "reasons": [
+        {
+          "code": "persona:commuter",
+          "text": "Because you follow Commuter"
+        },
+        {
+          "code": "urgency:orange_warning",
+          "text": "An orange thunderstorm warning is active"
+        }
+      ],
+      "insight": {
+        "headline": "Leave work by 16:30 or wait it out",
+        "detail": "Evening peak sits inside the storm: expect ~22 min extra and visibility near 1 km.",
+        "icon": "traffic"
+      },
+      "data": {
+        "windows": [
+          {
+            "label": "morning",
+            "start": "2026-09-08T08:00:00+05:30",
+            "end": "2026-09-08T10:00:00+05:30",
+            "impact": "low",
+            "delay_min": 12,
+            "rain_prob_pct": 25,
+            "visibility_km": 3.4,
+            "temp_c": 30.3,
+            "reasons": [
+              "Dry roads",
+              "Normal peak-hour congestion"
+            ]
+          },
+          {
+            "label": "evening",
+            "start": "2026-09-08T17:00:00+05:30",
+            "end": "2026-09-08T20:00:00+05:30",
+            "impact": "severe",
+            "delay_min": 22,
+            "rain_prob_pct": 75,
+            "visibility_km": 1.1,
+            "temp_c": 28.0,
+            "reasons": [
+              "Orange thunderstorm warning",
+              "Waterlogging likely on underpasses",
+              "Visibility 1.1 km"
+            ]
+          }
+        ],
+        "traffic": {
+          "congestion_pct": 48,
+          "source": "estimated"
+        },
+        "advice": "Metro is the safer option after 16:00. If you drive, avoid the Minto Bridge and Pul Prahladpur underpasses."
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin to top"
+        },
+        {
+          "id": "dismiss",
+          "label": "Show less"
+        },
+        {
+          "id": "hide",
+          "label": "Hide"
+        }
+      ],
+      "personas": [
+        "commuter"
+      ],
+      "source": "mixed",
+      "estimated": true,
+      "updated_at": "2026-09-08T07:20:00+05:30"
+    },
+    {
+      "type": "rain_alert",
+      "instance_id": "rain_alert",
+      "title": "Rain alert",
+      "subtitle": "Very heavy · from 13:00",
+      "size": "medium",
+      "renderer": "alert",
+      "urgency": 0.8,
+      "severity": "warning",
+      "pinned": false,
+      "score": 0.82,
+      "reasons": [
+        {
+          "code": "persona:commuter",
+          "text": "Because you follow Commuter"
+        },
+        {
+          "code": "season:monsoon",
+          "text": "It is the monsoon season"
+        }
+      ],
+      "insight": {
+        "headline": "29 mm of rain expected, peaking at 15:00",
+        "detail": "Rain starts around 13:00 and eases after 20:00. Very heavy intensity at the peak hour.",
+        "icon": "heavy_rain"
+      },
+      "data": {
+        "next_rain_start": "2026-09-08T13:00:00+05:30",
+        "next_rain_end": "2026-09-08T20:00:00+05:30",
+        "peak_prob_pct": 90,
+        "peak_time": "2026-09-08T15:00:00+05:30",
+        "expected_mm": 29.4,
+        "intensity": "very_heavy",
+        "hourly": [
+          {
+            "time": "2026-09-08T07:00:00+05:30",
+            "precip_prob_pct": 20,
+            "precip_mm": 0.0
+          },
+          {
+            "time": "2026-09-08T08:00:00+05:30",
+            "precip_prob_pct": 20,
+            "precip_mm": 0.0
+          },
+          {
+            "time": "2026-09-08T09:00:00+05:30",
+            "precip_prob_pct": 25,
+            "precip_mm": 0.0
+          },
+          {
+            "time": "2026-09-08T10:00:00+05:30",
+            "precip_prob_pct": 30,
+            "precip_mm": 0.0
+          },
+          {
+            "time": "2026-09-08T11:00:00+05:30",
+            "precip_prob_pct": 35,
+            "precip_mm": 0.0
+          },
+          {
+            "time": "2026-09-08T12:00:00+05:30",
+            "precip_prob_pct": 45,
+            "precip_mm": 0.2
+          },
+          {
+            "time": "2026-09-08T13:00:00+05:30",
+            "precip_prob_pct": 60,
+            "precip_mm": 0.8
+          },
+          {
+            "time": "2026-09-08T14:00:00+05:30",
+            "precip_prob_pct": 80,
+            "precip_mm": 4.6
+          },
+          {
+            "time": "2026-09-08T15:00:00+05:30",
+            "precip_prob_pct": 90,
+            "precip_mm": 9.4
+          },
+          {
+            "time": "2026-09-08T16:00:00+05:30",
+            "precip_prob_pct": 85,
+            "precip_mm": 7.2
+          },
+          {
+            "time": "2026-09-08T17:00:00+05:30",
+            "precip_prob_pct": 75,
+            "precip_mm": 3.9
+          },
+          {
+            "time": "2026-09-08T18:00:00+05:30",
+            "precip_prob_pct": 65,
+            "precip_mm": 2.1
+          }
+        ],
+        "warning": {
+          "id": "wrn_thunder_delhi_0908",
+          "severity": "orange",
+          "hazard": "thunderstorm",
+          "title": "Thunderstorm with gusty winds",
+          "description": "Thunderstorm accompanied with lightning and gusty winds (50-60 km/h) very likely over Delhi and NCR between 14:00 and 20:00 IST. Take shelter indoors, avoid open grounds and stay away from trees and electric poles.",
+          "issued_at": "2026-09-08T06:15:00+05:30",
+          "valid_from": "2026-09-08T14:00:00+05:30",
+          "valid_to": "2026-09-08T20:00:00+05:30",
+          "district": "New Delhi",
+          "state": "Delhi",
+          "lat": 28.61,
+          "lon": 77.21,
+          "radius_km": 75,
+          "source": "admin",
+          "color_hex": "#F28C28"
+        }
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "share",
+          "label": "Share"
+        },
+        {
+          "id": "pin",
+          "label": "Pin to top"
+        },
+        {
+          "id": "dismiss",
+          "label": "Show less"
+        },
+        {
+          "id": "hide",
+          "label": "Hide"
+        }
+      ],
+      "personas": [
+        "parent",
+        "commuter"
+      ],
+      "source": "open-meteo",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:20:00+05:30"
+    },
+    {
+      "type": "storm_fog_alert",
+      "instance_id": "storm_fog_alert",
+      "title": "Thunderstorm watch",
+      "subtitle": "14:00-20:00 · warning",
+      "size": "medium",
+      "renderer": "alert",
+      "urgency": 0.7,
+      "severity": "warning",
+      "pinned": false,
+      "score": 0.78,
+      "reasons": [
+        {
+          "code": "persona:commuter",
+          "text": "Because you follow Commuter"
+        },
+        {
+          "code": "data:hazard",
+          "text": "Thunderstorm codes in the next 12 hours"
+        }
+      ],
+      "insight": {
+        "headline": "Lightning and 50-60 km/h gusts this afternoon",
+        "detail": "Stay off two-wheelers between 14:00 and 20:00; secure loose items on balconies.",
+        "icon": "storm"
+      },
+      "data": {
+        "hazard": "thunderstorm",
+        "level": "warning",
+        "window": {
+          "start": "2026-09-08T14:00:00+05:30",
+          "end": "2026-09-08T20:00:00+05:30"
+        },
+        "detail": "WMO codes 95 for four consecutive hours with gusts peaking at 46 km/h.",
+        "warning": {
+          "id": "wrn_thunder_delhi_0908",
+          "severity": "orange",
+          "hazard": "thunderstorm",
+          "title": "Thunderstorm with gusty winds",
+          "description": "Thunderstorm accompanied with lightning and gusty winds (50-60 km/h) very likely over Delhi and NCR between 14:00 and 20:00 IST. Take shelter indoors, avoid open grounds and stay away from trees and electric poles.",
+          "issued_at": "2026-09-08T06:15:00+05:30",
+          "valid_from": "2026-09-08T14:00:00+05:30",
+          "valid_to": "2026-09-08T20:00:00+05:30",
+          "district": "New Delhi",
+          "state": "Delhi",
+          "lat": 28.61,
+          "lon": 77.21,
+          "radius_km": 75,
+          "source": "admin",
+          "color_hex": "#F28C28"
+        },
+        "advice": [
+          "Take shelter indoors - do not stand under trees.",
+          "Unplug sensitive electronics during the lightning phase.",
+          "Delay two-wheeler trips until after 20:00."
+        ]
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin to top"
+        },
+        {
+          "id": "dismiss",
+          "label": "Show less"
+        },
+        {
+          "id": "hide",
+          "label": "Hide"
+        }
+      ],
+      "personas": [
+        "commuter",
+        "parent"
+      ],
+      "source": "mixed",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:20:00+05:30"
+    },
+    {
+      "type": "nowcast",
+      "instance_id": "nowcast",
+      "title": "Next 3 hours",
+      "subtitle": "Cloudy, rain holding off",
+      "size": "medium",
+      "renderer": "nowcast",
+      "urgency": 0.5,
+      "severity": "watch",
+      "pinned": false,
+      "score": 0.71,
+      "reasons": [
+        {
+          "code": "persona:commuter",
+          "text": "Because you follow Commuter"
+        }
+      ],
+      "insight": {
+        "headline": "Dry until about 13:00",
+        "detail": "Overcast with light winds through the morning; the first cells arrive by early afternoon.",
+        "icon": "cloud"
+      },
+      "data": {
+        "issued_at": "2026-09-08T07:00:00+05:30",
+        "valid_till": "2026-09-08T10:00:00+05:30",
+        "text": "Cloudy sky with light winds. Isolated light rain possible after 12:00; thunderstorm activity from 14:00.",
+        "severity": "moderate",
+        "hazards": [
+          "thunderstorm"
+        ],
+        "source": "estimated"
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "dismiss",
+          "label": "Show less"
+        },
+        {
+          "id": "hide",
+          "label": "Hide"
+        }
+      ],
+      "personas": [
+        "commuter",
+        "parent"
+      ],
+      "source": "estimated",
+      "estimated": true,
+      "updated_at": "2026-09-08T07:20:00+05:30"
+    },
+    {
+      "type": "hourly_forecast",
+      "instance_id": "hourly_forecast",
+      "title": "Next 24 hours",
+      "subtitle": "Peak 35° at 13:00",
+      "size": "large",
+      "renderer": "hourly",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.64,
+      "reasons": [
+        {
+          "code": "base:always",
+          "text": "Standard forecast card"
+        }
+      ],
+      "insight": {
+        "headline": "Rain from 13:00, heaviest 15:00-16:00",
+        "detail": "Temperatures fall about 5° once the storm breaks.",
+        "icon": "rain"
+      },
+      "data": {
+        "hours": [
+          {
+            "time": "2026-09-08T07:00:00+05:30",
+            "temp_c": 28.4,
+            "precip_prob_pct": 20,
+            "precip_mm": 0.0,
+            "condition_code": 3,
+            "icon": "cloud",
+            "wind_kph": 11,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T08:00:00+05:30",
+            "temp_c": 29.6,
+            "precip_prob_pct": 20,
+            "precip_mm": 0.0,
+            "condition_code": 3,
+            "icon": "cloud",
+            "wind_kph": 12,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T09:00:00+05:30",
+            "temp_c": 31.0,
+            "precip_prob_pct": 25,
+            "precip_mm": 0.0,
+            "condition_code": 3,
+            "icon": "cloud",
+            "wind_kph": 13,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T10:00:00+05:30",
+            "temp_c": 32.5,
+            "precip_prob_pct": 30,
+            "precip_mm": 0.0,
+            "condition_code": 2,
+            "icon": "partly_cloudy",
+            "wind_kph": 14,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T11:00:00+05:30",
+            "temp_c": 33.8,
+            "precip_prob_pct": 35,
+            "precip_mm": 0.0,
+            "condition_code": 2,
+            "icon": "partly_cloudy",
+            "wind_kph": 15,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T12:00:00+05:30",
+            "temp_c": 34.6,
+            "precip_prob_pct": 45,
+            "precip_mm": 0.2,
+            "condition_code": 3,
+            "icon": "cloud",
+            "wind_kph": 17,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T13:00:00+05:30",
+            "temp_c": 35.1,
+            "precip_prob_pct": 60,
+            "precip_mm": 0.8,
+            "condition_code": 80,
+            "icon": "rain",
+            "wind_kph": 20,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T14:00:00+05:30",
+            "temp_c": 34.2,
+            "precip_prob_pct": 80,
+            "precip_mm": 4.6,
+            "condition_code": 95,
+            "icon": "thunderstorm",
+            "wind_kph": 34,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T15:00:00+05:30",
+            "temp_c": 31.8,
+            "precip_prob_pct": 90,
+            "precip_mm": 9.4,
+            "condition_code": 95,
+            "icon": "thunderstorm",
+            "wind_kph": 46,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T16:00:00+05:30",
+            "temp_c": 29.9,
+            "precip_prob_pct": 85,
+            "precip_mm": 7.2,
+            "condition_code": 95,
+            "icon": "thunderstorm",
+            "wind_kph": 41,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T17:00:00+05:30",
+            "temp_c": 28.7,
+            "precip_prob_pct": 75,
+            "precip_mm": 3.9,
+            "condition_code": 81,
+            "icon": "heavy_rain",
+            "wind_kph": 33,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T18:00:00+05:30",
+            "temp_c": 27.9,
+            "precip_prob_pct": 65,
+            "precip_mm": 2.1,
+            "condition_code": 80,
+            "icon": "rain",
+            "wind_kph": 27,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T19:00:00+05:30",
+            "temp_c": 27.2,
+            "precip_prob_pct": 50,
+            "precip_mm": 0.9,
+            "condition_code": 80,
+            "icon": "rain",
+            "wind_kph": 22,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-08T20:00:00+05:30",
+            "temp_c": 26.6,
+            "precip_prob_pct": 35,
+            "precip_mm": 0.3,
+            "condition_code": 61,
+            "icon": "rain",
+            "wind_kph": 18,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-08T21:00:00+05:30",
+            "temp_c": 26.1,
+            "precip_prob_pct": 25,
+            "precip_mm": 0.0,
+            "condition_code": 3,
+            "icon": "cloud",
+            "wind_kph": 15,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-08T22:00:00+05:30",
+            "temp_c": 25.7,
+            "precip_prob_pct": 20,
+            "precip_mm": 0.0,
+            "condition_code": 3,
+            "icon": "cloud",
+            "wind_kph": 13,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-08T23:00:00+05:30",
+            "temp_c": 25.3,
+            "precip_prob_pct": 15,
+            "precip_mm": 0.0,
+            "condition_code": 2,
+            "icon": "partly_cloudy",
+            "wind_kph": 11,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T00:00:00+05:30",
+            "temp_c": 25.0,
+            "precip_prob_pct": 15,
+            "precip_mm": 0.0,
+            "condition_code": 2,
+            "icon": "partly_cloudy",
+            "wind_kph": 10,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T01:00:00+05:30",
+            "temp_c": 24.7,
+            "precip_prob_pct": 10,
+            "precip_mm": 0.0,
+            "condition_code": 1,
+            "icon": "partly_cloudy",
+            "wind_kph": 9,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T02:00:00+05:30",
+            "temp_c": 24.4,
+            "precip_prob_pct": 10,
+            "precip_mm": 0.0,
+            "condition_code": 1,
+            "icon": "partly_cloudy",
+            "wind_kph": 9,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T03:00:00+05:30",
+            "temp_c": 24.1,
+            "precip_prob_pct": 10,
+            "precip_mm": 0.0,
+            "condition_code": 1,
+            "icon": "partly_cloudy",
+            "wind_kph": 8,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T04:00:00+05:30",
+            "temp_c": 23.9,
+            "precip_prob_pct": 10,
+            "precip_mm": 0.0,
+            "condition_code": 1,
+            "icon": "partly_cloudy",
+            "wind_kph": 8,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T05:00:00+05:30",
+            "temp_c": 23.8,
+            "precip_prob_pct": 10,
+            "precip_mm": 0.0,
+            "condition_code": 1,
+            "icon": "partly_cloudy",
+            "wind_kph": 8,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T06:00:00+05:30",
+            "temp_c": 24.6,
+            "precip_prob_pct": 15,
+            "precip_mm": 0.0,
+            "condition_code": 2,
+            "icon": "partly_cloudy",
+            "wind_kph": 9,
+            "is_day": false
+          }
+        ]
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "dismiss",
+          "label": "Show less"
+        },
+        {
+          "id": "hide",
+          "label": "Hide"
+        }
+      ],
+      "personas": [
+        "commuter",
+        "parent"
+      ],
+      "source": "open-meteo",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:20:00+05:30"
+    },
+    {
+      "type": "visibility",
+      "instance_id": "visibility",
+      "title": "Visibility",
+      "subtitle": "Moderate · 3.2 km",
+      "size": "small",
+      "renderer": "metric",
+      "urgency": 0.5,
+      "severity": "watch",
+      "pinned": false,
+      "score": 0.62,
+      "reasons": [
+        {
+          "code": "persona:commuter",
+          "text": "Because you follow Commuter"
+        }
+      ],
+      "insight": {
+        "headline": "Haze cuts visibility to 3.2 km",
+        "detail": "Expect around 1 km during the afternoon storm - use low beams, not high beams.",
+        "icon": "eye"
+      },
+      "data": {
+        "visibility_km": 3.2,
+        "category": "Moderate",
+        "fog_expected_hours": [
+          {
+            "time": "2026-09-08T15:00:00+05:30",
+            "visibility_km": 1.2
+          },
+          {
+            "time": "2026-09-08T16:00:00+05:30",
+            "visibility_km": 1.1
+          },
+          {
+            "time": "2026-09-08T17:00:00+05:30",
+            "visibility_km": 1.6
+          }
+        ],
+        "advice": "Keep headlights on and double your following distance after 14:00."
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "dismiss",
+          "label": "Show less"
+        },
+        {
+          "id": "hide",
+          "label": "Hide"
+        }
+      ],
+      "personas": [
+        "commuter"
+      ],
+      "source": "open-meteo",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:20:00+05:30"
+    },
+    {
+      "type": "aqi",
+      "instance_id": "aqi",
+      "title": "Air quality",
+      "subtitle": "Moderate · 132",
+      "size": "medium",
+      "renderer": "gauge",
+      "urgency": 0.3,
+      "severity": "advisory",
+      "pinned": false,
+      "score": 0.55,
+      "reasons": [
+        {
+          "code": "persona:parent",
+          "text": "Because you follow Parent"
+        },
+        {
+          "code": "time:dawn",
+          "text": "Air quality peaks around dawn"
+        }
+      ],
+      "insight": {
+        "headline": "Moderate air - sensitive groups should go easy",
+        "detail": "PM2.5 is 61 ug/m3. Rain this afternoon should wash the air clean by evening.",
+        "icon": "aqi"
+      },
+      "data": {
+        "aqi": 132,
+        "category": "Moderate",
+        "dominant_pollutant": "pm2_5",
+        "pm2_5": 61.4,
+        "pm10": 128.7,
+        "o3": 42.1,
+        "no2": 38.6,
+        "so2": 11.2,
+        "co": 0.9,
+        "hourly": [
+          {
+            "time": "2026-09-08T07:00:00+05:30",
+            "aqi": 132
+          },
+          {
+            "time": "2026-09-08T08:00:00+05:30",
+            "aqi": 138
+          },
+          {
+            "time": "2026-09-08T09:00:00+05:30",
+            "aqi": 141
+          },
+          {
+            "time": "2026-09-08T10:00:00+05:30",
+            "aqi": 136
+          },
+          {
+            "time": "2026-09-08T11:00:00+05:30",
+            "aqi": 128
+          },
+          {
+            "time": "2026-09-08T12:00:00+05:30",
+            "aqi": 121
+          },
+          {
+            "time": "2026-09-08T13:00:00+05:30",
+            "aqi": 115
+          },
+          {
+            "time": "2026-09-08T14:00:00+05:30",
+            "aqi": 109
+          },
+          {
+            "time": "2026-09-08T15:00:00+05:30",
+            "aqi": 102
+          },
+          {
+            "time": "2026-09-08T16:00:00+05:30",
+            "aqi": 96
+          },
+          {
+            "time": "2026-09-08T17:00:00+05:30",
+            "aqi": 92
+          },
+          {
+            "time": "2026-09-08T18:00:00+05:30",
+            "aqi": 88
+          },
+          {
+            "time": "2026-09-08T19:00:00+05:30",
+            "aqi": 91
+          },
+          {
+            "time": "2026-09-08T20:00:00+05:30",
+            "aqi": 97
+          },
+          {
+            "time": "2026-09-08T21:00:00+05:30",
+            "aqi": 104
+          },
+          {
+            "time": "2026-09-08T22:00:00+05:30",
+            "aqi": 112
+          },
+          {
+            "time": "2026-09-08T23:00:00+05:30",
+            "aqi": 119
+          },
+          {
+            "time": "2026-09-09T00:00:00+05:30",
+            "aqi": 126
+          },
+          {
+            "time": "2026-09-09T01:00:00+05:30",
+            "aqi": 133
+          },
+          {
+            "time": "2026-09-09T02:00:00+05:30",
+            "aqi": 139
+          },
+          {
+            "time": "2026-09-09T03:00:00+05:30",
+            "aqi": 144
+          },
+          {
+            "time": "2026-09-09T04:00:00+05:30",
+            "aqi": 148
+          },
+          {
+            "time": "2026-09-09T05:00:00+05:30",
+            "aqi": 151
+          },
+          {
+            "time": "2026-09-09T06:00:00+05:30",
+            "aqi": 147
+          }
+        ],
+        "advice": "Children and people with asthma should limit prolonged outdoor exertion.",
+        "scale": "CPCB"
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin to top"
+        },
+        {
+          "id": "dismiss",
+          "label": "Show less"
+        },
+        {
+          "id": "hide",
+          "label": "Hide"
+        }
+      ],
+      "personas": [
+        "parent"
+      ],
+      "source": "open-meteo",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:20:00+05:30"
+    }
+  ],
+  "more_cards": [
+    {
+      "type": "daily_forecast",
+      "instance_id": "daily_forecast",
+      "title": "7-day forecast",
+      "subtitle": "Wet start, drier from Friday",
+      "size": "large",
+      "renderer": "daily",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.48,
+      "reasons": [
+        {
+          "code": "base:always",
+          "text": "Standard forecast card"
+        }
+      ],
+      "insight": {
+        "headline": "Two more wet days, then a drier spell",
+        "detail": "Rain eases after Thursday; highs stay near 35°.",
+        "icon": "calendar"
+      },
+      "data": {
+        "days": [
+          {
+            "date": "2026-09-08",
+            "tmax_c": 35.1,
+            "tmin_c": 25.6,
+            "precip_prob_max_pct": 90,
+            "precip_sum_mm": 29.4,
+            "condition_code": 95,
+            "icon": "thunderstorm"
+          },
+          {
+            "date": "2026-09-09",
+            "tmax_c": 33.4,
+            "tmin_c": 25.1,
+            "precip_prob_max_pct": 70,
+            "precip_sum_mm": 12.8,
+            "condition_code": 80,
+            "icon": "rain"
+          },
+          {
+            "date": "2026-09-10",
+            "tmax_c": 32.8,
+            "tmin_c": 24.8,
+            "precip_prob_max_pct": 55,
+            "precip_sum_mm": 6.2,
+            "condition_code": 61,
+            "icon": "rain"
+          },
+          {
+            "date": "2026-09-11",
+            "tmax_c": 33.9,
+            "tmin_c": 25.3,
+            "precip_prob_max_pct": 35,
+            "precip_sum_mm": 1.4,
+            "condition_code": 3,
+            "icon": "cloud"
+          },
+          {
+            "date": "2026-09-12",
+            "tmax_c": 34.7,
+            "tmin_c": 25.9,
+            "precip_prob_max_pct": 25,
+            "precip_sum_mm": 0.4,
+            "condition_code": 2,
+            "icon": "partly_cloudy"
+          },
+          {
+            "date": "2026-09-13",
+            "tmax_c": 35.2,
+            "tmin_c": 26.4,
+            "precip_prob_max_pct": 20,
+            "precip_sum_mm": 0.0,
+            "condition_code": 1,
+            "icon": "partly_cloudy"
+          },
+          {
+            "date": "2026-09-14",
+            "tmax_c": 34.8,
+            "tmin_c": 26.1,
+            "precip_prob_max_pct": 30,
+            "precip_sum_mm": 0.8,
+            "condition_code": 3,
+            "icon": "cloud"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "dismiss",
+          "label": "Show less"
+        },
+        {
+          "id": "hide",
+          "label": "Hide"
+        }
+      ],
+      "personas": [
+        "parent",
+        "commuter"
+      ],
+      "source": "open-meteo",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:20:00+05:30"
+    },
+    {
+      "type": "uv_index",
+      "instance_id": "uv_index",
+      "title": "UV index",
+      "subtitle": "Low now · High at 12:00",
+      "size": "small",
+      "renderer": "metric",
+      "urgency": 0.2,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.34,
+      "reasons": [
+        {
+          "code": "base:always",
+          "text": "Part of the daily basics"
+        }
+      ],
+      "insight": {
+        "headline": "UV peaks at 7.9 around noon",
+        "detail": "Cloud cover keeps it low this morning. Sunscreen if you are out 11:00-14:00.",
+        "icon": "uv"
+      },
+      "data": {
+        "uv_now": 1.4,
+        "uv_max_today": 7.9,
+        "uv_max_time": "2026-09-08T12:00:00+05:30",
+        "category": "Low",
+        "safe_exposure_min": 60,
+        "hourly": [
+          {
+            "time": "2026-09-08T07:00:00+05:30",
+            "uv": 1.4
+          },
+          {
+            "time": "2026-09-08T08:00:00+05:30",
+            "uv": 2.8
+          },
+          {
+            "time": "2026-09-08T09:00:00+05:30",
+            "uv": 4.6
+          },
+          {
+            "time": "2026-09-08T10:00:00+05:30",
+            "uv": 6.3
+          },
+          {
+            "time": "2026-09-08T11:00:00+05:30",
+            "uv": 7.5
+          },
+          {
+            "time": "2026-09-08T12:00:00+05:30",
+            "uv": 7.9
+          },
+          {
+            "time": "2026-09-08T13:00:00+05:30",
+            "uv": 6.8
+          },
+          {
+            "time": "2026-09-08T14:00:00+05:30",
+            "uv": 4.4
+          },
+          {
+            "time": "2026-09-08T15:00:00+05:30",
+            "uv": 2.6
+          },
+          {
+            "time": "2026-09-08T16:00:00+05:30",
+            "uv": 1.2
+          },
+          {
+            "time": "2026-09-08T17:00:00+05:30",
+            "uv": 0.3
+          },
+          {
+            "time": "2026-09-08T18:00:00+05:30",
+            "uv": 0.0
+          }
+        ]
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "dismiss",
+          "label": "Show less"
+        },
+        {
+          "id": "hide",
+          "label": "Hide"
+        }
+      ],
+      "personas": [
+        "parent"
+      ],
+      "source": "open-meteo",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:20:00+05:30"
+    },
+    {
+      "type": "radar",
+      "instance_id": "radar",
+      "title": "Rain radar",
+      "subtitle": "Cells approaching from the west",
+      "size": "medium",
+      "renderer": "radar",
+      "urgency": 0.4,
+      "severity": "advisory",
+      "pinned": false,
+      "score": 0.41,
+      "reasons": [
+        {
+          "code": "persona:commuter",
+          "text": "Because you follow Commuter"
+        }
+      ],
+      "insight": {
+        "headline": "Rain within 2 hours: 65% chance",
+        "detail": "The nearest echo is about 40 km west of Delhi and moving east-north-east.",
+        "icon": "radar"
+      },
+      "data": {
+        "host": "https://tilecache.rainviewer.com",
+        "frames": [
+          {
+            "time": "2026-09-08T06:40:00+05:30",
+            "path": "/v2/radar/1789012800"
+          },
+          {
+            "time": "2026-09-08T06:50:00+05:30",
+            "path": "/v2/radar/1789013400"
+          },
+          {
+            "time": "2026-09-08T07:00:00+05:30",
+            "path": "/v2/radar/1789014000"
+          },
+          {
+            "time": "2026-09-08T07:10:00+05:30",
+            "path": "/v2/radar/1789014600"
+          },
+          {
+            "time": "2026-09-08T07:20:00+05:30",
+            "path": "/v2/radar/1789015200"
+          }
+        ],
+        "tile_template": "{host}{path}/256/{z}/{x}/{y}/2/1_1.png",
+        "center": {
+          "lat": 28.61,
+          "lon": 77.21
+        },
+        "zoom": 7,
+        "rain_within_2h_prob_pct": 65
+      },
+      "actions": [
+        {
+          "id": "open_map",
+          "label": "Open map"
+        },
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "dismiss",
+          "label": "Show less"
+        },
+        {
+          "id": "hide",
+          "label": "Hide"
+        }
+      ],
+      "personas": [
+        "commuter"
+      ],
+      "source": "mixed",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:20:00+05:30"
+    }
+  ],
+  "hidden_types": [],
+  "freshness": {
+    "weather": "2026-09-08T07:20:00+05:30",
+    "air": "2026-09-08T07:00:00+05:30",
+    "marine": null,
+    "warnings": "2026-09-08T06:15:00+05:30"
+  },
+  "sources": {
+    "weather": "open-meteo",
+    "air": "open-meteo",
+    "marine": null,
+    "warnings": "admin"
+  },
+  "engine": {
+    "version": "1.0",
+    "weights": {
+      "relevance": 0.5,
+      "urgency": 0.5
+    }
+  }
+}
