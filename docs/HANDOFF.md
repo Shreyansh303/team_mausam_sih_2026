@@ -51,9 +51,14 @@ See `docs/PROGRESS.md` → "Phase status" (the checkboxes are the truth) and `gi
 - **App on Windows:** run `scripts/setup_flutter_windows.ps1` (user-space install to `D:\sdk`),
   then `docs/SETUP_WINDOWS.md`. The `TEMP=D:\sdk\tmp` recipe in `CLAUDE.md` §8 only matters for
   Gradle started from an agent shell; a normal terminal is unaffected.
-- **App on macOS/Linux:** install Flutter stable, JDK 17 and the Android SDK the standard way
-  until `flutter doctor` is happy; ignore the Windows-specific paths in `CLAUDE.md` §8.
-- iOS builds and simulators need macOS; judges get the Android APK.
+- **App on macOS (the next owner's machine):** see §4 step 2 for the exact recipe. Path
+  differences from the Windows-first docs: the venv Python is `backend/.venv/bin/python` (not
+  `Scripts/python`); there is no `D:\sdk` — use `~/development/{flutter,android}`; `scripts/setup_flutter_windows.ps1`,
+  `scripts/flutter_env.*` and the `TEMP=D:\sdk\tmp` / `dangerouslyDisableSandbox` Gradle recipe in
+  `CLAUDE.md` §8 are Windows-only and do not apply; `taskkill` → `kill`. Everything else (docs,
+  tests, fixtures, commands in `CLAUDE.md` Quick commands with the path swap) is identical.
+- iOS builds and simulators need Xcode (optional, ~10 GB); judges get the Android APK, so H0 does
+  not require Xcode. If Xcode is installed, `flutter run -d iphone` works with the same code.
 
 ## 4. Phase H0 — fresh-machine bootstrap (run first on a new computer)
 Nothing but git is assumed. An Opus agent does all of it; the human only opens Claude Code in the
@@ -62,13 +67,20 @@ cloned folder. Deliverable: both verification gates green, then `[x] H0` in PROG
    `python -m venv backend/.venv` → pip install `backend/requirements.txt` + `requirements-dev.txt`
    → gate: `pytest -q` in `backend/` green (offline; no keys) → start uvicorn in background, curl
    `/api/v1/health`, stop it.
-2. App: Windows → run `scripts/setup_flutter_windows.ps1` then follow `docs/SETUP_WINDOWS.md`
-   (installs Flutter stable, JDK 17, Android SDK to `D:\sdk` without admin; adjust the drive letter
-   in the script if there is no D:). macOS/Linux → install Flutter stable, JDK 17, Android
-   command-line tools + platform-tools/build-tools, accept licenses. Gate: `flutter doctor` shows
-   Flutter + Android toolchain + a browser OK; `flutter pub get`, `flutter analyze`, `flutter test`,
-   `flutter build web` all pass in `app/`; `flutter build apk --debug` succeeds (on Windows from an
-   agent shell use the TEMP recipe in CLAUDE.md §8).
+2. App on **macOS** (Apple Silicon or Intel; user-space, no sudo needed except optionally for
+   Homebrew): (a) Flutter stable — download the macOS zip for the right CPU from
+   `https://docs.flutter.dev/install/archive` (or `brew install --cask flutter`), unzip to
+   `~/development/flutter`, add `~/development/flutter/bin` to PATH in `~/.zshrc`; (b) JDK 17 —
+   `brew install --cask temurin@17` or the Adoptium macOS tar.gz extracted to `~/development/jdk-17`,
+   set `JAVA_HOME`; (c) Android SDK — `brew install --cask android-commandlinetools` or the
+   command-line-tools zip into `~/development/android/cmdline-tools/latest`, set
+   `ANDROID_HOME=~/development/android`, then `sdkmanager "platform-tools" "platforms;android-35"
+   "build-tools;35.0.0"` and `yes | sdkmanager --licenses`, `flutter config --android-sdk $ANDROID_HOME`;
+   (d) Chrome for `flutter run -d chrome`. Windows alternative: `scripts/setup_flutter_windows.ps1`
+   + `docs/SETUP_WINDOWS.md`. Gate: `flutter doctor` shows Flutter + Android toolchain + Chrome OK
+   (Xcode may be missing); `flutter pub get`, `flutter analyze`, `flutter test`, `flutter build web`
+   all pass in `app/`; `flutter build apk --debug` succeeds (first Gradle run downloads ~1 GB; run in
+   background and poll). On macOS there is no TEMP recipe — Gradle just works.
 3. Install the auto-push hook from §2; confirm `git config user.name/email` are the new owner's.
 4. Record machine specifics (OS, paths, versions) in PROGRESS.md "Notes for next phase".
 
