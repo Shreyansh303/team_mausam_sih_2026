@@ -1,0 +1,53 @@
+# Render blueprint — free web service for the Mausam backend (01 §Deploy).
+#
+# Deploy: Render dashboard → New → Blueprint → point at this repo (it finds infra/render.yaml).
+# After the first deploy, set ADMIN_KEY and JWT_SECRET in the service's Environment tab (or let
+# Render generate them, as configured below) and open https://<service>.onrender.com/admin/console.
+#
+# Notes for the free plan:
+#  * the instance sleeps after ~15 min idle; the first request afterwards takes ~30 s
+#  * the disk is ephemeral — the SQLite file is recreated on every deploy/restart. That is fine
+#    for the demo (guest users, saved places, pushed warnings are all demo data). For anything
+#    persistent set DATABASE_URL to a Postgres URL instead.
+#  * WebSockets (`/ws/alerts`) work on the free plan; there is exactly one instance, which is
+#    what the in-process connection registry in app/api/ws.py assumes.
+
+services:
+  - type: web
+    name: mausam-backend
+    runtime: python
+    plan: free
+    region: singapore
+    rootDir: backend
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips '*'"
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13.5"
+      - key: DEMO_MODE
+        value: "1"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: ADMIN_KEY
+        generateValue: true      # read it from the dashboard, paste it into /admin/console
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:///./data/mausam.db
+      - key: DEFAULT_SCENARIO
+        value: live
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: IMD_ENABLED
+        value: "1"
+      - key: IMD_BASE_URL
+        value: https://mausam.imd.gov.in/api
+      - key: HTTP_TIMEOUT_S
+        value: "8"
+      # Optional upstreams — leave unset to keep the estimated values.
+      - key: DATA_GOV_IN_KEY
+        sync: false
+      - key: TOMTOM_KEY
+        sync: false

@@ -1,0 +1,39 @@
+# Team Mausam — backend for local/demo hosting.
+#
+#   cd infra
+#   docker compose up --build            # http://localhost:8000  ·  console /admin/console
+#
+# Settings come from backend/.env (copy backend/.env.example first). The file is optional:
+# every variable has a working default in app/config.py, so the stack boots with no .env at all.
+# SQLite lives on a bind mount so pushed warnings and guest users survive `docker compose down`.
+
+services:
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    image: mausam-backend:local
+    container_name: mausam-backend
+    env_file:
+      - path: ../backend/.env
+        required: false
+    environment:
+      # Explicit defaults so the container is usable even without backend/.env.
+      DEMO_MODE: "1"
+      LOG_LEVEL: "INFO"
+      ADMIN_KEY: "${ADMIN_KEY:-mausam-admin}"
+      DATABASE_URL: "sqlite:///./data/mausam.db"
+      CORS_ORIGINS: "*"
+      DEFAULT_SCENARIO: "live"
+    ports:
+      - "8000:8000"
+    volumes:
+      # `DATABASE_URL=sqlite:///./data/mausam.db` resolves against /srv (see backend/Dockerfile).
+      - ../backend/data:/srv/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status == 200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
