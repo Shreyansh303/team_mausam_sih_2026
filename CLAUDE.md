@@ -24,6 +24,7 @@ docs/                     THE PLAN. Specs are normative; code follows docs.
   06_MOBILE_SPEC.md       Flutter structure, screens, renderers, offline, i18n, animation
   07_PHASES.md            phase-by-phase work packages for implementation agents
   PROGRESS.md             living checklist — update it as you finish items
+  HANDOFF.md              how to continue this repo with a new owner / new Claude session
   fixtures/               example JSON payloads shared by backend and app
 backend/                  FastAPI service (Python 3.13, venv at backend/.venv)
 app/                      Flutter app (package `mausam_app`)
