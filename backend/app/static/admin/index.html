@@ -285,7 +285,11 @@
       .then(function (data) {
         var box = $("scenarios");
         box.innerHTML = "";
+        var seen = {};
         (data.scenarios || []).forEach(function (s) {
+          // /weather/scenarios prepends "live" and data/scenarios/ also holds live.json.
+          if (seen[s.name]) { return; }
+          seen[s.name] = true;
           var b = document.createElement("button");
           b.textContent = s.name;
           b.title = s.description || "";

@@ -10,6 +10,7 @@ from datetime import timedelta
 
 import pytest
 
+from app.core import cache
 from app.core import db as db_core
 from app.core.timeutil import iso, parse_any
 from app.models.admin_warning import AdminWarning, new_warning_id
@@ -177,6 +178,20 @@ def test_admin_warning_is_pinned_on_home_with_a_banner(client, guest):
     assert final["context"]["warning_count"] == 0
     assert final["banner"] is None
     assert "warnings" not in [c["type"] for c in final["pinned"]]
+
+
+def test_admin_write_drops_snapshots_but_keeps_provider_caches_warm(client, guest):
+    """The write must not be hidden by a cached snapshot — and must not cost a cold refetch."""
+    home(client, guest)
+    warm = cache.stats()
+    assert warm.get("snapshot", 0) > 0
+    assert warm.get("om_forecast", 0) > 0
+
+    push(client)
+    after = cache.stats()
+    assert after.get("snapshot", 0) == 0
+    for bucket in ("om_forecast", "om_air", "radar"):
+        assert after.get(bucket, 0) == warm.get(bucket, 0), bucket
 
 
 def test_admin_warning_is_filtered_by_location(client, guest):

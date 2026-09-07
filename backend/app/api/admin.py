@@ -2,8 +2,8 @@
 
 Every mutating route does the same three things in the same order:
     1. write (DB row or `demo_state`)
-    2. `cache.clear_all()` — a snapshot cached before the write would otherwise be served for
-       up to `CACHE_TTL_SNAPSHOT` seconds without the new warning
+    2. drop the assembled-snapshot cache — a snapshot cached before the write would otherwise be
+       served for up to `CACHE_TTL_SNAPSHOT` seconds without the new warning
     3. broadcast on the WebSocket (`api/ws.py`) — never from `app/engine/`, which stays pure
 """
 
@@ -45,6 +45,16 @@ router = APIRouter(prefix="/admin", tags=["admin"])
 CONSOLE_HTML = BASE_DIR / "static" / "admin" / "index.html"
 
 
+def _invalidate_snapshots() -> None:
+    """Drop every assembled snapshot so the next `/home` sees the write.
+
+    Only the `snapshot` bucket, not `cache.clear_all()`: an admin write cannot change what
+    Open-Meteo returned, and clearing the provider buckets too made the very next `/home` refetch
+    every upstream — 2.7 s measured, against the < 400 ms warm target in `docs/01`.
+    """
+    cache.invalidate("snapshot")
+
+
 def _state(db: Session) -> AdminState:
     return AdminState(
         scenario=demo_state.scenario,
@@ -79,7 +89,7 @@ async def set_scenario(body: ScenarioBody, db: Session = Depends(get_db)) -> Adm
     if name != "live" and not scenarios.exists(name):
         raise ValidationError(f"Unknown scenario '{name}'", code="unknown_scenario")
     demo_state.scenario = name
-    cache.clear_all()
+    _invalidate_snapshots()
     await ws.broadcast("scenario_changed", {"scenario": name})
     log.info("admin scenario -> %s", name)
     return _state(db)
@@ -97,7 +107,7 @@ async def set_now_override(body: NowOverrideBody, db: Session = Depends(get_db))
         except ValueError as exc:
             raise ValidationError(f"Bad now: {exc}") from exc
     demo_state.now_override = value
-    cache.clear_all()
+    _invalidate_snapshots()
     await ws.broadcast("now_override", {"now": value})
     log.info("admin now_override -> %s", value)
     return _state(db)
@@ -122,7 +132,7 @@ async def push_warning(body: WarningCreate, db: Session = Depends(get_db)) -> Wa
         ttl_minutes=body.ttl_minutes,
     )
     warning = row.to_warning()
-    cache.clear_all()
+    _invalidate_snapshots()
     delivered = await ws.broadcast_warning(warning)
     log.info(
         "admin warning %s %s/%s pushed to %d ws client(s)",
@@ -137,7 +147,7 @@ async def push_warning(body: WarningCreate, db: Session = Depends(get_db)) -> Wa
 async def clear_warning(warning_id: str, db: Session = Depends(get_db)) -> OkResponse:
     if not admin_svc.remove(db, warning_id):
         raise NotFoundError(f"Unknown warning '{warning_id}'")
-    cache.clear_all()
+    _invalidate_snapshots()
     await ws.broadcast("warning_cleared", {"id": warning_id})
     log.info("admin warning %s cleared", warning_id)
     return OkResponse(ok=True)
