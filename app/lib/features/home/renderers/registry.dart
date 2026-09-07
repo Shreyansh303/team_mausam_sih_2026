@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/models/card.dart';
+import 'alert.dart';
 import 'daily.dart';
 import 'gauge.dart';
 import 'generic.dart';
@@ -28,6 +29,7 @@ class RendererRegistry {
     'metric',
     'gauge',
     'timeline',
+    'alert',
   };
 
   /// Renderer kinds named in docs/02 that currently fall back to `generic`.
@@ -35,7 +37,6 @@ class RendererRegistry {
     'nowcast',
     'radar',
     'advice_list',
-    'alert',
     'sea',
     'tides',
     'places',
@@ -58,6 +59,8 @@ class RendererRegistry {
         return GaugeRenderer(card: card);
       case 'timeline':
         return TimelineRenderer(card: card);
+      case 'alert':
+        return AlertRenderer(card: card);
       default:
         return GenericRenderer(card: card);
     }

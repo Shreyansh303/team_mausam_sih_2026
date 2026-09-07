@@ -6,6 +6,7 @@ import '../../../data/models/card.dart';
 import '../../../l10n/gen/app_localizations.dart';
 import '../renderers/generic.dart';
 import '../renderers/registry.dart';
+import 'alert_detail.dart';
 import 'gauge_detail.dart';
 import 'timeline_detail.dart';
 
@@ -34,6 +35,8 @@ class CardDetailPage extends StatelessWidget {
         return GaugeDetail(card: card);
       case 'timeline':
         return TimelineDetail(card: card);
+      case 'alert':
+        return AlertDetail(card: card);
       default:
         return RendererRegistry.build(context, card);
     }

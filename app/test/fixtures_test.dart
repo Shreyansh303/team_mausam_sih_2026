@@ -8,6 +8,7 @@ import 'package:mausam_app/data/models/card.dart';
 import 'package:mausam_app/data/models/home_response.dart';
 import 'package:mausam_app/data/models/json.dart';
 import 'package:mausam_app/data/models/warning.dart';
+import 'package:mausam_app/features/home/renderers/alert.dart';
 import 'package:mausam_app/features/home/renderers/gauge.dart';
 import 'package:mausam_app/features/home/renderers/registry.dart';
 import 'package:mausam_app/features/home/renderers/timeline.dart';
@@ -296,6 +297,89 @@ void main() {
         find.textContaining('+${(first['delay_min'] as num).round()} min', findRichText: true),
         findsWidgets,
       );
+    });
+
+    testWidgets('alert — rain_alert shows the intensity, the peak and the window',
+        (tester) async {
+      await pumpType(tester, 'rain_alert');
+      final card = oneCardPerType['rain_alert']!;
+      expect(find.byType(AlertTile), findsOneWidget);
+      expect(find.text('${card.data['intensity'].toString()[0].toUpperCase()}'
+          '${card.data['intensity'].toString().substring(1)} rain'), findsOneWidget);
+      expect(find.textContaining('From '), findsOneWidget);
+      expect(find.text('${(card.data['peak_prob_pct'] as num).round()}%'), findsOneWidget);
+    });
+
+    testWidgets('alert — storm_fog_alert shows the hazard level and its advice bullets',
+        (tester) async {
+      await pumpType(tester, 'storm_fog_alert');
+      final card = oneCardPerType['storm_fog_alert']!;
+      final advice = (card.data['advice'] as List).cast<String>();
+      expect(find.byType(AlertTile), findsOneWidget);
+      expect(find.textContaining(card.data['level'] as String), findsOneWidget);
+      expect(find.text(advice.first), findsOneWidget);
+      // docs/02 card 30 — `warning: true` means a real warning of this hazard is in force.
+      expect(find.text('Warning in force'), findsOneWidget);
+    });
+
+    // heat_alert and frost_alert are the two `alert` types no fixture scenario triggers
+    // (docs/PROGRESS.md §"B1/B2 — the fixture contract"), so they are exercised against the
+    // docs/02 key list directly. Delete this once a fixture carries them.
+    testWidgets('alert — heat_alert and frost_alert render from the docs/02 keys',
+        (tester) async {
+      final heat = HomeCard.fromJson(<String, dynamic>{
+        'type': 'heat_alert',
+        'instance_id': 'heat_alert',
+        'title': 'Heat alert',
+        'renderer': 'alert',
+        'severity': 'warning',
+        'urgency': 0.8,
+        'insight': <String, dynamic>{'headline': 'Dangerous heat this afternoon'},
+        'data': <String, dynamic>{
+          'feels_like_c': 44.2,
+          'temp_c': 41.0,
+          'heat_index_c': 45.1,
+          'level': 'danger',
+          'peak_time': '2026-09-08T15:00:00+05:30',
+          'warning': true,
+          'advice': <String>['Stay indoors between 12:00 and 16:00.', 'Drink water every hour.'],
+        },
+      });
+      await tester.pumpWidget(
+          _host(Builder(builder: (context) => RendererRegistry.build(context, heat))));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(find.text('Danger'), findsOneWidget);
+      expect(find.textContaining('Peaks around'), findsOneWidget);
+      expect(find.text('44°C'), findsOneWidget);
+      expect(find.text('Drink water every hour.'), findsOneWidget);
+
+      final frost = HomeCard.fromJson(<String, dynamic>{
+        'type': 'frost_alert',
+        'instance_id': 'frost_alert',
+        'title': 'Frost alert',
+        'renderer': 'alert',
+        'severity': 'watch',
+        'urgency': 0.55,
+        'insight': <String, dynamic>{'headline': 'Frost likely tonight'},
+        'data': <String, dynamic>{
+          'risk': 'moderate',
+          'tmin_c': 1.5,
+          'expected_night': '2026-01-12',
+          'wind_kph': 6.0,
+          'cloud_pct': 20,
+          'warning': false,
+          'advice': <String>['Irrigate lightly in the evening.'],
+        },
+      });
+      await tester.pumpWidget(
+          _host(Builder(builder: (context) => RendererRegistry.build(context, frost))));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(find.text('Moderate frost risk'), findsOneWidget);
+      expect(find.text('2°C'), findsOneWidget);
+      expect(find.text('Irrigate lightly in the evening.'), findsOneWidget);
+      expect(find.text('Warning in force'), findsNothing);
     });
   });
 
