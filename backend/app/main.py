@@ -13,9 +13,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
-from app.api import health, locations, weather
+from app.api import auth, events, health, home, locations, me, places, weather
 from app.config import settings
 from app.core import cache
+from app.core.db import init_db
 from app.core.errors import install_error_handlers
 
 API_PREFIX = "/api/v1"
@@ -31,6 +32,7 @@ def _configure_logging() -> None:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     _configure_logging()
+    init_db()
     logging.getLogger("mausam").info(
         "Mausam backend %s starting (demo_mode=%s, scenario=%s)",
         __version__, settings.demo_mode, settings.default_scenario,
@@ -59,7 +61,17 @@ def create_app() -> FastAPI:
 
     install_error_handlers(app)
 
-    for router in (health.router, locations.router, weather.router):
+    routers = (
+        health.router,
+        locations.router,
+        weather.router,
+        auth.router,
+        me.router,
+        places.router,
+        home.router,
+        events.router,
+    )
+    for router in routers:
         app.include_router(router, prefix=API_PREFIX)
         app.include_router(router, include_in_schema=False)
 

@@ -28,7 +28,7 @@ class Settings(BaseSettings):
 
     # --- auth / admin (used from A2/A3) -----------------------------------
     admin_key: str = "mausam-admin"
-    jwt_secret: str = "change-me-in-production"
+    jwt_secret: str = "mausam-dev-secret-change-me-in-production"
     jwt_expire_days: int = 30
 
     # --- storage -----------------------------------------------------------
