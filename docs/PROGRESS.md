@@ -130,6 +130,12 @@ unticked items but files present:
 
 ## Notes for next phase
 
+### PAUSED 2026-09-07 11:03 IST (usage limit protocol)
+Agents stopped by the orchestrator on the user's request. B1 had just committed its foundation
+milestone (a1345b2); remaining B1 work: run `flutter analyze` / `flutter test` / `flutter build web`,
+screenshot to docs/screenshots/b1_home.png, tick the B1 checklist, write B2 notes. A3 had not written
+any files. On resume: re-spawn B1 (resume mode) and A3 (fresh) per the recovery protocol.
+
 ### B0/B1/B2/B3 — "Unable to establish loopback connection" from Gradle: SOLVED (B1, 2026-09-07 10:30)
 Supersedes the earlier orchestrator note that blamed the sandbox's loopback networking.
 `dangerouslyDisableSandbox: true` alone does **not** fix it — the build still fails.
