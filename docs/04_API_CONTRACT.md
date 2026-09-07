@@ -38,6 +38,12 @@ with the proper HTTP status (400 validation, 401 auth, 404, 429, 502 upstream, 5
 | WS | `/ws/alerts?token=&lat=&lon=` | ✓ | live alerts (below) |
 
 Admin auth: header `X-Admin-Key: <ADMIN_KEY>` (env; default `mausam-admin` in DEMO_MODE).
+A missing or wrong key is `401 {"error":{"code":"unauthorized",…}}`. `/admin/console` is the only
+`/admin/*` route without the header — the page asks for the key and keeps it in `localStorage`.
+`POST /admin/scenario` and `POST /admin/now-override` return the same object as `GET /admin/state`.
+A warning must be targeted by `lat`+`lon`, `district` or `state` (400 otherwise); `lat` and `lon`
+go together. `now` is ISO-8601; a value without an offset is read as IST. Sending `{"now": null}`
+clears the demo clock.
 
 ### `GET /home` query params
 `lat`, `lon` (required unless `place_id`), `place_id` (saved place or curated id), `lang`,
@@ -122,6 +128,14 @@ Client connects with `token`, `lat`, `lon`. Server → client messages:
 Client → server: `{"type":"pong"}`, `{"type":"location","lat":..,"lon":..}` (when user changes
 location). On `warning_issued` with `affects_you` or on `scenario_changed`/`now_override`, the
 app re-fetches `/home` and animates the diff.
+
+`token` is a guest or OTP JWT; when `DEMO_MODE=1` it may be omitted (the admin console and
+`wscat` connect without one). An **invalid** token is always rejected: the server closes with
+code 1008 before sending `hello`. `affects_you` is computed per connection from the `lat`/`lon`
+the client connected with (or its last `location` message) using the same rule as the warning
+filter in `/home`: district match, state match for `cyclone|heatwave|cold_wave`, or within
+`radius_km`. `hello.server_time` is the demo clock when one is set, else real server time in IST.
+The server does not reply to `location`; the next `warning_issued` simply uses the new position.
 
 ## Engagement events (`POST /events`)
 `type` = card type, `action` ∈ `impression|tap|expand|dismiss|pin|unpin|hide|unhide`, `ts` ISO,

@@ -22,7 +22,7 @@ unticked items but files present:
 ## Phase status
 - [x] A1 backend data layer
 - [x] A2 engine + home + auth + events + i18n
-- [ ] A3 live alerts + admin + deploy + CI
+- [x] A3 live alerts + admin + deploy + CI
 - [x] B0 flutter toolchain + scaffold
 - [x] B1 app foundation + onboarding + home skeleton
 - [ ] B2 full card system + map + places + WS + events
@@ -54,10 +54,25 @@ unticked items but files present:
 - [x] tests: 03 §tests ×9 + API flows + i18n parity — **283 passed** (210 A1 + 73 A2)
 
 ## A3 checklist
-- [ ] admin routes + console · WS manager + /ws/alerts · global scenario/now-override
-- [ ] infra/docker-compose.yml · infra/render.yaml · .github/workflows/backend.yml
-- [ ] backend README section (run, env, IMD whitelisting, deploy)
-- [ ] tests: admin→home pinned · ws warning_issued · expiry · lite
+- [x] `models/admin_warning.py` + `services/admin_warnings.py` (TTL expiry, no delete needed) ·
+  `/admin/{state,scenario,now-override,warnings,warnings/{id},reset-user,console}` behind
+  `X-Admin-Key` · admin warnings merged into `/home` via `get_snapshot(admin_warnings=…)` ·
+  global scenario + now-override honoured when the request does not override them
+- [x] `api/ws.py`: in-memory manager + `/ws/alerts?token=&lat=&lon=` with all six 04 message
+  types, 30 s ping, client `location` updates, dead connections dropped; broadcasts fired from
+  the admin router only
+- [x] `app/static/admin/index.html` at `/admin/console` — base+key in localStorage, scenario
+  buttons with active highlight, demo clock, push form (`/locations/popular` or lat/lon) with the
+  five 05 presets, active-warnings table with delete, client count auto-refreshing every 5 s,
+  reset-user, live WS feed
+- [x] infra/docker-compose.yml · infra/render.yaml · backend/Dockerfile reviewed (PORT, healthcheck)
+  · .github/workflows/backend.yml (Python 3.13, pip cache, offline pytest)
+- [x] backend README section (run, env table, console + demo flow, WS, IMD whitelisting, deploy,
+  pointing the app at the URL)
+- [x] perf: `/home` timing line at INFO (`home lat=… lon=… personas=… … 12ms`); `lite` verified
+- [x] tests: admin→home pinned + banner + warning_count · expiry · ws hello/`warning_issued`
+  affects_you near+far · scenario/now-override broadcasts · lite trimming · wrong admin key —
+  **300 passed** (283 + 17)
 
 ## B0 checklist
 - [x] scripts/setup_flutter_windows.ps1 + flutter_env.ps1/.sh
@@ -154,6 +169,30 @@ unticked items but files present:
   `animated_reorderable_list` / `great_list_view` for the re-rank animation "if it builds on the
   installed Flutter"; neither was added in B1 because the re-rank animation itself is B2 work, and
   a keyed list + `flutter_animate` entrance is the documented fallback. B2 decides.
+- **A3** After an admin write the router drops **only the `snapshot` cache bucket**
+  (`cache.invalidate("snapshot")`), not `cache.clear_all()` as the A2 note suggested. An admin
+  write cannot change what Open-Meteo returned, and clearing the provider buckets too made the
+  very next `/home` refetch every upstream — **2.7 s measured**, against the < 400 ms warm target
+  in 01. With the narrower invalidation the same request is **27 ms** and still sees the new
+  warning. (`clear_all()` remains on shutdown and in the test fixture.)
+- **A3** `AdminWarning` stores its three times as **ISO strings** plus one epoch float
+  (`expires_at_ts`), not `DateTime` columns: SQLite drops the offset from `DateTime(timezone=True)`,
+  so the "still live" filter would compare a naive to an aware datetime and raise. Portable to
+  Postgres unchanged.
+- **A3** Admin warnings are stamped with the **effective demo clock** (`demo_state.now_override`
+  when set, else real IST), not `datetime.now(UTC)`. Otherwise a warning pushed while the console's
+  demo clock sits at 2026-09-08T07:30 is already "expired" against the snapshot's reference time
+  and never reaches `/home`.
+- **A3** `/ws/alerts` accepts a **missing** `token` while `DEMO_MODE=1` (the console and `wscat`
+  connect without one); an *invalid* token is always closed with code 1008. `docs/04` §WebSocket
+  was updated in the same commit, together with the admin-auth clarifications (`/admin/console`
+  needs no header; scenario/now-override return the `/admin/state` object; a warning must be
+  targeted by lat+lon, district or state; a `now` without an offset is read as IST).
+- **A3** No new WS message types were added — the six in 04 are exactly what the server sends.
+  A `location` frame is answered with silence by design (the next `warning_issued` carries the
+  recomputed `affects_you`), so B2 must not wait for an ack.
+- **A3** `docs/fixtures/*.json` were regenerated and **reverted**: the only diff was the random
+  `usr_`/`plc_`/`wrn_` ids, so the committed files still match the current backend byte for byte.
 
 ## Notes for next phase
 
@@ -399,3 +438,72 @@ Ten renderers is most of B2's card work.
   load can show tofu for ~1 s while the system font resolves.
 - Cache keys are `home_<lat2dp>_<lon2dp>_<personas>_<lang>`, written by `JsonFileCache`
   (path_provider on device, `localStorage` under a `flutter.` prefix on web).
+
+### B2/B3 — what A3 hands you (live alerts, admin console, deploy)
+
+**Run the backend for the app** (nothing else needed — no key, no Docker):
+```powershell
+cd backend
+.venv\Scripts\python -m uvicorn app.main:app --reload --port 8000
+```
+`GET /health` should answer `{"status":"ok",…}`. Every router is mounted twice, at `/api/v1` and
+at the root, so both `/api/v1/home` and `/home` work. Backend URL for the app:
+`http://localhost:8000` (Flutter web/desktop) · `http://10.0.2.2:8000` (Android emulator) ·
+`http://<LAN-IP>:8000` (real phone) · `https://<service>.onrender.com` (Render). `CORS_ORIGINS=*`
+is the default, so Flutter web needs no proxy.
+
+**WebSocket — exact URL and message samples.** Derive it from the backend base
+(`http`→`ws`, `https`→`wss`) and append `/ws/alerts`:
+```
+ws://localhost:8000/ws/alerts?token=<jwt>&lat=28.61&lon=77.21
+```
+`token` is the guest/OTP JWT (the same one `/home` uses). While `DEMO_MODE=1` it may be omitted;
+an **invalid** token is closed with code 1008 before `hello`, so treat 1008 as "re-authenticate,
+do not retry with the same token". Real frames captured from the running server:
+```json
+{"type":"hello","server_time":"2026-09-07T15:51:47+05:30","scenario":"live"}
+{"type":"ping"}
+{"type":"warning_issued","warning":{"id":"wrn_7a4734a416","severity":"orange","hazard":"thunderstorm","title":"Thunderstorm warning — Delhi","description":"Thunderstorm with lightning and gusty winds (50–60 km/h) likely over Delhi in the next 3 hours.","issued_at":"2026-09-07T15:55:48+05:30","valid_from":"2026-09-07T15:55:48+05:30","valid_to":"2026-09-07T17:55:48+05:30","district":"New Delhi","state":"Delhi","lat":28.61,"lon":77.21,"radius_km":75,"source":"admin","color_hex":"#F28C28"},"affects_you":true}
+{"type":"warning_cleared","id":"wrn_7a4734a416"}
+{"type":"scenario_changed","scenario":"heatwave"}
+{"type":"now_override","now":"2026-09-08T07:30:00+05:30"}
+{"type":"now_override","now":null}
+```
+Client → server, the only two frames the server reads:
+`{"type":"pong"}` (answer every `ping`, one every 30 s — the server drops a socket whose send
+fails) and `{"type":"location","lat":19.08,"lon":72.88}` when the user changes location. There is
+**no ack** for `location`; the next `warning_issued` simply carries the recomputed `affects_you`.
+The same warning goes to every client — only `affects_you` differs (verified: Delhi client `true`,
+Mumbai client `false` for the sample above). Re-fetch `/home` on `warning_issued && affects_you`,
+`scenario_changed` and `now_override`; ignore unknown `type`s so a later server can add one.
+
+**Admin console**: `http://localhost:8000/admin/console` (no key in the URL; the page asks for
+`ADMIN_KEY`, default `mausam-admin`, and keeps it plus the backend base in `localStorage`).
+Panels: scenario buttons · demo clock · push-warning form with the five 05 presets ·
+active-warnings table with delete · connected-client count (5 s refresh) + a live WS feed ·
+reset-user. Everything it does is a plain REST call, e.g.
+`POST /api/v1/admin/warnings` with `X-Admin-Key` and
+`{"severity","hazard","title","description","district","state","lat","lon","radius_km","ttl_minutes"}`.
+
+**The demo to wire up in B2/B3**: console → preset *Orange thunderstorm — Delhi* → **Push
+warning** → the app receives `warning_issued` with `affects_you: true`, re-fetches `/home` and
+animates: the `warnings` card appears in `pinned` with `urgency 0.8`, `banner` is set to the
+orange warning and `context.warning_count` becomes 1. Delete the row (or wait out
+`ttl_minutes`, default 120) and everything reverts. Measured on this machine: `/home` warm is
+**10 ms**, and **27 ms** on the first request after a push.
+
+**Contract clarifications made in A3** (docs/04 edited in the same commit, details under
+Deviations): `/admin/console` takes no header; `POST /admin/scenario` and `/admin/now-override`
+return the `GET /admin/state` object; a pushed warning must be targeted by `lat`+`lon`, `district`
+or `state`; a `now` without an offset is read as IST; `{"now": null}` clears the demo clock.
+Nothing in `HomeResponse`, `Card` or `Warning` changed — `docs/fixtures/*.json` are still valid
+byte for byte.
+
+**Deploy** (B3's README section can point at this): `infra/render.yaml` is a Render blueprint
+(free plan, `rootDir: backend`, `uvicorn … --port $PORT`, health check `/health`, `ADMIN_KEY` and
+`JWT_SECRET` generated). Free-plan gotchas for a live demo: the instance sleeps after ~15 min
+(hit `/health` a minute before presenting), the disk is ephemeral (guest users and pushed warnings
+reset on deploy), and there is exactly one instance — which is what the in-process WS registry
+needs. `infra/docker-compose.yml` is the local Docker path (written, **not run** — no Docker on
+this machine). `.github/workflows/backend.yml` runs the offline pytest suite on every push/PR
+touching `backend/`.
