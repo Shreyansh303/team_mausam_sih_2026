@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../data/models/card.dart';
 import 'advice_list.dart';
 import 'alert.dart';
+import 'bar_chart.dart';
 import 'daily.dart';
 import 'gauge.dart';
 import 'generic.dart';
@@ -34,6 +35,7 @@ class RendererRegistry {
     'alert',
     'advice_list',
     'nowcast',
+    'bar_chart',
   };
 
   /// Renderer kinds named in docs/02 that currently fall back to `generic`.
@@ -42,7 +44,6 @@ class RendererRegistry {
     'sea',
     'tides',
     'places',
-    'bar_chart',
   };
 
   static Widget _dispatch(HomeCard card) {
@@ -67,6 +68,8 @@ class RendererRegistry {
         return AdviceListRenderer(card: card);
       case 'nowcast':
         return NowcastRenderer(card: card);
+      case 'bar_chart':
+        return BarChartRenderer(card: card);
       default:
         return GenericRenderer(card: card);
     }

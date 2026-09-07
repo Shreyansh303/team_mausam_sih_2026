@@ -8,6 +8,7 @@ import '../renderers/generic.dart';
 import '../renderers/registry.dart';
 import 'advice_list_detail.dart';
 import 'alert_detail.dart';
+import 'bar_chart_detail.dart';
 import 'gauge_detail.dart';
 import 'timeline_detail.dart';
 
@@ -40,6 +41,8 @@ class CardDetailPage extends StatelessWidget {
         return AlertDetail(card: card);
       case 'advice_list':
         return AdviceListDetail(card: card);
+      case 'bar_chart':
+        return BarChartDetail(card: card);
       default:
         return RendererRegistry.build(context, card);
     }

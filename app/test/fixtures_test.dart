@@ -10,6 +10,7 @@ import 'package:mausam_app/data/models/json.dart';
 import 'package:mausam_app/data/models/warning.dart';
 import 'package:mausam_app/features/home/renderers/advice_list.dart';
 import 'package:mausam_app/features/home/renderers/alert.dart';
+import 'package:mausam_app/features/home/renderers/charts.dart';
 import 'package:mausam_app/features/home/renderers/gauge.dart';
 import 'package:mausam_app/features/home/renderers/parts.dart';
 import 'package:mausam_app/features/home/renderers/registry.dart';
@@ -424,6 +425,32 @@ void main() {
       // docs/02 card 3 — severity `none` reads as "All clear", not as an empty chip.
       final severity = card.data['severity'] as String;
       expect(find.text(severity == 'none' ? 'All clear' : severity), findsWidgets);
+    });
+
+    testWidgets('bar_chart — rain_probability draws a bar per day and marks the focus day',
+        (tester) async {
+      await pumpType(tester, 'rain_probability');
+      final card = oneCardPerType['rain_probability']!;
+      final days = (card.data['by_day'] as List).cast<Map<String, dynamic>>();
+      final chart = tester.widget<SeriesBarChart>(find.byType(SeriesBarChart));
+      expect(chart.points.length, days.length);
+      expect(chart.maxY, 100, reason: 'probability bars are drawn on a fixed 0–100 axis');
+      final focus = days.indexWhere((d) => d['date'] == card.data['focus_date']);
+      expect(chart.highlightIndex, focus >= 0 ? focus : null);
+      expect(find.textContaining(card.data['focus_label'] as String), findsOneWidget);
+      expect(find.textContaining('Chance of rain'), findsOneWidget);
+    });
+
+    testWidgets('bar_chart — rainfall_outlook shows mm bars and the 24 h/72 h totals',
+        (tester) async {
+      await pumpType(tester, 'rainfall_outlook');
+      final card = oneCardPerType['rainfall_outlook']!;
+      final days = (card.data['daily'] as List).cast<Map<String, dynamic>>();
+      final chart = tester.widget<SeriesBarChart>(find.byType(SeriesBarChart));
+      expect(chart.points.length, days.length);
+      expect(find.text('Next 24 h'), findsOneWidget);
+      expect(find.text('Next 72 h'), findsOneWidget);
+      expect(find.textContaining('mm per day'), findsOneWidget);
     });
   });
 
