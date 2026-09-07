@@ -70,6 +70,11 @@ scripts/                  setup + run scripts (Windows-first)
 10. **Final report format (keep it short):** Done / Verified (commands + output tail) /
     Not done + why / Exact next step. No essays.
 
+11. **Long-running servers** (uvicorn, `python -m http.server`, `flutter run`): start them with the
+    Bash tool's `run_in_background: true`, then poll with curl. A foreground call to a server never
+    exits, hits the tool timeout and is shown as "Failed" even though the server is running. Stop
+    servers with `taskkill /F /PID <pid>` (or `TaskStop`) before restarting on the same port.
+
 ## Quick commands (after setup)
 ```
 # backend
