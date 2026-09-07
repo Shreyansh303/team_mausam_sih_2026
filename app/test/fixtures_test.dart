@@ -8,6 +8,7 @@ import 'package:mausam_app/data/models/card.dart';
 import 'package:mausam_app/data/models/home_response.dart';
 import 'package:mausam_app/data/models/json.dart';
 import 'package:mausam_app/data/models/warning.dart';
+import 'package:mausam_app/features/home/renderers/gauge.dart';
 import 'package:mausam_app/features/home/renderers/registry.dart';
 import 'package:mausam_app/l10n/gen/app_localizations.dart';
 
@@ -217,6 +218,48 @@ void main() {
         }
       });
     }
+  });
+
+  /// docs/07 §B2a — the acceptance gate for a renderer is not "it did not throw" but
+  /// "its distinctive widget is on screen". One assertion per implemented renderer, driven by
+  /// the real payload the backend produced.
+  group('each B2a renderer draws its distinctive widget', () {
+    Future<void> pumpType(WidgetTester tester, String type) async {
+      final card = oneCardPerType[type];
+      expect(card, isNotNull, reason: 'no $type card in the corpus');
+      await tester.pumpWidget(
+          _host(Builder(builder: (context) => RendererRegistry.build(context, card!))));
+      await tester.pump();
+      expect(tester.takeException(), isNull, reason: type);
+    }
+
+    testWidgets('gauge — aqi draws the CPCB arc, the value and the category', (tester) async {
+      await pumpType(tester, 'aqi');
+      final card = oneCardPerType['aqi']!;
+      expect(
+        find.byWidgetPredicate((w) => w is CustomPaint && w.painter is GaugeArcPainter),
+        findsOneWidget,
+      );
+      expect(find.text('${(card.data['aqi'] as num).round()}'), findsOneWidget);
+      expect(find.text(card.data['category'] as String), findsOneWidget);
+      expect(find.textContaining('CPCB'), findsOneWidget);
+    });
+
+    testWidgets('gauge — soil_moisture shows a volumetric % and its status', (tester) async {
+      await pumpType(tester, 'soil_moisture');
+      final card = oneCardPerType['soil_moisture']!;
+      final pct = ((card.data['surface_m3m3'] as num) * 100).round();
+      expect(find.text('$pct'), findsOneWidget);
+      expect(find.text('%'), findsOneWidget);
+      expect(find.textContaining('Root zone'), findsOneWidget);
+    });
+
+    testWidgets('gauge — comfort_index shows the 0–100 index', (tester) async {
+      await pumpType(tester, 'comfort_index');
+      final card = oneCardPerType['comfort_index']!;
+      expect(find.text('${(card.data['index'] as num).round()}'), findsOneWidget);
+      expect(find.text(card.data['category'] as String), findsOneWidget);
+    });
   });
 
   testWidgets('one card of every type in the corpus also renders in Hindi', (tester) async {

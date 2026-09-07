@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../data/models/card.dart';
 import 'daily.dart';
+import 'gauge.dart';
 import 'generic.dart';
 import 'hero.dart';
 import 'hourly.dart';
@@ -10,11 +11,10 @@ import 'warnings.dart';
 
 /// docs/06_MOBILE_SPEC.md §Layout `home/renderers/registry.dart`.
 ///
-/// B1 implements the six renderers listed in docs/07 §B1 — hero, warnings, hourly, daily,
-/// metric — plus the generic fallback. The remaining kinds (nowcast, radar, gauge, advice_list,
-/// timeline, alert, sea, tides, places, bar_chart) resolve to `generic` for now, which is why
-/// docs/06 insists the generic renderer never crashes: it is what every not-yet-written card
-/// falls back to. B2 fills the table in.
+/// B1 implemented hero, warnings, hourly, daily and metric plus the generic fallback; B2a is
+/// filling in the ten kinds that were left pending, one commit at a time. Anything still in
+/// [pending] resolves to `generic`, which is why docs/06 insists the generic renderer never
+/// crashes: it is what every not-yet-written card falls back to.
 class RendererRegistry {
   RendererRegistry._();
 
@@ -25,13 +25,13 @@ class RendererRegistry {
     'hourly',
     'daily',
     'metric',
+    'gauge',
   };
 
   /// Renderer kinds named in docs/02 that currently fall back to `generic`.
   static const Set<String> pending = <String>{
     'nowcast',
     'radar',
-    'gauge',
     'advice_list',
     'timeline',
     'alert',
@@ -53,6 +53,8 @@ class RendererRegistry {
         return DailyRenderer(card: card, maxRows: card.type == 'extended_forecast' ? 10 : 7);
       case 'metric':
         return MetricRenderer(card: card);
+      case 'gauge':
+        return GaugeRenderer(card: card);
       default:
         return GenericRenderer(card: card);
     }

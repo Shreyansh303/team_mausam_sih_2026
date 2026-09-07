@@ -6,9 +6,9 @@ import '../../../core/theme.dart';
 import '../../../data/models/card.dart';
 import '../../../data/repositories/events_repo.dart';
 import '../../../l10n/gen/app_localizations.dart';
+import '../detail/card_detail_page.dart';
 import '../providers.dart';
 import '../renderers/registry.dart';
-import 'card_detail_sheet.dart';
 import 'reason_chips.dart';
 import 'why_sheet.dart';
 
@@ -41,7 +41,7 @@ class CardShell extends ConsumerWidget {
 
     void openDetail() {
       send('tap');
-      CardDetailSheet.show(context, card);
+      CardDetailPage.show(context, card);
     }
 
     void openWhy() => WhySheet.show(context, card);
