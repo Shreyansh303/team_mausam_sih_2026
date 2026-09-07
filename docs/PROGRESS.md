@@ -100,7 +100,7 @@ unticked items but files present:
 
 ## B2 checklist
 ### B2a (renderers)
-- [x] nowcast · [ ] radar · [x] gauge · [x] advice_list · [x] timeline · [x] alert · [ ] sea · [ ] tides · [ ] places · [x] bar_chart
+- [x] nowcast · [ ] radar · [x] gauge · [x] advice_list · [x] timeline · [x] alert · [x] sea · [ ] tides · [ ] places · [x] bar_chart
 - [~] detail page per renderer (`lib/features/home/detail/card_detail_page.dart` + one
   `<renderer>_detail.dart` per kind; the card shell now pushes a full-screen page instead of the
   B1 bottom sheet) · fixtures_test green · [ ] screenshots

@@ -13,6 +13,7 @@ import 'package:mausam_app/features/home/renderers/alert.dart';
 import 'package:mausam_app/features/home/renderers/charts.dart';
 import 'package:mausam_app/features/home/renderers/gauge.dart';
 import 'package:mausam_app/features/home/renderers/parts.dart';
+import 'package:mausam_app/features/home/renderers/sea.dart';
 import 'package:mausam_app/features/home/renderers/registry.dart';
 import 'package:mausam_app/features/home/renderers/timeline.dart';
 import 'package:mausam_app/l10n/gen/app_localizations.dart';
@@ -451,6 +452,24 @@ void main() {
       expect(find.text('Next 24 h'), findsOneWidget);
       expect(find.text('Next 72 h'), findsOneWidget);
       expect(find.textContaining('mm per day'), findsOneWidget);
+    });
+
+    testWidgets('sea — sea_conditions shows the state badge, the swim pill and the wave curve',
+        (tester) async {
+      await pumpType(tester, 'sea_conditions');
+      final card = oneCardPerType['sea_conditions']!;
+      expect(find.text(card.data['sea_state'] as String), findsOneWidget);
+      expect(
+        find.text(card.data['safe_for_swimming'] == true
+            ? 'Safe for swimming'
+            : 'Not safe for swimming'),
+        findsOneWidget,
+      );
+      expect(find.byType(SurfStars), findsOneWidget);
+      // docs/06 §Renderers — "24-h wave sparkline".
+      final waves = (card.data['hourly'] as List).length;
+      expect(find.byType(SeriesLineChart), findsOneWidget);
+      expect(find.textContaining('Wave height, next $waves h'), findsOneWidget);
     });
   });
 
