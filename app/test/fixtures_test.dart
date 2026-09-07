@@ -8,8 +8,10 @@ import 'package:mausam_app/data/models/card.dart';
 import 'package:mausam_app/data/models/home_response.dart';
 import 'package:mausam_app/data/models/json.dart';
 import 'package:mausam_app/data/models/warning.dart';
+import 'package:mausam_app/features/home/renderers/advice_list.dart';
 import 'package:mausam_app/features/home/renderers/alert.dart';
 import 'package:mausam_app/features/home/renderers/gauge.dart';
+import 'package:mausam_app/features/home/renderers/parts.dart';
 import 'package:mausam_app/features/home/renderers/registry.dart';
 import 'package:mausam_app/features/home/renderers/timeline.dart';
 import 'package:mausam_app/l10n/gen/app_localizations.dart';
@@ -380,6 +382,37 @@ void main() {
       expect(find.text('2°C'), findsOneWidget);
       expect(find.text('Irrigate lightly in the evening.'), findsOneWidget);
       expect(find.text('Warning in force'), findsNothing);
+    });
+
+    testWidgets('advice_list — health_advisory draws icon + title + detail rows',
+        (tester) async {
+      await pumpType(tester, 'health_advisory');
+      final card = oneCardPerType['health_advisory']!;
+      final items = (card.data['items'] as List).cast<Map<String, dynamic>>();
+      expect(find.byType(AdviceRow), findsNWidgets(items.length.clamp(0, 3)));
+      expect(find.text(items.first['title'] as String), findsOneWidget);
+      expect(find.text(items.first['detail'] as String), findsOneWidget);
+    });
+
+    testWidgets('advice_list — packing_suggestions groups its rows per saved place',
+        (tester) async {
+      await pumpType(tester, 'packing_suggestions');
+      final card = oneCardPerType['packing_suggestions']!;
+      final places = (card.data['places'] as List).cast<Map<String, dynamic>>();
+      for (final place in places) {
+        expect(find.text(place['place_name'] as String), findsOneWidget,
+            reason: 'a heading per place — docs/06 §Renderers');
+      }
+    });
+
+    testWidgets('advice_list — planting_guidance shows the crop and its stage',
+        (tester) async {
+      await pumpType(tester, 'planting_guidance');
+      final card = oneCardPerType['planting_guidance']!;
+      final crops = (card.data['crops'] as List).cast<Map<String, dynamic>>();
+      expect(find.text(crops.first['name'] as String), findsOneWidget);
+      expect(find.textContaining('season'), findsOneWidget);
+      expect(find.byType(Pill), findsWidgets);
     });
   });
 

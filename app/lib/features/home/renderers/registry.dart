@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/models/card.dart';
+import 'advice_list.dart';
 import 'alert.dart';
 import 'daily.dart';
 import 'gauge.dart';
@@ -30,13 +31,13 @@ class RendererRegistry {
     'gauge',
     'timeline',
     'alert',
+    'advice_list',
   };
 
   /// Renderer kinds named in docs/02 that currently fall back to `generic`.
   static const Set<String> pending = <String>{
     'nowcast',
     'radar',
-    'advice_list',
     'sea',
     'tides',
     'places',
@@ -61,6 +62,8 @@ class RendererRegistry {
         return TimelineRenderer(card: card);
       case 'alert':
         return AlertRenderer(card: card);
+      case 'advice_list':
+        return AdviceListRenderer(card: card);
       default:
         return GenericRenderer(card: card);
     }
