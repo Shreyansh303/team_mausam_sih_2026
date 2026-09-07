@@ -414,6 +414,17 @@ void main() {
       expect(find.textContaining('season'), findsOneWidget);
       expect(find.byType(Pill), findsWidgets);
     });
+
+    testWidgets('nowcast — shows the 3-h text, the severity chip and the validity',
+        (tester) async {
+      await pumpType(tester, 'nowcast');
+      final card = oneCardPerType['nowcast']!;
+      expect(find.text(card.data['text'] as String), findsOneWidget);
+      expect(find.textContaining('Valid till'), findsOneWidget);
+      // docs/02 card 3 — severity `none` reads as "All clear", not as an empty chip.
+      final severity = card.data['severity'] as String;
+      expect(find.text(severity == 'none' ? 'All clear' : severity), findsWidgets);
+    });
   });
 
   testWidgets('one card of every type in the corpus also renders in Hindi', (tester) async {
