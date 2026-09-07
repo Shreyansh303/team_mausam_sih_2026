@@ -85,9 +85,10 @@ void main() {
 
   /// The home is a lazy `CustomScrollView`: on the default 800x600 test surface only the first
   /// couple of cards are ever built. Give the test a tall viewport so the whole ranked list is
-  /// in the tree and the finders below mean what they say.
+  /// in the tree and the finders below mean what they say. The bundled fixture is the severe
+  /// scenario — 4 pinned + hero + 8 ranked cards — so this has to be very tall.
   void useTallViewport(WidgetTester tester) {
-    tester.view.physicalSize = const Size(1000, 4000);
+    tester.view.physicalSize = const Size(1000, 12000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
   }
@@ -124,7 +125,7 @@ void main() {
     expect(find.text('New Delhi'), findsWidgets);
 
     // docs/06 §Home behaviour — the banner appears whenever `banner != null`.
-    expect(find.text('Thunderstorm with gusty winds'), findsWidgets);
+    expect(find.text('Orange warning: thunderstorm with lightning'), findsWidgets);
 
     // Hero + a persona-driven card are on screen.
     expect(find.text('School run'), findsOneWidget);
@@ -160,10 +161,11 @@ void main() {
     await tester.pumpWidget(_app(container));
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
-    expect(find.text('7-day forecast'), findsNothing);
+    // `14-day outlook` is in `more_cards`, so it is not in the tree until the tail expands.
+    expect(find.text('14-day outlook'), findsNothing);
     await tester.tap(find.text('Show more'));
     await tester.pumpAndSettle();
-    expect(find.text('7-day forecast'), findsOneWidget);
+    expect(find.text('14-day outlook'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -179,7 +181,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Why am I seeing this?'), findsOneWidget);
-    expect(find.text('Because you follow Parent'), findsWidgets);
+    // The reason text is localized by the backend (docs/03 §Explainability); the app renders
+    // whatever string it is handed.
+    expect(find.text('Because you follow Parenting'), findsWidgets);
     expect(find.text('Hide this card'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

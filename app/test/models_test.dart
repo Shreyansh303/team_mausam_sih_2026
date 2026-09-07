@@ -12,6 +12,11 @@ import 'package:mausam_app/data/models/warning.dart';
 import 'fixture.dart';
 
 /// Every field name and enum checked here comes from docs/04_API_CONTRACT.md.
+///
+/// The bundled fixture is a copy of `docs/fixtures/home_severe.json` — real engine output
+/// (parent, New Delhi, `scenario=thunderstorm`). `fixtures_test.dart` runs the same shape
+/// checks across all ten reference payloads; this file pins the exact values the app's own
+/// widget tests and the offline demo depend on.
 void main() {
   late Map<String, dynamic> raw;
   late HomeResponse home;
@@ -45,25 +50,30 @@ void main() {
       expect(home.location.name, 'New Delhi');
       expect(home.location.lat, closeTo(28.61, 0.001));
       expect(home.location.isCoastal, isFalse);
-      expect(home.context.activePersonas, <String>['parent', 'commuter']);
+      expect(home.context.activePersonas, <String>['parent']);
+      expect(home.context.scenario, 'thunderstorm');
       expect(home.context.warningCount, 1);
       expect(home.context.daypart, 'dawn');
       expect(home.context.season, 'monsoon');
       expect(home.engine['version'], '1.0');
     });
 
-    test('has a hero, ~8 cards and 3 more_cards (docs/07 §B1)', () {
+    test('has a hero, 8 ranked cards and a "More for you" tail (docs/03 §Ranking)', () {
       expect(home.hero, isNotNull);
       expect(home.hero!.type, 'current_conditions');
       expect(home.hero!.renderer, 'hero');
-      expect(home.cards.length, 8);
-      expect(home.moreCards.length, 3);
+      expect(home.cards.length, 8); // docs/03 §Ranking — the first 8 are `cards`
+      expect(home.moreCards, isNotEmpty);
+      expect(home.moreCards.length, 12);
     });
 
-    test('pins one orange thunderstorm warning and raises the banner', () {
-      expect(home.pinned, hasLength(1));
-      final card = home.pinned.single;
-      expect(card.type, 'warnings');
+    test('pins the urgent cards and raises the orange banner', () {
+      // docs/03 §Ranking — pinned is sorted by urgency desc; a warning ≥ orange always lands here.
+      expect(home.pinned, hasLength(4));
+      expect(home.pinned.map((c) => c.type).toList(),
+          <String>['commute_conditions', 'school_commute', 'rain_alert', 'warnings']);
+      expect(home.pinned.every((c) => c.pinned), isTrue);
+      final card = home.pinned.firstWhere((c) => c.type == 'warnings');
       expect(card.pinned, isTrue);
 
       final warnings = asList(card.data['warnings'], WeatherWarning.fromJson);
@@ -73,7 +83,7 @@ void main() {
       expect(w.hazard, 'thunderstorm');
       expect(w.isOrangeOrAbove, isTrue);
       expect(w.colorHex, '#F28C28'); // docs/02 §Shared objects
-      expect(w.source, 'admin');
+      expect(w.source, 'scenario'); // the fixture was generated with ?scenario=thunderstorm
 
       // docs/04: banner is the highest active warning at orange or above.
       expect(home.banner, isNotNull);
@@ -114,7 +124,8 @@ void main() {
         expect(sizes, contains(card.size), reason: '${card.type}.size');
         expect(severities, contains(card.severity), reason: '${card.type}.severity');
         expect(card.urgency, inInclusiveRange(0, 1), reason: '${card.type}.urgency');
-        expect(card.score, inInclusiveRange(0, 1), reason: '${card.type}.score');
+        // Not a probability — docs/03's `0.5*rel*ctx + 0.5*urg + eng` plus boosts can exceed 1.
+        expect(card.score, greaterThanOrEqualTo(0), reason: '${card.type}.score');
         expect(card.insight, isNotNull, reason: '${card.type}.insight');
         expect(card.insight!.headline, isNotEmpty);
         expect(card.updatedAt, isNotNull);
@@ -148,15 +159,24 @@ void main() {
           expect(card.isEstimated, isTrue, reason: '${card.type} must show the Estimated chip');
         }
       }
-      final nowcast = home.cards.firstWhere((c) => c.type == 'nowcast');
-      expect(nowcast.isEstimated, isTrue);
+      // docs/PROGRESS.md §A1 — pollen is always modelled for Indian coordinates, and the
+      // commute/traffic block has no free data source either.
+      for (final type in <String>['pollen', 'commute_conditions']) {
+        final card = home.allCards.firstWhere((c) => c.type == type);
+        expect(card.source, 'estimated', reason: type);
+        expect(card.isEstimated, isTrue, reason: '$type must show the Estimated chip');
+      }
     });
 
     test('hourly and daily payloads have the documented lengths', () {
       final hourly = home.cards.firstWhere((c) => c.type == 'hourly_forecast');
-      expect((hourly.data['hours'] as List).length, 24); // docs/02 card 4
-      final daily = home.moreCards.firstWhere((c) => c.type == 'daily_forecast');
+      // docs/02 card 4 asks for 24 h; the engine emits what is left of the 48 h window from
+      // `now` (17 at 07:30), and trims to 12 under `?lite=1`. The renderer must not assume 24.
+      expect((hourly.data['hours'] as List).length, inInclusiveRange(12, 24));
+      final daily = home.cards.firstWhere((c) => c.type == 'daily_forecast');
       expect((daily.data['days'] as List).length, 7); // docs/02 card 5
+      final extended = home.moreCards.firstWhere((c) => c.type == 'extended_forecast');
+      expect((extended.data['days'] as List).length, 14); // docs/02 card 6
     });
 
     test('round-trips through toJson without losing card identity', () {

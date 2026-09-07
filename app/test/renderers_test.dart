@@ -61,21 +61,21 @@ void main() {
     await tester.pumpWidget(
         _host(Builder(builder: (context) => RendererRegistry.build(context, hero))));
     await tester.pump();
-    expect(find.text('28°'), findsOneWidget); // temp_c 28.4
+    expect(find.text('27°'), findsWidgets); // temp_c 27.0
     expect(find.text('Humidity'), findsOneWidget);
     expect(find.text('AQI'), findsOneWidget);
   });
 
   testWidgets('the warnings renderer shows the orange severity tile', (tester) async {
-    final card = home.pinned.single;
+    final card = home.pinned.firstWhere((c) => c.type == 'warnings');
     await tester.pumpWidget(
         _host(Builder(builder: (context) => RendererRegistry.build(context, card))));
     await tester.pump();
-    expect(find.text('Thunderstorm with gusty winds'), findsOneWidget);
+    expect(find.text('Orange warning: thunderstorm with lightning'), findsOneWidget);
     expect(find.text('Orange'), findsOneWidget);
   });
 
-  testWidgets('the hourly renderer lays out all 24 hours', (tester) async {
+  testWidgets('the hourly renderer lays out the whole strip', (tester) async {
     final card = home.cards.firstWhere((c) => c.type == 'hourly_forecast');
     await tester.pumpWidget(
         _host(Builder(builder: (context) => RendererRegistry.build(context, card))));
@@ -85,7 +85,7 @@ void main() {
   });
 
   testWidgets('the daily renderer draws one row per day', (tester) async {
-    final card = home.moreCards.firstWhere((c) => c.type == 'daily_forecast');
+    final card = home.cards.firstWhere((c) => c.type == 'daily_forecast');
     await tester.pumpWidget(
         _host(Builder(builder: (context) => RendererRegistry.build(context, card))));
     await tester.pump();
