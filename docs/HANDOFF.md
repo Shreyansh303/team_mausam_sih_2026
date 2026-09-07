@@ -4,7 +4,12 @@ This repo is designed so that any Claude Code session can pick it up cold. The p
 (normative), the rules in `CLAUDE.md` (auto-loaded by Claude Code), and the live state in
 `docs/PROGRESS.md`. Nothing important lives outside git except the local toolchain.
 
-## 1. Where things stand (handed off 2026-09-07, commit `27f9d8a`, tree clean, origin in sync)
+## 1. Where things stand (handed off 2026-09-07, commit `35499e0`, tree clean, origin in sync)
+**Update:** B2a is also done — all ten previously-pending renderers (gauge, timeline, alert,
+advice_list, nowcast, bar_chart, sea, tides, places, radar) plus a full-screen detail page per
+renderer; `flutter test` 64 green; screenshots `docs/screenshots/b2a_*.png` against the live backend.
+Two small backend i18n gaps found on live data are listed in PROGRESS for B3 (nowcast subtitle shows
+the raw key `hazard.rain`; AQI insight shows `pollutant.O3 … — µg/m³`). Next owner starts at **B2b**.
 See `docs/PROGRESS.md` → "Phase status" (the checkboxes are the truth) and `git log --oneline`.
 - **Done (first owner):** A1–A3 — backend complete: providers with IMD→Open-Meteo fallback, 33 card
   builders, personalization engine with explainability + learning, `/home` with every param, auth,
