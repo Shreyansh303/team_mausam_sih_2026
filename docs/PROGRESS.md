@@ -25,7 +25,8 @@ unticked items but files present:
 - [x] A3 live alerts + admin + deploy + CI
 - [x] B0 flutter toolchain + scaffold
 - [x] B1 app foundation + onboarding + home skeleton
-- [ ] B2 full card system + map + places + WS + events
+- [ ] B2a ten pending renderers + detail pages (one commit each)
+- [ ] B2b animations · events · why-sheet actions · places · map · settings · demo sheet · WS client · low-bandwidth · a11y · l10n · icon/splash
 - [ ] B3 integration + APK + CI
 - [ ] C1 e2e QA
 - [ ] C2 docs + pitch
@@ -98,6 +99,10 @@ unticked items but files present:
   screenshots `docs/screenshots/b1_home.png` (live backend) + `b1_home_offline.png` (fixture)
 
 ## B2 checklist
+### B2a (renderers)
+- [ ] nowcast · [ ] radar · [ ] gauge · [ ] advice_list · [ ] timeline · [ ] alert · [ ] sea · [ ] tides · [ ] places · [ ] bar_chart
+- [ ] detail page per renderer · fixtures_test green · screenshots
+### B2b
 - [ ] all renderers + detail pages · animations · events pipeline · why-sheet actions
 - [ ] places page · map page (radar + warnings) · settings complete · demo sheet · WS client · low-bandwidth · a11y
 - [ ] l10n en/hi complete · icon/splash · screenshots per persona

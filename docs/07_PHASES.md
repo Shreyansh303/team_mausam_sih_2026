@@ -64,6 +64,12 @@ serve `build/web` (`python -m http.server 8080`) and screenshot the home via the
 `docs/screenshots/b1_home.png`. Commit: `phase(B1): app foundation`.
 
 ## B2 · Full card system, map, places, live alerts, events, polish  (owner: `app/`)
+Split into two agent runs: **B2a** = the ten pending renderers (`nowcast, radar, gauge, advice_list,
+timeline, alert, sea, tides, places, bar_chart`) drawn per docs/06 §Renderers from real fixture data,
+plus the per-renderer detail page; one commit per renderer; `app/test/fixtures_test.dart` stays green
+and is the acceptance gate; screenshots of each new renderer to `docs/screenshots/`. **B2b** = everything
+else below (animations, events pipeline, why-sheet actions, places, map, settings, demo sheet, WS client,
+low-bandwidth, a11y, l10n, icon/splash).
 Read: 02, 04, 06. Requires B1; use `docs/fixtures/home_*.json` (A2) if present.
 Deliver: all renderers + detail pages; animations (re-rank, banner arrival); events pipeline
 (impression/tap/expand/dismiss/pin/hide) + why-sheet actions; places page; map page (radar frames +
