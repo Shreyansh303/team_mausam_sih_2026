@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mausam demo console</title>
+<style>
+  :root {
+    --bg: #0f1720; --panel: #172230; --panel2: #1e2b3b; --line: #2b3b4f;
+    --ink: #e8eef5; --muted: #93a4b8; --accent: #2f81f7;
+    --yellow: #f5c518; --orange: #f28c28; --red: #d32f2f; --green: #2e7d32;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 14px/1.45 "Segoe UI", system-ui, -apple-system, sans-serif; }
+  header { background: var(--panel); border-bottom: 1px solid var(--line);
+           padding: 12px 18px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  header h1 { font-size: 16px; margin: 0 14px 0 0; font-weight: 600; letter-spacing: .2px; }
+  header .tag { font-size: 11px; color: var(--muted); border: 1px solid var(--line);
+                border-radius: 10px; padding: 2px 8px; }
+  main { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+         gap: 14px; padding: 14px 18px 40px; max-width: 1500px; }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+            padding: 14px 16px; }
+  section h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em;
+               color: var(--muted); margin: 0 0 12px; font-weight: 600; }
+  label { display: block; font-size: 12px; color: var(--muted); margin: 8px 0 3px; }
+  input, select, textarea, button { font: inherit; }
+  input, select, textarea { width: 100%; background: var(--panel2); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; }
+  textarea { resize: vertical; min-height: 54px; }
+  button { background: var(--panel2); color: var(--ink); border: 1px solid var(--line);
+    border-radius: 6px; padding: 7px 12px; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  button.danger { border-color: #6b2b2b; color: #ffb4b4; }
+  button.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .row > * { flex: 1 1 120px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chips button { flex: 0 0 auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th, td { text-align: left; padding: 6px 6px; border-bottom: 1px solid var(--line);
+           vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  .sev { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
+  .sev.yellow { background: var(--yellow); } .sev.orange { background: var(--orange); }
+  .sev.red { background: var(--red); }
+  .big { font-size: 30px; font-weight: 700; line-height: 1.1; }
+  .muted { color: var(--muted); font-size: 12px; }
+  .ok { color: #7ee08a; } .err { color: #ff9b9b; }
+  #log { background: #0b1219; border: 1px solid var(--line); border-radius: 6px; padding: 10px;
+         height: 200px; overflow: auto; font-family: Consolas, "Courier New", monospace;
+         font-size: 11.5px; white-space: pre-wrap; }
+  #feed { background: #0b1219; border: 1px solid var(--line); border-radius: 6px; padding: 10px;
+          height: 150px; overflow: auto; font-family: Consolas, "Courier New", monospace;
+          font-size: 11.5px; white-space: pre-wrap; }
+  .grow { flex: 3 1 220px; }
+  .hint { font-size: 11.5px; color: var(--muted); margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Mausam demo console</h1>
+  <span class="tag">Team Mausam prototype &middot; not an official IMD service</span>
+  <div style="flex:2 1 260px">
+    <label for="base">Backend base</label>
+    <input id="base" placeholder="http://localhost:8000">
+  </div>
+  <div style="flex:1 1 180px">
+    <label for="key">Admin key (X-Admin-Key)</label>
+    <input id="key" type="password" placeholder="mausam-admin">
+  </div>
+  <div style="flex:0 0 auto; align-self:flex-end">
+    <button id="save" class="primary">Save</button>
+  </div>
+  <div style="flex:0 0 auto; align-self:flex-end" class="muted" id="conn">not connected</div>
+</header>
+
+<main>
+  <section>
+    <h2>1 &middot; Scenario</h2>
+    <div class="chips" id="scenarios"><span class="muted">loading&hellip;</span></div>
+    <p class="hint">The global default for <code>/home</code> and <code>/weather/snapshot</code>.
+      A per-request <code>?scenario=</code> still wins. Changing it broadcasts
+      <code>scenario_changed</code>.</p>
+  </section>
+
+  <section>
+    <h2>2 &middot; Demo clock</h2>
+    <div class="big" id="clock">&mdash;</div>
+    <div class="muted" id="clockNote">using real server time</div>
+    <label for="nowInput">Set now-override (local time)</label>
+    <div class="row">
+      <input id="nowInput" type="datetime-local" class="grow">
+      <button id="setNow" class="primary">Set</button>
+      <button id="clearNow">Clear</button>
+    </div>
+    <div class="chips" style="margin-top:10px">
+      <button data-now="2026-09-08T07:30">Tue 07:30 (school run)</button>
+      <button data-now="2026-09-08T14:00">Tue 14:00 (afternoon)</button>
+      <button data-now="2026-09-08T21:00">Tue 21:00 (night)</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>5 &middot; Connected clients</h2>
+    <div class="big" id="clients">0</div>
+    <div class="muted">WebSocket <code>/ws/alerts</code> &middot; refreshed every 5 s</div>
+    <div class="row" style="margin-top:10px">
+      <button id="wsToggle">Connect this page to /ws/alerts</button>
+    </div>
+    <label>Live feed</label>
+    <div id="feed"></div>
+  </section>
+
+  <section style="grid-column: 1 / -1">
+    <h2>3 &middot; Push a warning</h2>
+    <div class="chips" id="presets"></div>
+    <div class="row" style="margin-top:12px">
+      <div>
+        <label for="severity">Severity</label>
+        <select id="severity">
+          <option value="yellow">yellow</option>
+          <option value="orange" selected>orange</option>
+          <option value="red">red</option>
+        </select>
+      </div>
+      <div>
+        <label for="hazard">Hazard</label>
+        <select id="hazard"></select>
+      </div>
+      <div class="grow">
+        <label for="title">Title</label>
+        <input id="title" placeholder="Thunderstorm warning">
+      </div>
+    </div>
+    <label for="description">Description</label>
+    <textarea id="description" placeholder="Thunderstorm with lightning and gusty winds likely in the next 3 hours."></textarea>
+    <div class="row">
+      <div class="grow">
+        <label for="place">Location (from /locations/popular)</label>
+        <select id="place"><option value="">— pick a city —</option></select>
+      </div>
+      <div><label for="lat">Lat</label><input id="lat" type="number" step="0.01" value="28.61"></div>
+      <div><label for="lon">Lon</label><input id="lon" type="number" step="0.01" value="77.21"></div>
+    </div>
+    <div class="row">
+      <div><label for="district">District</label><input id="district" value="New Delhi"></div>
+      <div><label for="state">State</label><input id="state" value="Delhi"></div>
+      <div><label for="radius">Radius km</label><input id="radius" type="number" value="75"></div>
+      <div><label for="ttl">TTL minutes</label><input id="ttl" type="number" value="120"></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button id="push" class="primary" style="flex:0 0 200px">Push warning</button>
+      <span class="hint" style="flex:1 1 auto">Broadcasts <code>warning_issued</code> on the
+        WebSocket and pins the <code>warnings</code> card on <code>/home</code> (orange and red
+        also raise the banner).</span>
+    </div>
+  </section>
+
+  <section style="grid-column: 1 / -1">
+    <h2>4 &middot; Active warnings</h2>
+    <table id="warnings">
+      <thead><tr>
+        <th>Severity</th><th>Hazard</th><th>Title</th><th>Where</th>
+        <th>Valid to</th><th>Id</th><th></th>
+      </tr></thead>
+      <tbody><tr><td colspan="7" class="muted">none</td></tr></tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>6 &middot; Reset a user</h2>
+    <label for="userId">User id</label>
+    <div class="row">
+      <input id="userId" class="grow" placeholder="usr_…">
+      <button id="resetUser" class="danger">Reset learning</button>
+    </div>
+    <p class="hint">Clears engagement counters and card pins/hides for that user
+      (same as <code>POST /me/reset-learning</code>).</p>
+  </section>
+
+  <section>
+    <h2>Log</h2>
+    <div id="log"></div>
+  </section>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var HAZARDS = ["heavy_rain","very_heavy_rain","thunderstorm","lightning","squall","hail",
+    "heatwave","cold_wave","fog","dust_storm","cyclone","strong_wind","snow","flood","other"];
+
+  // 05 §Admin console — the five demo presets, in order.
+  var PRESETS = [
+    { label: "Orange thunderstorm — Delhi", severity: "orange", hazard: "thunderstorm",
+      title: "Thunderstorm warning — Delhi",
+      description: "Thunderstorm with lightning and gusty winds (50–60 km/h) likely over Delhi in the next 3 hours.",
+      lat: 28.61, lon: 77.21, district: "New Delhi", state: "Delhi", radius_km: 75, ttl_minutes: 120 },
+    { label: "Red cyclone — Goa", severity: "red", hazard: "cyclone",
+      title: "Cyclone warning — Goa coast",
+      description: "Cyclonic storm approaching the Goa coast. Fishermen advised not to venture into the sea.",
+      lat: 15.49, lon: 73.83, district: "North Goa", state: "Goa", radius_km: 150, ttl_minutes: 240 },
+    { label: "Orange dense fog — Delhi", severity: "orange", hazard: "fog",
+      title: "Dense fog warning — Delhi NCR",
+      description: "Visibility below 200 m in places until 09:00. Expect flight and train delays.",
+      lat: 28.61, lon: 77.21, district: "New Delhi", state: "Delhi", radius_km: 90, ttl_minutes: 180 },
+    { label: "Red heatwave — Nagpur", severity: "red", hazard: "heatwave",
+      title: "Severe heatwave — Vidarbha",
+      description: "Maximum temperature 46–47 °C. Avoid outdoor exposure between 11:00 and 16:00.",
+      lat: 21.15, lon: 79.09, district: "Nagpur", state: "Maharashtra", radius_km: 120, ttl_minutes: 360 },
+    { label: "Orange very heavy rain — Mumbai", severity: "orange", hazard: "very_heavy_rain",
+      title: "Very heavy rain — Mumbai",
+      description: "Very heavy rainfall (115–204 mm) likely. Waterlogging expected in low-lying areas.",
+      lat: 19.08, lon: 72.88, district: "Mumbai", state: "Maharashtra", radius_km: 80, ttl_minutes: 180 }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var state = { scenario: "live", now_override: null };
+  var ws = null;
+
+  function base() {
+    var v = ($("base").value || "").trim().replace(/\/+$/, "");
+    return v || window.location.origin;
+  }
+  function api(path) { return base() + "/api/v1" + path; }
+  function adminKey() { return ($("key").value || "").trim(); }
+
+  function log(msg, cls) {
+    var el = $("log");
+    var line = document.createElement("div");
+    line.className = cls || "";
+    line.textContent = new Date().toLocaleTimeString() + "  " + msg;
+    el.appendChild(line);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function feed(msg) {
+    var el = $("feed");
+    var line = document.createElement("div");
+    line.textContent = new Date().toLocaleTimeString() + "  " + msg;
+    el.appendChild(line);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function call(path, options) {
+    options = options || {};
+    var headers = { "X-Admin-Key": adminKey() };
+    if (options.body !== undefined) { headers["Content-Type"] = "application/json"; }
+    return fetch(api(path), {
+      method: options.method || "GET",
+      headers: headers,
+      body: options.body === undefined ? undefined : JSON.stringify(options.body)
+    }).then(function (res) {
+      return res.text().then(function (text) {
+        var data = null;
+        try { data = text ? JSON.parse(text) : null; } catch (e) { data = { raw: text }; }
+        if (!res.ok) {
+          var message = (data && data.error && data.error.message) || res.status + " " + res.statusText;
+          throw new Error(message);
+        }
+        return data;
+      });
+    });
+  }
+
+  // --- header / persistence ------------------------------------------------
+  function loadSettings() {
+    $("base").value = localStorage.getItem("mausam.base") || window.location.origin;
+    $("key").value = localStorage.getItem("mausam.adminKey") || "mausam-admin";
+  }
+  function saveSettings() {
+    localStorage.setItem("mausam.base", ($("base").value || "").trim());
+    localStorage.setItem("mausam.adminKey", adminKey());
+    log("settings saved", "ok");
+    refreshAll();
+  }
+
+  // --- scenarios -----------------------------------------------------------
+  function loadScenarios() {
+    return fetch(api("/weather/scenarios")).then(function (r) { return r.json(); })
+      .then(function (data) {
+        var box = $("scenarios");
+        box.innerHTML = "";
+        (data.scenarios || []).forEach(function (s) {
+          var b = document.createElement("button");
+          b.textContent = s.name;
+          b.title = s.description || "";
+          b.dataset.name = s.name;
+          b.onclick = function () { setScenario(s.name); };
+          box.appendChild(b);
+        });
+        paintScenario();
+      })
+      .catch(function (e) { log("scenarios: " + e.message, "err"); });
+  }
+
+  function paintScenario() {
+    Array.prototype.forEach.call($("scenarios").querySelectorAll("button"), function (b) {
+      if (b.dataset.name === state.scenario) { b.classList.add("active"); }
+      else { b.classList.remove("active"); }
+    });
+  }
+
+  function setScenario(name) {
+    call("/admin/scenario", { method: "POST", body: { name: name } })
+      .then(function (s) { applyState(s); log("scenario → " + name, "ok"); })
+      .catch(function (e) { log("scenario: " + e.message, "err"); });
+  }
+
+  // --- demo clock ----------------------------------------------------------
+  function setNow(value) {
+    call("/admin/now-override", { method: "POST", body: { now: value } })
+      .then(function (s) { applyState(s); log("now-override → " + (value || "cleared"), "ok"); })
+      .catch(function (e) { log("now-override: " + e.message, "err"); });
+  }
+
+  function paintClock() {
+    if (state.now_override) {
+      $("clock").textContent = state.now_override.replace("T", " ");
+      $("clockNote").textContent = "demo clock active — /home uses this time";
+    } else {
+      $("clock").textContent = new Date().toLocaleString();
+      $("clockNote").textContent = "using real server time";
+    }
+  }
+
+  // --- warnings ------------------------------------------------------------
+  function fillHazards() {
+    var sel = $("hazard");
+    HAZARDS.forEach(function (h) {
+      var o = document.createElement("option");
+      o.value = h; o.textContent = h;
+      if (h === "thunderstorm") { o.selected = true; }
+      sel.appendChild(o);
+    });
+  }
+
+  function fillPresets() {
+    var box = $("presets");
+    PRESETS.forEach(function (p) {
+      var b = document.createElement("button");
+      b.textContent = p.label;
+      b.onclick = function () { applyPreset(p); };
+      box.appendChild(b);
+    });
+  }
+
+  function applyPreset(p) {
+    $("severity").value = p.severity;
+    $("hazard").value = p.hazard;
+    $("title").value = p.title;
+    $("description").value = p.description;
+    $("lat").value = p.lat;
+    $("lon").value = p.lon;
+    $("district").value = p.district;
+    $("state").value = p.state;
+    $("radius").value = p.radius_km;
+    $("ttl").value = p.ttl_minutes;
+    $("place").value = "";
+    log("preset loaded: " + p.label);
+  }
+
+  function loadPlaces() {
+    return fetch(api("/locations/popular?limit=120")).then(function (r) { return r.json(); })
+      .then(function (rows) {
+        var sel = $("place");
+        rows.forEach(function (r) {
+          var o = document.createElement("option");
+          o.value = [r.lat, r.lon, r.admin2 || "", r.admin1 || ""].join("|");
+          o.textContent = r.name + (r.admin1 ? " · " + r.admin1 : "");
+          sel.appendChild(o);
+        });
+      })
+      .catch(function (e) { log("popular: " + e.message, "err"); });
+  }
+
+  function onPlace() {
+    var v = $("place").value;
+    if (!v) { return; }
+    var p = v.split("|");
+    $("lat").value = p[0];
+    $("lon").value = p[1];
+    $("district").value = p[2];
+    $("state").value = p[3];
+  }
+
+  function pushWarning() {
+    var body = {
+      severity: $("severity").value,
+      hazard: $("hazard").value,
+      title: ($("title").value || "").trim(),
+      description: ($("description").value || "").trim(),
+      district: ($("district").value || "").trim() || null,
+      state: ($("state").value || "").trim() || null,
+      lat: parseFloat($("lat").value),
+      lon: parseFloat($("lon").value),
+      radius_km: parseFloat($("radius").value) || 75,
+      ttl_minutes: parseInt($("ttl").value, 10) || 120
+    };
+    if (isNaN(body.lat) || isNaN(body.lon)) { body.lat = null; body.lon = null; }
+    if (!body.title) { log("title is required", "err"); return; }
+    call("/admin/warnings", { method: "POST", body: body })
+      .then(function (w) { log("pushed " + w.severity + " " + w.hazard + " " + w.id, "ok"); refreshState(); })
+      .catch(function (e) { log("push: " + e.message, "err"); });
+  }
+
+  function deleteWarning(id) {
+    call("/admin/warnings/" + encodeURIComponent(id), { method: "DELETE" })
+      .then(function () { log("cleared " + id, "ok"); refreshState(); })
+      .catch(function (e) { log("delete: " + e.message, "err"); });
+  }
+
+  function paintWarnings(list) {
+    var body = $("warnings").querySelector("tbody");
+    body.innerHTML = "";
+    if (!list || !list.length) {
+      body.innerHTML = '<tr><td colspan="7" class="muted">none</td></tr>';
+      return;
+    }
+    list.forEach(function (w) {
+      var tr = document.createElement("tr");
+      var where = [w.district, w.state].filter(Boolean).join(", ");
+      if (w.lat !== null && w.lat !== undefined) {
+        where += (where ? " · " : "") + w.lat + "," + w.lon + " r" + (w.radius_km || 0) + "km";
+      }
+      tr.innerHTML =
+        '<td><span class="sev ' + w.severity + '"></span>' + w.severity + "</td>" +
+        "<td>" + w.hazard + "</td>" +
+        "<td>" + escapeHtml(w.title) + "</td>" +
+        "<td>" + escapeHtml(where) + "</td>" +
+        "<td>" + (w.valid_to || "").replace("T", " ") + "</td>" +
+        '<td class="muted">' + w.id + "</td>" +
+        "<td></td>";
+      var btn = document.createElement("button");
+      btn.className = "danger";
+      btn.textContent = "Delete";
+      btn.onclick = function () { deleteWarning(w.id); };
+      tr.lastChild.appendChild(btn);
+      body.appendChild(tr);
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s === null || s === undefined ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  // --- state polling -------------------------------------------------------
+  function applyState(s) {
+    state.scenario = s.scenario;
+    state.now_override = s.now_override;
+    $("clients").textContent = s.connected_clients;
+    $("conn").textContent = "connected · " + s.scenario;
+    $("conn").className = "muted ok";
+    paintScenario();
+    paintClock();
+    paintWarnings(s.warnings);
+  }
+
+  function refreshState() {
+    return call("/admin/state")
+      .then(applyState)
+      .catch(function (e) {
+        $("conn").textContent = "error: " + e.message;
+        $("conn").className = "muted err";
+      });
+  }
+
+  function refreshAll() { loadScenarios(); refreshState(); }
+
+  // --- live feed -----------------------------------------------------------
+  function toggleWs() {
+    if (ws) { ws.close(); ws = null; return; }
+    var url = base().replace(/^http/, "ws") + "/ws/alerts?lat=" +
+      encodeURIComponent($("lat").value || 28.61) + "&lon=" +
+      encodeURIComponent($("lon").value || 77.21);
+    try { ws = new WebSocket(url); } catch (e) { log("ws: " + e.message, "err"); return; }
+    $("wsToggle").textContent = "Disconnect";
+    ws.onmessage = function (ev) {
+      var msg = ev.data;
+      try {
+        var parsed = JSON.parse(ev.data);
+        if (parsed.type === "ping") { ws.send(JSON.stringify({ type: "pong" })); }
+        msg = JSON.stringify(parsed);
+      } catch (e) { /* leave raw */ }
+      feed(msg);
+    };
+    ws.onclose = function () { $("wsToggle").textContent = "Connect this page to /ws/alerts"; ws = null; feed("closed"); };
+    ws.onerror = function () { feed("error"); };
+  }
+
+  // --- wiring --------------------------------------------------------------
+  document.addEventListener("DOMContentLoaded", function () {
+    loadSettings();
+    fillHazards();
+    fillPresets();
+    loadPlaces();
+    $("save").onclick = saveSettings;
+    $("setNow").onclick = function () { setNow($("nowInput").value); };
+    $("clearNow").onclick = function () { setNow(null); };
+    Array.prototype.forEach.call(document.querySelectorAll("[data-now]"), function (b) {
+      b.onclick = function () { $("nowInput").value = b.dataset.now; setNow(b.dataset.now); };
+    });
+    $("place").onchange = onPlace;
+    $("push").onclick = pushWarning;
+    $("resetUser").onclick = function () {
+      var id = ($("userId").value || "").trim();
+      if (!id) { log("user id is required", "err"); return; }
+      call("/admin/reset-user", { method: "POST", body: { user_id: id } })
+        .then(function () { log("reset learning for " + id, "ok"); })
+        .catch(function (e) { log("reset-user: " + e.message, "err"); });
+    };
+    $("wsToggle").onclick = toggleWs;
+    refreshAll();
+    setInterval(refreshState, 5000);   // 05 §Admin console — 5 s auto refresh
+    setInterval(paintClock, 1000);
+  });
+})();
+</script>
+</body>
+</html>

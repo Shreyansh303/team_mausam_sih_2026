@@ -11,10 +11,11 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app import __version__
-from app.api import auth, events, health, home, locations, me, places, weather
-from app.config import settings
+from app.api import admin, auth, events, health, home, locations, me, places, weather, ws
+from app.config import BASE_DIR, settings
 from app.core import cache
 from app.core.db import init_db
 from app.core.errors import install_error_handlers
@@ -70,10 +71,18 @@ def create_app() -> FastAPI:
         places.router,
         home.router,
         events.router,
+        admin.router,
+        ws.router,
     )
     for router in routers:
         app.include_router(router, prefix=API_PREFIX)
         app.include_router(router, include_in_schema=False)
+
+    # 05 §Layout — the single-file demo console. `/admin/console` serves index.html; the mount
+    # is here so any asset dropped next to it is reachable too.
+    static_dir = BASE_DIR / "static"
+    if static_dir.is_dir():
+        app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
     @app.get("/", include_in_schema=False)
     async def root() -> dict[str, str]:
@@ -82,6 +91,8 @@ def create_app() -> FastAPI:
             "version": __version__,
             "docs": "/docs",
             "api": API_PREFIX,
+            "admin_console": "/admin/console",
+            "ws": "/ws/alerts",
         }
 
     return app

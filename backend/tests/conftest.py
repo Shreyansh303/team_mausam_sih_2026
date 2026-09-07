@@ -14,6 +14,7 @@ import httpx
 import pytest
 import respx
 
+from app.api import ws
 from app.config import settings
 from app.core import cache, db, geo, i18n
 from app.providers import imd, scenarios
@@ -71,9 +72,11 @@ def reset_state():
     geo.cities.cache_clear()
     geo.coastal_points.cache_clear()
     demo_state.reset()
+    ws.manager.reset()
     yield
     cache.clear_all()
     demo_state.reset()
+    ws.manager.reset()
 
 
 @pytest.fixture(autouse=True)

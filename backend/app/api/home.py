@@ -31,6 +31,7 @@ from app.schemas.home import HomeResponse
 from app.schemas.location import LocationResult
 from app.schemas.snapshot import Snapshot
 from app.schemas.user import PERSONA_IDS
+from app.services import admin_warnings as admin_warnings_svc
 from app.services import locations as locations_svc
 from app.services import snapshot as snapshot_svc
 from app.services import users as users_svc
@@ -138,7 +139,11 @@ def place_summary(place: Any, snap: dict[str, Any]) -> dict[str, Any]:
 
 
 async def place_extras(
-    places: list[Any], *, scenario: str, now: datetime | None
+    places: list[Any],
+    *,
+    scenario: str,
+    now: datetime | None,
+    admin_warnings: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """05 §Performance — saved-place snapshots fetched concurrently, capped at 5."""
     subset = places[:MAX_PLACE_SNAPSHOTS]
@@ -146,7 +151,9 @@ async def place_extras(
         return []
     results = await asyncio.gather(
         *(
-            snapshot_svc.get_snapshot(p.lat, p.lon, scenario=scenario, now=now)
+            snapshot_svc.get_snapshot(
+                p.lat, p.lon, scenario=scenario, now=now, admin_warnings=admin_warnings
+            )
             for p in subset
         ),
         return_exceptions=True,
@@ -197,8 +204,13 @@ async def get_home(
     language = normalize_lang(lang or user.language or accept_language)
     is_lite = bool(lite)
 
+    # A3: live admin-pushed warnings are merged into the snapshot (and location-filtered
+    # there). Passing a non-empty list also bypasses the 5-minute snapshot cache, which is what
+    # we want — a warning pushed 10 s ago must show up on the next /home.
+    admin_warnings = admin_warnings_svc.active_warnings(db, now=now) or None
+
     snapshot: Snapshot = await snapshot_svc.get_snapshot(
-        lat_v, lon_v, scenario=name, now=now
+        lat_v, lon_v, scenario=name, now=now, admin_warnings=admin_warnings
     )
     snap = snapshot.model_dump()
     location = LocationResult.model_validate(snap["location"])
@@ -210,7 +222,9 @@ async def get_home(
     saved_places = users_svc.places_for(db, user.id)
     radar, places = await asyncio.gather(
         radar_extra(lat_v, lon_v, snap),
-        place_extras(saved_places, scenario=name, now=now),
+        place_extras(
+            saved_places, scenario=name, now=now, admin_warnings=admin_warnings
+        ),
     )
 
     pins, hidden = users_svc.prefs_for(db, user.id)
@@ -245,13 +259,16 @@ async def get_home(
         bundle=bundle, ctx=ctx, profile=profile, location=location
     )
 
+    # 05 §Performance — one timing line per request at INFO.
     log.info(
-        "home lat=%s lon=%s personas=%s scenario=%s lang=%s %dms",
+        "home lat=%s lon=%s personas=%s scenario=%s lang=%s lite=%d warnings=%d %dms",
         round(lat_v, 3),
         round(lon_v, 3),
         ",".join(profile.persona_ids) or "-",
         name,
         language,
+        int(is_lite),
+        len(ctx.active_warnings),
         int((time.perf_counter() - t0) * 1000),
     )
     return response

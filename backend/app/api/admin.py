@@ -1,0 +1,168 @@
+"""Admin/demo routes (04 §/admin/*) and the single-file demo console (05 §Admin console).
+
+Every mutating route does the same three things in the same order:
+    1. write (DB row or `demo_state`)
+    2. `cache.clear_all()` — a snapshot cached before the write would otherwise be served for
+       up to `CACHE_TTL_SNAPSHOT` seconds without the new warning
+    3. broadcast on the WebSocket (`api/ws.py`) — never from `app/engine/`, which stays pure
+"""
+
+from __future__ import annotations
+
+import logging
+from typing import Any
+
+from fastapi import APIRouter, Depends
+from fastapi.responses import FileResponse
+from sqlalchemy.orm import Session
+
+from app.api import ws
+from app.config import BASE_DIR, settings
+from app.core import cache
+from app.core.db import get_db
+from app.core.errors import NotFoundError, ValidationError
+from app.core.security import require_admin
+from app.core.timeutil import iso, parse_any, tz_for
+from app.models.user import User as UserModel
+from app.providers import scenarios
+from app.schemas.admin import (
+    AdminState,
+    NowOverrideBody,
+    ResetUserBody,
+    ScenarioBody,
+    WarningCreate,
+)
+from app.schemas.user import OkResponse
+from app.schemas.warning import Warning
+from app.services import admin_warnings as admin_svc
+from app.services import users as users_svc
+from app.state import demo_state
+
+log = logging.getLogger("mausam.api.admin")
+
+router = APIRouter(prefix="/admin", tags=["admin"])
+
+CONSOLE_HTML = BASE_DIR / "static" / "admin" / "index.html"
+
+
+def _state(db: Session) -> AdminState:
+    return AdminState(
+        scenario=demo_state.scenario,
+        now_override=demo_state.now_override,
+        warnings=[Warning.model_validate(w) for w in admin_svc.active_warnings(db)],
+        connected_clients=ws.connected_clients(),
+    )
+
+
+# --------------------------------------------------------------------------- console
+
+
+@router.get("/console", include_in_schema=False)
+async def console() -> FileResponse:
+    """The demo console. No admin key here — the page asks for it and keeps it in localStorage."""
+    if not CONSOLE_HTML.exists():  # pragma: no cover - shipped with the package
+        raise NotFoundError("Admin console is not installed")
+    return FileResponse(CONSOLE_HTML, media_type="text/html; charset=utf-8")
+
+
+# --------------------------------------------------------------------------- state
+
+
+@router.get("/state", response_model=AdminState, dependencies=[Depends(require_admin)])
+async def get_state(db: Session = Depends(get_db)) -> AdminState:
+    return _state(db)
+
+
+@router.post("/scenario", response_model=AdminState, dependencies=[Depends(require_admin)])
+async def set_scenario(body: ScenarioBody, db: Session = Depends(get_db)) -> AdminState:
+    name = body.name.strip()
+    if name != "live" and not scenarios.exists(name):
+        raise ValidationError(f"Unknown scenario '{name}'", code="unknown_scenario")
+    demo_state.scenario = name
+    cache.clear_all()
+    await ws.broadcast("scenario_changed", {"scenario": name})
+    log.info("admin scenario -> %s", name)
+    return _state(db)
+
+
+@router.post("/now-override", response_model=AdminState, dependencies=[Depends(require_admin)])
+async def set_now_override(body: NowOverrideBody, db: Session = Depends(get_db)) -> AdminState:
+    raw = (body.now or "").strip()
+    value: str | None = None
+    if raw:
+        try:
+            # A naive value (what `<input type="datetime-local">` sends) is read as IST — the
+            # console is an India demo tool, and UTC would silently shift the clock by 5.5 h.
+            value = iso(parse_any(raw, tz_for(admin_svc.DEMO_TZ)))
+        except ValueError as exc:
+            raise ValidationError(f"Bad now: {exc}") from exc
+    demo_state.now_override = value
+    cache.clear_all()
+    await ws.broadcast("now_override", {"now": value})
+    log.info("admin now_override -> %s", value)
+    return _state(db)
+
+
+# --------------------------------------------------------------------------- warnings
+
+
+@router.post("/warnings", response_model=Warning, dependencies=[Depends(require_admin)])
+async def push_warning(body: WarningCreate, db: Session = Depends(get_db)) -> Warning:
+    row = admin_svc.create(
+        db,
+        severity=body.severity,
+        hazard=body.hazard,
+        title=body.title,
+        description=body.description,
+        district=body.district,
+        state=body.state,
+        lat=body.lat,
+        lon=body.lon,
+        radius_km=body.radius_km,
+        ttl_minutes=body.ttl_minutes,
+    )
+    warning = row.to_warning()
+    cache.clear_all()
+    delivered = await ws.broadcast_warning(warning)
+    log.info(
+        "admin warning %s %s/%s pushed to %d ws client(s)",
+        warning["id"], warning["severity"], warning["hazard"], delivered,
+    )
+    return Warning.model_validate(warning)
+
+
+@router.delete(
+    "/warnings/{warning_id}", response_model=OkResponse, dependencies=[Depends(require_admin)]
+)
+async def clear_warning(warning_id: str, db: Session = Depends(get_db)) -> OkResponse:
+    if not admin_svc.remove(db, warning_id):
+        raise NotFoundError(f"Unknown warning '{warning_id}'")
+    cache.clear_all()
+    await ws.broadcast("warning_cleared", {"id": warning_id})
+    log.info("admin warning %s cleared", warning_id)
+    return OkResponse(ok=True)
+
+
+# --------------------------------------------------------------------------- users
+
+
+@router.post("/reset-user", response_model=OkResponse, dependencies=[Depends(require_admin)])
+async def reset_user(body: ResetUserBody, db: Session = Depends(get_db)) -> OkResponse:
+    user = db.get(UserModel, body.user_id.strip())
+    if user is None:
+        raise NotFoundError(f"Unknown user '{body.user_id}'")
+    users_svc.reset_learning(db, user.id)
+    log.info("admin reset learning for %s", user.id)
+    return OkResponse(ok=True)
+
+
+@router.get("/config", include_in_schema=False)
+async def console_config() -> dict[str, Any]:
+    """Tiny bootstrap the console reads before the admin key is entered."""
+    return {
+        "demo_mode": bool(settings.demo_mode),
+        "api_base": "/api/v1",
+        "ws_path": "/ws/alerts",
+        "scenario": demo_state.scenario,
+        "now_override": demo_state.now_override,
+    }
