@@ -29,9 +29,13 @@ flutter build apk --debug
 
 ## 1. What gets installed, and where
 
+Versions verified on this machine (2026-09-07): **Flutter 3.47.2 stable** (Dart 3.13.2, engine
+`a804b26164`), **Temurin JDK 17.0.20.1+1**, **Android SDK platform `android-36` + build-tools
+`36.0.0`**, NDK `r28c` (pulled automatically by the first APK build).
+
 | Path | Contents | Size |
 |---|---|---|
-| `D:\sdk\flutter` | Flutter SDK, stable channel (includes Dart) | ~4.5 GB after first `flutter doctor` |
+| `D:\sdk\flutter` | Flutter SDK, stable channel 3.47.2 (includes Dart) | ~4.5 GB after first `flutter doctor` |
 | `D:\sdk\jdk-17` | Eclipse Temurin JDK 17 (HotSpot), zip build | ~310 MB |
 | `D:\sdk\android` | Android SDK — `platform-tools`, `platforms;android-3x`, `build-tools;3x.0.0` | ~1.5 GB |
 | `D:\sdk\android\cmdline-tools\latest` | `sdkmanager`, `avdmanager`, `apkanalyzer` | ~150 MB |
@@ -135,13 +139,16 @@ flutter doctor -v
 ## 4. What "good" looks like in `flutter doctor`
 
 ```
-[√] Flutter (Channel stable, ...)
-[√] Android toolchain - develop for Android devices (Android SDK version 3x.0.0)
+[!] Flutter (Channel stable, 3.47.2, ...)      <- only "binary is not on your path" warnings
+[√] Windows Version (Windows 11 or higher, 25H2)
+[√] Android toolchain - develop for Android devices (Android SDK version 36.0.0)
 [√] Chrome - develop for the web
-[!] Visual Studio - develop Windows apps
-[!] Android Studio (not installed)
+[!] Visual Studio - develop Windows apps       <- fine, we do not build the Windows target
+[√] Connected device (Windows, Chrome, Edge)
 [√] Network resources
 ```
+
+(Android Studio does not even appear in the list when it is absent — that is fine.)
 
 * **Android Studio "not installed" is fine.** It is an IDE convenience check, not a build
   requirement. Everything the build needs comes from `cmdline-tools` + `platform-tools`.
@@ -163,6 +170,11 @@ flutter test
 flutter build web         # output: app\build\web  (~40 s first time)
 flutter build apk --debug # output: app\build\app\outputs\flutter-apk\app-debug.apk
 ```
+
+**Android version floor: Android 7.0 (API 24).** `app/android/app/build.gradle.kts` sets
+`minSdk = flutter.minSdkVersion`, which is **24** on Flutter 3.47. Do not hardcode 23: Flutter 3.47
+runs `MinSdkVersionMigration` on every Android build and silently rewrites any hardcoded 16–23 back
+to `flutter.minSdkVersion`. See the minSdk note in `docs/06_MOBILE_SPEC.md` §Android config.
 
 ### The first `flutter build apk` is slow — this is normal
 
@@ -318,7 +330,39 @@ $env:HTTP_PROXY  = 'http://proxy.example:8080'
 #   systemProp.https.proxyPort=8080
 ```
 
-### 7.9 Starting over
+### 7.9 `java.io.IOException: Unable to establish loopback connection` from Gradle
+
+**In a normal user terminal this does not happen — Gradle and `flutter build apk` work
+out of the box.** It only shows up inside restricted/automation shells (the Claude Code tool
+sandbox, some CI containers, and machines where a security product filters `%LOCALAPPDATA%\Temp`).
+
+Root cause (confirmed with a 10-line JDK repro, not guesswork): JDK 17's `Selector.open()` builds
+its internal pipe from an **AF_UNIX socket pair**, and it creates the socket file in
+`java.io.tmpdir` (i.e. `%TEMP%`). When AF_UNIX socket files cannot be created there,
+`UnixDomainSockets.connect0` fails with `SocketException: Invalid argument: connect`, which
+`PipeImpl` reports as the misleading "Unable to establish loopback connection". Gradle cannot
+start a single worker without a `Selector`.
+
+Fix — point `TEMP`/`TMP` at a short path on a plain local disk for that one command:
+
+```powershell
+$env:TEMP = 'D:\sdk\tmp'; $env:TMP = 'D:\sdk\tmp'
+mkdir D:\sdk\tmp -Force | Out-Null
+flutter build apk --debug
+```
+
+```bash
+TEMP='D:\sdk\tmp' TMP='D:\sdk\tmp' flutter build apk --debug   # Git Bash
+```
+
+Equivalent one-off JVM flag if you would rather not move `TEMP`:
+`-Djdk.nio.channels.unixdomain.tmpdir=D:\sdk\tmp`.
+
+Do **not** "fix" this with IPv4-only flags, `org.gradle.daemon=false`, or edits to
+`app/android/gradle.properties` — none of them touch the cause, and the repo's
+`gradle.properties` must stay at the Flutter defaults.
+
+### 7.10 Starting over
 
 ```powershell
 Remove-Item -Recurse -Force D:\sdk\flutter, D:\sdk\jdk-17, D:\sdk\android

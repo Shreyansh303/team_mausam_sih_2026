@@ -56,11 +56,15 @@ scripts/                  setup + run scripts (Windows-first)
 8. **Windows host.** Git Bash and PowerShell 5.1 are available; Python 3.13 at `C:\Python313\python.exe`;
    Node 22. Assume **no admin rights**. Toolchains install under `D:\sdk\`.
    Env changes made with `setx` do not apply to the current shell — use absolute paths.
-   **Gradle/APK builds must run with the tool sandbox disabled** (Bash/PowerShell tool parameter
-   `dangerouslyDisableSandbox: true`): inside the sandbox Java NIO `Selector.open()`/`Pipe.open()`
-   fail with `java.io.IOException: Unable to establish loopback connection`, so any `flutter build
-   apk`, `flutter run` on Android, or `gradlew` call fails. `flutter build web`, `flutter analyze`,
-   `flutter test`, Python and curl are fine inside the sandbox. A normal user terminal is unaffected.
+   **Gradle/APK builds from an agent shell need `TEMP`/`TMP` on a short local path** — run them as
+   `TEMP='D:\sdk\tmp' TMP='D:\sdk\tmp' flutter build apk --debug` (also pass
+   `dangerouslyDisableSandbox: true`). Cause (verified with a JDK repro in B1, superseding the
+   earlier "sandbox blocks loopback" note): JDK 17's `Selector.open()` creates an **AF_UNIX** socket
+   file in `java.io.tmpdir`; under `%LOCALAPPDATA%\Temp` that `connect` returns `EINVAL`, which
+   `PipeImpl` reports as `java.io.IOException: Unable to establish loopback connection`, and Gradle
+   cannot start. Do **not** try IPv4 flags, daemon toggles or `app/android/gradle.properties` edits —
+   they do not touch the cause. `flutter build web`, `flutter analyze`, `flutter test`, Python and
+   curl are fine inside the sandbox. A normal user terminal is unaffected by any of this.
 9. **Don't impersonate IMD.** App id `com.teammausam.mausam_app`, display name
    "Mausam Personalized (Team Mausam prototype)". Use IMD colour conventions, not IMD logos.
 10. **Final report format (keep it short):** Done / Verified (commands + output tail) /
