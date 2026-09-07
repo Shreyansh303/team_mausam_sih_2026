@@ -14,6 +14,7 @@ import 'package:mausam_app/features/home/renderers/charts.dart';
 import 'package:mausam_app/features/home/renderers/gauge.dart';
 import 'package:mausam_app/features/home/renderers/parts.dart';
 import 'package:mausam_app/features/home/renderers/sea.dart';
+import 'package:mausam_app/features/home/renderers/tides.dart';
 import 'package:mausam_app/features/home/renderers/registry.dart';
 import 'package:mausam_app/features/home/renderers/timeline.dart';
 import 'package:mausam_app/l10n/gen/app_localizations.dart';
@@ -470,6 +471,23 @@ void main() {
       final waves = (card.data['hourly'] as List).length;
       expect(find.byType(SeriesLineChart), findsOneWidget);
       expect(find.textContaining('Wave height, next $waves h'), findsOneWidget);
+    });
+
+    testWidgets('tides — draws a marked curve, the turning points and the Estimated chip',
+        (tester) async {
+      await pumpType(tester, 'tides');
+      final card = oneCardPerType['tides']!;
+      final events = (card.data['events'] as List).cast<Map<String, dynamic>>();
+      final curve = TideCurve.of(card)!;
+      // One marker per published turning point, interpolated points in between.
+      expect(curve.markers.length, events.length);
+      expect(curve.points.length, greaterThan(events.length));
+      expect(find.byType(SeriesLineChart), findsOneWidget);
+      // CLAUDE.md §6 — a modelled tide says so on the card itself, not only in the shell.
+      expect(find.text('Estimated'), findsOneWidget);
+      expect(find.textContaining('Next: '), findsOneWidget);
+      expect(find.textContaining(card.data['trend'] == 'rising' ? 'Rising' : 'Falling'),
+          findsOneWidget);
     });
   });
 
