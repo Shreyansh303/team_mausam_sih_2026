@@ -24,7 +24,7 @@ unticked items but files present:
 - [x] A2 engine + home + auth + events + i18n
 - [ ] A3 live alerts + admin + deploy + CI
 - [x] B0 flutter toolchain + scaffold
-- [~] B1 app foundation + onboarding + home skeleton
+- [x] B1 app foundation + onboarding + home skeleton
 - [ ] B2 full card system + map + places + WS + events
 - [ ] B3 integration + APK + CI
 - [ ] C1 e2e QA
@@ -69,10 +69,18 @@ unticked items but files present:
   `app/build/app/outputs/flutter-apk/app-debug.apk` (150 MB debug, all ABIs, 339 s first run)
 
 ## B1 checklist
-- [ ] packages · theme · router · riverpod · models · api client · cache · repos (+fixture fallback)
-- [ ] onboarding (language, personas, location) · settings (backend URL, language)
-- [ ] home: shell, chips, banner, freshness, offline banner, hero/warnings/hourly/daily/metric/generic renderers, why sheet UI
-- [ ] l10n en/hi scaffolding · analyze/test/build web · screenshot docs/screenshots/b1_home.png
+- [x] packages (18 runtime deps, versions in "Notes for next phase → B2") · `core/theme.dart`
+  (M3 light+dark, IMD severity colours) · `core/router.dart` (go_router, hard onboarding redirect)
+  · Riverpod 3 · models (`HomeResponse/HomeCard/Warning/User/Location`, coercing `json.dart`)
+  · `data/api_client.dart` (dio, `/api/v1`, bearer) · `data/cache/json_file_cache.dart`
+  · repos: auth · home (network → cache → **bundled fixture**) · locations · events · settings
+- [x] onboarding (language, personas 1–3, location: GPS + search + popular) · settings page
+  (backend URL, language, low bandwidth, cache clear)
+- [x] home: shell + `CustomScrollView`, persona chips, warning banner, freshness chip, offline /
+  sample-data banners, hero + warnings + hourly + daily + metric + generic renderers, why sheet UI
+- [x] l10n en/hi scaffolding (`flutter gen-l10n` from `l10n.yaml`, no build_runner) ·
+  `flutter analyze` clean · `flutter test` **44 passed** · `flutter build web` ·
+  screenshots `docs/screenshots/b1_home.png` (live backend) + `b1_home_offline.png` (fixture)
 
 ## B2 checklist
 - [ ] all renderers + detail pages · animations · events pipeline · why-sheet actions
@@ -128,14 +136,33 @@ unticked items but files present:
   Flutter 3.47's `MinSdkVersionMigration` rewrites any hardcoded 16–23 back to
   `flutter.minSdkVersion` on every build, so 23 cannot survive. `docs/06_MOBILE_SPEC.md` was
   updated in place with the explanation.
+- **B1** `app/assets/fixtures/home_sample.json` is a **byte-for-byte copy of
+  `docs/fixtures/home_severe.json`**, not the hand-written payload 07 §B1 allows as a fallback.
+  Real engine output beats a transcription of the contract, and 07 says to build against
+  `docs/fixtures/` when they exist. Consequence: the offline demo is parent / New Delhi /
+  `scenario=thunderstorm` (orange banner, 4 pinned cards), not parent+commuter. Refresh it with
+  `cp docs/fixtures/home_severe.json app/assets/fixtures/home_sample.json` whenever A3 regenerates
+  the fixtures.
+- **B1** `Card.score` is **not** in 0..1. docs/03 §Scoring is `0.5*rel*ctx + 0.5*urg + eng` plus the
+  pin/urgency boosts, and `home_severe.json`'s pinned `school_commute` scores **1.175**. 04 only
+  ever shows an example value, so this is not a contract break — but the app must treat `score` as
+  an opaque ranking number (it is displayed as text in the why sheet, never as a 0–1 bar).
+- **B1** `hourly_forecast.data.hours` is **not always 24** (02 card 4 says 24): the engine emits
+  what is left of its 48 h window from `now` — 17 entries at 07:30 — and 12 under `?lite=1`.
+  Renderers must read the list length, never assume it.
+- **B1** No animation package beyond `flutter_animate` 4.5.2. 06 §Animation offers
+  `animated_reorderable_list` / `great_list_view` for the re-rank animation "if it builds on the
+  installed Flutter"; neither was added in B1 because the re-rank animation itself is B2 work, and
+  a keyed list + `flutter_animate` entrance is the documented fallback. B2 decides.
 
 ## Notes for next phase
 
-### PAUSED 2026-09-07 11:03 IST (usage limit protocol)
-Agents stopped by the orchestrator on the user's request. B1 had just committed its foundation
-milestone (a1345b2); remaining B1 work: run `flutter analyze` / `flutter test` / `flutter build web`,
-screenshot to docs/screenshots/b1_home.png, tick the B1 checklist, write B2 notes. A3 had not written
-any files. On resume: re-spawn B1 (resume mode) and A3 (fresh) per the recovery protocol.
+### RESUMED — B1 finished 2026-09-07 (the 11:03 IST pause is cleared for B1)
+The pause after a1345b2 left B1 unverified. The resumed run did the rest: `flutter analyze`
+(clean), `flutter test` (44 passed), `flutter build web`, and both screenshots. B1 is `[x]`.
+A3 (backend live alerts + admin + deploy + CI) is the only phase still mid-flight from that pause —
+it was running its own uvicorn on port 8000 during this verification, which is how the live-data
+screenshot happened.
 
 ### B0/B1/B2/B3 — "Unable to establish loopback connection" from Gradle: SOLVED (B1, 2026-09-07 10:30)
 Supersedes the earlier orchestrator note that blamed the sandbox's loopback networking.
@@ -279,3 +306,96 @@ Regenerate with `backend/.venv/Scripts/python scripts/gen_fixtures.py` (offline;
 **Auth for the app:** `POST /api/v1/auth/guest` → `{token, user}`; send
 `Authorization: Bearer <token>` on `/home`, `/me*`, `/events`. OTP demo code is `123456`; pass the
 old guest token in `X-Guest-Token` on `/auth/verify-otp` to merge places/prefs/engagement.
+
+### B2 (full card system, map, places, WS, events) — what B1 hands you
+
+**Package versions actually resolved** (`app/pubspec.lock`, Flutter 3.47.2 / Dart 3.13):
+`flutter_riverpod 3.4.3` · `go_router 18.0.1` · `dio 5.11.1` · `shared_preferences 2.5.5` ·
+`path_provider 2.1.6` · `connectivity_plus 7.3.1` · `geolocator 14.0.3` ·
+`permission_handler 13.0.2` · `flutter_map 8.3.2` + `latlong2 0.10.1` · `fl_chart 1.2.0` ·
+`intl 0.20.3` · `web_socket_channel 3.0.3` · `share_plus 13.3.0` · `url_launcher 6.3.2` ·
+`flutter_animate 4.5.2` · `package_info_plus 10.2.1` · `cached_network_image 4.0.0` ·
+`flutter_lints 6.0.0`. `flutter pub get` warns that 8 transitive packages have newer versions
+pinned back by constraints — expected, not a problem. **Riverpod is v3**: `Notifier`/`build()`,
+`ref.watch` inside `build`, no `StateNotifier`; no codegen anywhere (no build_runner), and l10n
+comes from `flutter gen-l10n` driven by `app/l10n.yaml` into `lib/l10n/gen/`.
+
+**Animation decision:** `flutter_animate` only (used in `home_page.dart` and
+`warning_banner.dart`). `animated_reorderable_list` / `great_list_view` were *not* added — see
+Deviations. If you want the WS re-rank animation from 06 §Animation, try
+`animated_reorderable_list` first (`flutter pub add`, then `flutter analyze`); the documented
+fallback is a keyed list + `flutter_animate` entrance + a highlight flash + the SnackBar.
+
+**How to run the app.**
+```bash
+# web (fastest loop; no Android toolchain needed)
+D:/sdk/flutter/bin/flutter.bat build web            # or: flutter run -d chrome
+cd app/build/web && C:/Python313/python.exe -m http.server 8080 --bind 127.0.0.1   # run_in_background!
+# device / emulator — needs the TEMP recipe from CLAUDE.md §8
+TEMP='D:\sdk\tmp' TMP='D:\sdk\tmp' D:/sdk/flutter/bin/flutter.bat run -d <device>
+```
+The backend origin defaults to `http://localhost:8000` on web/iOS and **`http://10.0.2.2:8000`** on
+Android (the emulator's host alias); Settings overrides it, so on a real handset put the LAN IP
+there. `AppConfig` appends `/api/v1` itself — the stored URL is the origin only.
+
+**Driving the web build headlessly** (how `docs/screenshots/*.png` were made, and how B2/C1 can
+script per-persona screenshots): Flutter web paints to a canvas, so the agent browser tool cannot
+click anything — there is no DOM to find, and the semantics tree only materialises after the
+"Enable accessibility" placeholder is clicked *and* a frame is rendered (it is not, while the pane
+is hidden). What works: launch Chrome headless with `--remote-debugging-port=9222
+--user-data-dir=D:\sdk\tmp\cdp-profile` and drive it over CDP from a ~60-line Node script (Node 22
+has a global `WebSocket`, so **no npm install**) — `Emulation.setDeviceMetricsOverride`
+(390×844@2 for a phone-shaped shot), `Emulation.setEmulatedMedia` `prefers-color-scheme`,
+`Input.dispatchMouseEvent` for taps at CSS coordinates, `Page.captureScreenshot` to a PNG file.
+Two traps: CDP emulation overrides are dropped when the WebSocket session detaches, so set metrics
++ media and take the screenshot **in one run**; and Flutter only picks up a changed
+`deviceScaleFactor` on reload, so navigate after setting metrics or half the canvas stays blank.
+
+**Where things live** (all under `app/lib/`):
+`core/{config,theme,router,icons,formatters,connectivity}.dart` ·
+`data/{api_client,cache/json_file_cache}.dart` · `data/models/{home_response,card,warning,user,
+location,json}.dart` · `data/repositories/{auth,home,locations,events,settings}_repo.dart` ·
+`features/onboarding/{language,persona,location}_page.dart` + `onboarding_scaffold.dart` ·
+`features/home/{home_page,providers}.dart` + `widgets/` (card shell, persona chips, warning banner,
+freshness chip, offline banner, why sheet, reason chips, card detail sheet) · `features/settings/`.
+**The renderer registry is `lib/features/home/renderers/registry.dart`** — a `switch` on
+`card.renderer` in `RendererRegistry._dispatch`, plus two documented sets, `implemented` and
+`pending`, that `test/fixtures_test.dart` asserts against. Add a renderer = new file in
+`renderers/`, one `case`, and move its name from `pending` to `implemented`.
+
+**Renderers that exist:** `hero`, `warnings`, `hourly`, `daily`, `metric`.
+**Everything else falls back to `generic`** (a labelled key/value grid): `nowcast`, `radar`,
+`gauge`, `advice_list`, `timeline`, `alert`, `sea`, `tides`, `places`, `bar_chart`. That fallback
+is load-bearing and looks acceptable but generic in the screenshots — `School run` (timeline) and
+`Heat alert` (alert) render as "Windows: 2 items / Overall Verdict: caution" key/value pairs.
+Ten renderers is most of B2's card work.
+
+**Tests** — `cd app && D:/sdk/flutter/bin/flutter.bat test` → **44 passed** in ~10 s:
+- `test/fixtures_test.dart` is the contract test: it walks **all ten `docs/fixtures/*.json`**
+  (`../docs/fixtures`, relative to the package root), parses each with the models, checks the 04
+  enums / urgency bands / `estimated` labelling / banner→warning linkage, round-trips `toJson`,
+  asserts the corpus still covers 30 card types, and **pumps every card of every payload through
+  the registry** in English plus one of each type in Hindi. Keep it green: it is what stops a new
+  renderer from crashing on a payload nobody looked at.
+- `test/models_test.dart` pins the bundled fixture, `renderers_test.dart` the five real renderers,
+  `home_page_test.dart` the whole home with a fake repo (note `useTallViewport` — the home is a
+  lazy `CustomScrollView`, so a short test surface silently builds only the first two cards).
+
+**Surprises worth knowing**
+- The app **already renders live A3 backend data** end to end: guest token → `PUT /me/profile` →
+  `GET /home`, verified against the running uvicorn on 8000 (`docs/screenshots/b1_home.png` is
+  live 32 °C / AQI 306 Delhi data, and it contains a `heat_alert` card — one of the three types no
+  fixture has). No contract mismatches surfaced.
+- Onboarding must survive a dead backend: `_finish()` in `location_page.dart` calls
+  `ensureGuestToken()` + `updateProfile()`, and both swallow `ApiException` and return `null`, so
+  the user still reaches the home. Keep that property when you add `/me/places`.
+- With the backend down the home stacks **two** banners — the red "Could not refresh. Showing saved
+  data." and the grey "Sample data — the backend at … is not reachable." (see
+  `b1_home_offline.png`). Harmless but redundant, and the red one's wording is wrong for the
+  fixture case. Worth collapsing in B2.
+- The popular-cities list on the location page falls back to `LocationsRepo.fallbackCities`
+  (18 hard-coded cities) when `/locations/popular` is unreachable, so onboarding works offline.
+- Devanagari renders fine in the web build (no bundled font needed); the first frame after a cold
+  load can show tofu for ~1 s while the system font resolves.
+- Cache keys are `home_<lat2dp>_<lon2dp>_<personas>_<lang>`, written by `JsonFileCache`
+  (path_provider on device, `localStorage` under a `flutter.` prefix on web).
