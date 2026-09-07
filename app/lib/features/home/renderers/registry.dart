@@ -7,6 +7,7 @@ import 'generic.dart';
 import 'hero.dart';
 import 'hourly.dart';
 import 'metric.dart';
+import 'timeline.dart';
 import 'warnings.dart';
 
 /// docs/06_MOBILE_SPEC.md §Layout `home/renderers/registry.dart`.
@@ -26,6 +27,7 @@ class RendererRegistry {
     'daily',
     'metric',
     'gauge',
+    'timeline',
   };
 
   /// Renderer kinds named in docs/02 that currently fall back to `generic`.
@@ -33,7 +35,6 @@ class RendererRegistry {
     'nowcast',
     'radar',
     'advice_list',
-    'timeline',
     'alert',
     'sea',
     'tides',
@@ -55,6 +56,8 @@ class RendererRegistry {
         return MetricRenderer(card: card);
       case 'gauge':
         return GaugeRenderer(card: card);
+      case 'timeline':
+        return TimelineRenderer(card: card);
       default:
         return GenericRenderer(card: card);
     }

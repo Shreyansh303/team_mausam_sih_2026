@@ -7,6 +7,7 @@ import '../../../l10n/gen/app_localizations.dart';
 import '../renderers/generic.dart';
 import '../renderers/registry.dart';
 import 'gauge_detail.dart';
+import 'timeline_detail.dart';
 
 /// docs/06_MOBILE_SPEC.md §Layout — `home/detail/card_detail_page.dart`,
 /// "full-screen detail per renderer, charts via fl_chart".
@@ -31,6 +32,8 @@ class CardDetailPage extends StatelessWidget {
     switch (card.renderer) {
       case 'gauge':
         return GaugeDetail(card: card);
+      case 'timeline':
+        return TimelineDetail(card: card);
       default:
         return RendererRegistry.build(context, card);
     }

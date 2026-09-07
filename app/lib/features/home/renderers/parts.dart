@@ -144,3 +144,11 @@ class RendererEmpty extends StatelessWidget {
     );
   }
 }
+
+/// A label/value pair a renderer resolved out of a card-specific `data` shape.
+class KeyValue {
+  const KeyValue(this.label, this.value);
+
+  final String label;
+  final String value;
+}

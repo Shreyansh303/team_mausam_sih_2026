@@ -10,6 +10,7 @@ import 'package:mausam_app/data/models/json.dart';
 import 'package:mausam_app/data/models/warning.dart';
 import 'package:mausam_app/features/home/renderers/gauge.dart';
 import 'package:mausam_app/features/home/renderers/registry.dart';
+import 'package:mausam_app/features/home/renderers/timeline.dart';
 import 'package:mausam_app/l10n/gen/app_localizations.dart';
 
 import 'fixture.dart';
@@ -259,6 +260,42 @@ void main() {
       final card = oneCardPerType['comfort_index']!;
       expect(find.text('${(card.data['index'] as num).round()}'), findsOneWidget);
       expect(find.text(card.data['category'] as String), findsOneWidget);
+    });
+
+    testWidgets('timeline — school_commute shows both windows and the overall verdict',
+        (tester) async {
+      await pumpType(tester, 'school_commute');
+      final card = oneCardPerType['school_commute']!;
+      final windows = (card.data['windows'] as List).cast<Map<String, dynamic>>();
+      expect(find.byType(TimelineBar), findsOneWidget);
+      expect(find.byType(TimelineWindowRow), findsNWidgets(windows.length));
+      expect(find.text('Morning Drop'), findsWidgets);
+      expect(
+        find.textContaining('Overall: ${card.data['overall_verdict'].toString()[0].toUpperCase()}'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('timeline — best_workout_window scores each window out of 100',
+        (tester) async {
+      await pumpType(tester, 'best_workout_window');
+      final card = oneCardPerType['best_workout_window']!;
+      final first = (card.data['windows'] as List).first as Map<String, dynamic>;
+      expect(find.byType(TimelineBar), findsOneWidget);
+      expect(find.text('${(first['score'] as num).round()}/100'), findsOneWidget);
+    });
+
+    testWidgets('timeline — commute_conditions shows the impact and the delay',
+        (tester) async {
+      await pumpType(tester, 'commute_conditions');
+      final card = oneCardPerType['commute_conditions']!;
+      final first = (card.data['windows'] as List).first as Map<String, dynamic>;
+      expect(find.textContaining('impact'), findsWidgets);
+      // The stats row is a Text.rich ("Delay  +12 min"), so search the spans too.
+      expect(
+        find.textContaining('+${(first['delay_min'] as num).round()} min', findRichText: true),
+        findsWidgets,
+      );
     });
   });
 
