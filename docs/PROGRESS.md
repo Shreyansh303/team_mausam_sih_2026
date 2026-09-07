@@ -25,7 +25,7 @@ unticked items but files present:
 - [x] A3 live alerts + admin + deploy + CI
 - [x] B0 flutter toolchain + scaffold
 - [x] B1 app foundation + onboarding + home skeleton
-- [ ] B2a ten pending renderers + detail pages (one commit each)
+- [x] B2a ten pending renderers + detail pages (one commit each)
 - [ ] B2b animations · events · why-sheet actions · places · map · settings · demo sheet · WS client · low-bandwidth · a11y · l10n · icon/splash
 - [ ] B3 integration + APK + CI
 - [ ] C1 e2e QA
@@ -104,9 +104,10 @@ unticked items but files present:
 - [x] detail page per renderer (`lib/features/home/detail/card_detail_page.dart` + one
   `<renderer>_detail.dart` for gauge/timeline/alert/advice_list/bar_chart/sea/tides/places/radar;
   the card shell now pushes a full-screen page instead of the B1 bottom sheet) ·
-  [x] fixtures_test green (64 tests) · [ ] screenshots
+  [x] fixtures_test green (64 tests) · [x] screenshots `docs/screenshots/b2a_{health,fitness,beach}.png`
+  + `_scrolled` variants, all against the live backend
 ### B2b
-- [ ] all renderers + detail pages · animations · events pipeline · why-sheet actions
+- [x] all renderers + detail pages (B2a) · [ ] animations · events pipeline · why-sheet actions
 - [ ] places page · map page (radar + warnings) · settings complete · demo sheet · WS client · low-bandwidth · a11y
 - [ ] l10n en/hi complete · icon/splash · screenshots per persona
 
@@ -202,7 +203,91 @@ unticked items but files present:
 - **A3** `docs/fixtures/*.json` were regenerated and **reverted**: the only diff was the random
   `usr_`/`plc_`/`wrn_` ids, so the committed files still match the current backend byte for byte.
 
+- **B2a** B1's `features/home/widgets/card_detail_sheet.dart` (a modal stand-in) is **deleted**;
+  tapping a card now pushes `features/home/detail/card_detail_page.dart`, which is what
+  docs/06 §Layout always specified. No contract or spec change.
+- **B2a** `RendererRegistry.pending` is now an **empty set** rather than being removed:
+  `test/fixtures_test.dart` asserts against `implemented ∪ pending`, and a later phase that adds a
+  renderer kind still needs somewhere to declare it before the widget exists.
+- **B2a** The `tides` card draws an **interpolated** curve. docs/02 card 17 publishes only
+  `events[≤4]` turning points, and docs/06 asks for "a 24-h tide curve", so `TideCurve.of` samples
+  a half-cosine between consecutive extremes every 20 minutes — the shape a single harmonic gives,
+  which is the same family of model the backend used. The markers sit on the **published** points,
+  and the card shows the "Estimated" pill plus the backend's `disclaimer` (CLAUDE.md §6).
+- **B2a** `RadarRenderer.tileProviderFactory` is a static test hook: `test/fixtures_test.dart`
+  sets it to a provider that returns a 1×1 transparent PNG so the radar card is exercised for real
+  without touching the network. Production leaves it `null` (flutter_map's own network provider).
+- **B2a** New renderer strings are English literals, matching B1's existing renderers; the ARB
+  pass is B2b's (see Notes). Card *content* is localized by the backend via `?lang=`.
+
 ## Notes for next phase
+
+### B2b — what B2a hands you (2026-09-07)
+
+**All 15 renderer kinds are implemented.** `RendererRegistry.pending` is now an **empty set** and
+`implemented` holds every kind docs/02 names. `generic` is still the `default:` arm, so an unknown
+kind from a later backend degrades instead of throwing. One file per kind under
+`lib/features/home/renderers/`, plus two new shared files:
+- `parts.dart` — `StatCell`, `Pill`, `AdviceBullets`, `RendererEmpty`, `KeyValue`. Use these
+  rather than inventing a fourth way to draw a chip.
+- `charts.dart` — `SeriesLineChart` / `SeriesBarChart` (fl_chart 1.2.0 wrappers over
+  `List<SeriesPoint>`), `SeriesMarker`. Both are display-only: `LineTouchData(enabled: false)` and
+  `BarTouchData(enabled: false)`, because a card body must never eat the shell's tap gesture.
+  fl_chart 1.2.0 notes: `TileLayer` has no `backgroundColor`; `getTitlesWidget` returns a plain
+  `Text` (no `SideTitleWidget`, whose `axisSide` argument was replaced upstream).
+
+**Detail pages.** `lib/features/home/detail/card_detail_page.dart` is a full-screen `Scaffold`
+pushed by the card shell on tap (`CardDetailPage.show`); B1's `card_detail_sheet.dart` is deleted.
+`CardDetailPage.detailBodyFor` switches on `card.renderer` and falls back to the card body, so
+every one of the 33 types opens. Convention for a new detail body: a file
+`detail/<renderer>_detail.dart` exporting one widget, and the renderer itself takes an
+`expanded`/`large` flag rather than being duplicated (gauge, timeline, alert, advice_list,
+bar_chart, sea, tides use exactly that; places and radar have their own layouts).
+
+**Still to do in B2b** (unchanged from 07 §B2 minus the renderers): animations, events pipeline,
+why-sheet actions, places page, map page, settings, demo sheet, WS client, low-bandwidth, a11y,
+l10n, icon/splash. Two smaller ones that touch B2a's files:
+- Renderer strings are **English literals** (`'Open map'`, `'Safe for swimming'`, `'Next 24 h'`,
+  `'Estimated'`, `'All clear'` …), following B1's existing renderers. B2b's l10n pass should move
+  them into the ARBs. The card *content* is already localized by the backend.
+- `RadarRenderer`'s "Open map" opens the card's detail page (a bigger `flutter_map` with a frame
+  slider). When B2b adds the real `/map` route, point it there instead.
+
+**Data-shape surprises worth knowing**
+- `packing_suggestions.places[].items` is **`[]` in `home_traveler.json`** — the group heading has
+  to render without rows, otherwise the card shows nothing at all. Same trap for any card whose
+  list is empty but whose grouping is the information.
+- `docs/02` card 12 `best_workout_window.windows[].label` is a **quality** ("Great"), while cards
+  22/28 use `label` as the **window name** ("morning_drop"). `TimelineWindow.parse` switches on
+  `card.type` for exactly this reason.
+- `tides` publishes **four turning points, not a curve** (docs/02 card 17). `TideCurve.of`
+  interpolates a half-cosine between consecutive extremes at 20-minute steps — recorded under
+  Deviations, and the card carries its own "Estimated" pill plus the backend `disclaimer`.
+- `Fmt.humanize` capitalises **every** word: `morning_drop` → "Morning Drop", not "Morning drop".
+- In widget tests, `find.text` does not see `Text.rich` spans — pass `findRichText: true` (and
+  remember it matches the **whole** concatenated string, so `textContaining` is usually what you
+  want).
+- **Two backend i18n gaps show up on live data** (not app bugs, and not visible in the fixtures):
+  the nowcast card's subtitle renders as the raw key `hazard.rain`, and the AQI insight detail as
+  `pollutant.O3 is the dominant pollutant at — µg/m³` (missing key + missing value). Worth a fix
+  on the backend side during B3 integration.
+
+**Screenshots — how `docs/screenshots/b2a_*.png` were made** (extends B1's CDP recipe; the driver
+script lives in the agent scratchpad, not the repo, because `scripts/` was out of B2a's scope):
+1. `flutter build web`; serve `app/build/web` with `python -m http.server 8080 --bind 127.0.0.1`;
+   run the backend on 8000. **Use `http://127.0.0.1:8000` as the app's backend URL, not
+   `localhost`** — headless Chrome resolves `localhost` to `::1` first and uvicorn binds IPv4 only,
+   which silently drops the app into its bundled-fixture fallback.
+2. Skip onboarding by seeding `shared_preferences` **before** the app boots: it is `localStorage`
+   under a `flutter.` prefix with `json.encode`d values —
+   `flutter.onboarded='true'`, `flutter.language='"en"'`, `flutter.backend_url='"http://127.0.0.1:8000"'`,
+   `flutter.personas='["health"]'`, `flutter.home_location='"{\"id\":…,\"lat\":28.61,…}"'`
+   (a JSON **string** containing JSON). Navigate once, seed, then navigate again.
+3. **Load the page twice after seeding.** On the first load the home request races ahead of the
+   guest token and gets a 401, so the app shows "Sample data"; the token is stored by then and the
+   second load renders live data.
+4. `Input.dispatchMouseEvent` with `type: 'mouseWheel'` scrolls the Flutter canvas — that is how
+   the `_scrolled.png` shots reach the gauge/sea cards further down the feed.
 
 ### RESUMED — B1 finished 2026-09-07 (the 11:03 IST pause is cleared for B1)
 The pause after a1345b2 left B1 unverified. The resumed run did the rest: `flutter analyze`
