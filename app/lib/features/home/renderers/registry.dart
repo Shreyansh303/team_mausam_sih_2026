@@ -11,6 +11,7 @@ import 'hero.dart';
 import 'hourly.dart';
 import 'metric.dart';
 import 'nowcast.dart';
+import 'places.dart';
 import 'sea.dart';
 import 'tides.dart';
 import 'timeline.dart';
@@ -40,12 +41,12 @@ class RendererRegistry {
     'bar_chart',
     'sea',
     'tides',
+    'places',
   };
 
   /// Renderer kinds named in docs/02 that currently fall back to `generic`.
   static const Set<String> pending = <String>{
     'radar',
-    'places',
   };
 
   static Widget _dispatch(HomeCard card) {
@@ -76,6 +77,8 @@ class RendererRegistry {
         return SeaRenderer(card: card);
       case 'tides':
         return TidesRenderer(card: card);
+      case 'places':
+        return PlacesRenderer(card: card);
       default:
         return GenericRenderer(card: card);
     }

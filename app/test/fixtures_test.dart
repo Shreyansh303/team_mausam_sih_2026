@@ -13,6 +13,7 @@ import 'package:mausam_app/features/home/renderers/alert.dart';
 import 'package:mausam_app/features/home/renderers/charts.dart';
 import 'package:mausam_app/features/home/renderers/gauge.dart';
 import 'package:mausam_app/features/home/renderers/parts.dart';
+import 'package:mausam_app/features/home/renderers/places.dart';
 import 'package:mausam_app/features/home/renderers/sea.dart';
 import 'package:mausam_app/features/home/renderers/tides.dart';
 import 'package:mausam_app/features/home/renderers/registry.dart';
@@ -488,6 +489,20 @@ void main() {
       expect(find.textContaining('Next: '), findsOneWidget);
       expect(find.textContaining(card.data['trend'] == 'rising' ? 'Rising' : 'Falling'),
           findsOneWidget);
+    });
+
+    testWidgets('places — one tile per saved place with its own local time',
+        (tester) async {
+      await pumpType(tester, 'saved_places');
+      final card = oneCardPerType['saved_places']!;
+      final places = (card.data['places'] as List).cast<Map<String, dynamic>>();
+      expect(find.byType(PlaceTile), findsNWidgets(places.length));
+      for (final p in places) {
+        expect(find.text(p['name'] as String), findsOneWidget);
+      }
+      // docs/04 preamble — `local_time` carries the place's offset and is printed as it stands.
+      final first = places.first;
+      expect(find.text((first['local_time'] as String).substring(11, 16)), findsWidgets);
     });
   });
 
