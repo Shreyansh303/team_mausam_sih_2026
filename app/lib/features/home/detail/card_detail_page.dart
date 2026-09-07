@@ -11,6 +11,7 @@ import 'alert_detail.dart';
 import 'bar_chart_detail.dart';
 import 'gauge_detail.dart';
 import 'places_detail.dart';
+import 'radar_detail.dart';
 import 'sea_detail.dart';
 import 'tides_detail.dart';
 import 'timeline_detail.dart';
@@ -52,6 +53,8 @@ class CardDetailPage extends StatelessWidget {
         return TidesDetail(card: card);
       case 'places':
         return PlacesDetail(card: card);
+      case 'radar':
+        return RadarDetail(card: card);
       default:
         return RendererRegistry.build(context, card);
     }

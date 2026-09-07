@@ -12,6 +12,7 @@ import 'hourly.dart';
 import 'metric.dart';
 import 'nowcast.dart';
 import 'places.dart';
+import 'radar.dart';
 import 'sea.dart';
 import 'tides.dart';
 import 'timeline.dart';
@@ -42,12 +43,12 @@ class RendererRegistry {
     'sea',
     'tides',
     'places',
-  };
-
-  /// Renderer kinds named in docs/02 that currently fall back to `generic`.
-  static const Set<String> pending = <String>{
     'radar',
   };
+
+  /// Renderer kinds named in docs/02 that currently fall back to `generic`. B2a emptied this
+  /// set; it stays so a card type A3 (or a later phase) adds still has a documented home.
+  static const Set<String> pending = <String>{};
 
   static Widget _dispatch(HomeCard card) {
     switch (card.renderer) {
@@ -79,6 +80,8 @@ class RendererRegistry {
         return TidesRenderer(card: card);
       case 'places':
         return PlacesRenderer(card: card);
+      case 'radar':
+        return RadarRenderer(card: card);
       default:
         return GenericRenderer(card: card);
     }

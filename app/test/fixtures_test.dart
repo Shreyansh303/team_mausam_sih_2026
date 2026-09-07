@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mausam_app/core/theme.dart';
@@ -14,6 +16,7 @@ import 'package:mausam_app/features/home/renderers/charts.dart';
 import 'package:mausam_app/features/home/renderers/gauge.dart';
 import 'package:mausam_app/features/home/renderers/parts.dart';
 import 'package:mausam_app/features/home/renderers/places.dart';
+import 'package:mausam_app/features/home/renderers/radar.dart';
 import 'package:mausam_app/features/home/renderers/sea.dart';
 import 'package:mausam_app/features/home/renderers/tides.dart';
 import 'package:mausam_app/features/home/renderers/registry.dart';
@@ -52,6 +55,18 @@ String _bandFor(double u) {
   return 'severe';
 }
 
+/// Keeps `flutter_map` off the network in tests: every tile resolves to a 1×1 transparent PNG,
+/// so the radar card is exercised for real without a single HTTP request.
+class _BlankTileProvider extends TileProvider {
+  static final Uint8List _pixel = base64Decode(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+  );
+
+  @override
+  ImageProvider<Object> getImage(TileCoordinates coordinates, TileLayer options) =>
+      MemoryImage(_pixel);
+}
+
 void main() {
   const sizes = <String>{'hero', 'large', 'medium', 'small'};
   const severities = <String>{'info', 'advisory', 'watch', 'warning', 'severe'};
@@ -88,6 +103,7 @@ void main() {
   final oneCardPerType = <String, HomeCard>{};
 
   setUpAll(() {
+    RadarRenderer.tileProviderFactory = _BlankTileProvider.new;
     fixtures = loadDocsFixtures();
     for (final entry in fixtures) {
       for (final card in HomeResponse.fromJson(entry.value).allCards) {
@@ -503,6 +519,37 @@ void main() {
       // docs/04 preamble — `local_time` carries the place's offset and is printed as it stands.
       final first = places.first;
       expect(find.text((first['local_time'] as String).substring(11, 16)), findsWidgets);
+    });
+
+    testWidgets('radar — draws the map with the latest RainViewer frame and an Open map button',
+        (tester) async {
+      await pumpType(tester, 'radar');
+      final card = oneCardPerType['radar']!;
+      final spec = RadarSpec.of(card)!;
+      final frames = (card.data['frames'] as List).cast<Map<String, dynamic>>();
+      expect(spec.frames.length, frames.length);
+      // docs/02 card 6 — the template carries a literal {path} the app substitutes per frame.
+      expect(spec.tileUrlFor(spec.frames.length - 1),
+          (card.data['tile_template'] as String)
+              .replaceAll('{path}', frames.last['path'] as String));
+      expect(find.byType(RadarMap), findsOneWidget);
+      expect(find.byType(FlutterMap), findsOneWidget);
+      expect(find.text('Open map'), findsOneWidget);
+      expect(find.textContaining('Rain within 2 h'), findsOneWidget);
+    });
+
+    testWidgets('radar — degrades to a placeholder when there are no frames', (tester) async {
+      final card = oneCardPerType['radar']!;
+      final offline = HomeCard.fromJson(<String, dynamic>{
+        ...card.toJson(),
+        'data': <String, dynamic>{...card.data, 'frames': <dynamic>[]},
+      });
+      await tester.pumpWidget(
+          _host(Builder(builder: (context) => RendererRegistry.build(context, offline))));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(find.byType(RadarUnavailable), findsOneWidget);
+      expect(find.byType(FlutterMap), findsNothing);
     });
   });
 

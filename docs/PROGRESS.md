@@ -100,10 +100,11 @@ unticked items but files present:
 
 ## B2 checklist
 ### B2a (renderers)
-- [x] nowcast · [ ] radar · [x] gauge · [x] advice_list · [x] timeline · [x] alert · [x] sea · [x] tides · [x] places · [x] bar_chart
-- [~] detail page per renderer (`lib/features/home/detail/card_detail_page.dart` + one
-  `<renderer>_detail.dart` per kind; the card shell now pushes a full-screen page instead of the
-  B1 bottom sheet) · fixtures_test green · [ ] screenshots
+- [x] nowcast · [x] radar · [x] gauge · [x] advice_list · [x] timeline · [x] alert · [x] sea · [x] tides · [x] places · [x] bar_chart
+- [x] detail page per renderer (`lib/features/home/detail/card_detail_page.dart` + one
+  `<renderer>_detail.dart` for gauge/timeline/alert/advice_list/bar_chart/sea/tides/places/radar;
+  the card shell now pushes a full-screen page instead of the B1 bottom sheet) ·
+  [x] fixtures_test green (64 tests) · [ ] screenshots
 ### B2b
 - [ ] all renderers + detail pages · animations · events pipeline · why-sheet actions
 - [ ] places page · map page (radar + warnings) · settings complete · demo sheet · WS client · low-bandwidth · a11y
