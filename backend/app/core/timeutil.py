@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from datetime import date, datetime, timedelta, timezone
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -59,9 +60,18 @@ def parse_local(value: str, tz: timezone | ZoneInfo) -> datetime:
     return dt.astimezone(tz)
 
 
+#: `2026-09-08T07:30:00 05:30` — a query string where the `+` of the offset decoded to a space.
+_SPACED_OFFSET = re.compile(r"(?<=\d{2}:\d{2}:\d{2}) (\d{2}:\d{2})$")
+
+
 def parse_any(value: str, tz: timezone | ZoneInfo | None = None) -> datetime:
-    """Parse an ISO-8601 string (with or without offset, `Z` allowed)."""
+    """Parse an ISO-8601 string (with or without offset, `Z` allowed).
+
+    A `+` that reached us as a space is repaired: `?now_override=...+05:30` typed into curl or
+    a browser arrives URL-decoded as a space, and rejecting it only confuses the demo.
+    """
     v = value.strip().replace("Z", "+00:00")
+    v = _SPACED_OFFSET.sub(r"+\1", v)
     dt = datetime.fromisoformat(v)
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=tz or UTC)

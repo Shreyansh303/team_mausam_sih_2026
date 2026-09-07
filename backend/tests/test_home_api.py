@@ -475,3 +475,26 @@ def test_accept_language_header_is_used_when_no_query_or_profile(client, guest):
     )
     assert res.status_code == 200
     assert res.json()["context"]["lang"] == "hi"
+
+
+# --------------------------------------------------------------------------- schema drift
+
+
+def test_init_db_rebuilds_a_table_left_over_from_an_older_schema(tmp_path):
+    """A database written before a model change must not 500 on the next insert."""
+    from sqlalchemy import text
+
+    from app.core import db as db_mod
+
+    url = f"sqlite:///{(tmp_path / 'old.db').as_posix()}"
+    db_mod.configure(url)
+    engine = db_mod.get_engine()
+    with engine.begin() as conn:
+        conn.execute(text("CREATE TABLE users (id VARCHAR(32) PRIMARY KEY, language VARCHAR(8) NOT NULL)"))
+
+    assert "users" in db_mod._stale_tables(engine)
+    db_mod.init_db()
+    assert db_mod._stale_tables(db_mod.get_engine()) == []
+
+    db_mod.reset_engine()
+    db_mod.configure(None)

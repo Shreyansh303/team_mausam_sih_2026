@@ -12,7 +12,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 from sqlalchemy.engine import Engine, make_url
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 from sqlalchemy.pool import StaticPool
@@ -85,11 +85,46 @@ def get_session_factory() -> sessionmaker[Session]:
     return _session_factory
 
 
-def init_db() -> None:
-    """Create every table. Imports the model package so the metadata is populated."""
+def _stale_tables(engine: Engine) -> list[str]:
+    """Tables whose live columns no longer match the models (name set or nullability).
+
+    There is no migration tool in this prototype: `create_all` leaves an existing table alone,
+    so a database written by an older build silently keeps the old constraints and the next
+    INSERT fails with a confusing 500. Detect that and say so.
+    """
+    inspector = inspect(engine)
+    live = set(inspector.get_table_names())
+    stale: list[str] = []
+    for name, table in Base.metadata.tables.items():
+        if name not in live:
+            continue
+        actual = {c["name"]: bool(c["nullable"]) for c in inspector.get_columns(name)}
+        expected = {c.name: bool(c.nullable) for c in table.columns}
+        if actual != expected:
+            stale.append(name)
+    return stale
+
+
+def init_db(*, rebuild_stale: bool = True) -> None:
+    """Create every table. Imports the model package so the metadata is populated.
+
+    A table left over from an older schema is dropped and recreated (`rebuild_stale`). The
+    store only holds demo/guest state, and a stale file is otherwise a hard 500 on first write.
+    """
     import app.models  # noqa: F401  (registers the mappers)
 
-    Base.metadata.create_all(bind=get_engine())
+    engine = get_engine()
+    stale = _stale_tables(engine)
+    if stale and rebuild_stale:
+        log.warning(
+            "schema changed since this database was written; recreating %s (demo data is lost)",
+            ", ".join(sorted(stale)),
+        )
+        Base.metadata.drop_all(bind=engine, tables=[Base.metadata.tables[t] for t in stale])
+    elif stale:
+        raise RuntimeError(f"stale tables in {current_url()}: {', '.join(sorted(stale))}")
+
+    Base.metadata.create_all(bind=engine)
 
 
 def get_db() -> Iterator[Session]:
