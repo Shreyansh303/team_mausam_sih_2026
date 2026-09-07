@@ -15,8 +15,9 @@ import pytest
 import respx
 
 from app.config import settings
-from app.core import cache, geo, i18n
+from app.core import cache, db, geo, i18n
 from app.providers import imd, scenarios
+from app.state import demo_state
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -69,8 +70,20 @@ def reset_state():
     i18n.reload()
     geo.cities.cache_clear()
     geo.coastal_points.cache_clear()
+    demo_state.reset()
     yield
     cache.clear_all()
+    demo_state.reset()
+
+
+@pytest.fixture(autouse=True)
+def fresh_db():
+    """Every test gets an empty in-memory SQLite (never the developer's data/mausam.db)."""
+    db.configure("sqlite://")
+    db.init_db()
+    yield
+    db.reset_engine()
+    db.configure(None)
 
 
 @pytest.fixture(autouse=True)
@@ -118,3 +131,16 @@ def client():
 
     with TestClient(app) as c:
         yield c
+
+
+@pytest.fixture
+def guest(client):
+    """A fresh guest token plus its auth header (04 §POST /auth/guest)."""
+    res = client.post("/api/v1/auth/guest")
+    assert res.status_code == 200, res.text
+    body = res.json()
+    return {
+        "token": body["token"],
+        "user": body["user"],
+        "headers": {"Authorization": f"Bearer {body['token']}"},
+    }

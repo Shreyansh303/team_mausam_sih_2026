@@ -346,7 +346,9 @@ _workout_t, _workout_s = _mult(dayparts={"dawn": 1.4, "evening": 1.4, "late": 0.
 _sun_t, _sun_s = _mult(dayparts={"dawn": 1.2, "evening": 1.2})
 _heat_t, _heat_s = _mult(dayparts={"midday": 1.3, "afternoon": 1.3}, seasons={"pre_monsoon": 1.3})
 _school_t, _school_s = _mult(
-    weekday_dayparts={"dawn": 1.5, "morning": 1.5, "midday": 1.3, "afternoon": 1.3},
+    weekday_dayparts={
+        "dawn": 1.5, "morning": 1.5, "midday": 1.3, "afternoon": 1.3, "late": 0.5, "night": 0.5
+    },
     weekend=0.4,
 )
 _rain_t, _rain_s = _mult(seasons={"monsoon": 1.3})

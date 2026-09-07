@@ -32,7 +32,9 @@ class User(Base):
     id: Mapped[str] = mapped_column(String(32), primary_key=True)
     phone: Mapped[str | None] = mapped_column(String(24), index=True, default=None)
     is_guest: Mapped[bool] = mapped_column(Boolean, default=True)
-    language: Mapped[str] = mapped_column(String(8), default="en")
+    #: `None` until the user actually picks one — that is what lets `Accept-Language` win over
+    #: the "en" default in `/home` (04 §Language) while an explicit choice still wins over both.
+    language: Mapped[str | None] = mapped_column(String(8), default=None)
     units: Mapped[str] = mapped_column(String(16), default="metric")
     personas: Mapped[list[dict[str, Any]]] = mapped_column(JSON, default=list)
     home_location: Mapped[dict[str, Any] | None] = mapped_column(JSON, default=None)

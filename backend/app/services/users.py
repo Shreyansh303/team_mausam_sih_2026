@@ -41,7 +41,7 @@ def normalize_personas(ids: list[str]) -> list[dict[str, Any]]:
     return out
 
 
-def create_guest(db: Session, *, language: str = "en") -> User:
+def create_guest(db: Session, *, language: str | None = None) -> User:
     user = User(
         id=new_user_id(),
         phone=None,
@@ -178,7 +178,7 @@ def merge_guest(db: Session, *, guest_id: str, target_id: str) -> None:
         target.personas = guest.personas
     if guest.home_location and not target.home_location:
         target.home_location = guest.home_location
-    if guest.language and target.language == "en":
+    if guest.language and not target.language:
         target.language = guest.language
     if guest.school_windows:
         target.school_windows = guest.school_windows
