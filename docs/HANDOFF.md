@@ -44,22 +44,44 @@ Handoff-ready points are phase boundaries with a clean tree. The intended split:
   until `flutter doctor` is happy; ignore the Windows-specific paths in `CLAUDE.md` §8.
 - iOS builds and simulators need macOS; judges get the Android APK.
 
-## 4. Ready-to-paste orchestrator prompt (start of each new session)
+## 4. Phase H0 — fresh-machine bootstrap (run first on a new computer)
+Nothing but git is assumed. An Opus agent does all of it; the human only opens Claude Code in the
+cloned folder. Deliverable: both verification gates green, then `[x] H0` in PROGRESS.md.
+1. Backend: install Python 3.13 if missing (winget/brew/apt or python.org, user-space OK) →
+   `python -m venv backend/.venv` → pip install `backend/requirements.txt` + `requirements-dev.txt`
+   → gate: `pytest -q` in `backend/` green (offline; no keys) → start uvicorn in background, curl
+   `/api/v1/health`, stop it.
+2. App: Windows → run `scripts/setup_flutter_windows.ps1` then follow `docs/SETUP_WINDOWS.md`
+   (installs Flutter stable, JDK 17, Android SDK to `D:\sdk` without admin; adjust the drive letter
+   in the script if there is no D:). macOS/Linux → install Flutter stable, JDK 17, Android
+   command-line tools + platform-tools/build-tools, accept licenses. Gate: `flutter doctor` shows
+   Flutter + Android toolchain + a browser OK; `flutter pub get`, `flutter analyze`, `flutter test`,
+   `flutter build web` all pass in `app/`; `flutter build apk --debug` succeeds (on Windows from an
+   agent shell use the TEMP recipe in CLAUDE.md §8).
+3. Install the auto-push hook from §2; confirm `git config user.name/email` are the new owner's.
+4. Record machine specifics (OS, paths, versions) in PROGRESS.md "Notes for next phase".
+
+## 5. Ready-to-paste orchestrator prompt (start of each new session)
 ```
 You are the orchestrator for Team Mausam's SIH 2026 project in this repo. Read CLAUDE.md,
-docs/HANDOFF.md, docs/PROGRESS.md and docs/07_PHASES.md. You do not implement anything yourself.
-For the next unchecked phase(s) in PROGRESS.md (respecting the parallelism rules), spawn an Opus
-agent (Agent tool, model "opus", run in background) whose prompt tells it to: read CLAUDE.md,
-docs/07_PHASES.md §<phase>, docs/PROGRESS.md (Deviations + Notes for next phase) and the docs the
-phase names; deliver the phase's full list; verify with real commands and paste output tails;
-commit + push per milestone with no attribution lines; tick PROGRESS.md and write notes for the
-next phase; stay inside its assigned directories. When an agent reports, verify briefly (git log,
-tests), then spawn the next phase. When I say "pause", TaskStop all agents, checkpoint (commit +
-push), mark phases [~]; when I say "resume", re-spawn per the recovery protocol. Keep your own
-turns short and do not spend tokens re-deriving what the docs already say.
+docs/HANDOFF.md, docs/PROGRESS.md and docs/07_PHASES.md. You do not implement anything yourself:
+all implementation runs on Opus agents (Agent tool, model "opus", run in background) so that
+expensive-model usage stays minimal. If PROGRESS.md does not show "[x] H0" for this machine, first
+spawn one Opus agent for Phase H0 (docs/HANDOFF.md §4: bootstrap Python venv, Flutter/JDK/Android
+toolchain, run all verification gates, install the auto-push hook, tick H0). Then, for the next
+unchecked phase(s) in PROGRESS.md (respecting the parallelism rules in docs/07_PHASES.md), spawn
+one Opus agent per phase whose prompt tells it to: read CLAUDE.md, docs/07_PHASES.md §<phase>,
+docs/PROGRESS.md (Deviations + Notes for next phase) and the docs the phase names; deliver the
+phase's full list; verify with real commands and paste output tails; commit + push per milestone
+with no attribution lines of any kind; tick PROGRESS.md and write notes for the next phase; stay
+inside its assigned directories. When an agent reports, verify briefly (git log, tests), then
+spawn the next phase. When I say "pause" or give a usage percentage above ~90, TaskStop all
+agents, checkpoint (commit + push), mark phases [~]; when I say "resume", re-spawn per the
+recovery protocol in PROGRESS.md. Schedule a one-shot safety pause ~80 minutes after starting two
+parallel agents. Keep your own turns short and never re-derive what the docs already say.
 ```
 
-## 5. Per-phase agent prompt template
+## 6. Per-phase agent prompt template
 ```
 Implement Phase <ID> of the Team Mausam SIH 2026 project in <repo path>. Read in order: CLAUDE.md,
 docs/07_PHASES.md §<ID>, docs/PROGRESS.md (Deviations, Notes for next phase), then <docs the phase
@@ -71,7 +93,7 @@ phase [x] when done, record deviations, write "Notes for next phase". Final repo
 Verified / Not done + why / Exact next step.
 ```
 
-## 6. Demo assets the next owner should know exist
+## 7. Demo assets the next owner should know exist
 - Admin console: `http://<backend>/admin/console` (key `mausam-admin` in demo mode) — push
   warnings, switch scenarios, set the demo clock.
 - Scenarios: `?scenario=heatwave|cyclone|dense_fog|frost|severe_aqi|thunderstorm|heavy_rain|

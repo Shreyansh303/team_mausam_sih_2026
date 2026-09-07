@@ -30,6 +30,7 @@ unticked items but files present:
 - [ ] C1 e2e QA
 - [ ] C2 docs + pitch
 - [ ] S* stretch
+- [ ] H0 fresh-machine bootstrap (new owner; see docs/HANDOFF.md §4) — not needed on the original machine
 
 ## A1 checklist
 - [x] skeleton + venv + deps + .env.example + Dockerfile
