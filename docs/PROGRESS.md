@@ -21,7 +21,7 @@ unticked items but files present:
 
 ## Phase status
 - [x] A1 backend data layer
-- [ ] A2 engine + home + auth + events + i18n
+- [x] A2 engine + home + auth + events + i18n
 - [ ] A3 live alerts + admin + deploy + CI
 - [x] B0 flutter toolchain + scaffold
 - [~] B1 app foundation + onboarding + home skeleton
@@ -41,12 +41,16 @@ unticked items but files present:
 - [x] recorded fixtures + offline tests green (210 passed)
 
 ## A2 checklist
-- [ ] DB models + sqlite init · JWT guest/OTP · /me, /me/card-prefs, /me/places
-- [ ] engine: catalog (02 matrix) · context · scoring · explain · learning
-- [ ] 33 builders · /home (all params) · /events
-- [ ] i18n en + hi complete
-- [ ] docs/fixtures/home_<persona>.json ×8 + home_severe.json + home_coastal.json
-- [ ] tests: 03 §tests ×9 + API flows
+- [x] DB models + sqlite init · JWT guest/OTP (demo OTP `123456`, guest merge via `X-Guest-Token`)
+  · `/me`, `/me/profile`, `/me/card-prefs`, `/me/reset-learning`, `/me/places` (max 8)
+- [x] engine: catalog (full 02 matrix, gates, time/season multipliers, urgency) · context ·
+  scoring (03 formulas verbatim) · explain (7 reason families, localized) · learning
+- [x] 33 builders · `/home` (lat/lon, place_id, lang, personas, now_override, scenario,
+  event_date, lite; saved-place snapshots concurrent, capped at 5) · `/events` (batch ≤ 100,
+  pin/unpin/hide/unhide also write card-prefs)
+- [x] i18n en + hi complete (471 keys each) · mr/ta/bn partial (54 keys, per-key fallback)
+- [x] docs/fixtures/home_<persona>.json ×8 + home_severe.json + home_coastal.json
+- [x] tests: 03 §tests ×9 + API flows + i18n parity — **283 passed** (210 A1 + 73 A2)
 
 ## A3 checklist
 - [ ] admin routes + console · WS manager + /ws/alerts · global scenario/now-override
@@ -95,6 +99,30 @@ unticked items but files present:
   the call when the id is missing.
 - **A1** `/locations/popular` returns up to 120 curated cities (04 asks for ≥ 40); 106 are flagged
   `popular` in `cities.json`.
+- **A2** `docs/02` §22 school_commute gained `late`,`night` ×0.5 (weekday) — the doc was updated in
+  the same commit. Without it the card scores 0.5 all night and 03 §Tests 5 ("at 22:00 it is not in
+  the top 3") is unsatisfiable. Every other multiplier is exactly as written in 02.
+- **A2** 03 §Tests 7 asks for "≥ 3 of a persona's own cards in the top 8 under `clear_pleasant`".
+  That scenario deliberately removes every hazard, so the hazard-gated cards in a coverage list
+  (`warnings`, `rain_alert`, `storm_fog_alert`, `frost_alert`, `heat_alert`) do not exist at all —
+  parent has 1 ungated card of 3 and commuter 2 of 3. `test_engine.py::test_7…` instead asserts
+  that **every ungated** coverage card reaches the top 8 (identical for the six personas with ≥ 3,
+  stronger for the other two). Loosening the gates was rejected: a rain alert with no rain is a lie.
+- **A2** `Snapshot.fetched_at` now carries the **location's** offset (04 says every time does) and
+  equals `now_override` when a demo clock is set. Previously it was `datetime.now(UTC)`, which made
+  `Card.updated_at` / `freshness.weather` UTC and `docs/fixtures/*.json` differ on every run.
+- **A2** `users.language` is **nullable**; it is `null` until the user picks a language. 04 §User
+  still shows a string — `GET /me` coerces `null` → `"en"`. This is what makes the 04 language
+  order work: `?lang=` → the user's saved choice → `Accept-Language` → `en`. With a stored `"en"`
+  default the profile always shadowed `Accept-Language`.
+- **A2** `core/timeutil.parse_any` repairs an offset whose `+` arrived as a space
+  (`?now_override=2026-09-08T07:30:00+05:30` URL-decodes to `... 05:30` in curl and browsers).
+- **A2** `core/db.init_db()` drops and recreates any table whose live columns no longer match the
+  models (name set or nullability) and logs a warning. There is no migration tool; a `mausam.db`
+  written by an older build otherwise 500s on the first insert. Demo/guest data only.
+- **A2** Additive, no contract change: `Card.data` for `tides` carries a resolved `disclaimer`
+  string (04/02 name the key; A1's `Snapshot.tides` exposes `disclaimer_key`), and `GET /home/now`
+  (hidden from the schema) reports the effective demo clock for the A3 console.
 - **B0** `minSdk` is **24** (Android 7.0), not the 23 originally written in 06 §Android config.
   Flutter 3.47's `MinSdkVersionMigration` rewrites any hardcoded 16–23 back to
   `flutter.minSdkVersion` on every build, so 23 cannot survive. `docs/06_MOBILE_SPEC.md` was
@@ -177,3 +205,70 @@ Every derived block also carries a `urgency` float computed per the 02 rules —
 **Tests**: `backend/.venv/Scripts/python -m pytest -q` → 210 passed, fully offline. `tests/conftest.py`
 replays `tests/fixtures/*.json` through respx and fails on any unmocked host; add new upstreams there.
 Re-record with `.venv/Scripts/python scripts/record_fixtures.py` (hits the real APIs).
+
+### A3 (live alerts + admin) — what A2 hands you
+
+**Everything is mounted twice**, at `/api/v1` and at the root (A1's convention) — add your
+`admin.router` and `ws.router` to the `routers` tuple in `app/main.py` the same way.
+
+**Where admin warnings plug into `/home`.** `api/home.py` calls
+`snapshot_svc.get_snapshot(lat, lon, scenario=..., now=...)`. `build_snapshot` already accepts
+`admin_warnings: list[dict] | None` and merges them through `services/warnings.merge()` (filter by
+district / state / `radius_km`, drop `valid_to <= now`, sort by severity) — and passing it
+**bypasses the snapshot cache**, which is what you want. So A3 needs exactly two edits:
+1. load the live admin warnings (new `models/admin_warning.py`, `expires_at > now`) in `get_home`
+   and pass them as `admin_warnings=`;
+2. nothing else. `snap["warnings"]` flows into `Context.active_warnings`, and from there the
+   `warnings` card gate, `urgency_warnings` (yellow 0.5 / orange 0.8 / red 1.0 → pinned at ≥ 0.8),
+   `engine/home.banner_for` (banner at orange+) and `context.warning_count` all light up on their
+   own. Verified today: `?scenario=thunderstorm` pins the warnings card and sets an orange banner.
+
+**Where `demo_state` plugs in.** `app/state.py` holds `demo_state.scenario` / `.now_override`;
+`get_home` already reads both as the fallback under the per-request `?scenario=` / `?now_override=`.
+`POST /admin/scenario` and `POST /admin/now-override` only have to write `demo_state` — no engine
+change. `GET /home/now` (hidden route) reports the effective clock for the console.
+
+**Where the WS hook belongs.** `api/ws.py` should own the connection registry; the broadcast calls
+belong in the **admin router**, right after the DB write, not in the engine (`app/engine/` is pure
+and must stay that way):
+- `POST /admin/warnings` → persist → `ws.broadcast_warning(w)` (`affects_you` = `warnings.applies_to(w, lat, lon, district, state)`, which already exists);
+- `DELETE /admin/warnings/{id}` → `ws.broadcast("warning_cleared", {"id": id})`;
+- `POST /admin/scenario` / `/admin/now-override` → `ws.broadcast("scenario_changed"|"now_override", …)`.
+Cache note: after any admin write, call `cache.clear_all()` or at least drop the `snapshot` bucket,
+otherwise a cached snapshot without the new warning can still be served for up to 5 minutes.
+
+**Regenerate the fixtures** at the end of A3 (`scripts/gen_fixtures.py`) if the payload changes.
+
+### B1/B2 — the fixture contract
+
+`docs/fixtures/` holds 10 files, each one complete `HomeResponse` per docs/04, all Delhi at
+`now_override=2026-09-08T07:30:00+05:30` unless noted:
+
+| file | persona | location | scenario |
+|---|---|---|---|
+| `home_health.json` `home_fitness.json` `home_parent.json` `home_agriculture.json` `home_commuter.json` `home_event_planner.json` | that persona alone | Delhi | `clear_pleasant` |
+| `home_beach.json` | beach | Panaji | `clear_pleasant` |
+| `home_traveler.json` | traveler | Delhi + 2 saved places (Panaji, Mumbai) | `clear_pleasant` |
+| `home_severe.json` | parent | Delhi | `thunderstorm` — orange banner, 4 pinned cards |
+| `home_coastal.json` | beach | Panaji | `clear_pleasant` |
+
+Regenerate with `backend/.venv/Scripts/python scripts/gen_fixtures.py` (offline; replays
+`backend/tests/fixtures/`). Byte-for-byte reproducible except the random `usr_`/`plc_` ids.
+
+- **30 of the 33 card types appear** across the 10 files. `frost_alert`, `heat_alert` and
+  `travel_alerts` do not, because `clear_pleasant`/`thunderstorm` do not trigger their gates.
+  To exercise those three renderers against a live backend:
+  `?scenario=frost&personas=agriculture` · `?scenario=heatwave&personas=fitness` ·
+  `?scenario=dense_fog&personas=traveler` **with at least one saved place** (all three verified).
+- **Renderers to register** (`Card.renderer`): `hero, warnings, nowcast, hourly, daily, radar,
+  gauge, metric, advice_list, timeline, alert, sea, tides, places, bar_chart`. Fall back to a
+  generic renderer on an unknown value rather than throwing — A3 may add cards.
+- `Card.actions[].id` is already localized in `label`; `pin` becomes `unpin` when the user pinned
+  the card, so render the id you are given.
+- `more_cards` is `[]` when `?lite=1`; hourly arrays trim to 12 and radar frames to 3.
+- **Any contract change must edit `docs/04_API_CONTRACT.md` in the same commit** (CLAUDE.md §1)
+  and be recorded under Deviations here.
+
+**Auth for the app:** `POST /api/v1/auth/guest` → `{token, user}`; send
+`Authorization: Bearer <token>` on `/home`, `/me*`, `/events`. OTP demo code is `123456`; pass the
+old guest token in `X-Guest-Token` on `/auth/verify-otp` to merge places/prefs/engagement.
