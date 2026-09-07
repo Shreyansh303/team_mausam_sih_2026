@@ -786,7 +786,9 @@ async def build_snapshot(
 
     snap: dict[str, Any] = {
         "location": location.model_dump(),
-        "fetched_at": iso(datetime.now(UTC)),
+        # 04: every time carries the *location's* offset. Under a demo clock (`now_override`)
+        # this is the reference time, which also makes `docs/fixtures/*.json` reproducible.
+        "fetched_at": iso(ref_now if now else datetime.now(UTC).astimezone(tzinfo)),
         "current": norm["current"],
         "hourly": norm["hourly"],
         "daily": norm["daily"],

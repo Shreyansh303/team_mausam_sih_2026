@@ -1,0 +1,2168 @@
+{
+  "generated_at": "2026-09-08T07:30:00+05:30",
+  "location": {
+    "id": "city:delhi",
+    "name": "New Delhi",
+    "admin1": "Delhi",
+    "admin2": "New Delhi",
+    "country": "India",
+    "country_code": "IN",
+    "lat": 28.61,
+    "lon": 77.21,
+    "timezone": "Asia/Kolkata",
+    "is_coastal": false,
+    "elevation_m": 216.0,
+    "population": 16787941
+  },
+  "context": {
+    "now": "2026-09-08T07:30:00+05:30",
+    "daypart": "dawn",
+    "is_weekend": false,
+    "season": "monsoon",
+    "is_coastal": false,
+    "scenario": "clear_pleasant",
+    "active_personas": [
+      "parent"
+    ],
+    "warning_count": 0,
+    "lang": "en"
+  },
+  "banner": null,
+  "pinned": [],
+  "hero": {
+    "type": "current_conditions",
+    "instance_id": "current_conditions",
+    "title": "Right now",
+    "subtitle": "29° / 19° · Clear sky",
+    "size": "hero",
+    "renderer": "hero",
+    "urgency": 0.0,
+    "severity": "info",
+    "pinned": false,
+    "score": 0.5,
+    "reasons": [
+      {
+        "code": "persona:parent",
+        "text": "Because you follow Parenting"
+      }
+    ],
+    "insight": {
+      "headline": "26°C, feels like 26°C — Clear sky",
+      "detail": "Humidity 45%, wind 8 km/h; AQI Satisfactory (75).",
+      "icon": "moon"
+    },
+    "data": {
+      "temp_c": 26.0,
+      "feels_like_c": 26.5,
+      "condition_code": 0,
+      "condition_text": "Clear sky",
+      "icon": "moon",
+      "humidity_pct": 45.0,
+      "wind_kph": 8.0,
+      "wind_dir": "NNW",
+      "uv_index": 5.0,
+      "visibility_km": 20.0,
+      "pressure_hpa": 1013.0,
+      "tmax_c": 29.0,
+      "tmin_c": 19.0,
+      "is_day": false,
+      "aqi": 75,
+      "aqi_category": "Satisfactory",
+      "sunrise": "2026-09-07T06:02:00+05:30",
+      "sunset": "2026-09-07T18:36:00+05:30",
+      "all_clear": true,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    "actions": [
+      {
+        "id": "details",
+        "label": "Details"
+      },
+      {
+        "id": "share",
+        "label": "Share"
+      },
+      {
+        "id": "open_map",
+        "label": "Open map"
+      }
+    ],
+    "personas": [
+      "health",
+      "fitness",
+      "beach",
+      "traveler",
+      "parent",
+      "agriculture",
+      "commuter",
+      "event_planner"
+    ],
+    "source": "scenario",
+    "estimated": false,
+    "updated_at": "2026-09-08T07:30:00+05:30"
+  },
+  "cards": [
+    {
+      "type": "school_commute",
+      "instance_id": "school_commute",
+      "title": "School run",
+      "subtitle": "07:00–09:00 · Good",
+      "size": "medium",
+      "renderer": "timeline",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.75,
+      "reasons": [
+        {
+          "code": "persona:parent",
+          "text": "Because you follow Parenting"
+        },
+        {
+          "code": "time:dawn",
+          "text": "Early-morning window"
+        }
+      ],
+      "insight": {
+        "headline": "School run looks Good",
+        "detail": "Normal school run — nothing special needed.",
+        "icon": "school"
+      },
+      "data": {
+        "windows": [
+          {
+            "label": "morning_drop",
+            "start": "2026-09-08T07:00:00+05:30",
+            "end": "2026-09-08T09:00:00+05:30",
+            "verdict": "good",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "visibility_km": 20.0,
+            "aqi": 75,
+            "reasons": [
+              "Calm and clear through the window"
+            ]
+          },
+          {
+            "label": "afternoon_pickup",
+            "start": "2026-09-08T13:00:00+05:30",
+            "end": "2026-09-08T16:00:00+05:30",
+            "verdict": "good",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "visibility_km": 20.0,
+            "aqi": 75,
+            "reasons": [
+              "Calm and clear through the window"
+            ]
+          }
+        ],
+        "overall_verdict": "good",
+        "advice": "Normal school run — nothing special needed.",
+        "is_school_day": true
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "parent"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "health_advisory",
+      "instance_id": "health_advisory",
+      "title": "Health advisory",
+      "subtitle": "1 advisories",
+      "size": "medium",
+      "renderer": "advice_list",
+      "urgency": 0.4,
+      "severity": "advisory",
+      "pinned": false,
+      "score": 0.35,
+      "reasons": [
+        {
+          "code": "urgency:health_advisory:advisory",
+          "text": "Health conditions need care today (an advisory)"
+        }
+      ],
+      "insight": {
+        "headline": "1 health advisory(ies) for today",
+        "detail": "High pollen — keep windows shut in the morning and shower after being out.",
+        "icon": "pollen"
+      },
+      "data": {
+        "items": [
+          {
+            "icon": "pollen",
+            "title": "Pollen is High",
+            "detail": "High pollen — keep windows shut in the morning and shower after being out.",
+            "level": "advisory"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "health"
+      ],
+      "source": "mixed",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "nowcast",
+      "instance_id": "nowcast",
+      "title": "Next 3 hours",
+      "subtitle": "Nothing significant",
+      "size": "medium",
+      "renderer": "nowcast",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.3375,
+      "reasons": [
+        {
+          "code": "persona:parent",
+          "text": "Because you follow Parenting"
+        }
+      ],
+      "insight": {
+        "headline": "No significant weather in next 3 hours",
+        "detail": "Valid till 10:30.",
+        "icon": "cloud"
+      },
+      "data": {
+        "issued_at": "2026-09-08T07:30:00+05:30",
+        "valid_till": "2026-09-08T10:30:00+05:30",
+        "text": "No significant weather in next 3 hours",
+        "severity": "none",
+        "hazards": [],
+        "source": "scenario"
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "fitness",
+        "beach",
+        "parent",
+        "agriculture",
+        "commuter"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "aqi",
+      "instance_id": "aqi",
+      "title": "Air quality",
+      "subtitle": "Satisfactory · 75",
+      "size": "medium",
+      "renderer": "gauge",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.318,
+      "reasons": [
+        {
+          "code": "persona:parent",
+          "text": "Because you follow Parenting"
+        },
+        {
+          "code": "time:dawn",
+          "text": "Early-morning window"
+        }
+      ],
+      "insight": {
+        "headline": "Air quality is Satisfactory (75)",
+        "detail": "pollutant.CO is the dominant pollutant at — µg/m³.",
+        "icon": "aqi"
+      },
+      "data": {
+        "aqi": 75,
+        "category": "Satisfactory",
+        "dominant_pollutant": "CO",
+        "pm2_5": 22.0,
+        "pm10": 48.0,
+        "o3": 60.0,
+        "no2": 18.0,
+        "so2": 8.0,
+        "co": 1.542,
+        "hourly": [
+          {
+            "time": "2026-09-08T07:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T08:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T09:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T10:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T11:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T12:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T13:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T14:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T15:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T16:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T17:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T18:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T19:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T20:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T21:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T22:00:00+05:30",
+            "aqi": 75
+          },
+          {
+            "time": "2026-09-08T23:00:00+05:30",
+            "aqi": 75
+          }
+        ],
+        "advice": "Air is satisfactory; sensitive people may feel minor discomfort.",
+        "scale": "CPCB"
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "health",
+        "fitness",
+        "parent"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "hourly_forecast",
+      "instance_id": "hourly_forecast",
+      "title": "Hourly forecast",
+      "subtitle": "26° – 26°",
+      "size": "large",
+      "renderer": "hourly",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.2875,
+      "reasons": [
+        {
+          "code": "persona:parent",
+          "text": "Because you follow Parenting"
+        }
+      ],
+      "insight": {
+        "headline": "26° to 26° over the next 24 hours",
+        "detail": "No significant rain expected in the next 24 hours.",
+        "icon": "cloud"
+      },
+      "data": {
+        "hours": [
+          {
+            "time": "2026-09-08T08:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun",
+            "wind_kph": 8.0,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T09:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun",
+            "wind_kph": 8.0,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T10:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun",
+            "wind_kph": 8.0,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T11:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun",
+            "wind_kph": 8.0,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T12:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun",
+            "wind_kph": 8.0,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T13:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun",
+            "wind_kph": 8.0,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T14:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun",
+            "wind_kph": 8.0,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T15:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun",
+            "wind_kph": 8.0,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T16:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun",
+            "wind_kph": 8.0,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T17:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun",
+            "wind_kph": 8.0,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T18:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun",
+            "wind_kph": 8.0,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-08T19:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "moon",
+            "wind_kph": 8.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-08T20:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "moon",
+            "wind_kph": 8.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-08T21:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "moon",
+            "wind_kph": 8.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-08T22:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "moon",
+            "wind_kph": 8.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-08T23:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "moon",
+            "wind_kph": 8.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T00:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "moon",
+            "wind_kph": 8.0,
+            "is_day": false
+          }
+        ]
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "fitness",
+        "parent",
+        "commuter",
+        "event_planner"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "daily_forecast",
+      "instance_id": "daily_forecast",
+      "title": "7-day forecast",
+      "subtitle": "19° – 29°",
+      "size": "large",
+      "renderer": "daily",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.2875,
+      "reasons": [
+        {
+          "code": "persona:parent",
+          "text": "Because you follow Parenting"
+        }
+      ],
+      "insight": {
+        "headline": "This week: 19° to 29°",
+        "detail": "0 rainy day(s) in the next seven.",
+        "icon": "calendar"
+      },
+      "data": {
+        "days": [
+          {
+            "date": "2026-09-07",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-08",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-09",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-10",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-11",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-12",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-13",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "traveler",
+        "parent",
+        "agriculture",
+        "event_planner"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "commute_conditions",
+      "instance_id": "commute_conditions",
+      "title": "Your commute",
+      "subtitle": "08:00–10:00 · Low",
+      "size": "medium",
+      "renderer": "timeline",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.28,
+      "reasons": [
+        {
+          "code": "time:dawn",
+          "text": "Early-morning window"
+        }
+      ],
+      "insight": {
+        "headline": "Low impact on your commute (+12 min)",
+        "detail": "Usual travel time — no weather delays expected.",
+        "icon": "traffic"
+      },
+      "data": {
+        "windows": [
+          {
+            "label": "morning",
+            "start": "2026-09-08T08:00:00+05:30",
+            "end": "2026-09-08T10:00:00+05:30",
+            "impact": "low",
+            "delay_min": 12,
+            "rain_prob_pct": 5.0,
+            "visibility_km": 20.0,
+            "temp_c": 26.0,
+            "reasons": [
+              "Clear run expected"
+            ]
+          },
+          {
+            "label": "evening",
+            "start": "2026-09-08T17:00:00+05:30",
+            "end": "2026-09-08T20:00:00+05:30",
+            "impact": "low",
+            "delay_min": 12,
+            "rain_prob_pct": 5.0,
+            "visibility_km": 20.0,
+            "temp_c": 26.0,
+            "reasons": [
+              "Clear run expected"
+            ]
+          }
+        ],
+        "traffic": {
+          "congestion_pct": 50,
+          "source": "estimated"
+        },
+        "advice": "Usual travel time — no weather delays expected."
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "commuter"
+      ],
+      "source": "estimated",
+      "estimated": true,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "pollen",
+      "instance_id": "pollen",
+      "title": "Pollen",
+      "subtitle": "High",
+      "size": "small",
+      "renderer": "metric",
+      "urgency": 0.4,
+      "severity": "advisory",
+      "pinned": false,
+      "score": 0.26,
+      "reasons": [
+        {
+          "code": "urgency:pollen:advisory",
+          "text": "Pollen is high right now (an advisory)"
+        }
+      ],
+      "insight": {
+        "headline": "Pollen level is High",
+        "detail": "Weed pollen dominates today.",
+        "icon": "pollen"
+      },
+      "data": {
+        "index": 3,
+        "level": "High",
+        "dominant": "weed",
+        "by_type": {
+          "tree": 1,
+          "grass": 2,
+          "weed": 3
+        },
+        "advice": "High pollen — keep windows shut in the morning and shower after being out.",
+        "source": "estimated"
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "health"
+      ],
+      "source": "estimated",
+      "estimated": true,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    }
+  ],
+  "more_cards": [
+    {
+      "type": "radar",
+      "instance_id": "radar",
+      "title": "Rain radar",
+      "subtitle": "13 radar frames",
+      "size": "medium",
+      "renderer": "radar",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.2225,
+      "reasons": [],
+      "insight": {
+        "headline": "5% chance of rain within 2 hours",
+        "detail": "Latest radar frame at 20:00.",
+        "icon": "radar"
+      },
+      "data": {
+        "host": "https://tilecache.rainviewer.com",
+        "frames": [
+          {
+            "time": "2026-09-06T18:00:00+00:00",
+            "path": "/v2/radar/62e2e0180d3d"
+          },
+          {
+            "time": "2026-09-06T18:10:00+00:00",
+            "path": "/v2/radar/4595dd9b236a"
+          },
+          {
+            "time": "2026-09-06T18:20:00+00:00",
+            "path": "/v2/radar/5a6aecc94530"
+          },
+          {
+            "time": "2026-09-06T18:30:00+00:00",
+            "path": "/v2/radar/5938036d0c24"
+          },
+          {
+            "time": "2026-09-06T18:40:00+00:00",
+            "path": "/v2/radar/095dc9d72ba0"
+          },
+          {
+            "time": "2026-09-06T18:50:00+00:00",
+            "path": "/v2/radar/8fa0ef936d38"
+          },
+          {
+            "time": "2026-09-06T19:00:00+00:00",
+            "path": "/v2/radar/e6683e4b911c"
+          },
+          {
+            "time": "2026-09-06T19:10:00+00:00",
+            "path": "/v2/radar/c5772ba556b5"
+          },
+          {
+            "time": "2026-09-06T19:20:00+00:00",
+            "path": "/v2/radar/ae5c7085d242"
+          },
+          {
+            "time": "2026-09-06T19:30:00+00:00",
+            "path": "/v2/radar/ed24925760ae"
+          },
+          {
+            "time": "2026-09-06T19:40:00+00:00",
+            "path": "/v2/radar/4825181d3a62"
+          },
+          {
+            "time": "2026-09-06T19:50:00+00:00",
+            "path": "/v2/radar/17338c7d4e31"
+          },
+          {
+            "time": "2026-09-06T20:00:00+00:00",
+            "path": "/v2/radar/78707cbfa781"
+          }
+        ],
+        "tile_template": "https://tilecache.rainviewer.com{path}/256/{z}/{x}/{y}/2/1_1.png",
+        "center": {
+          "lat": 28.61,
+          "lon": 77.21
+        },
+        "zoom": 7,
+        "rain_within_2h_prob_pct": 5
+      },
+      "actions": [
+        {
+          "id": "open_map",
+          "label": "Open map"
+        },
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "commuter"
+      ],
+      "source": "rainviewer",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "uv_index",
+      "instance_id": "uv_index",
+      "title": "UV index",
+      "subtitle": "5.0 · Moderate",
+      "size": "small",
+      "renderer": "metric",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.165,
+      "reasons": [],
+      "insight": {
+        "headline": "UV index 5.0 — Moderate",
+        "detail": "Peaks at 6.0 around 08:00; safe unprotected exposure about 13 minutes.",
+        "icon": "uv"
+      },
+      "data": {
+        "uv_now": 5.0,
+        "uv_max_today": 6.0,
+        "uv_max_time": "2026-09-08T08:00:00+05:30",
+        "category": "Moderate",
+        "safe_exposure_min": 13,
+        "hourly": [
+          {
+            "time": "2026-09-08T08:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T09:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T10:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T11:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T12:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T13:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T14:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T15:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T16:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T17:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T18:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T19:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T20:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T21:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T22:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-08T23:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-09T00:00:00+05:30",
+            "uv": 4.0
+          }
+        ]
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "health",
+        "fitness",
+        "beach"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "rain_probability",
+      "instance_id": "rain_probability",
+      "title": "Rain chance",
+      "subtitle": "Sat 12 Sep · 5%",
+      "size": "medium",
+      "renderer": "bar_chart",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.1575,
+      "reasons": [],
+      "insight": {
+        "headline": "Sat 12 Sep: 5% chance of rain — Dry",
+        "detail": "About 0.0 mm expected. Very likely dry — outdoor plans are safe.",
+        "icon": "calendar"
+      },
+      "data": {
+        "focus_date": "2026-09-12",
+        "focus_label": "Sat 12 Sep",
+        "by_day": [
+          {
+            "date": "2026-09-07",
+            "prob_pct": 5.0,
+            "mm": 0.0
+          },
+          {
+            "date": "2026-09-08",
+            "prob_pct": 5.0,
+            "mm": 0.0
+          },
+          {
+            "date": "2026-09-09",
+            "prob_pct": 5.0,
+            "mm": 0.0
+          },
+          {
+            "date": "2026-09-10",
+            "prob_pct": 5.0,
+            "mm": 0.0
+          },
+          {
+            "date": "2026-09-11",
+            "prob_pct": 5.0,
+            "mm": 0.0
+          },
+          {
+            "date": "2026-09-12",
+            "prob_pct": 5.0,
+            "mm": 0.0
+          },
+          {
+            "date": "2026-09-13",
+            "prob_pct": 5.0,
+            "mm": 0.0
+          }
+        ],
+        "hourly_focus": [],
+        "verdict": "dry",
+        "advice": "Very likely dry — outdoor plans are safe."
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "event_planner"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "visibility",
+      "instance_id": "visibility",
+      "title": "Visibility",
+      "subtitle": "20.0 km · Excellent",
+      "size": "small",
+      "renderer": "metric",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.1398,
+      "reasons": [
+        {
+          "code": "time:dawn",
+          "text": "Early-morning window"
+        }
+      ],
+      "insight": {
+        "headline": "Visibility 20.0 km — Excellent",
+        "detail": "Clear all round — no visibility concerns.",
+        "icon": "eye"
+      },
+      "data": {
+        "visibility_km": 20.0,
+        "category": "Excellent",
+        "fog_expected_hours": [],
+        "advice": "Clear all round — no visibility concerns."
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "traveler",
+        "commuter"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "sun_times",
+      "instance_id": "sun_times",
+      "title": "Sunrise & sunset",
+      "subtitle": "06:02 · 18:36",
+      "size": "small",
+      "renderer": "metric",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.129,
+      "reasons": [
+        {
+          "code": "time:dawn",
+          "text": "Early-morning window"
+        }
+      ],
+      "insight": {
+        "headline": "Sunrise 06:02 · Sunset 18:36",
+        "detail": "12 h 34 min of daylight today.",
+        "icon": "sunrise"
+      },
+      "data": {
+        "sunrise": "2026-09-07T06:02:00+05:30",
+        "sunset": "2026-09-07T18:36:00+05:30",
+        "daylight_minutes": 754.1,
+        "golden_hour_morning": {
+          "start": "2026-09-07T06:02:00+05:30",
+          "end": "2026-09-07T07:02:00+05:30"
+        },
+        "golden_hour_evening": {
+          "start": "2026-09-07T17:36:00+05:30",
+          "end": "2026-09-07T18:36:00+05:30"
+        },
+        "civil_twilight_end": "2026-09-07T19:01:00+05:30"
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "fitness",
+        "beach"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "best_workout_window",
+      "instance_id": "best_workout_window",
+      "title": "Best time to work out",
+      "subtitle": "08:00–01:00 · Great",
+      "size": "medium",
+      "renderer": "timeline",
+      "urgency": 0.2,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.1,
+      "reasons": [
+        {
+          "code": "time:dawn",
+          "text": "Early-morning window"
+        }
+      ],
+      "insight": {
+        "headline": "Best window 08:00–01:00",
+        "detail": "Score 91/100 · 26°C · AQI 75.",
+        "icon": "run"
+      },
+      "data": {
+        "windows": [
+          {
+            "start": "2026-09-08T08:00:00+05:30",
+            "end": "2026-09-09T01:00:00+05:30",
+            "score": 91,
+            "temp_c": 26.0,
+            "aqi": 75,
+            "uv": 4.0,
+            "humidity_pct": 45,
+            "label": "Great"
+          }
+        ],
+        "best": {
+          "start": "2026-09-08T08:00:00+05:30",
+          "end": "2026-09-09T01:00:00+05:30",
+          "score": 91,
+          "temp_c": 26.0,
+          "aqi": 75,
+          "uv": 4.0,
+          "humidity_pct": 45,
+          "label": "Great"
+        },
+        "hourly_scores": [
+          {
+            "time": "2026-09-08T08:00:00+05:30",
+            "score": 100
+          },
+          {
+            "time": "2026-09-08T09:00:00+05:30",
+            "score": 100
+          },
+          {
+            "time": "2026-09-08T10:00:00+05:30",
+            "score": 100
+          },
+          {
+            "time": "2026-09-08T11:00:00+05:30",
+            "score": 100
+          },
+          {
+            "time": "2026-09-08T12:00:00+05:30",
+            "score": 100
+          },
+          {
+            "time": "2026-09-08T13:00:00+05:30",
+            "score": 100
+          },
+          {
+            "time": "2026-09-08T14:00:00+05:30",
+            "score": 100
+          },
+          {
+            "time": "2026-09-08T15:00:00+05:30",
+            "score": 100
+          },
+          {
+            "time": "2026-09-08T16:00:00+05:30",
+            "score": 100
+          },
+          {
+            "time": "2026-09-08T17:00:00+05:30",
+            "score": 100
+          },
+          {
+            "time": "2026-09-08T18:00:00+05:30",
+            "score": 100
+          },
+          {
+            "time": "2026-09-08T19:00:00+05:30",
+            "score": 75
+          },
+          {
+            "time": "2026-09-08T20:00:00+05:30",
+            "score": 75
+          },
+          {
+            "time": "2026-09-08T21:00:00+05:30",
+            "score": 75
+          },
+          {
+            "time": "2026-09-08T22:00:00+05:30",
+            "score": 75
+          },
+          {
+            "time": "2026-09-08T23:00:00+05:30",
+            "score": 75
+          },
+          {
+            "time": "2026-09-09T00:00:00+05:30",
+            "score": 75
+          }
+        ],
+        "no_good_window_reason": null
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "fitness"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "comfort_index",
+      "instance_id": "comfort_index",
+      "title": "Comfort index",
+      "subtitle": "91/100 · Ideal",
+      "size": "medium",
+      "renderer": "gauge",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.1,
+      "reasons": [],
+      "insight": {
+        "headline": "Comfort 91/100 — Ideal",
+        "detail": "Feels like 26°C at 45% humidity.",
+        "icon": "comfort"
+      },
+      "data": {
+        "index": 91,
+        "category": "Ideal",
+        "feels_like_c": 26.5,
+        "humidity_pct": 45,
+        "wind_kph": 8.0,
+        "uv": 5.0,
+        "best_hours_today": [
+          {
+            "start": "2026-09-08T08:00:00+05:30",
+            "end": "2026-09-08T08:00:00+05:30",
+            "index": 91
+          },
+          {
+            "start": "2026-09-08T09:00:00+05:30",
+            "end": "2026-09-08T09:00:00+05:30",
+            "index": 91
+          }
+        ],
+        "daily": [
+          {
+            "date": "2026-09-07",
+            "index": 82
+          },
+          {
+            "date": "2026-09-08",
+            "index": 82
+          },
+          {
+            "date": "2026-09-09",
+            "index": 82
+          },
+          {
+            "date": "2026-09-10",
+            "index": 82
+          },
+          {
+            "date": "2026-09-11",
+            "index": 82
+          },
+          {
+            "date": "2026-09-12",
+            "index": 82
+          },
+          {
+            "date": "2026-09-13",
+            "index": 82
+          }
+        ],
+        "advice": "Perfect conditions — plan anything outdoors."
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "event_planner"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "humidity",
+      "instance_id": "humidity",
+      "title": "Humidity",
+      "subtitle": "45% · Comfortable",
+      "size": "small",
+      "renderer": "metric",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.069,
+      "reasons": [
+        {
+          "code": "season:monsoon",
+          "text": "Matters in the monsoon"
+        }
+      ],
+      "insight": {
+        "headline": "Humidity 45% — Comfortable",
+        "detail": "Dew point 13.2°C and steady.",
+        "icon": "humidity"
+      },
+      "data": {
+        "humidity_pct": 45,
+        "dew_point_c": 13.2,
+        "category": "Comfortable",
+        "trend": "steady",
+        "advice": "Humidity is comfortable."
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "health"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "wind",
+      "instance_id": "wind",
+      "title": "Wind",
+      "subtitle": "8 km/h NNW",
+      "size": "small",
+      "renderer": "metric",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.0575,
+      "reasons": [],
+      "insight": {
+        "headline": "8 km/h from NNW — Light breeze",
+        "detail": "Gusting to 14 km/h.",
+        "icon": "wind"
+      },
+      "data": {
+        "speed_kph": 8.0,
+        "gust_kph": 14.0,
+        "direction_deg": 331,
+        "direction_text": "NNW",
+        "beaufort": 2,
+        "beaufort_text": "Light breeze",
+        "hourly": [
+          {
+            "time": "2026-09-08T08:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T09:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T10:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T11:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T12:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T13:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T14:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T15:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T16:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T17:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T18:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T19:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T20:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T21:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T22:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-08T23:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-09T00:00:00+05:30",
+            "speed_kph": 8.0
+          }
+        ],
+        "advice": "Wind is light — no precautions needed."
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "fitness",
+        "beach"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "rainfall_outlook",
+      "instance_id": "rainfall_outlook",
+      "title": "Rainfall outlook",
+      "subtitle": "0.0 mm / 72h",
+      "size": "medium",
+      "renderer": "bar_chart",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.05,
+      "reasons": [],
+      "insight": {
+        "headline": "0.0 mm expected over the next 3 days",
+        "detail": "0 rain day(s) and 0.0 mm in the coming week.",
+        "icon": "heavy_rain"
+      },
+      "data": {
+        "next_24h_mm": 0.0,
+        "next_72h_mm": 0.0,
+        "next_7d_mm": 0.0,
+        "daily": [
+          {
+            "date": "2026-09-07",
+            "mm": 0.0,
+            "prob_pct": 5
+          },
+          {
+            "date": "2026-09-08",
+            "mm": 0.0,
+            "prob_pct": 5
+          },
+          {
+            "date": "2026-09-09",
+            "mm": 0.0,
+            "prob_pct": 5
+          },
+          {
+            "date": "2026-09-10",
+            "mm": 0.0,
+            "prob_pct": 5
+          },
+          {
+            "date": "2026-09-11",
+            "mm": 0.0,
+            "prob_pct": 5
+          },
+          {
+            "date": "2026-09-12",
+            "mm": 0.0,
+            "prob_pct": 5
+          },
+          {
+            "date": "2026-09-13",
+            "mm": 0.0,
+            "prob_pct": 5
+          }
+        ],
+        "rain_days": 0,
+        "advice": "Little rain in the next 3 days — plan irrigation as usual."
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "agriculture"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "extended_forecast",
+      "instance_id": "extended_forecast",
+      "title": "14-day outlook",
+      "subtitle": "14 days · 19° – 29°",
+      "size": "large",
+      "renderer": "daily",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.05,
+      "reasons": [],
+      "insight": {
+        "headline": "Next 14 days: 19° to 29°",
+        "detail": "Confidence drops beyond day 7 — treat the second week as a trend, not a forecast.",
+        "icon": "calendar"
+      },
+      "data": {
+        "days": [
+          {
+            "date": "2026-09-07",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-08",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-09",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-10",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-11",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-12",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-13",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-14",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-15",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-16",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-17",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-18",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-19",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          },
+          {
+            "date": "2026-09-20",
+            "tmax_c": 29.0,
+            "tmin_c": 19.0,
+            "precip_prob_max_pct": 5.0,
+            "precip_sum_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun"
+          }
+        ],
+        "confidence_note": "Confidence drops beyond day 7 — treat the second week as a trend, not a forecast."
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "traveler",
+        "event_planner"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "soil_moisture",
+      "instance_id": "soil_moisture",
+      "title": "Soil moisture",
+      "subtitle": "0.40 m³/m³ · Wet",
+      "size": "medium",
+      "renderer": "gauge",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.0,
+      "reasons": [
+        {
+          "code": "time:dawn",
+          "text": "Early-morning window"
+        }
+      ],
+      "insight": {
+        "headline": "Topsoil is Wet (0.40 m³/m³)",
+        "detail": "Soil is wet — skip irrigation.",
+        "icon": "soil"
+      },
+      "data": {
+        "surface_m3m3": 0.397,
+        "root_zone_m3m3": 0.405,
+        "status": "wet",
+        "soil_temp_c": 23.9,
+        "days_since_rain": null,
+        "advice": "Soil is wet — skip irrigation."
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "agriculture"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "planting_guidance",
+      "instance_id": "planting_guidance",
+      "title": "Planting guidance",
+      "subtitle": "Kharif · North India",
+      "size": "medium",
+      "renderer": "advice_list",
+      "urgency": 0.0,
+      "severity": "info",
+      "pinned": false,
+      "score": 0.0,
+      "reasons": [],
+      "insight": {
+        "headline": "Kharif season — North India",
+        "detail": "Paddy rice: Irrigation stage now.",
+        "icon": "sprout"
+      },
+      "data": {
+        "season": "kharif",
+        "zone": "north",
+        "month": 9,
+        "crops": [
+          {
+            "name": "Paddy rice",
+            "stage": "irrigate",
+            "action": "Irrigate Paddy rice — this is a critical moisture stage."
+          },
+          {
+            "name": "Sugarcane",
+            "stage": "grow",
+            "action": "Sugarcane is in vegetative growth — weed and top-dress nitrogen."
+          },
+          {
+            "name": "Maize",
+            "stage": "harvest",
+            "action": "Harvest Maize at the right grain/fruit moisture and dry before storage."
+          }
+        ],
+        "tips": [
+          "Soil is wet — hold back irrigation and check field drainage."
+        ]
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "agriculture"
+      ],
+      "source": "estimated",
+      "estimated": true,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    }
+  ],
+  "hidden_types": [],
+  "freshness": {
+    "weather": "2026-09-08T07:30:00+05:30",
+    "air": "2026-09-07T01:30:00+05:30",
+    "marine": null,
+    "warnings": "2026-09-08T07:30:00+05:30"
+  },
+  "sources": {
+    "weather": "scenario",
+    "air": "scenario",
+    "marine": null,
+    "warnings": "none"
+  },
+  "engine": {
+    "version": "1.0",
+    "weights": {
+      "relevance": 0.5,
+      "urgency": 0.5
+    }
+  }
+}
