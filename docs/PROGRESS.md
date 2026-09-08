@@ -27,7 +27,7 @@ unticked items but files present:
 - [x] B1 app foundation + onboarding + home skeleton
 - [x] B2a ten pending renderers + detail pages (one commit each)
 - [x] B2b animations · events · why-sheet actions · places · map · settings · demo sheet · WS client · low-bandwidth · a11y · l10n · icon/splash
-- [ ] B3 integration + APK + CI
+- [x] B3 integration + APK + CI (+ the backend i18n gaps B2b logged)
 - [ ] C1 e2e QA
 - [ ] C2 docs + pitch
 - [ ] S* stretch
@@ -151,8 +151,34 @@ unticked items but files present:
 - [x] gates: `flutter analyze` clean · `flutter test` **90 passed** · `flutter build web`
 
 ## B3 checklist
-- [ ] live backend integration, contract mismatches fixed · WS reorder verified in web build
-- [ ] release APK built · .github/workflows/flutter.yml · README app section
+- [x] live backend integration: the web build driven against a local uvicorn (headless Chrome over
+  CDP) — **zero console errors, zero failed requests**, and every endpoint the app uses answered
+  200 (`/auth/guest`, `/home`, `/events`, `/weather/radar`, `/me/places`, `/ws/alerts`).
+  **No contract mismatches found**: a live `/home` and `docs/fixtures/home_severe.json` have
+  identical key sets at every level (top level, `Card`, `context`, `freshness`, `engine`,
+  `banner`), so `docs/04` needed no edit.
+- [x] backend i18n gaps B2b logged, all three fixed + tests (see the B3 commits and Deviations):
+  AQI pollutant key/value · `hazard.rain`/`hazard.haze` · Hindi advice, window reasons, crop
+  actions, planting tips, packing items, flight-risk detail, nowcast text, scenario warning copy
+  and date labels. `pytest -q` **326 passed**; `docs/fixtures/*.json` regenerated and
+  `app/assets/fixtures/home_sample.json` refreshed from `home_severe.json` (B1 deviation).
+- [x] WS re-rank re-verified in the web build against the live backend: push → orange banner →
+  re-fetch → `commute_conditions` pinned "Severe" → SnackBar "A warning moved to the top of your
+  feed · View". Screenshot pair `docs/screenshots/b2b_ws_before.png` → `b2b_ws_rerank.png` still
+  matches what the current build does.
+- [x] release APK: `flutter build apk --release` → `app/build/app/outputs/flutter-apk/app-release.apk`,
+  **62 496 756 B (62.5 MB)**, Gradle task **113.8 s**, wall clock 1 min 55 s (warm, after
+  `flutter clean`). `flutter build apk --debug` also re-verified ✓ (~168 MB, Gradle 62.7 s) and its
+  output deleted again — the volume was down to 433 MB free with both APKs plus 2.4 GB of Gradle
+  intermediates on disk. Debug signing (`app/android/app/build.gradle.kts` keeps
+  `signingConfig = signingConfigs.getByName("debug")` for release).
+- [x] `.github/workflows/flutter.yml` — push/PR on `app/**`: job `apk` (checkout · temurin JDK 17 ·
+  `subosito/flutter-action@v2` pinned to **3.47.2** stable with cache · pub get · analyze · test ·
+  `build apk --release` · upload `app-release-apk`) and job `web` (`build web`, uploaded too).
+  YAML validated locally; GitHub Actions cannot be executed from this machine.
+- [x] README "Run it yourself → 2. App" rewritten for a first-time Flutter user (a)–(f) +
+  `scripts/setup_android_emulator.{ps1,sh}` / `run_emulator.{ps1,sh}` + flutter CI badge +
+  screenshot grid rebuilt on the b2b/b3 shots.
 
 ## C1 / C2
 - [ ] QA_REPORT.md with every demo step verified
@@ -295,7 +321,136 @@ unticked items but files present:
   English per key — `flutter gen-l10n` prints "273 untranslated message(s)" for each, which is
   the documented best-effort state 07 §B2 asks for, not a build error.
 
+- **B3** **No app↔backend contract mismatch was found**, so `docs/04_API_CONTRACT.md` is unchanged.
+  Checked by driving the real web build against a local uvicorn (console + network captured: zero
+  errors, zero failed requests) and by diffing the key sets of a live `/home` against
+  `docs/fixtures/home_severe.json` — identical at the top level and inside `Card`, `context`,
+  `freshness`, `engine` and `banner`. The only English→English payload change in the whole phase
+  is the AQI insight line, which was a bug.
+- **B3** Derived-metric services no longer compose user-facing English sentences. Anything a card
+  shows is now either resolved in the builder or emitted as a **deferred translation** —
+  `i18n.token(key, **params)` → `{"key": …, "params": {…}}` — which the builder turns into a string
+  with `i18n.resolve()` once `ctx.lang` is known. Reason: the snapshot is cached per
+  (lat, lon, scenario) and **not** per language, so a service cannot localize at all. Changed
+  shapes, all *inside* `Snapshot.derived` (untyped by design, A1 deviation 3) and therefore not a
+  04 contract change: `school_commute`/`commute` `windows[].reasons`, `planting.tips`,
+  `packing.items[]` (`item` → `item_key`, `reason` → a token) and `flight_risk.detail_tokens`.
+  The published card `data` keeps exactly the docs/02 shape (plain strings).
+- **B3** `Snapshot.nowcast.text_token` is a new optional field on the schema — the same pattern as
+  A1's `Tides.disclaimer_key`, additive, and visible only on `/weather/snapshot`. `text` still
+  carries the English rendering, so `tests/test_derived.py` and any existing consumer are unaffected.
+- **B3** Scenario warning copy is **not** stored as keys in `app/data/scenarios/*.json`; the builder
+  resolves `scenario.warning.<hazard>.{title,description}` when `warning.source == "scenario"` and
+  falls back to the JSON's own English text when the key is missing. That keeps the 04 `Warning`
+  model free of `title_key`/`description_key` fields. It relies on each scenario's warning having a
+  distinct hazard (true today: cyclone · fog · cold_wave · heatwave · heavy_rain ·
+  very_heavy_rain · thunderstorm). A second warning with the same hazard in another scenario would
+  need a per-scenario key instead. Scenario *nowcast* text does carry an explicit `text_key` in the
+  JSON, because those are not hazard-unique.
+- **B3** Admin-pushed and IMD warnings are **not** localized — they are free text typed by a human
+  (or issued by IMD), and inventing a key for them would be a lie. Only the canned scenario copy
+  resolves through the catalog. Same for place names.
+- **B3** `daylabel()` in `engine/builders/base.py` changed signature (`daylabel(lang, value,
+  *, with_dow=False)`) and now resolves `dow.*` / `month.*` through the catalog instead of
+  `strftime`. It had no callers before this phase; `rain_probability` is the first.
+- **B3** The release APK is signed with the **debug** key (`app/android/app/build.gradle.kts` keeps
+  Flutter's generated `signingConfig = signingConfigs.getByName("debug")` for the release build).
+  07 §B3 allows this. A Play-store build would need a real keystore + `key.properties`.
+- **B3** `docs/fixtures/*.json` were regenerated (the AQI line is a genuine fix) and
+  `app/assets/fixtures/home_sample.json` re-copied from `home_severe.json` per the B1 deviation.
+  The `usr_`/`plc_`/`wrn_` ids changed with them, as A3 noted they always do.
+
 ## Notes for next phase
+
+### C1 — what B3 hands you (2026-09-08)
+
+**Everything is green on this Mac.** `pytest -q` **326 passed** · `flutter analyze` clean ·
+`flutter test` **90 passed** · `flutter build web` ✓ · `flutter build apk --release` ✓ ·
+`flutter build apk --debug` ✓. No app↔backend contract mismatch exists — see Deviations.
+
+**Artefacts C1 can use straight away**
+
+| what | where |
+|---|---|
+| release APK (debug-signed, all ABIs, 62.5 MB) | `app/build/app/outputs/flutter-apk/app-release.apk` — **already built, still on disk**; `app/build/` is git-ignored |
+| APK from CI | Actions → **flutter** → the run for your commit → artifact `app-release-apk` |
+| web bundle | rebuild with `flutter build web` (42 MB, ~2 min); the CI `web` job also uploads one |
+| bundled offline payload | `app/assets/fixtures/home_sample.json` = `docs/fixtures/home_severe.json` |
+
+**The exact commands, copy-paste (macOS; an agent shell has no `~/.zshrc`)**
+
+```bash
+# 0. environment
+export JAVA_HOME="$HOME/development/jdk-17"
+export ANDROID_HOME="$HOME/development/android"; export ANDROID_SDK_ROOT="$ANDROID_HOME"
+FL=~/development/flutter/bin/flutter
+
+# 1. backend (run_in_background; NEVER in the foreground — it never exits)
+cd backend && .venv/bin/python -m uvicorn app.main:app --port 8000
+curl -s http://127.0.0.1:8000/api/v1/health          # {"status":"ok",...,"scenario":"live"}
+pkill -f "uvicorn app.main:app"                      # stop it
+
+# 2. gates
+cd backend && .venv/bin/python -m pytest -q          # 326 passed, ~7 s
+cd app && $FL analyze && $FL test                    # clean, 90 passed
+cd app && $FL build web                              # ~2 min
+cd app && $FL build apk --release                    # ~2 min warm; run_in_background + dangerouslyDisableSandbox
+
+# 3. serve the web build for a browser/CDP demo (use 127.0.0.1, never localhost)
+cd app/build/web && python3 -m http.server 8080 --bind 127.0.0.1
+```
+
+**The WS re-rank demo, re-verified in B3 against the current build.** Backend on 8000, the app
+pointed at `http://127.0.0.1:8000` (the freshness chip grows a green dot when `/ws/alerts` is up),
+then:
+
+```bash
+# push (or use the console at http://127.0.0.1:8000/admin/console, key `mausam-admin`)
+curl -s -X POST http://127.0.0.1:8000/api/v1/admin/warnings \
+  -H 'Content-Type: application/json' -H 'X-Admin-Key: mausam-admin' \
+  -d '{"severity":"orange","hazard":"thunderstorm","title":"Thunderstorm warning — Delhi",
+       "description":"Thunderstorm with lightning and gusty winds (50-60 km/h) likely over Delhi.",
+       "district":"New Delhi","state":"Delhi","lat":28.61,"lon":77.21,
+       "radius_km":75,"ttl_minutes":120}'
+# clean up afterwards — a live warning changes every later screenshot
+curl -s -H 'X-Admin-Key: mausam-admin' http://127.0.0.1:8000/api/v1/admin/state   # lists ids
+curl -s -X DELETE -H 'X-Admin-Key: mausam-admin' \
+  http://127.0.0.1:8000/api/v1/admin/warnings/<id>
+```
+Within ~1 s: orange banner → `/home` re-fetch → `commute_conditions` (and `warnings`) pinned with
+"Severe impact" → SnackBar *"A warning moved to the top of your feed · View"*. Global scenario and
+demo clock over the same admin API: `POST /admin/scenario {"name":"thunderstorm"}` (the body key is
+**`name`**, not `scenario`) and `POST /admin/now-override {"now": …}` / `{"now": null}`.
+
+**Screenshot driver.** B2b's CDP recipe still works verbatim (Chrome 152, Node 26 at
+`/opt/homebrew/bin/node`, no npm install). B3 re-used it and added nothing to the repo — the
+driver lives in the agent scratchpad. Two things worth copying if you rebuild it: seed
+`localStorage` between **three** navigations (seed → load → load, waiting ~4 s and ~9 s), and put
+`Emulation.setDeviceMetricsOverride` + `setEmulatedMedia(prefers-color-scheme: light)` +
+`Page.captureScreenshot` in **one** CDP session, because the overrides die with the socket.
+The quick-actions row (Radar · Places · Demo) sits at CSS y ≈ 522 with x ≈ 73 / 195 / 317 —
+**but only when nothing is pinned above the hero**; delete any pushed warning first or the click
+lands on a card instead (that happened in B3).
+
+**Known gaps / things C1 should decide about**
+- **`flutter build apk --release` needs disk.** Building it left the volume at **433 MB free**
+  (2.4 GB of Gradle intermediates + a 176 MB debug APK + a 62 MB release APK). B3 deleted
+  `app/build/app/intermediates`, the debug APK, `outputs/apk/debug`, `outputs/mapping` and
+  `outputs/native-debug-symbols` afterwards and got back to ~3.2 GB free. **Run `flutter clean`
+  first and delete the intermediates after** — or the next build fails on ENOSPC, not on code.
+- **CI cannot be run from here.** `.github/workflows/flutter.yml` is validated YAML but the first
+  real run is on GitHub. The risk to watch is the `compileSdk = 37` platform: on this Mac AGP
+  installed `platforms/android-37.0` and needed a hand-made `android-37` alias (H0 gotcha 2). If
+  the runner hits `Failed to find target with hash string 'android-37'`, add an explicit
+  `sdkmanager "platforms;android-37"` step (or `android-actions/setup-android`) before the build.
+- `traveler` still has no saved places on a fresh guest, so `saved_places` / `packing_suggestions` /
+  `travel_alerts` are absent until you add two places (Places page, or `POST /me/places`). Do that
+  before recording the traveller part of the demo — the packing item list is now localized too.
+- The app still never calls `GET /me/card-prefs` on start-up (B2b note): hides/pins survive within
+  a session because `/home` carries them back, not across a reinstall.
+- `mr`/`ta`/`bn` remain best-effort (69 app keys, 54 backend keys) and fall back to English per key.
+  `flutter build` prints "277 untranslated message(s)" for each — expected, not an error.
+- Nothing in the repo depends on IMD being reachable; `providers/imd.py` 401s and falls through.
 
 ### B3 — what B2b hands you (2026-09-08)
 
