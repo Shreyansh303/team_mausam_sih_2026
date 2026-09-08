@@ -26,7 +26,7 @@ unticked items but files present:
 - [x] B0 flutter toolchain + scaffold
 - [x] B1 app foundation + onboarding + home skeleton
 - [x] B2a ten pending renderers + detail pages (one commit each)
-- [ ] B2b animations · events · why-sheet actions · places · map · settings · demo sheet · WS client · low-bandwidth · a11y · l10n · icon/splash
+- [x] B2b animations · events · why-sheet actions · places · map · settings · demo sheet · WS client · low-bandwidth · a11y · l10n · icon/splash
 - [ ] B3 integration + APK + CI
 - [ ] C1 e2e QA
 - [ ] C2 docs + pitch
@@ -113,9 +113,42 @@ unticked items but files present:
   [x] fixtures_test green (64 tests) · [x] screenshots `docs/screenshots/b2a_{health,fitness,beach}.png`
   + `_scrolled` variants, all against the live backend
 ### B2b
-- [x] all renderers + detail pages (B2a) · [ ] animations · events pipeline · why-sheet actions
-- [ ] places page · map page (radar + warnings) · settings complete · demo sheet · WS client · low-bandwidth · a11y
-- [ ] l10n en/hi complete · icon/splash · screenshots per persona
+- [x] all renderers + detail pages (B2a)
+- [x] `compileSdk = 37` (H0's carry-over, first commit of the phase)
+- [x] WS client `data/ws/alerts_socket.dart` (pong on every ping, `location` frame on a move,
+  1008 = re-auth and no retry, exponential backoff, unknown types ignored) + `features/home/
+  live_alerts.dart` (re-fetch on `warning_issued && affects_you`, `scenario_changed`,
+  `now_override`)
+- [x] events pipeline: `EventsRepo` batches ≤ 100, flushes every 10 s / on background / before a
+  re-rank, keeps the `engagement` counters from the response · `features/home/card_actions.dart`
+  is the single path for impression/tap/expand/dismiss/pin/unpin/hide/unhide/share ·
+  `data/repositories/profile_repo.dart` (`/me/card-prefs`, `/me/reset-learning`)
+- [x] why-sheet actions send the event, flush and re-fetch `/home`; the sheet also shows what the
+  ranker learned (taps / dismissals) for that card type
+- [x] animations: re-rank highlight flash on promoted cards + "A warning moved to the top of your
+  feed" SnackBar with a **View** action, banner arrival slide/fade (`flutter_animate`)
+- [x] places page `/places` over `/me/places` (search, kind, delete, max 8)
+- [x] map page `/map` (OSM base, RainViewer past+nowcast frames, play/scrub slider, warning
+  circles + markers, user marker); `RadarRenderer`'s "Open map" now pushes `/map`
+- [x] settings complete: language (5), units (metric/imperial), personas, home location picker,
+  school + commute windows, backend URL, low-bandwidth, larger text, reset learning, about,
+  links to places / map / demo sheet
+- [x] demo sheet: scenario chips, demo clock presets + picker, persona view, simulate offline,
+  low-bandwidth, live-alert status dot, "Open admin console", reset
+- [x] low-bandwidth: `?lite=1`, radar tiles suppressed on the card **and** the map page, `Lite`
+  badge in the feed footer and the quick-actions row
+- [x] a11y: 48 dp targets, semantics labels on cards/quick actions/banner, banner foreground
+  chosen from background luminance, text-scale setting — `test/accessibility_test.dart` runs the
+  Android + iOS tap-target, labelled-target and **text-contrast** guidelines
+- [x] l10n en/hi complete (**282 keys**, parity enforced by `test/l10n_test.dart`), mr/ta/bn
+  best-effort (69 keys each, per-key fallback to English) · every renderer/widget English literal
+  moved into the ARBs, data-value enums resolved through `lib/l10n/labels.dart`
+- [x] app icon + splash (generated sun-behind-cloud mark on IMD blue; adaptive icon, launch
+  background, web icons/manifest/boot splash) — no IMD logo (CLAUDE.md §9)
+- [x] the double offline/sample banner is collapsed into one `_FeedStatus` strip
+- [x] screenshots: `docs/screenshots/b2b_<persona>.png` ×8 + `b2b_ws_before/rerank.png` +
+  `b2b_map/places/demo_sheet/hindi.png`, all against the live backend
+- [x] gates: `flutter analyze` clean · `flutter test` **90 passed** · `flutter build web`
 
 ## B3 checklist
 - [ ] live backend integration, contract mismatches fixed · WS reorder verified in web build
@@ -226,7 +259,140 @@ unticked items but files present:
 - **B2a** New renderer strings are English literals, matching B1's existing renderers; the ARB
   pass is B2b's (see Notes). Card *content* is localized by the backend via `?lang=`.
 
+- **B2b** `compileSdk = 37` is now pinned in `app/android/app/build.gradle.kts` (H0's carry-over,
+  gotcha 3): `permission_handler_android` 14.1.0 fails the AAR-metadata check against 36. AGP
+  warns "maximum recommended compile SDK … is 36" and builds anyway.
+- **B2b** Two **display-only statics** exist so renderers keep working in widget tests that build
+  them outside a `ProviderScope`: `Fmt.imperial` (units) and `RadarRenderer.tilesEnabled`
+  (low-bandwidth). `SettingsNotifier._applyDisplayFlags` is the only writer, called from
+  `hydrate()` and `update()`. The alternative — threading units and lite through fifteen renderer
+  constructors — buys nothing the settings notifier does not already guarantee.
+- **B2b** The API always answers in metric (docs/04 preamble), so `units: imperial` is a **display**
+  conversion in `Fmt.temp` / `Fmt.kph` / `MetricRenderer` only; the value sent to
+  `PUT /me/profile` still records the user's choice.
+- **B2b** `Card.data` enum values (`sea_state`, `risk`, `impact`, `intensity`, `status`,
+  `category`, window labels, hazards, seasons) are **not** localized by the backend — only
+  titles/subtitles/insights/reasons are. `lib/l10n/labels.dart` maps them to ARB strings with a
+  `Fmt.humanize` fallback, so a value a later backend adds still reads as words. Consequence:
+  `GaugeSpec.of`, `AlertSpec.of`, `BarChartSpec.of`, `TimelineWindow.parse` and
+  `AdviceGroup.parse` now take an `L`. No contract change.
+- **B2b** `levelLabel` keeps `medium` and `moderate` distinct (docs/02 uses both), and
+  `qualityLabel` also resolves the `good|caution|poor|avoid` ladder of cards 22/28.
+  `test/fixtures_test.dart` expects "Morning drop", not `Fmt.humanize`'s "Morning Drop".
+- **B2b** Changing a saved place's `kind` is **DELETE + POST**: docs/04 has no update route for
+  `/me/places`, and inventing one would have been a contract change.
+- **B2b** The demo sheet's scenario list is the hardcoded docs/05 set, not a call to A1's
+  `/weather/scenarios` (which is not in docs/04). It is one static list in
+  `features/demo/demo_sheet.dart`; if A* adds a scenario, add it there too.
+- **B2b** The warning banner's foreground colour is derived from the background's luminance:
+  white on IMD yellow (#F5C518) and orange (#F28C28) fails WCAG AA, and
+  `test/accessibility_test.dart` runs `textContrastGuideline` over the whole home screen.
+- **B2b** B1's two stacked banners are now one `_FeedStatus` strip with a fixed priority —
+  bundled sample → offline → stale cache — so the wording always matches what is on screen.
+- **B2b** `TimeWindow` existed twice (`data/models/user.dart` and a new one in the settings
+  repo); the model's copy won and gained `copyWith` + the docs/04 defaults.
+- **B2b** `mr`, `ta` and `bn` carry **69 keys each** (the chrome a judge sees) and fall back to
+  English per key — `flutter gen-l10n` prints "273 untranslated message(s)" for each, which is
+  the documented best-effort state 07 §B2 asks for, not a build error.
+
 ## Notes for next phase
+
+### B3 — what B2b hands you (2026-09-08)
+
+**Gates as run on this Mac, in `app/`** (absolute flutter path — an agent shell has no `~/.zshrc`):
+```bash
+FL=~/development/flutter/bin/flutter
+cd app && $FL analyze          # "No issues found!"  (~4 s warm)
+cd app && $FL test             # 90 passed           (~20 s)
+cd app && $FL build web        # ✓ Built build/web   (~2 min, 42 MB)
+```
+`flutter build apk` was **not** run in B2b (only ~3.4 GB free on this volume). `compileSdk = 37`
+is committed, so the APK gate should pass with the two machine-level Gradle fixes H0 already
+applied (wrapper zip pre-seeded, `platforms/android-37` alias). Run `flutter clean` first if the
+disk is tight — `app/build` holds ~0.4 GB and a debug APK another 168 MB.
+
+**New tests** (all in `app/test/`): `alerts_socket_test.dart` (9 — ping/pong, the six docs/04
+frames, unknown types, `location` instead of a reconnect, 1008 = no retry, backoff, disconnect),
+`events_repo_test.dart` (7 — batch shape, ≤ 100, timer flush, dropped batch offline, queue cap,
+engagement counters), `l10n_test.dart` (7 — en/hi key + placeholder parity, mr/ta/bn validity,
+`AppConfig.supportedLanguages` vs the delegate, every locale builds, label helpers),
+`accessibility_test.dart` (3 — tap targets, labelled targets, **text contrast**, semantics labels,
+1.5× text scale). `test/support.dart` holds the two things every widget test that mounts the home
+needs: `BlankTileProvider` (keeps `flutter_map` off the network **and** off `path_provider`) and
+`silentAlertsSocket()` (no real WebSocket, no pending reconnect timer). **Use both in any new
+widget test that pumps `HomePage`** — without them you get a `MissingPluginException` from the
+tile cache and a `SocketException` after the test ends.
+
+**The WS demo, end to end** (this is the one to rehearse for judges):
+1. `cd backend && .venv/bin/python -m uvicorn app.main:app --port 8000` (run_in_background).
+2. Open the app (web build or APK) with the backend URL set to **`http://127.0.0.1:8000`** —
+   never `localhost`, headless Chrome resolves it to `::1` and uvicorn binds IPv4 only.
+3. The freshness chip grows a **green dot** once `/ws/alerts` is connected; the demo sheet shows
+   "Live alerts: connected" with the same dot.
+4. Push the warning — the admin console at `/admin/console` (key `mausam-admin`, preset
+   *Orange thunderstorm — Delhi*), or straight over curl:
+   ```bash
+   curl -s -X POST http://127.0.0.1:8000/api/v1/admin/warnings \
+     -H 'Content-Type: application/json' -H 'X-Admin-Key: mausam-admin' \
+     -d '{"severity":"orange","hazard":"thunderstorm","title":"Thunderstorm warning — Delhi",
+          "description":"Thunderstorm with lightning and gusty winds likely over Delhi.",
+          "district":"New Delhi","state":"Delhi","lat":28.61,"lon":77.21,
+          "radius_km":75,"ttl_minutes":120}'
+   ```
+5. Within a second the app shows the orange banner (from the socket frame, before `/home` comes
+   back), re-fetches, flashes the promoted cards and raises the SnackBar "A warning moved to the
+   top of your feed · View". `docs/screenshots/b2b_ws_before.png` → `b2b_ws_rerank.png` is exactly
+   that pair.
+6. Clean up: `curl -X DELETE -H 'X-Admin-Key: mausam-admin' .../api/v1/admin/warnings/<id>`.
+
+**Screenshot recipe, as it actually worked here** (extends B1/B2a; driver script lives in the
+agent scratchpad because `scripts/` is out of B2's scope — re-create it from these steps):
+1. `flutter build web`; `cd app/build/web && python3 -m http.server 8080 --bind 127.0.0.1` and the
+   backend on 8000, both in the background.
+2. `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --disable-gpu
+   --no-first-run --remote-debugging-port=9222 --user-data-dir=<scratch>/cdp-profile about:blank`
+   — Chrome 152 on this Mac.
+3. **Node 26 is installed** (`/opt/homebrew/bin/node`) and has a global `WebSocket` + `fetch`, so
+   the CDP driver is ~150 lines with **no npm install**. Per shot: `PUT
+   http://127.0.0.1:9222/json/new?about:blank` → connect to `webSocketDebuggerUrl` →
+   `Page.enable`, `Runtime.enable`, `Emulation.setDeviceMetricsOverride`
+   (390×844 @2, `mobile: true`), `Emulation.setEmulatedMedia`
+   (`prefers-color-scheme: light`, otherwise headless renders the dark theme).
+4. Seed `shared_preferences` **between two loads**: navigate once, `Runtime.evaluate` the
+   `localStorage.setItem('flutter.…')` block, then navigate **twice more** (the first load after
+   seeding races the guest token and 401s into "Sample data"), waiting ~4 s and ~9 s. Keys:
+   `flutter.onboarded='true'`, `flutter.language='"en"'`,
+   `flutter.backend_url='"http://127.0.0.1:8000"'`, `flutter.personas='["parent"]'`,
+   `flutter.home_location='"{…}"'` (a JSON **string** containing JSON), `flutter.units='"metric"'`.
+5. `Page.captureScreenshot` → PNG. Taps use `Input.dispatchMouseEvent`
+   (`mousePressed` + `mouseReleased`) in **CSS** pixels: the quick-actions row sits at y ≈ 522,
+   with Radar x ≈ 73, Places x ≈ 195, Demo x ≈ 317 — that is how `b2b_map/places/demo_sheet.png`
+   were taken. Scrolling is `type: 'mouseWheel'`.
+6. Emulation overrides die with the WebSocket session, so metrics + media + screenshot must
+   happen in one run — one CDP session per screenshot is the simplest way to keep that true.
+
+**Routes and files added by B2b** — `/places` (`features/places/places_page.dart`), `/map`
+(`features/map/map_page.dart`), the demo sheet (`features/demo/demo_sheet.dart`, opened from the
+AppBar flask icon, the quick-actions row and Settings), plus
+`data/ws/alerts_socket.dart`, `data/repositories/{places,radar,profile}_repo.dart`,
+`features/home/{live_alerts,card_actions}.dart`, `features/home/widgets/quick_actions.dart`,
+`lib/l10n/labels.dart`.
+
+**Known gaps B3 should pick up**
+- **Backend i18n, visible under `?lang=hi`** (not an app bug, and invisible in the fixtures):
+  card *advice/reason* strings still come back in English — e.g. "Calm and clear through the
+  window" in the Hindi screenshot — and B2a already logged the nowcast subtitle rendering as the
+  raw key `hazard.rain` plus the AQI insight's missing pollutant value. All three are backend
+  i18n fixes.
+- `traveler` has no saved places on a fresh guest, so `saved_places` / `packing_suggestions` /
+  `travel_alerts` do not appear in `b2b_traveler.png`. Add two places from the Places page (or
+  seed them over `/me/places`) before recording the traveller part of the demo.
+- The app never calls `GET /me/card-prefs` on start-up: pins/hides are applied server-side by
+  `POST /events` and arrive back inside `/home`, so the local overlay is only for the current
+  session. If a future phase wants hidden cards to survive a reinstall, seed
+  `hiddenCardsProvider` from `ProfileRepo.cardPrefs()` in `main`.
+- Onboarding and home still survive a dead backend (bundled fixture + cache); the WS client just
+  keeps retrying with backoff. `flutter test` covers the dead-backend home path.
 
 ### H0 — this Mac (2026-09-08)
 
