@@ -822,6 +822,252 @@ abstract class L {
   /// In en, this message translates to:
   /// **'Open map'**
   String get openMap;
+
+  /// No description provided for @settingsUnits.
+  ///
+  /// In en, this message translates to:
+  /// **'Units'**
+  String get settingsUnits;
+
+  /// No description provided for @unitsMetric.
+  ///
+  /// In en, this message translates to:
+  /// **'Metric (°C, km/h)'**
+  String get unitsMetric;
+
+  /// No description provided for @unitsImperial.
+  ///
+  /// In en, this message translates to:
+  /// **'Imperial (°F, mph)'**
+  String get unitsImperial;
+
+  /// No description provided for @settingsHomeLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Home location'**
+  String get settingsHomeLocation;
+
+  /// No description provided for @settingsNoLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'No location set'**
+  String get settingsNoLocation;
+
+  /// No description provided for @settingsPlacesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Places you follow beyond home'**
+  String get settingsPlacesSubtitle;
+
+  /// No description provided for @settingsSchoolWindows.
+  ///
+  /// In en, this message translates to:
+  /// **'School run windows'**
+  String get settingsSchoolWindows;
+
+  /// No description provided for @settingsCommuteWindows.
+  ///
+  /// In en, this message translates to:
+  /// **'Commute windows'**
+  String get settingsCommuteWindows;
+
+  /// No description provided for @settingsAccessibility.
+  ///
+  /// In en, this message translates to:
+  /// **'Data & accessibility'**
+  String get settingsAccessibility;
+
+  /// No description provided for @settingsLowBandwidth.
+  ///
+  /// In en, this message translates to:
+  /// **'Low-bandwidth mode'**
+  String get settingsLowBandwidth;
+
+  /// No description provided for @settingsLowBandwidthHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sends lite=1: trimmed hourly arrays, no radar tiles.'**
+  String get settingsLowBandwidthHelp;
+
+  /// No description provided for @settingsLargeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Larger text'**
+  String get settingsLargeText;
+
+  /// No description provided for @settingsLargeTextHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Raises the minimum text size across the app.'**
+  String get settingsLargeTextHelp;
+
+  /// No description provided for @settingsResetLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset what the app learned'**
+  String get settingsResetLearning;
+
+  /// No description provided for @settingsResetLearningHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Clears taps, dismissals, pins and hidden cards.'**
+  String get settingsResetLearningHelp;
+
+  /// No description provided for @settingsResetLearningConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'This clears every card preference and the ranking history on the server. Continue?'**
+  String get settingsResetLearningConfirm;
+
+  /// No description provided for @settingsResetLearningDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning reset. The feed is back to its defaults.'**
+  String get settingsResetLearningDone;
+
+  /// No description provided for @settingsReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get settingsReset;
+
+  /// No description provided for @aboutDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'SIH 2026 · PS 26076 · a Team Mausam prototype. Not affiliated with, and not endorsed by, the India Meteorological Department.'**
+  String get aboutDisclaimer;
+
+  /// No description provided for @change.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get change;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @demoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo controls'**
+  String get demoTitle;
+
+  /// No description provided for @demoSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scenario, clock and persona overrides for this device only.'**
+  String get demoSubtitle;
+
+  /// No description provided for @demoScenario.
+  ///
+  /// In en, this message translates to:
+  /// **'Scenario'**
+  String get demoScenario;
+
+  /// No description provided for @demoClock.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo clock (IST)'**
+  String get demoClock;
+
+  /// No description provided for @demoClockNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get demoClockNow;
+
+  /// No description provided for @demoClockPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a time'**
+  String get demoClockPick;
+
+  /// No description provided for @demoPersona.
+  ///
+  /// In en, this message translates to:
+  /// **'View as persona'**
+  String get demoPersona;
+
+  /// No description provided for @demoPersonaMine.
+  ///
+  /// In en, this message translates to:
+  /// **'My personas'**
+  String get demoPersonaMine;
+
+  /// No description provided for @demoSimulateOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulate offline'**
+  String get demoSimulateOffline;
+
+  /// No description provided for @demoSimulateOfflineHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Shows the offline behaviour without touching the radio.'**
+  String get demoSimulateOfflineHelp;
+
+  /// No description provided for @demoOpenConsole.
+  ///
+  /// In en, this message translates to:
+  /// **'Open admin console'**
+  String get demoOpenConsole;
+
+  /// No description provided for @demoReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset demo'**
+  String get demoReset;
+
+  /// No description provided for @demoActiveHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo overrides are active — the feed is not showing live data.'**
+  String get demoActiveHint;
+
+  /// No description provided for @demoConsoleUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the console. Try this URL:'**
+  String get demoConsoleUnavailable;
+
+  /// No description provided for @demoLiveStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Live alerts: {status}'**
+  String demoLiveStatus(String status);
+
+  /// No description provided for @wsConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'connected'**
+  String get wsConnected;
+
+  /// No description provided for @wsConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'connecting…'**
+  String get wsConnecting;
+
+  /// No description provided for @wsReconnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'reconnecting…'**
+  String get wsReconnecting;
+
+  /// No description provided for @wsUnauthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'needs a new token'**
+  String get wsUnauthorized;
+
+  /// No description provided for @wsOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'not connected'**
+  String get wsOffline;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

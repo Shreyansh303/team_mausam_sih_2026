@@ -4,41 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/config.dart';
 import '../models/location.dart';
-
-/// docs/04 §Objects `User.school_windows` / `commute_windows` —
-/// `{"label":"morning_drop","start":"07:00","end":"09:00"}`.
-class TimeWindow {
-  const TimeWindow({required this.label, required this.start, required this.end});
-
-  final String label;
-
-  /// `HH:mm`, local to the user's home location.
-  final String start;
-  final String end;
-
-  TimeWindow copyWith({String? start, String? end}) =>
-      TimeWindow(label: label, start: start ?? this.start, end: end ?? this.end);
-
-  factory TimeWindow.fromJson(Map<String, dynamic> json) => TimeWindow(
-        label: '${json['label'] ?? ''}',
-        start: '${json['start'] ?? '00:00'}',
-        end: '${json['end'] ?? '00:00'}',
-      );
-
-  Map<String, dynamic> toJson() =>
-      <String, dynamic>{'label': label, 'start': start, 'end': end};
-
-  /// docs/04 §Objects `User` — the defaults the backend itself uses.
-  static const List<TimeWindow> defaultSchool = <TimeWindow>[
-    TimeWindow(label: 'morning_drop', start: '07:00', end: '09:00'),
-    TimeWindow(label: 'afternoon_pickup', start: '13:00', end: '16:00'),
-  ];
-
-  static const List<TimeWindow> defaultCommute = <TimeWindow>[
-    TimeWindow(label: 'morning', start: '08:00', end: '10:00'),
-    TimeWindow(label: 'evening', start: '17:00', end: '20:00'),
-  ];
-}
+import '../models/user.dart' show TimeWindow;
 
 /// Everything the app persists locally between launches.
 class AppSettings {

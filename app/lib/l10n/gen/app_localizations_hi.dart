@@ -398,4 +398,139 @@ class LHi extends L {
 
   @override
   String get openMap => 'मानचित्र खोलें';
+
+  @override
+  String get settingsUnits => 'इकाइयाँ';
+
+  @override
+  String get unitsMetric => 'मीट्रिक (°से, किमी/घं)';
+
+  @override
+  String get unitsImperial => 'इम्पीरियल (°फ़ै, मील/घं)';
+
+  @override
+  String get settingsHomeLocation => 'घर का स्थान';
+
+  @override
+  String get settingsNoLocation => 'कोई स्थान तय नहीं';
+
+  @override
+  String get settingsPlacesSubtitle =>
+      'घर के अलावा जिन स्थानों को आप देखते हैं';
+
+  @override
+  String get settingsSchoolWindows => 'स्कूल आने-जाने का समय';
+
+  @override
+  String get settingsCommuteWindows => 'आवागमन का समय';
+
+  @override
+  String get settingsAccessibility => 'डेटा और सुगम्यता';
+
+  @override
+  String get settingsLowBandwidth => 'कम-बैंडविड्थ मोड';
+
+  @override
+  String get settingsLowBandwidthHelp =>
+      'lite=1 भेजता है: छोटी घंटेवार सूची, रडार टाइल्स नहीं।';
+
+  @override
+  String get settingsLargeText => 'बड़ा टेक्स्ट';
+
+  @override
+  String get settingsLargeTextHelp =>
+      'पूरे ऐप में न्यूनतम टेक्स्ट आकार बढ़ाता है।';
+
+  @override
+  String get settingsResetLearning => 'ऐप ने जो सीखा है उसे रीसेट करें';
+
+  @override
+  String get settingsResetLearningHelp =>
+      'टैप, हटाए गए, पिन और छिपे कार्ड साफ़ करता है।';
+
+  @override
+  String get settingsResetLearningConfirm =>
+      'इससे सर्वर पर हर कार्ड वरीयता और रैंकिंग इतिहास मिट जाएगा। जारी रखें?';
+
+  @override
+  String get settingsResetLearningDone =>
+      'सीख रीसेट हुई। फ़ीड फिर से डिफ़ॉल्ट पर है।';
+
+  @override
+  String get settingsReset => 'रीसेट';
+
+  @override
+  String get aboutDisclaimer =>
+      'SIH 2026 · PS 26076 · टीम मौसम का प्रोटोटाइप। भारत मौसम विज्ञान विभाग से संबद्ध या अनुमोदित नहीं।';
+
+  @override
+  String get change => 'बदलें';
+
+  @override
+  String get cancel => 'रद्द करें';
+
+  @override
+  String get demoTitle => 'डेमो नियंत्रण';
+
+  @override
+  String get demoSubtitle =>
+      'केवल इस डिवाइस के लिए परिदृश्य, घड़ी और पर्सोना बदलाव।';
+
+  @override
+  String get demoScenario => 'परिदृश्य';
+
+  @override
+  String get demoClock => 'डेमो घड़ी (IST)';
+
+  @override
+  String get demoClockNow => 'लाइव';
+
+  @override
+  String get demoClockPick => 'समय चुनें';
+
+  @override
+  String get demoPersona => 'पर्सोना के रूप में देखें';
+
+  @override
+  String get demoPersonaMine => 'मेरे पर्सोना';
+
+  @override
+  String get demoSimulateOffline => 'ऑफ़लाइन जैसा दिखाएँ';
+
+  @override
+  String get demoSimulateOfflineHelp =>
+      'नेटवर्क बंद किए बिना ऑफ़लाइन व्यवहार दिखाता है।';
+
+  @override
+  String get demoOpenConsole => 'एडमिन कंसोल खोलें';
+
+  @override
+  String get demoReset => 'डेमो रीसेट करें';
+
+  @override
+  String get demoActiveHint =>
+      'डेमो बदलाव सक्रिय हैं — फ़ीड लाइव डेटा नहीं दिखा रही।';
+
+  @override
+  String get demoConsoleUnavailable => 'कंसोल नहीं खुल सका। यह URL आज़माएँ:';
+
+  @override
+  String demoLiveStatus(String status) {
+    return 'लाइव अलर्ट: $status';
+  }
+
+  @override
+  String get wsConnected => 'जुड़ा हुआ';
+
+  @override
+  String get wsConnecting => 'जुड़ रहा है…';
+
+  @override
+  String get wsReconnecting => 'फिर जुड़ रहा है…';
+
+  @override
+  String get wsUnauthorized => 'नया टोकन चाहिए';
+
+  @override
+  String get wsOffline => 'जुड़ा नहीं';
 }

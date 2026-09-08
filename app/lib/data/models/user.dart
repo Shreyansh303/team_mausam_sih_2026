@@ -24,14 +24,28 @@ class TimeWindow {
   final String start; // "07:00"
   final String end; // "09:00"
 
+  TimeWindow copyWith({String? start, String? end}) =>
+      TimeWindow(label: label, start: start ?? this.start, end: end ?? this.end);
+
   factory TimeWindow.fromJson(Map<String, dynamic> json) => TimeWindow(
         label: asString(json['label']),
-        start: asString(json['start']),
-        end: asString(json['end']),
+        start: asString(json['start'], fallback: '00:00'),
+        end: asString(json['end'], fallback: '00:00'),
       );
 
   Map<String, dynamic> toJson() =>
       <String, dynamic>{'label': label, 'start': start, 'end': end};
+
+  /// docs/04 §Objects `User` — the same defaults the backend applies to a new guest.
+  static const List<TimeWindow> defaultSchool = <TimeWindow>[
+    TimeWindow(label: 'morning_drop', start: '07:00', end: '09:00'),
+    TimeWindow(label: 'afternoon_pickup', start: '13:00', end: '16:00'),
+  ];
+
+  static const List<TimeWindow> defaultCommute = <TimeWindow>[
+    TimeWindow(label: 'morning', start: '08:00', end: '10:00'),
+    TimeWindow(label: 'evening', start: '17:00', end: '20:00'),
+  ];
 }
 
 /// docs/04_API_CONTRACT.md §Objects `User`.

@@ -397,4 +397,139 @@ class LEn extends L {
 
   @override
   String get openMap => 'Open map';
+
+  @override
+  String get settingsUnits => 'Units';
+
+  @override
+  String get unitsMetric => 'Metric (°C, km/h)';
+
+  @override
+  String get unitsImperial => 'Imperial (°F, mph)';
+
+  @override
+  String get settingsHomeLocation => 'Home location';
+
+  @override
+  String get settingsNoLocation => 'No location set';
+
+  @override
+  String get settingsPlacesSubtitle => 'Places you follow beyond home';
+
+  @override
+  String get settingsSchoolWindows => 'School run windows';
+
+  @override
+  String get settingsCommuteWindows => 'Commute windows';
+
+  @override
+  String get settingsAccessibility => 'Data & accessibility';
+
+  @override
+  String get settingsLowBandwidth => 'Low-bandwidth mode';
+
+  @override
+  String get settingsLowBandwidthHelp =>
+      'Sends lite=1: trimmed hourly arrays, no radar tiles.';
+
+  @override
+  String get settingsLargeText => 'Larger text';
+
+  @override
+  String get settingsLargeTextHelp =>
+      'Raises the minimum text size across the app.';
+
+  @override
+  String get settingsResetLearning => 'Reset what the app learned';
+
+  @override
+  String get settingsResetLearningHelp =>
+      'Clears taps, dismissals, pins and hidden cards.';
+
+  @override
+  String get settingsResetLearningConfirm =>
+      'This clears every card preference and the ranking history on the server. Continue?';
+
+  @override
+  String get settingsResetLearningDone =>
+      'Learning reset. The feed is back to its defaults.';
+
+  @override
+  String get settingsReset => 'Reset';
+
+  @override
+  String get aboutDisclaimer =>
+      'SIH 2026 · PS 26076 · a Team Mausam prototype. Not affiliated with, and not endorsed by, the India Meteorological Department.';
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get demoTitle => 'Demo controls';
+
+  @override
+  String get demoSubtitle =>
+      'Scenario, clock and persona overrides for this device only.';
+
+  @override
+  String get demoScenario => 'Scenario';
+
+  @override
+  String get demoClock => 'Demo clock (IST)';
+
+  @override
+  String get demoClockNow => 'Live';
+
+  @override
+  String get demoClockPick => 'Pick a time';
+
+  @override
+  String get demoPersona => 'View as persona';
+
+  @override
+  String get demoPersonaMine => 'My personas';
+
+  @override
+  String get demoSimulateOffline => 'Simulate offline';
+
+  @override
+  String get demoSimulateOfflineHelp =>
+      'Shows the offline behaviour without touching the radio.';
+
+  @override
+  String get demoOpenConsole => 'Open admin console';
+
+  @override
+  String get demoReset => 'Reset demo';
+
+  @override
+  String get demoActiveHint =>
+      'Demo overrides are active — the feed is not showing live data.';
+
+  @override
+  String get demoConsoleUnavailable =>
+      'Could not open the console. Try this URL:';
+
+  @override
+  String demoLiveStatus(String status) {
+    return 'Live alerts: $status';
+  }
+
+  @override
+  String get wsConnected => 'connected';
+
+  @override
+  String get wsConnecting => 'connecting…';
+
+  @override
+  String get wsReconnecting => 'reconnecting…';
+
+  @override
+  String get wsUnauthorized => 'needs a new token';
+
+  @override
+  String get wsOffline => 'not connected';
 }

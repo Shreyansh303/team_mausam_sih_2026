@@ -8,6 +8,7 @@ import '../../core/formatters.dart';
 import '../../data/api_client.dart';
 import '../../data/cache/json_file_cache.dart';
 import '../../data/models/location.dart';
+import '../../data/models/user.dart' show TimeWindow;
 import '../../data/repositories/auth_repo.dart';
 import '../../data/repositories/events_repo.dart';
 import '../../data/repositories/home_repo.dart';
