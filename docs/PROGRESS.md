@@ -31,7 +31,13 @@ unticked items but files present:
 - [ ] C1 e2e QA
 - [ ] C2 docs + pitch
 - [ ] S* stretch
-- [ ] H0 fresh-machine bootstrap (new owner; see docs/HANDOFF.md §4) — not needed on the original machine
+- [x] H0 fresh-machine bootstrap (new owner; see docs/HANDOFF.md §4) — done on the macOS machine
+  2026-09-08 (see "Notes for next phase → H0 — this Mac"); was never needed on the original Windows machine.
+  Toolchain + every gate green (pytest 300, analyze clean, 64 tests, web, and a real
+  `app-debug.apk`). **One carry-over for whoever owns `app/` next:** the APK build needs
+  `compileSdk = 37` in `app/android/app/build.gradle.kts` (plugin `permission_handler_android`
+  14.1.0 demands API 37). H0 verified that one-line fix, then reverted it — it belongs to B2b/B3,
+  not to a machine bootstrap. Details in the H0 notes, gotcha 3.
 
 ## A1 checklist
 - [x] skeleton + venv + deps + .env.example + Dockerfile
@@ -221,6 +227,172 @@ unticked items but files present:
   pass is B2b's (see Notes). Card *content* is localized by the backend via `?lang=`.
 
 ## Notes for next phase
+
+### H0 — this Mac (2026-09-08)
+
+The project moved from the original Windows box to a **MacBook Air (Apple M1, arm64)**. Everything
+below is verified on this machine; the Windows-only parts of `CLAUDE.md` §8 and
+`docs/SETUP_WINDOWS.md` (`D:\sdk`, `setx`, `TEMP=D:\sdk\tmp`, `taskkill`,
+`scripts/setup_flutter_windows.ps1`, `scripts/flutter_env.*`) **do not apply here** — none of them
+were run, and the Gradle "Unable to establish loopback connection" bug does not reproduce on macOS.
+
+**Gate results (every one re-run end-to-end on 2026-09-08 after the interrupted first attempt)**
+
+| gate | result |
+|---|---|
+| `backend/.venv/bin/python -m pytest -q` | **300 passed**, 1 warning, 10.38 s |
+| uvicorn + `curl /api/v1/health` | `{"status":"ok","version":"0.1.0",…,"scenario":"live"}` |
+| `flutter doctor -v` | Flutter ✓ · Android toolchain (SDK 36.0.0, licences accepted) ✓ · Chrome ✓ · Network ✓ · **Xcode `[!]`** (simulator runtimes + CocoaPods — allowed, see below) |
+| `flutter pub get` / `flutter analyze` | deps resolved · **"No issues found!" (18.1 s)** |
+| `flutter test` | **64 passed** |
+| `flutter build web` | **✓ Built build/web** — 1 min 43 s |
+| `flutter build apk --debug` | **✓ Built build/app/outputs/flutter-apk/app-debug.apk** — 168 MB — **but only after three fixes; the third one is not committed**, see "Three Gradle/Android gotchas" below |
+
+**Machine**
+
+| | |
+|---|---|
+| OS | macOS 26.6.2 (build 25G83), Darwin 25.6.0, `darwin-arm64`, locale en-GB |
+| CPU | Apple M1 |
+| Shell | zsh (`~/.zshrc`; a backup of the pre-H0 file is at `~/.zshrc.bak.h0`) |
+| Homebrew | `/opt/homebrew` — present but **not used** for the toolchain (no casks, no sudo, no pkg installers) |
+| Repo | `/Users/anushka/Downloads/team_mausam_sih_2026` |
+
+**Absolute tool paths** (an agent shell does not source `~/.zshrc` — always use these)
+
+| tool | path | version |
+|---|---|---|
+| system python | `/Users/anushka/.pyenv/shims/python3` (pyenv) | 3.13.2 |
+| **venv python** | `backend/.venv/bin/python` | 3.13.2 |
+| **flutter** | `/Users/anushka/development/flutter/bin/flutter` | 3.47.2 stable, engine `a804b26164`, rev `d3b14c8769` |
+| dart | `/Users/anushka/development/flutter/bin/dart` | 3.13.2 (DevTools 2.60.0) |
+| **JDK 17** | `/Users/anushka/development/jdk-17` (`JAVA_HOME`) | Temurin 17.0.20.1+1 (Adoptium tar.gz) |
+| **Android SDK** | `/Users/anushka/development/android` (`ANDROID_HOME`, `ANDROID_SDK_ROOT`) | platform-tools · platforms `android-35`+`android-36`+`android-37.0`+`android-37` (the last is the alias from gotcha 2) · build-tools `35.0.0`+`36.0.0` · `cmake/3.22.1` · all licences accepted |
+| sdkmanager | `/Users/anushka/development/android/cmdline-tools/latest/bin/sdkmanager` | cmdline-tools **21.0** (see gotcha below) |
+| adb | `/Users/anushka/development/android/platform-tools/adb` | |
+| Chrome | `/Applications/Google Chrome.app` | 152.0.7977.82 (already installed — no cask needed) |
+| Xcode | `/Applications/Xcode.app` | 26.6 (17F113) — installed but **incomplete**, see below |
+
+`~/.zshrc` got one block (`# --- Team Mausam SIH 2026 toolchain (added by phase H0) ---`) exporting
+`JAVA_HOME`, `ANDROID_HOME`, `ANDROID_SDK_ROOT` and prepending
+`flutter/bin`, `$JAVA_HOME/bin`, `cmdline-tools/latest/bin`, `platform-tools` to `PATH`. A **human**
+terminal picks that up after `source ~/.zshrc`; an **agent** shell does not, so agents must keep
+using the absolute paths above (or re-export inline — the pattern used throughout H0 is
+`export JAVA_HOME="$HOME/development/jdk-17"; export ANDROID_HOME="$HOME/development/android"; export PATH="$HOME/development/flutter/bin:$JAVA_HOME/bin:$PATH"`).
+
+**Gotcha that cost the most time: the Android command-line tools split in two.**
+The current `cmdline-tools;latest` (rev **16111833**, version 23.0, and the arch-split 22.0 before
+it) **no longer ships the classic `sdkmanager`** — it ships a new `android` CLI, and `sdkmanager` is
+only a deprecation shim over `android sdk`. That shim **hangs forever** on
+`sdkmanager --install <pkgs>` from a non-interactive shell (the wrapper `/bin/sh` sits there and
+never spawns a JVM), and `sdkmanager --version` prints three warning lines before the number, which
+`flutter doctor` is not written for. Fix, and what is installed now: the **last classic release,
+cmdline-tools 21.0** (`https://dl.google.com/android/repository/commandlinetools-mac-15641748_latest.zip`)
+is unzipped as `~/development/android/cmdline-tools/latest`; the new 23.0 is parked next to it as
+`~/development/android/cmdline-tools/23.0` and is unused. With 21.0 in place,
+`yes | sdkmanager --sdk_root=$ANDROID_HOME <pkgs>` and `yes | sdkmanager --sdk_root=$ANDROID_HOME --licenses`
+both work and `flutter doctor` reports "All Android licenses accepted." **Do not "upgrade"
+`cmdline-tools/latest` to 23.0** — it will break `flutter doctor` and every scripted SDK install.
+
+**Three Gradle/Android gotchas found while running the APK gate (2026-09-08, all verified)**
+
+1. **The Gradle wrapper cannot download its own distribution here.** `gradlew` fetches
+   `https://services.gradle.org/distributions/gradle-9.3.1-all.zip`, which 307s to GitHub and then
+   to `release-assets.githubusercontent.com`. That name resolves to four IPs and **one of them
+   (185.199.109.133) refuses TCP 443 on this network**; the JVM tries only the first address it is
+   handed and dies with `java.net.ConnectException: Connection refused` inside
+   `org.gradle.wrapper.Download`. `curl` survives it (happy-eyeballs retries the other IPs), so
+   this is *not* the agent sandbox — it fails identically with `dangerouslyDisableSandbox: true`,
+   and a plain `java` one-liner reproduces it. **Fix (already applied, keep it):** the zip was
+   downloaded with curl straight into the wrapper's cache slot —
+   ```bash
+   cd ~/.gradle/wrapper/dists/gradle-9.3.1-all/9ot9r568e8zfvvd4mn8rbu1j0 \
+     && curl -fL --retry 5 --retry-all-errors -o gradle-9.3.1-all.zip \
+        https://services.gradle.org/distributions/gradle-9.3.1-all.zip
+   ```
+   sha256 `17f277867f6914d61b1aa02efab1ba7bb439ad652ca485cd8ca6842fccec6e43` (matches
+   `…/gradle-9.3.1-all.zip.sha256`). `Install.createDist` skips the download when the zip is
+   already there. Redo this if `~/.gradle` is ever wiped or the wrapper version changes.
+2. **`platforms;android-37` does not exist any more — only `platforms;android-37.0`.** A plugin
+   (see 3) makes AGP ask for target hash `android-37`; AGP auto-installed
+   `platforms/android-37.0` (`AndroidVersion.ApiLevel=37.0`, `<api-level>37.0</api-level>`, SDK XML
+   v4), which the older parser cannot match, so the build died with
+   `Failed to find target with hash string 'android-37'`. **Fix (already applied):**
+   `platforms/android-37` is an APFS clone of `android-37.0` with `source.properties`
+   (`AndroidVersion.ApiLevel=37`) and `package.xml` (`path="platforms;android-37"`,
+   `<api-level>37</api-level>`) patched to the legacy naming. Both dirs are kept.
+   The successful build also auto-installed `~/development/android/cmake/3.22.1`.
+3. **`app/android` still pins `compileSdk = flutter.compileSdkVersion` (36) but
+   `permission_handler_android` 14.1.0 requires 37**, so `assembleDebug` fails the AAR-metadata
+   check: "Dependency ':permission_handler_android' requires … version 37 or later … :app is
+   currently compiled against android-36". **This is a project fix, not a machine fix, so H0 did
+   not commit it.** Verified working one-liner for whoever owns `app/` next (B2b or B3): in
+   `app/android/app/build.gradle.kts` change `compileSdk = flutter.compileSdkVersion` to
+   `compileSdk = 37`. With that line and nothing else, `flutter build apk --debug` succeeds
+   (`✓ Built build/app/outputs/flutter-apk/app-debug.apk`, 176 254 607 B ≈ 168 MB, Gradle task
+   174.3 s). AGP 9.1.0 prints "maximum recommended compile SDK … is 36" as a warning only. H0
+   reverted the edit, so `git status` is clean and the APK gate will fail again until someone
+   commits it. `flutter analyze`, `flutter test` and `flutter build web` are unaffected.
+   Why it never bit anyone before: the only recorded APK build (B0 checklist, Windows, 150 MB)
+   predates B1, which is where `permission_handler` entered `pubspec.yaml` — B1/B2a verified
+   `analyze` + `test` + `build web`, never `build apk`. `pubspec.lock` was **not** touched here.
+
+**Other machine facts worth knowing**
+- `android-36` + `build-tools;36.0.0` are the ones that actually matter: `app/android` pins
+  **AGP 9.1.0, Kotlin 2.4.0, Gradle 9.3.1** and `compileSdk = flutter.compileSdkVersion` (36 on
+  Flutter 3.47). 35 is installed too, but a 35-only SDK will not build this app.
+- `/usr/bin/java` is the Apple stub and errors with "Unable to locate a Java Runtime" — never rely
+  on it; always point at `~/development/jdk-17`.
+- `app/android/local.properties` is gitignored and absent; `flutter build apk` regenerates it.
+- **Disk is tight**: the volume was at 91 % before H0 and is at **96 % after the APK gate
+  (≈7.5 GB free of 228 GB)**. The toolchain costs ≈3.9 GB (Flutter) + ≈1.3 GB (Android SDK, now
+  ≈1.5 GB with `android-37`/`android-37.0`) + ≈0.3 GB (JDK); `~/.gradle` grew to **≈2.8 GB** on the
+  first APK build (235 MB wrapper zip + caches) and `app/build` holds another ≈0.4 GB, of which the
+  debug APK alone is 168 MB. `flutter clean` reclaims `app/build`. All installer archives were
+  deleted after extraction (`~/development/dl/` now holds only small logs). Watch free space before adding an
+  emulator system image (`system-images;android-36;...` is another ~1.5 GB) — none is installed, so
+  there is **no AVD**; `flutter devices` offers only `macos` and `chrome`.
+- **Xcode 26.6 is installed but `flutter doctor` still flags it** — "Unable to get list of installed
+  Simulator runtimes" and "CocoaPods not installed". This is the one `[!]` category and is
+  **expected/allowed** by `docs/HANDOFF.md` §3: judges get the Android APK. If a later phase wants
+  an iOS run, install the simulator runtime from Xcode and `brew install cocoapods` (or
+  `sudo gem install cocoapods`) — neither was done in H0.
+- Chrome was already installed, so no `brew install --cask google-chrome` was needed and **no
+  password was ever requested**. Nothing in H0 used sudo.
+
+**Git**
+- `.git/hooks/post-commit` is installed exactly as `docs/HANDOFF.md` §2 specifies (auto-`git push
+  origin main` after every commit on `main`), mode `755`.
+- `git config user.name` = `Anushka Gupta`, `user.email` =
+  `90548501+CrossAnushka@users.noreply.github.com`; remote `origin` =
+  `https://github.com/Shreyansh303/team_mausam_sih_2026.git`. HTTPS push authenticates through the
+  existing macOS credential helper — no token had to be entered. `gh` is **not** installed.
+
+**Quick commands — macOS translation of `CLAUDE.md` §Quick commands**
+```bash
+# backend (venv python is bin/python, NOT Scripts/python)
+cd backend && .venv/bin/python -m pytest -q                                  # 300 passed, ~10 s
+cd backend && .venv/bin/python -m uvicorn app.main:app --reload --port 8000  # run_in_background!
+curl -s http://127.0.0.1:8000/api/v1/health                                  # {"status":"ok",...}
+pkill -f "uvicorn app.main:app"                                              # instead of taskkill
+
+# app — absolute flutter path, because an agent shell has no ~/.zshrc
+export JAVA_HOME="$HOME/development/jdk-17"; export ANDROID_HOME="$HOME/development/android"
+FL=~/development/flutter/bin/flutter
+cd app && $FL pub get && $FL analyze && $FL test          # analyze clean, 64 tests
+cd app && $FL build web                                   # 1 min 43 s (compile 100.6 s)
+cd app && $FL build apk --debug                           # NO TEMP recipe needed on macOS
+#   → app/build/app/outputs/flutter-apk/app-debug.apk  (debug, all 3 ABIs, 168 MB)
+#   warm run 2 min 59 s (Gradle task 174 s). The FIRST run also pulls ~2.7 GB into ~/.gradle
+#   (~7 min) — and needs the two Gradle fixes + the compileSdk fix in the Gradle notes below.
+#   Run APK builds with the Bash tool's run_in_background AND dangerouslyDisableSandbox: true.
+# serve the web build (see the B2a screenshot recipe below — use 127.0.0.1, never localhost)
+cd app/build/web && python3 -m http.server 8080 --bind 127.0.0.1   # run_in_background!
+
+# Android SDK maintenance
+yes | ~/development/android/cmdline-tools/latest/bin/sdkmanager \
+      --sdk_root="$HOME/development/android" --licenses
+```
 
 ### B2b — what B2a hands you (2026-09-07)
 
