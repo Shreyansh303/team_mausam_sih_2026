@@ -300,4 +300,23 @@ class LEn extends L {
   String validUntil(String time) {
     return 'Until $time';
   }
+
+  @override
+  String get pinnedToTop => 'Pinned to the top';
+
+  @override
+  String get unpinned => 'Unpinned';
+
+  @override
+  String get cardMenu => 'Card options';
+
+  @override
+  String learnedFromYou(int taps, int dismisses) {
+    return 'You opened this $taps times and pushed it down $dismisses times.';
+  }
+
+  @override
+  String rankScore(String score, String urgency) {
+    return 'Rank score $score · urgency $urgency';
+  }
 }

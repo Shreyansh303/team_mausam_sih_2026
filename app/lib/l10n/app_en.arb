@@ -109,5 +109,13 @@
   "next24Hours": "Next 24 hours",
   "sevenDays": "7 days",
   "validUntil": "Until {time}",
-  "@validUntil": { "placeholders": { "time": { "type": "String" } } }
+  "@validUntil": { "placeholders": { "time": { "type": "String" } } },
+
+  "pinnedToTop": "Pinned to the top",
+  "unpinned": "Unpinned",
+  "cardMenu": "Card options",
+  "learnedFromYou": "You opened this {taps} times and pushed it down {dismisses} times.",
+  "@learnedFromYou": {"placeholders": {"taps": {"type": "int"}, "dismisses": {"type": "int"}}},
+  "rankScore": "Rank score {score} · urgency {urgency}",
+  "@rankScore": {"placeholders": {"score": {"type": "String"}, "urgency": {"type": "String"}}}
 }

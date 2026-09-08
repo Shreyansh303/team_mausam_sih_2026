@@ -10,6 +10,20 @@ import 'package:intl/intl.dart';
 class Fmt {
   Fmt._();
 
+  /// docs/04 §Objects `User.units` / docs/06 §settings_page "units". The API always answers in
+  /// metric (docs/04 preamble), so the conversion is a display concern and lives here — one
+  /// switch instead of a unit argument threaded through fifteen renderers. `SettingsNotifier`
+  /// keeps it in step with the stored preference.
+  static bool imperial = false;
+
+  static num? toDisplayTemp(num? c) => c == null || !imperial ? c : c * 9 / 5 + 32;
+
+  static num? toDisplaySpeed(num? kph) => kph == null || !imperial ? kph : kph * 0.621371;
+
+  static String get tempUnit => imperial ? '°F' : '°C';
+
+  static String get speedUnit => imperial ? 'mph' : 'km/h';
+
   static final RegExp _offsetSuffix = RegExp(r'^(.*?)(?:Z|[+-]\d{2}:?\d{2})?$');
 
   /// Parses an ISO-8601 string and returns the *wall clock at the location*.
@@ -73,8 +87,9 @@ class Fmt {
   }
 
   static String temp(num? c, {bool degreeOnly = false}) {
-    if (c == null) return '--°';
-    return degreeOnly ? '${c.round()}°' : '${c.round()}°C';
+    final v = toDisplayTemp(c);
+    if (v == null) return '--°';
+    return degreeOnly ? '${v.round()}°' : '${v.round()}$tempUnit';
   }
 
   static String num1(num? v) {
@@ -83,7 +98,10 @@ class Fmt {
   }
 
   static String pct(num? v) => v == null ? '--' : '${v.round()}%';
-  static String kph(num? v) => v == null ? '--' : '${v.round()} km/h';
+  static String kph(num? v) {
+    final d = toDisplaySpeed(v);
+    return d == null ? '--' : '${d.round()} $speedUnit';
+  }
   static String mm(num? v) => v == null ? '--' : '${num1(v)} mm';
   static String km(num? v) => v == null ? '--' : '${num1(v)} km';
 

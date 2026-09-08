@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../data/models/card.dart';
 import '../../data/repositories/home_repo.dart';
 import '../../l10n/gen/app_localizations.dart';
+import 'card_actions.dart';
 import 'providers.dart';
 import 'widgets/card_shell.dart';
 import 'widgets/freshness_chip.dart';
@@ -120,7 +121,7 @@ class _HomeBody extends ConsumerWidget {
     final home = result.home;
     final hidden = ref.watch(hiddenCardsProvider);
     final demoted = ref.watch(demotedCardsProvider);
-    final events = ref.read(eventsRepoProvider);
+    final actions = ref.read(cardActionsProvider);
 
     bool visible(HomeCard c) => !hidden.contains(c.type);
 
@@ -134,7 +135,7 @@ class _HomeBody extends ConsumerWidget {
     // docs/06 §Home behaviour — one impression per card per load.
     var position = 0;
     for (final card in <HomeCard>[...pinned, if (home.hero != null) home.hero!, ...main]) {
-      events.recordImpression(card.type, position: position++);
+      actions.impression(card.type, position: position++);
     }
 
     return CustomScrollView(
@@ -216,10 +217,7 @@ class _HomeBody extends ConsumerWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: TextButton.icon(
-                    onPressed: () {
-                      ref.read(hiddenCardsProvider.notifier).restoreAll();
-                      ref.read(demotedCardsProvider.notifier).restoreAll();
-                    },
+                    onPressed: actions.restoreAll,
                     icon: const Icon(Icons.restore),
                     label: Text('${l.restoreHidden} (${hidden.length})'),
                   ),

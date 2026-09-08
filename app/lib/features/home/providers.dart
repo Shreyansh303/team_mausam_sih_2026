@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/connectivity.dart';
+import '../../core/formatters.dart';
 import '../../data/api_client.dart';
 import '../../data/cache/json_file_cache.dart';
 import '../../data/models/location.dart';
@@ -78,16 +81,24 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   Future<void> hydrate() async {
     state = await ref.read(settingsRepoProvider).load();
+    Fmt.imperial = state.isImperial;
   }
 
-  Future<void> update(AppSettings next) async {
+  Future<void> update(AppSettings next, {bool syncProfile = true}) async {
     state = next;
+    Fmt.imperial = next.isImperial;
     await ref.read(settingsRepoProvider).save(next);
+    // Keep the server profile in step (docs/04 `PUT /me/profile`). Best-effort by design:
+    // `updateProfile` swallows an unreachable backend so a demo without one still works.
+    if (syncProfile && next.onboarded) {
+      unawaited(ref.read(authRepoProvider).updateProfile(next.toProfilePatch()));
+    }
   }
 
   Future<void> setLanguage(String language) => update(state.copyWith(language: language));
 
-  Future<void> setBackendUrl(String url) => update(state.copyWith(backendUrl: url));
+  Future<void> setBackendUrl(String url) =>
+      update(state.copyWith(backendUrl: url), syncProfile: false);
 
   Future<void> setPersonas(List<String> personas) => update(state.copyWith(personas: personas));
 
@@ -96,7 +107,20 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   Future<void> completeOnboarding() => update(state.copyWith(onboarded: true));
 
-  Future<void> setLowBandwidth(bool value) => update(state.copyWith(lowBandwidth: value));
+  Future<void> setLowBandwidth(bool value) =>
+      update(state.copyWith(lowBandwidth: value), syncProfile: false);
+
+  /// docs/04 §Objects `User.units`.
+  Future<void> setUnits(String units) => update(state.copyWith(units: units));
+
+  Future<void> setLargeText(bool value) =>
+      update(state.copyWith(largeText: value), syncProfile: false);
+
+  Future<void> setSchoolWindows(List<TimeWindow> windows) =>
+      update(state.copyWith(schoolWindows: windows));
+
+  Future<void> setCommuteWindows(List<TimeWindow> windows) =>
+      update(state.copyWith(commuteWindows: windows));
 }
 
 final settingsProvider =

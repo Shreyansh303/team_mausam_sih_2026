@@ -108,5 +108,13 @@
   "next24Hours": "अगले 24 घंटे",
   "sevenDays": "7 दिन",
   "validUntil": "{time} तक",
-  "@validUntil": { "placeholders": { "time": { "type": "String" } } }
+  "@validUntil": { "placeholders": { "time": { "type": "String" } } },
+
+  "pinnedToTop": "सबसे ऊपर पिन किया गया",
+  "unpinned": "पिन हटाया गया",
+  "cardMenu": "कार्ड विकल्प",
+  "learnedFromYou": "आपने इसे {taps} बार खोला और {dismisses} बार नीचे किया।",
+  "@learnedFromYou": {"placeholders": {"taps": {"type": "int"}, "dismisses": {"type": "int"}}},
+  "rankScore": "रैंक स्कोर {score} · अर्जेंसी {urgency}",
+  "@rankScore": {"placeholders": {"score": {"type": "String"}, "urgency": {"type": "String"}}}
 }

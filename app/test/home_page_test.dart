@@ -12,6 +12,7 @@ import 'package:mausam_app/data/repositories/home_repo.dart';
 import 'package:mausam_app/data/repositories/settings_repo.dart';
 import 'package:mausam_app/features/home/home_page.dart';
 import 'package:mausam_app/features/home/providers.dart';
+import 'package:mausam_app/features/home/widgets/why_sheet.dart';
 import 'package:mausam_app/l10n/gen/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -184,7 +185,12 @@ void main() {
     // The reason text is localized by the backend (docs/03 §Explainability); the app renders
     // whatever string it is handed.
     expect(find.text('Because you follow Parenting'), findsWidgets);
-    expect(find.text('Hide this card'), findsOneWidget);
+    // Scoped to the sheet: since B2b every card also renders its own `actions` row from the
+    // payload, and the fixture's `hide` action carries the same localized label.
+    expect(
+      find.descendant(of: find.byType(WhySheet), matching: find.text('Hide this card')),
+      findsOneWidget,
+    );
     expect(tester.takeException(), isNull);
   });
 }

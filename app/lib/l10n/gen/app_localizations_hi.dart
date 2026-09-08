@@ -301,4 +301,23 @@ class LHi extends L {
   String validUntil(String time) {
     return '$time तक';
   }
+
+  @override
+  String get pinnedToTop => 'सबसे ऊपर पिन किया गया';
+
+  @override
+  String get unpinned => 'पिन हटाया गया';
+
+  @override
+  String get cardMenu => 'कार्ड विकल्प';
+
+  @override
+  String learnedFromYou(int taps, int dismisses) {
+    return 'आपने इसे $taps बार खोला और $dismisses बार नीचे किया।';
+  }
+
+  @override
+  String rankScore(String score, String urgency) {
+    return 'रैंक स्कोर $score · अर्जेंसी $urgency';
+  }
 }

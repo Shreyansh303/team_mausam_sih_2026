@@ -648,6 +648,36 @@ abstract class L {
   /// In en, this message translates to:
   /// **'Until {time}'**
   String validUntil(String time);
+
+  /// No description provided for @pinnedToTop.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned to the top'**
+  String get pinnedToTop;
+
+  /// No description provided for @unpinned.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpinned'**
+  String get unpinned;
+
+  /// No description provided for @cardMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Card options'**
+  String get cardMenu;
+
+  /// No description provided for @learnedFromYou.
+  ///
+  /// In en, this message translates to:
+  /// **'You opened this {taps} times and pushed it down {dismisses} times.'**
+  String learnedFromYou(int taps, int dismisses);
+
+  /// No description provided for @rankScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Rank score {score} · urgency {urgency}'**
+  String rankScore(String score, String urgency);
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {
