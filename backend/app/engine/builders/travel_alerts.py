@@ -44,7 +44,8 @@ def build(bundle: Bundle, ctx: Context, profile: UserProfile) -> CardContent:
         subtitle=t(lang, "travel.risk." + risk),
         headline=t(
             lang,
-            "insight.travel_alerts.headline",
+            # C1: "2 travel alert(s)" read like a placeholder on the demo screen.
+            "insight.travel_alerts.headline." + ("one" if len(alerts) == 1 else "other"),
             count=len(alerts),
             place=top.get("place_name", ""),
         ),
