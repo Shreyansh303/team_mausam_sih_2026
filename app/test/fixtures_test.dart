@@ -519,8 +519,12 @@ void main() {
       expect(curve.markers.length, events.length);
       expect(curve.points.length, greaterThan(events.length));
       expect(find.byType(SeriesLineChart), findsOneWidget);
-      // CLAUDE.md §6 — a modelled tide says so on the card itself, not only in the shell.
-      expect(find.text('Estimated'), findsOneWidget);
+      // CLAUDE.md §6 — a modelled tide says so. C1 moved the chip to the one place that owns
+      // it (docs/06 §Card shell); the renderer only draws its own when the host does not,
+      // which is what `renderers_test.dart` pins. Here the card is `estimated`, so the body
+      // must stay clean and let the shell speak.
+      expect(card.isEstimated, isTrue);
+      expect(find.text('Estimated'), findsNothing);
       expect(find.textContaining('Next: '), findsOneWidget);
       expect(find.textContaining(card.data['trend'] == 'rising' ? 'Rising' : 'Falling'),
           findsOneWidget);

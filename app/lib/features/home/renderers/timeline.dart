@@ -59,7 +59,10 @@ class TimelineRenderer extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 8),
             child: TimelineWindowRow(window: w, expanded: expanded),
           ),
-        if (advice != null && advice.isNotEmpty) ...[
+        // The card shell already prints `insight.detail` under the headline, and the engine
+        // usually reuses the same sentence for both (school_commute, commute_conditions).
+        // Printing it twice in one card reads like a rendering bug — C1.
+        if (advice != null && advice.isNotEmpty && advice != card.insight?.detail) ...[
           const SizedBox(height: 2),
           Text(advice,
               maxLines: expanded ? 8 : 2,

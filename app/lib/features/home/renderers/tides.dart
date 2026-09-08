@@ -60,12 +60,16 @@ class TidesRenderer extends StatelessWidget {
               ),
             ],
             const Spacer(),
-            Pill(
-              label: l.estimated,
-              color: const Color(0xFF8E8E8E),
-              icon: Icons.calculate_outlined,
-              dense: true,
-            ),
+            // The `Estimated` chip lives in the card header (docs/06 §Card shell) and in the
+            // detail page's own header, so drawing it here too showed it twice on one card.
+            // Kept for any host that renders the body on its own — C1.
+            if (!card.isEstimated)
+              Pill(
+                label: l.estimated,
+                color: const Color(0xFF8E8E8E),
+                icon: Icons.calculate_outlined,
+                dense: true,
+              ),
           ],
         ),
         const SizedBox(height: 10),

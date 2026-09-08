@@ -153,4 +153,61 @@ void main() {
       expect(known, contains(card.renderer), reason: 'unlisted renderer ${card.renderer}');
     }
   });
+
+  // ------------------------------------------------------------------ C1 regressions
+  //
+  // Both of these are "the card says the same thing twice", which reads on screen as a
+  // rendering bug. The card shell owns the `Estimated` chip and `insight.detail`; a renderer
+  // must not print them a second time.
+
+  Map<String, dynamic> rawCard(String fixture, String type) {
+    final payload = loadDocsFixture(fixture);
+    for (final key in <String>['pinned', 'cards', 'more_cards']) {
+      for (final c in (payload[key] as List<dynamic>? ?? const <dynamic>[])) {
+        if ((c as Map<String, dynamic>)['type'] == type) return Map<String, dynamic>.from(c);
+      }
+    }
+    throw StateError('no $type card in $fixture');
+  }
+
+  testWidgets('timeline does not repeat the advice the shell already prints', (tester) async {
+    final raw = rawCard('home_parent.json', 'school_commute');
+    final advice = raw['data']['advice'] as String;
+    expect(advice, (raw['insight'] as Map<String, dynamic>)['detail'],
+        reason: 'the engine reuses one sentence for both — that is what this guards');
+
+    await tester.pumpWidget(_host(Builder(
+      builder: (context) => RendererRegistry.build(context, HomeCard.fromJson(raw)),
+    )));
+    await tester.pump();
+    expect(find.text(advice), findsNothing);
+
+    // A genuinely different advice line still shows.
+    final other = Map<String, dynamic>.from(raw)
+      ..['data'] = <String, dynamic>{...raw['data'] as Map<String, dynamic>, 'advice': 'Leave 10 minutes earlier.'};
+    await tester.pumpWidget(_host(Builder(
+      builder: (context) => RendererRegistry.build(context, HomeCard.fromJson(other)),
+    )));
+    await tester.pump();
+    expect(find.text('Leave 10 minutes earlier.'), findsOneWidget);
+  });
+
+  testWidgets('tides leaves the Estimated chip to the card shell', (tester) async {
+    final raw = rawCard('home_coastal.json', 'tides');
+    expect(raw['estimated'], isTrue);
+
+    await tester.pumpWidget(_host(Builder(
+      builder: (context) => RendererRegistry.build(context, HomeCard.fromJson(raw)),
+    )));
+    await tester.pump();
+    expect(find.text('Estimated'), findsNothing);
+
+    // A host that does not draw the chip itself still gets one.
+    await tester.pumpWidget(_host(Builder(
+      builder: (context) => RendererRegistry.build(
+          context, HomeCard.fromJson(<String, dynamic>{...raw, 'estimated': false, 'source': 'imd'})),
+    )));
+    await tester.pump();
+    expect(find.text('Estimated'), findsOneWidget);
+  });
 }
