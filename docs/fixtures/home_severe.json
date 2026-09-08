@@ -28,7 +28,7 @@
     "lang": "en"
   },
   "banner": {
-    "warning_id": "wrn_0286d63d22",
+    "warning_id": "wrn_ba2fb41720",
     "severity": "orange",
     "title": "Orange warning: thunderstorm with lightning",
     "color_hex": "#F28C28"
@@ -384,7 +384,7 @@
       "data": {
         "warnings": [
           {
-            "id": "wrn_0286d63d22",
+            "id": "wrn_ba2fb41720",
             "severity": "orange",
             "hazard": "thunderstorm",
             "title": "Orange warning: thunderstorm with lightning",
@@ -1632,7 +1632,7 @@
       "reasons": [],
       "insight": {
         "headline": "UV index 1.0 — Low",
-        "detail": "Peaks at 6.8 around 08:00; safe unprotected exposure about 67 minutes.",
+        "detail": "Peaks at 6.9 around 08:00; safe unprotected exposure about 67 minutes.",
         "icon": "uv"
       },
       "data": {

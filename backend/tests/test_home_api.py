@@ -259,6 +259,28 @@ def test_now_override_moves_the_hero_and_reorders_the_feed(client, guest):
         assert rank(morning, card) < rank(night, card), card
 
 
+def test_card_copy_rounds_the_way_the_app_does(client, guest):
+    """C1 regression — one card, two numbers.
+
+    The hero's micro-stat is formatted by the app with Dart's `.round()` (ties away from zero)
+    while the insight sentence came from Python's `f"{30.5:.0f}"` (ties to even), so a
+    30.5 °C feels-like printed "Feels like 31°" directly above "feels like 30°C".
+    """
+    import math
+
+    from app.engine.builders.base import num
+
+    assert num(30.5) == "31"
+    assert num(29.5) == "30"
+    assert num(-0.5) == "-1"
+    assert num(2.35, 1) == "2.4"
+
+    hero = home(client, guest["headers"])["hero"]
+    feels = hero["data"]["feels_like_c"]
+    dart_round = math.floor(feels + 0.5) if feels >= 0 else math.ceil(feels - 0.5)
+    assert f"{dart_round}°C" in hero["insight"]["headline"], hero["insight"]["headline"]
+
+
 def test_home_place_id_and_missing_coordinates(client, guest):
     created = client.post(
         API + "/me/places",

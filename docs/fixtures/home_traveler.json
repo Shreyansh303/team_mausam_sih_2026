@@ -47,7 +47,7 @@
       }
     ],
     "insight": {
-      "headline": "26°C, feels like 26°C — Clear sky",
+      "headline": "26°C, feels like 27°C — Clear sky",
       "detail": "Humidity 45%, wind 8 km/h; AQI Satisfactory (60).",
       "icon": "sun"
     },
@@ -131,7 +131,7 @@
       "data": {
         "places": [
           {
-            "id": "plc_435c25167ff5",
+            "id": "plc_2f2b1ae83290",
             "name": "Panaji",
             "lat": 15.49,
             "lon": 73.83,
@@ -146,7 +146,7 @@
             "highest_severity": null
           },
           {
-            "id": "plc_287107f32145",
+            "id": "plc_c0be7d5539b0",
             "name": "Mumbai",
             "lat": 19.08,
             "lon": 72.88,
@@ -216,13 +216,13 @@
       "data": {
         "places": [
           {
-            "place_id": "plc_435c25167ff5",
+            "place_id": "plc_2f2b1ae83290",
             "place_name": "Panaji",
             "days": 3,
             "items": []
           },
           {
-            "place_id": "plc_287107f32145",
+            "place_id": "plc_c0be7d5539b0",
             "place_name": "Mumbai",
             "days": 3,
             "items": []
@@ -2007,7 +2007,7 @@
       "reasons": [],
       "insight": {
         "headline": "Comfort 91/100 — Ideal",
-        "detail": "Feels like 26°C at 45% humidity.",
+        "detail": "Feels like 27°C at 45% humidity.",
         "icon": "comfort"
       },
       "data": {

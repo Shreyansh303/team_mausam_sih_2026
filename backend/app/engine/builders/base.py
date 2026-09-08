@@ -9,6 +9,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from typing import Any
 
 from app.core.i18n import resolve, t
@@ -73,11 +74,18 @@ def daylabel(lang: str, value: str | None, *, with_dow: bool = False) -> str:
 
 
 def num(value: Any, digits: int = 0) -> str:
+    """Format a number for card copy.
+
+    Ties round **away from zero**, not to even: the app formats the same value with Dart's
+    `.round()`, and a hero that says "Feels like 31°" above a sentence that says "feels like
+    30°C" (Python's `f"{30.5:.0f}"`) reads like a bug. C1.
+    """
     if value is None:
         return "—"
     try:
-        return f"{float(value):.{digits}f}"
-    except (TypeError, ValueError):
+        quantum = Decimal(1).scaleb(-digits)
+        return f"{Decimal(str(float(value))).quantize(quantum, rounding=ROUND_HALF_UP):.{digits}f}"
+    except (TypeError, ValueError, ArithmeticError, InvalidOperation):
         return str(value)
 
 

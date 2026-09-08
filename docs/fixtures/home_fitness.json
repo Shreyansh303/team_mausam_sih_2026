@@ -47,7 +47,7 @@
       }
     ],
     "insight": {
-      "headline": "26°C, feels like 26°C — Clear sky",
+      "headline": "26°C, feels like 27°C — Clear sky",
       "detail": "Humidity 45%, wind 8 km/h; AQI Satisfactory (60).",
       "icon": "sun"
     },
@@ -1608,7 +1608,7 @@
       "reasons": [],
       "insight": {
         "headline": "Comfort 91/100 — Ideal",
-        "detail": "Feels like 26°C at 45% humidity.",
+        "detail": "Feels like 27°C at 45% humidity.",
         "icon": "comfort"
       },
       "data": {
