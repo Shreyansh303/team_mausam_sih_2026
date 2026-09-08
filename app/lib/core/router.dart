@@ -6,6 +6,7 @@ import '../features/home/home_page.dart';
 import '../features/home/providers.dart';
 import '../features/onboarding/language_page.dart';
 import '../features/onboarding/location_page.dart';
+import '../features/map/map_page.dart';
 import '../features/onboarding/persona_page.dart';
 import '../features/places/places_page.dart';
 import '../features/settings/settings_page.dart';
@@ -32,6 +33,7 @@ GoRouter buildRouter(Ref ref) {
       GoRoute(path: '/', name: 'home', builder: (_, _) => const HomePage()),
       GoRoute(path: '/settings', name: 'settings', builder: (_, _) => const SettingsPage()),
       GoRoute(path: '/places', name: 'places', builder: (_, _) => const PlacesPage()),
+      GoRoute(path: '/map', name: 'map', builder: (_, _) => const MapPage()),
       GoRoute(
         path: '/onboarding/language',
         name: 'onboardingLanguage',

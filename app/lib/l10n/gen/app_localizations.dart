@@ -762,6 +762,66 @@ abstract class L {
   /// In en, this message translates to:
   /// **'Remove'**
   String get remove;
+
+  /// No description provided for @mapTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Radar & warnings'**
+  String get mapTitle;
+
+  /// No description provided for @mapToggleRadar.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle the radar layer'**
+  String get mapToggleRadar;
+
+  /// No description provided for @mapAttribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Base map © OpenStreetMap contributors · radar frames from RainViewer.'**
+  String get mapAttribution;
+
+  /// No description provided for @radarNoFrames.
+  ///
+  /// In en, this message translates to:
+  /// **'No radar frames available right now.'**
+  String get radarNoFrames;
+
+  /// No description provided for @radarPastFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'observed'**
+  String get radarPastFrame;
+
+  /// No description provided for @radarForecastFrame.
+  ///
+  /// In en, this message translates to:
+  /// **'forecast'**
+  String get radarForecastFrame;
+
+  /// No description provided for @lowBandwidthRadarOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Low-bandwidth mode: radar tiles are off.'**
+  String get lowBandwidthRadarOff;
+
+  /// No description provided for @play.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get play;
+
+  /// No description provided for @pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// No description provided for @openMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Open map'**
+  String get openMap;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

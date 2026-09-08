@@ -133,5 +133,16 @@
   "placeKindTravel": "यात्रा",
   "placeKindOther": "अन्य",
   "coastal": "तटीय",
-  "remove": "हटाएँ"
+  "remove": "हटाएँ",
+
+  "mapTitle": "रडार और चेतावनियाँ",
+  "mapToggleRadar": "रडार परत बदलें",
+  "mapAttribution": "बेस मैप © OpenStreetMap योगदानकर्ता · रडार फ़्रेम RainViewer से।",
+  "radarNoFrames": "अभी रडार फ़्रेम उपलब्ध नहीं हैं।",
+  "radarPastFrame": "देखा गया",
+  "radarForecastFrame": "पूर्वानुमान",
+  "lowBandwidthRadarOff": "कम-बैंडविड्थ मोड: रडार टाइल्स बंद हैं।",
+  "play": "चलाएँ",
+  "pause": "रोकें",
+  "openMap": "मानचित्र खोलें"
 }

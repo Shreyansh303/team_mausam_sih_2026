@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../core/formatters.dart';
 import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
-import '../detail/card_detail_page.dart';
+import '../../../l10n/gen/app_localizations.dart';
 import 'parts.dart';
 
 /// docs/06_MOBILE_SPEC.md §Renderers — `radar`:
@@ -63,9 +64,11 @@ class RadarRenderer extends StatelessWidget {
               ),
             const Spacer(),
             TextButton.icon(
-              onPressed: () => CardDetailPage.show(context, card),
+              // B2a opened the card's detail page; B2b has a real map route (docs/06 §Layout
+              // `map/ map_page`), which is where "Open map" belongs.
+              onPressed: () => context.push('/map'),
               icon: const Icon(Icons.open_in_full, size: 16),
-              label: const Text('Open map'),
+              label: Text(L.of(context).openMap),
               style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
             ),
           ],
@@ -162,7 +165,7 @@ class RadarUnavailable extends StatelessWidget {
           Icon(Icons.radar, size: 26, color: theme.colorScheme.onSurfaceVariant),
           const SizedBox(height: 6),
           Text(
-            'Radar frames are not available right now.',
+            L.of(context).radarNoFrames,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall
                 ?.copyWith(color: theme.colorScheme.onSurfaceVariant),

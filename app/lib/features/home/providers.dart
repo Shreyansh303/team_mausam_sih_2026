@@ -13,6 +13,7 @@ import '../../data/repositories/events_repo.dart';
 import '../../data/repositories/home_repo.dart';
 import '../../data/repositories/locations_repo.dart';
 import '../../data/repositories/places_repo.dart';
+import '../../data/repositories/radar_repo.dart';
 import '../../data/repositories/settings_repo.dart';
 
 // ---------------------------------------------------------------- infrastructure
@@ -50,6 +51,10 @@ final homeRepoProvider = Provider<HomeRepo>((ref) => HomeRepo(
 
 final locationsRepoProvider =
     Provider<LocationsRepo>((ref) => LocationsRepo(api: ref.watch(apiClientProvider)));
+
+/// docs/04 `GET /weather/radar` — the frames the map page loops through.
+final radarRepoProvider =
+    Provider<RadarRepo>((ref) => RadarRepo(api: ref.watch(apiClientProvider)));
 
 /// docs/04 `/me/places` (max 8) — the saved places behind the traveller cards.
 final placesRepoProvider =

@@ -366,4 +366,35 @@ class LEn extends L {
 
   @override
   String get remove => 'Remove';
+
+  @override
+  String get mapTitle => 'Radar & warnings';
+
+  @override
+  String get mapToggleRadar => 'Toggle the radar layer';
+
+  @override
+  String get mapAttribution =>
+      'Base map © OpenStreetMap contributors · radar frames from RainViewer.';
+
+  @override
+  String get radarNoFrames => 'No radar frames available right now.';
+
+  @override
+  String get radarPastFrame => 'observed';
+
+  @override
+  String get radarForecastFrame => 'forecast';
+
+  @override
+  String get lowBandwidthRadarOff => 'Low-bandwidth mode: radar tiles are off.';
+
+  @override
+  String get play => 'Play';
+
+  @override
+  String get pause => 'Pause';
+
+  @override
+  String get openMap => 'Open map';
 }

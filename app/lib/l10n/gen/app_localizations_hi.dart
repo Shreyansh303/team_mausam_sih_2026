@@ -367,4 +367,35 @@ class LHi extends L {
 
   @override
   String get remove => 'हटाएँ';
+
+  @override
+  String get mapTitle => 'रडार और चेतावनियाँ';
+
+  @override
+  String get mapToggleRadar => 'रडार परत बदलें';
+
+  @override
+  String get mapAttribution =>
+      'बेस मैप © OpenStreetMap योगदानकर्ता · रडार फ़्रेम RainViewer से।';
+
+  @override
+  String get radarNoFrames => 'अभी रडार फ़्रेम उपलब्ध नहीं हैं।';
+
+  @override
+  String get radarPastFrame => 'देखा गया';
+
+  @override
+  String get radarForecastFrame => 'पूर्वानुमान';
+
+  @override
+  String get lowBandwidthRadarOff => 'कम-बैंडविड्थ मोड: रडार टाइल्स बंद हैं।';
+
+  @override
+  String get play => 'चलाएँ';
+
+  @override
+  String get pause => 'रोकें';
+
+  @override
+  String get openMap => 'मानचित्र खोलें';
 }

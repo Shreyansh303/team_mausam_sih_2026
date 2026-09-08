@@ -134,5 +134,16 @@
   "placeKindTravel": "Travel",
   "placeKindOther": "Other",
   "coastal": "Coastal",
-  "remove": "Remove"
+  "remove": "Remove",
+
+  "mapTitle": "Radar & warnings",
+  "mapToggleRadar": "Toggle the radar layer",
+  "mapAttribution": "Base map © OpenStreetMap contributors · radar frames from RainViewer.",
+  "radarNoFrames": "No radar frames available right now.",
+  "radarPastFrame": "observed",
+  "radarForecastFrame": "forecast",
+  "lowBandwidthRadarOff": "Low-bandwidth mode: radar tiles are off.",
+  "play": "Play",
+  "pause": "Pause",
+  "openMap": "Open map"
 }
