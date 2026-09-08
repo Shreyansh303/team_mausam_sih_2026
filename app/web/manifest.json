@@ -1,10 +1,10 @@
 {
-    "name": "Mausam Personalized",
+    "name": "Mausam Personalized (Team Mausam prototype)",
     "short_name": "Mausam",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
+    "background_color": "#1565C0",
+    "theme_color": "#1565C0",
     "description": "Persona-aware weather home screen (Team Mausam prototype, SIH 2026).",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,

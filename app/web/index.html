@@ -30,9 +30,38 @@
   <link rel="icon" type="image/png" href="favicon.png"/>
 
   <title>Mausam Personalized</title>
+  <meta name="theme-color" content="#1565C0">
   <link rel="manifest" href="manifest.json">
+
+  <!-- Boot splash (docs/07 §B2 "app icon/splash"). Flutter web paints nothing until the engine
+       has loaded, so the page shows the app mark on IMD blue until the first frame arrives.
+       `flutter-first-frame` is fired by the engine itself - no Dart code has to remove this. -->
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; background: #1565C0; }
+    #boot {
+      position: fixed; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 18px;
+      background: #1565C0; transition: opacity .35s ease; z-index: 9999;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    #boot img { width: 104px; height: 104px; }
+    #boot p { color: #E3F2FD; font-size: 14px; margin: 0; letter-spacing: .2px; }
+    #boot.done { opacity: 0; pointer-events: none; }
+  </style>
 </head>
 <body>
+  <div id="boot">
+    <img src="icons/Icon-192.png" alt="Mausam Personalized">
+    <p>Mausam Personalized</p>
+  </div>
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      var boot = document.getElementById('boot');
+      if (!boot) return;
+      boot.classList.add('done');
+      window.setTimeout(function () { boot.remove(); }, 400);
+    });
+  </script>
   <!--
     You can customize the "flutter_bootstrap.js" script.
     This is useful to provide a custom configuration to the Flutter loader

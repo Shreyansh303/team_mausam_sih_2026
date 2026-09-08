@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AppTheme.seed in lib/core/theme.dart (docs/06 §Layout core/theme.dart). -->
+    <color name="ic_launcher_background">#1565C0</color>
+    <color name="launch_background">#1565C0</color>
+</resources>
