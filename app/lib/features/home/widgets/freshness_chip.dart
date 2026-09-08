@@ -29,8 +29,16 @@ class FreshnessChip extends StatelessWidget {
   /// "Updated 16 h ago" the moment a judge sets the clock to 07:30.
   final String? nowOverride;
 
+  /// What "now" means for this payload: the demo clock the user set, else — for a payload
+  /// that just came off the network — the server's own `context.now`, which is already the
+  /// demo clock when the *admin console* set one. A cached or bundled payload has no usable
+  /// clock of its own, so it ages against the device (docs/06: "Updated 12 min ago").
+  DateTime? get _reference =>
+      Fmt.instant(nowOverride) ??
+      (result.isLive ? Fmt.instant(result.home.context.now) : null);
+
   String _label(L l) {
-    final reference = Fmt.instant(nowOverride);
+    final reference = _reference;
     final minutes = Fmt.minutesSince(result.home.newestFreshness, now: reference) ??
         _minutesSinceStored(reference);
     if (minutes == null) return l.loading;

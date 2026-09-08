@@ -49,6 +49,13 @@ void main() {
     expect(find.textContaining('50 min ago'), findsOneWidget);
   });
 
+  testWidgets('a live payload falls back to the server clock it was generated on', (tester) async {
+    // The admin console can set the demo clock before the app even starts, so there is no
+    // local override to read; `context.now` carries it instead.
+    await pump(tester, HomeResult(home: home, source: HomeSource.network));
+    expect(find.textContaining('just now'), findsOneWidget);
+  });
+
   testWidgets('without a demo clock it still ages against the device clock', (tester) async {
     // A cached payload with no usable freshness stamps falls back to `storedAt`.
     final stale = HomeResponse.fromJson(<String, dynamic>{
