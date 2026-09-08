@@ -6,6 +6,7 @@ import '../../../core/theme.dart';
 import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import 'parts.dart';
+import '../../../l10n/gen/app_localizations.dart';
 
 /// docs/06_MOBILE_SPEC.md §Renderers — `places`:
 /// "horizontal cards per saved place (local time, temp, icon, hi/lo, severity dot)".
@@ -34,7 +35,7 @@ class PlacesRenderer extends StatelessWidget {
   Widget build(BuildContext context) {
     final places = parse(card);
     if (places.isEmpty) {
-      return const RendererEmpty(message: 'No saved places yet.');
+      return RendererEmpty(message: L.of(context).noSavedPlaces);
     }
 
     return SizedBox(

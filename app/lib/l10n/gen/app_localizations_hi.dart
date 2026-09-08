@@ -553,4 +553,595 @@ class LHi extends L {
 
   @override
   String get engineFooterSemantics => 'रैंकिंग विवरण';
+
+  @override
+  String get aqiGood => 'अच्छा';
+
+  @override
+  String get aqiSatisfactory => 'संतोषजनक';
+
+  @override
+  String get aqiModerate => 'मध्यम';
+
+  @override
+  String get aqiPoor => 'खराब';
+
+  @override
+  String get aqiVeryPoor => 'बहुत खराब';
+
+  @override
+  String get aqiSevere => 'गंभीर';
+
+  @override
+  String get comfortUncomfortable => 'असुविधाजनक';
+
+  @override
+  String get comfortFair => 'ठीक-ठाक';
+
+  @override
+  String get comfortComfortable => 'आरामदेह';
+
+  @override
+  String get comfortIdeal => 'आदर्श';
+
+  @override
+  String get soilVeryDry => 'बहुत सूखी';
+
+  @override
+  String get soilDry => 'सूखी';
+
+  @override
+  String get soilAdequate => 'पर्याप्त';
+
+  @override
+  String get soilWet => 'गीली';
+
+  @override
+  String get soilSaturated => 'संतृप्त';
+
+  @override
+  String get seaCalm => 'शांत';
+
+  @override
+  String get seaSmooth => 'सपाट';
+
+  @override
+  String get seaSlight => 'हल्की लहरें';
+
+  @override
+  String get seaModerate => 'मध्यम लहरें';
+
+  @override
+  String get seaRough => 'अशांत';
+
+  @override
+  String get seaVeryRough => 'बहुत अशांत';
+
+  @override
+  String get seaHigh => 'ऊँची लहरें';
+
+  @override
+  String get qualityGreat => 'बहुत बढ़िया';
+
+  @override
+  String get qualityGood => 'अच्छा';
+
+  @override
+  String get qualityFair => 'ठीक';
+
+  @override
+  String get qualityPoor => 'खराब';
+
+  @override
+  String get levelLow => 'कम';
+
+  @override
+  String get levelMedium => 'मध्यम';
+
+  @override
+  String get levelHigh => 'अधिक';
+
+  @override
+  String get levelSevere => 'गंभीर';
+
+  @override
+  String get levelNone => 'कोई नहीं';
+
+  @override
+  String get intensityLight => 'हल्की';
+
+  @override
+  String get intensityModerate => 'मध्यम';
+
+  @override
+  String get intensityHeavy => 'भारी';
+
+  @override
+  String get intensityVeryHeavy => 'बहुत भारी';
+
+  @override
+  String get hazardHeavyRain => 'भारी वर्षा';
+
+  @override
+  String get hazardVeryHeavyRain => 'बहुत भारी वर्षा';
+
+  @override
+  String get hazardThunderstorm => 'आँधी-तूफ़ान';
+
+  @override
+  String get hazardLightning => 'बिजली गिरना';
+
+  @override
+  String get hazardHeatwave => 'लू';
+
+  @override
+  String get hazardColdWave => 'शीत लहर';
+
+  @override
+  String get hazardFog => 'कोहरा';
+
+  @override
+  String get hazardDustStorm => 'धूल भरी आँधी';
+
+  @override
+  String get hazardCyclone => 'चक्रवात';
+
+  @override
+  String get hazardStrongWind => 'तेज़ हवा';
+
+  @override
+  String get hazardSnow => 'बर्फ़बारी';
+
+  @override
+  String get hazardFlood => 'बाढ़';
+
+  @override
+  String get seasonWinter => 'सर्दी';
+
+  @override
+  String get seasonPreMonsoon => 'मानसून-पूर्व';
+
+  @override
+  String get seasonMonsoon => 'मानसून';
+
+  @override
+  String get seasonPostMonsoon => 'मानसून-पश्चात';
+
+  @override
+  String get windowMorningDrop => 'सुबह छोड़ना';
+
+  @override
+  String get windowAfternoonPickup => 'दोपहर लेना';
+
+  @override
+  String get windowMorning => 'सुबह';
+
+  @override
+  String get windowEvening => 'शाम';
+
+  @override
+  String get windowEarlyMorning => 'तड़के';
+
+  @override
+  String get windowLateMorning => 'देर सुबह';
+
+  @override
+  String get windowAfternoon => 'दोपहर';
+
+  @override
+  String get windowNight => 'रात';
+
+  @override
+  String get nothingToFlag => 'अभी बताने लायक कुछ नहीं।';
+
+  @override
+  String get nothingToAdd => 'जोड़ने के लिए कुछ नहीं।';
+
+  @override
+  String moreItems(int count) {
+    return '+$count और';
+  }
+
+  @override
+  String get placeFallback => 'स्थान';
+
+  @override
+  String nextDays(int days) {
+    return 'अगले $days दिन';
+  }
+
+  @override
+  String get nothingToPack => 'कुछ ख़ास पैक करने की ज़रूरत नहीं।';
+
+  @override
+  String get itemFallback => 'वस्तु';
+
+  @override
+  String get savedPlaceFallback => 'सहेजा गया स्थान';
+
+  @override
+  String riskWithLevel(String level) {
+    return '$level जोखिम';
+  }
+
+  @override
+  String seasonWithName(String season) {
+    return '$season मौसम';
+  }
+
+  @override
+  String zoneWithName(String zone) {
+    return '$zone क्षेत्र';
+  }
+
+  @override
+  String get cropFallback => 'फ़सल';
+
+  @override
+  String get warningInForce => 'चेतावनी लागू है';
+
+  @override
+  String peaksAround(String time) {
+    return 'लगभग $time पर चरम';
+  }
+
+  @override
+  String get airTemp => 'हवा का तापमान';
+
+  @override
+  String get heatIndex => 'ताप सूचकांक';
+
+  @override
+  String frostRiskWithLevel(String level) {
+    return '$level पाला जोखिम';
+  }
+
+  @override
+  String expectedNight(String day) {
+    return '$day की रात अपेक्षित';
+  }
+
+  @override
+  String get minTemp => 'न्यूनतम तापमान';
+
+  @override
+  String get cloud => 'बादल';
+
+  @override
+  String fromTime(String time) {
+    return '$time से';
+  }
+
+  @override
+  String untilTime(String time) {
+    return '$time तक';
+  }
+
+  @override
+  String peakAtTime(String time) {
+    return '· चरम $time';
+  }
+
+  @override
+  String rainWithIntensity(String intensity) {
+    return '$intensity वर्षा';
+  }
+
+  @override
+  String get peakChance => 'अधिकतम संभावना';
+
+  @override
+  String get expected => 'अपेक्षित';
+
+  @override
+  String get alertFallback => 'चेतावनी';
+
+  @override
+  String get noDailyRainfall => 'दैनिक वर्षा डेटा नहीं है।';
+
+  @override
+  String get axisRainChance => 'वर्षा की संभावना, % प्रतिदिन';
+
+  @override
+  String focusDayWithLabel(String label) {
+    return 'मुख्य दिन · $label';
+  }
+
+  @override
+  String get onTheDay => 'उस दिन';
+
+  @override
+  String get axisRainfallMm => 'वर्षा, मिमी प्रतिदिन';
+
+  @override
+  String wettestDayWithDate(String day) {
+    return 'सबसे अधिक वर्षा · $day';
+  }
+
+  @override
+  String get next24h => 'अगले 24 घं';
+
+  @override
+  String get next72h => 'अगले 72 घं';
+
+  @override
+  String get next7d => 'अगले 7 दिन';
+
+  @override
+  String get rainDays => 'वर्षा वाले दिन';
+
+  @override
+  String countOfTotal(int count, int total) {
+    return '$total में से $count';
+  }
+
+  @override
+  String get noDailyData => 'दैनिक डेटा नहीं है।';
+
+  @override
+  String get noHourlyData => 'घंटेवार डेटा नहीं है।';
+
+  @override
+  String get now => 'अभी';
+
+  @override
+  String itemsCount(int count) {
+    return '$count आइटम';
+  }
+
+  @override
+  String fieldsCount(int count) {
+    return '$count फ़ील्ड';
+  }
+
+  @override
+  String get noFurtherDetail => 'इससे अधिक विवरण उपलब्ध नहीं है।';
+
+  @override
+  String get noReading => 'कोई रीडिंग उपलब्ध नहीं है।';
+
+  @override
+  String aqiScaleNote(String scale) {
+    return '$scale AQI · 0–500';
+  }
+
+  @override
+  String get comfortScaleNote => 'आराम सूचकांक · 0–100';
+
+  @override
+  String get soilScaleNote => 'आयतनिक जल मात्रा, सतह 0–1 सेमी';
+
+  @override
+  String get dominant => 'प्रमुख';
+
+  @override
+  String get rootZone => 'जड़ क्षेत्र';
+
+  @override
+  String get soilTemp => 'मिट्टी का तापमान';
+
+  @override
+  String get sinceRain => 'वर्षा के बाद';
+
+  @override
+  String daysShort(int count) {
+    return '$count दिन';
+  }
+
+  @override
+  String get noNowcast => 'इस स्थान के लिए कोई नाउकास्ट जारी नहीं हुआ।';
+
+  @override
+  String validTill(String time) {
+    return '$time तक मान्य';
+  }
+
+  @override
+  String issuedAt(String time) {
+    return '$time पर जारी';
+  }
+
+  @override
+  String get noSavedPlaces => 'अभी कोई स्थान सहेजा नहीं गया।';
+
+  @override
+  String localTimeAt(String time) {
+    return 'स्थानीय समय $time';
+  }
+
+  @override
+  String get highLow => 'अधिकतम / न्यूनतम';
+
+  @override
+  String get activeWarning => 'सक्रिय चेतावनी';
+
+  @override
+  String get rainWithin2h => '2 घंटे में वर्षा';
+
+  @override
+  String rainWithin2hValue(String pct) {
+    return '2 घंटे में वर्षा · $pct';
+  }
+
+  @override
+  String radarFrameAt(String time) {
+    return 'RainViewer · फ़्रेम $time';
+  }
+
+  @override
+  String frameOf(int index, int total) {
+    return '$total में से फ़्रेम $index';
+  }
+
+  @override
+  String get frames => 'फ़्रेम';
+
+  @override
+  String get noMarineData => 'इस स्थान के लिए समुद्री डेटा नहीं है।';
+
+  @override
+  String get period => 'अवधि';
+
+  @override
+  String get seaTemp => 'समुद्र का तापमान';
+
+  @override
+  String get swell => 'स्वेल';
+
+  @override
+  String get current => 'धारा';
+
+  @override
+  String get fromDirection => 'दिशा';
+
+  @override
+  String get safeSwim => 'तैरने के लिए सुरक्षित';
+
+  @override
+  String get notSafeSwim => 'तैरने के लिए सुरक्षित नहीं';
+
+  @override
+  String waveHeightNextHours(int hours) {
+    return 'लहर ऊँचाई, अगले $hours घं';
+  }
+
+  @override
+  String get surf => 'सर्फ़';
+
+  @override
+  String get highestWaves => 'सबसे ऊँची लहरें';
+
+  @override
+  String get around => 'लगभग';
+
+  @override
+  String get douglasScale => 'डगलस समुद्र पैमाना';
+
+  @override
+  String get noTideTable => 'इस स्थान के लिए ज्वार तालिका नहीं है।';
+
+  @override
+  String metresNow(String value) {
+    return 'अभी $value मी';
+  }
+
+  @override
+  String get tideHigh => 'उच्च ज्वार';
+
+  @override
+  String get tideLow => 'निम्न ज्वार';
+
+  @override
+  String nextTide(String type, String time, String height) {
+    return 'अगला: $time पर $type ज्वार ($height मी)';
+  }
+
+  @override
+  String get turningPoints => 'परिवर्तन बिंदु';
+
+  @override
+  String get noWindow => 'पूर्वानुमान अवधि में कोई उपयुक्त समय नहीं।';
+
+  @override
+  String overallWithVerdict(String verdict) {
+    return 'कुल मिलाकर: $verdict';
+  }
+
+  @override
+  String get temp => 'तापमान';
+
+  @override
+  String get delay => 'देरी';
+
+  @override
+  String minutesShort(int count) {
+    return '+$count मिनट';
+  }
+
+  @override
+  String get visibility => 'दृश्यता';
+
+  @override
+  String impactWithLevel(String level) {
+    return '$level असर';
+  }
+
+  @override
+  String get hourlyScore => 'घंटेवार स्कोर';
+
+  @override
+  String get hourlyScoreHelp =>
+      '100 = आदर्श स्थिति; ऊपर दिए बैंड सबसे अच्छे घंटों के समूह हैं।';
+
+  @override
+  String get traffic => 'यातायात';
+
+  @override
+  String get congestion => 'भीड़भाड़';
+
+  @override
+  String get schoolDay => 'स्कूल का दिन';
+
+  @override
+  String get notSchoolDay => 'स्कूल का दिन नहीं';
+
+  @override
+  String get rainPerHourMm => 'प्रति घंटा वर्षा (मिमी)';
+
+  @override
+  String get rainChancePct => 'वर्षा की संभावना (%)';
+
+  @override
+  String get expectedRainfallMm => 'अपेक्षित वर्षा (मिमी)';
+
+  @override
+  String get hourByHourFocus => 'मुख्य दिन का घंटेवार विवरण';
+
+  @override
+  String get nextHours => 'अगले घंटे';
+
+  @override
+  String get next7Days => 'अगले 7 दिन';
+
+  @override
+  String get scale => 'पैमाना';
+
+  @override
+  String get bestHoursToday => 'आज के सर्वोत्तम घंटे';
+
+  @override
+  String get cachedSuffix => 'कैश से';
+
+  @override
+  String severityWarningWord(String severity, String title) {
+    return '$severity चेतावनी। $title';
+  }
+
+  @override
+  String get moreLanguagesNote =>
+      'और भाषाएँ अनुवाद पूरा होते ही जुड़ेंगी; जो अनुवादित नहीं है वह अंग्रेज़ी में दिखेगा।';
+
+  @override
+  String get yes => 'हाँ';
+
+  @override
+  String get no => 'नहीं';
+
+  @override
+  String get verdictCaution => 'सावधानी';
+
+  @override
+  String get verdictAvoid => 'टालें';
+
+  @override
+  String get severityYellow => 'पीली';
+
+  @override
+  String get severityOrange => 'नारंगी';
+
+  @override
+  String get severityRed => 'लाल';
+
+  @override
+  String get levelModerate => 'मध्यम';
 }

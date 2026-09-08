@@ -4,6 +4,8 @@ import '../../../core/formatters.dart';
 import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import 'parts.dart';
+import '../../../l10n/gen/app_localizations.dart';
+import '../../../l10n/labels.dart';
 
 /// docs/06_MOBILE_SPEC.md §Renderers — `timeline`:
 /// "horizontal bar of windows with verdict colours and labels".
@@ -26,12 +28,13 @@ class TimelineRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
-    final windows = TimelineWindow.parse(card);
+    final windows = TimelineWindow.parse(card, l);
     if (windows.isEmpty) {
       final reason = asStringOrNull(card.data['no_good_window_reason']) ??
           asStringOrNull(card.data['advice']);
-      return RendererEmpty(message: reason ?? 'No window in the forecast period.');
+      return RendererEmpty(message: reason ?? l.noWindow);
     }
     final overall = asStringOrNull(card.data['overall_verdict']);
     final advice = asStringOrNull(card.data['advice']);
@@ -43,7 +46,7 @@ class TimelineRenderer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: Pill(
-              label: 'Overall: ${Fmt.humanize(overall)}',
+              label: l.overallWithVerdict(qualityLabel(l, overall)),
               color: TimelineWindow.verdictColor(overall),
               icon: TimelineWindow.verdictIcon(overall),
               dense: true,
@@ -134,15 +137,16 @@ class TimelineWindow {
     }
   }
 
-  /// Score → the docs/02 card 12 label bands, used when the backend omits `label`.
-  static String scoreLabel(double score) {
-    if (score >= 80) return 'Great';
-    if (score >= 65) return 'Good';
-    if (score >= 55) return 'Fair';
-    return 'Poor';
+  /// Score → the docs/02 card 12 label bands, used when the backend omits `label`. The key
+  /// is resolved through the ARBs by `qualityLabel` (docs/06 §i18n).
+  static String scoreLabelKey(double score) {
+    if (score >= 80) return 'great';
+    if (score >= 65) return 'good';
+    if (score >= 55) return 'fair';
+    return 'poor';
   }
 
-  static List<TimelineWindow> parse(HomeCard card) {
+  static List<TimelineWindow> parse(HomeCard card, L l) {
     final raw = card.data['windows'];
     final rows = raw is List
         ? raw.map(asMapOrNull).whereType<Map<String, dynamic>>().toList()
@@ -158,20 +162,20 @@ class TimelineWindow {
       switch (card.type) {
         case 'best_workout_window':
           final score = asDouble(w['score']) ?? 0;
-          final verdict = label ?? scoreLabel(score);
+          final verdictKey = label ?? scoreLabelKey(score);
           out.add(TimelineWindow(
-            title: verdict,
+            title: qualityLabel(l, verdictKey),
             verdict: '${score.round()}/100',
-            color: verdictColor(verdict),
+            color: verdictColor(verdictKey),
             start: start,
             end: end,
             icon: Icons.directions_run,
             stats: <KeyValue>[
-              if (asNum(w['temp_c']) != null) KeyValue('Temp', Fmt.temp(asNum(w['temp_c']))),
-              if (asNum(w['aqi']) != null) KeyValue('AQI', '${asInt(w['aqi'])}'),
-              if (asNum(w['uv']) != null) KeyValue('UV', Fmt.num1(asNum(w['uv']))),
+              if (asNum(w['temp_c']) != null) KeyValue(l.temp, Fmt.temp(asNum(w['temp_c']))),
+              if (asNum(w['aqi']) != null) KeyValue(l.aqi, '${asInt(w['aqi'])}'),
+              if (asNum(w['uv']) != null) KeyValue(l.uv, Fmt.num1(asNum(w['uv']))),
               if (asNum(w['humidity_pct']) != null)
-                KeyValue('Humidity', Fmt.pct(asNum(w['humidity_pct']))),
+                KeyValue(l.humidity, Fmt.pct(asNum(w['humidity_pct']))),
             ],
             reasons: reasons,
           ));
@@ -180,19 +184,19 @@ class TimelineWindow {
           final impact = asStringOrNull(w['impact']) ?? 'low';
           final delay = asNum(w['delay_min']);
           out.add(TimelineWindow(
-            title: Fmt.humanize(label ?? 'window'),
-            verdict: '${Fmt.humanize(impact)} impact',
+            title: windowLabel(l, label),
+            verdict: l.impactWithLevel(levelLabel(l, impact)),
             color: verdictColor(impact),
             start: start,
             end: end,
             icon: Icons.directions_bus_outlined,
             stats: <KeyValue>[
-              if (delay != null) KeyValue('Delay', '+${delay.round()} min'),
+              if (delay != null) KeyValue(l.delay, l.minutesShort(delay.round())),
               if (asNum(w['rain_prob_pct']) != null)
-                KeyValue('Rain', Fmt.pct(asNum(w['rain_prob_pct']))),
+                KeyValue(l.rainChance, Fmt.pct(asNum(w['rain_prob_pct']))),
               if (asNum(w['visibility_km']) != null)
-                KeyValue('Visibility', Fmt.km(asNum(w['visibility_km']))),
-              if (asNum(w['temp_c']) != null) KeyValue('Temp', Fmt.temp(asNum(w['temp_c']))),
+                KeyValue(l.visibility, Fmt.km(asNum(w['visibility_km']))),
+              if (asNum(w['temp_c']) != null) KeyValue(l.temp, Fmt.temp(asNum(w['temp_c']))),
             ],
             reasons: reasons,
           ));
@@ -201,19 +205,19 @@ class TimelineWindow {
           // school_commute and anything else that speaks `verdict`.
           final verdict = asStringOrNull(w['verdict']) ?? asStringOrNull(w['impact']) ?? 'good';
           out.add(TimelineWindow(
-            title: Fmt.humanize(label ?? 'window'),
-            verdict: Fmt.humanize(verdict),
+            title: windowLabel(l, label),
+            verdict: qualityLabel(l, verdict),
             color: verdictColor(verdict),
             start: start,
             end: end,
             icon: Icons.school_outlined,
             stats: <KeyValue>[
-              if (asNum(w['temp_c']) != null) KeyValue('Temp', Fmt.temp(asNum(w['temp_c']))),
+              if (asNum(w['temp_c']) != null) KeyValue(l.temp, Fmt.temp(asNum(w['temp_c']))),
               if (asNum(w['precip_prob_pct']) != null)
-                KeyValue('Rain', Fmt.pct(asNum(w['precip_prob_pct']))),
+                KeyValue(l.rainChance, Fmt.pct(asNum(w['precip_prob_pct']))),
               if (asNum(w['visibility_km']) != null)
-                KeyValue('Visibility', Fmt.km(asNum(w['visibility_km']))),
-              if (asNum(w['aqi']) != null) KeyValue('AQI', '${asInt(w['aqi'])}'),
+                KeyValue(l.visibility, Fmt.km(asNum(w['visibility_km']))),
+              if (asNum(w['aqi']) != null) KeyValue(l.aqi, '${asInt(w['aqi'])}'),
             ],
             reasons: reasons,
           ));

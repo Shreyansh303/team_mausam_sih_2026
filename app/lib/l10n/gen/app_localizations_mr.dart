@@ -5,45 +5,45 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for English (`en`).
-class LEn extends L {
-  LEn([String locale = 'en']) : super(locale);
+/// The translations for Marathi (`mr`).
+class LMr extends L {
+  LMr([String locale = 'mr']) : super(locale);
 
   @override
-  String get appTitle => 'Mausam Personalized';
+  String get appTitle => 'मौसम पर्सनलाइज्ड';
 
   @override
-  String get onboardingLanguageTitle => 'Choose your language';
+  String get onboardingLanguageTitle => 'तुमची भाषा निवडा';
 
   @override
   String get onboardingLanguageSubtitle =>
-      'You can change this later in Settings.';
+      'तुम्ही हे नंतर सेटिंग्जमध्ये बदलू शकता.';
 
   @override
-  String get onboardingPersonaTitle => 'What should we watch for you?';
+  String get onboardingPersonaTitle => 'आम्ही तुमच्यासाठी काय पाहावे?';
 
   @override
   String get onboardingPersonaSubtitle =>
-      'Pick 1 to 3. The first one you pick is your primary.';
+      '१ ते ३ निवडा. पहिली निवड प्राथमिक असते.';
 
   @override
-  String get onboardingLocationTitle => 'Where are you?';
+  String get onboardingLocationTitle => 'तुम्ही कुठे आहात?';
 
   @override
   String get onboardingLocationSubtitle =>
-      'We use this to fetch weather for your area.';
+      'यावरून आम्ही तुमच्या भागाचे हवामान आणतो.';
 
   @override
-  String get continueLabel => 'Continue';
+  String get continueLabel => 'पुढे';
 
   @override
-  String get back => 'Back';
+  String get back => 'मागे';
 
   @override
-  String get finish => 'Finish';
+  String get finish => 'पूर्ण करा';
 
   @override
-  String get skip => 'Skip';
+  String get skip => 'वगळा';
 
   @override
   String get personaLimitReached => 'You can pick up to 3.';
@@ -57,13 +57,13 @@ class LEn extends L {
   }
 
   @override
-  String get useMyLocation => 'Use my location';
+  String get useMyLocation => 'माझे स्थान वापरा';
 
   @override
-  String get searchCity => 'Search for a city';
+  String get searchCity => 'शहर शोधा';
 
   @override
-  String get popularCities => 'Popular cities';
+  String get popularCities => 'प्रमुख शहरे';
 
   @override
   String get locationPermissionDenied =>
@@ -77,61 +77,63 @@ class LEn extends L {
   String get locatingYou => 'Finding you…';
 
   @override
-  String get homeTitle => 'Home';
+  String get homeTitle => 'होम';
 
   @override
-  String get moreForYou => 'More for you';
+  String get moreForYou => 'तुमच्यासाठी अधिक';
 
   @override
-  String get showMore => 'Show more';
+  String get showMore => 'अधिक दाखवा';
 
   @override
-  String get showLess => 'Show less';
+  String get showLess => 'कमी दाखवा';
 
   @override
-  String get details => 'Details';
+  String get details => 'तपशील';
 
   @override
-  String get share => 'Share';
+  String get share => 'शेअर करा';
 
   @override
-  String get pinToTop => 'Pin to top';
+  String get pinToTop => 'वर पिन करा';
 
   @override
-  String get unpin => 'Unpin';
+  String get unpin => 'पिन काढा';
 
   @override
-  String get hideCard => 'Hide this card';
+  String get hideCard => 'हे कार्ड लपवा';
 
   @override
-  String get restoreHidden => 'Restore hidden cards';
+  String get restoreHidden => 'लपवलेली कार्डे परत आणा';
 
   @override
-  String get whyThisCard => 'Why am I seeing this?';
+  String get whyThisCard => 'हे मला का दिसत आहे?';
 
   @override
-  String get drivenBy => 'Driven by';
+  String get drivenBy => 'यामुळे';
 
   @override
-  String get estimated => 'Estimated';
+  String get estimated => 'अंदाजित';
 
   @override
-  String get pinned => 'Pinned';
+  String get pinned => 'पिन केलेले';
 
   @override
-  String get allClear => 'All clear';
+  String get allClear => 'सर्व ठीक';
 
   @override
-  String get offlineBanner => 'You are offline — showing saved data.';
+  String get offlineBanner =>
+      'तुम्ही ऑफलाइन आहात — जतन केलेला डेटा दाखवत आहोत.';
 
   @override
-  String get staleBanner => 'Could not refresh. Showing saved data.';
+  String get staleBanner =>
+      'रिफ्रेश करता आले नाही. जतन केलेला डेटा दाखवत आहोत.';
 
   @override
-  String get retry => 'Retry';
+  String get retry => 'पुन्हा प्रयत्न';
 
   @override
-  String get updatedJustNow => 'Updated just now';
+  String get updatedJustNow => 'आत्ताच अद्ययावत';
 
   @override
   String updatedMinutesAgo(int minutes) {
@@ -144,7 +146,7 @@ class LEn extends L {
   }
 
   @override
-  String get sampleDataBadge => 'Sample data';
+  String get sampleDataBadge => 'नमुना डेटा';
 
   @override
   String viewingAs(String persona) {
@@ -158,10 +160,10 @@ class LEn extends L {
   String get clearRoleView => 'Clear';
 
   @override
-  String get settingsTitle => 'Settings';
+  String get settingsTitle => 'सेटिंग्ज';
 
   @override
-  String get settingsLanguage => 'Language';
+  String get settingsLanguage => 'भाषा';
 
   @override
   String get settingsBackendUrl => 'Backend URL';
@@ -174,73 +176,73 @@ class LEn extends L {
       'Point this at the machine running the FastAPI backend. On a phone use the PC\'s LAN IP.';
 
   @override
-  String get settingsPersonas => 'Your interests';
+  String get settingsPersonas => 'तुमच्या आवडी';
 
   @override
-  String get settingsAbout => 'About';
+  String get settingsAbout => 'विषयी';
 
   @override
-  String get save => 'Save';
+  String get save => 'जतन करा';
 
   @override
-  String get saved => 'Saved';
+  String get saved => 'जतन केले';
 
   @override
   String get invalidUrl => 'Enter a valid http(s) URL.';
 
   @override
-  String get errorGeneric => 'Something went wrong.';
+  String get errorGeneric => 'काहीतरी चूक झाली.';
 
   @override
   String get errorNoData => 'No weather data available right now.';
 
   @override
-  String get loading => 'Loading…';
+  String get loading => 'लोड होत आहे…';
 
   @override
-  String get personaHealth => 'Health';
+  String get personaHealth => 'आरोग्य';
 
   @override
   String get personaHealthTag => 'Air quality, pollen and health advice';
 
   @override
-  String get personaFitness => 'Fitness';
+  String get personaFitness => 'फिटनेस';
 
   @override
   String get personaFitnessTag => 'Best windows to run, ride or train';
 
   @override
-  String get personaBeach => 'Beach & sea';
+  String get personaBeach => 'समुद्रकिनारा';
 
   @override
   String get personaBeachTag => 'Waves, tides and sea temperature';
 
   @override
-  String get personaTraveler => 'Traveller';
+  String get personaTraveler => 'प्रवासी';
 
   @override
   String get personaTravelerTag => 'Saved places, packing and travel risk';
 
   @override
-  String get personaParent => 'Parent';
+  String get personaParent => 'पालक';
 
   @override
   String get personaParentTag => 'School run, rain alerts and warnings';
 
   @override
-  String get personaAgriculture => 'Farming';
+  String get personaAgriculture => 'शेती';
 
   @override
   String get personaAgricultureTag => 'Soil, rainfall outlook and frost';
 
   @override
-  String get personaCommuter => 'Commuter';
+  String get personaCommuter => 'प्रवास';
 
   @override
   String get personaCommuterTag => 'Traffic, visibility and storms';
 
   @override
-  String get personaEventPlanner => 'Event planner';
+  String get personaEventPlanner => 'कार्यक्रम नियोजक';
 
   @override
   String get personaEventPlannerTag => 'Long-range outlook and rain chance';
@@ -261,13 +263,13 @@ class LEn extends L {
   String get severitySevere => 'Severe';
 
   @override
-  String get feelsLike => 'Feels like';
+  String get feelsLike => 'जाणवते';
 
   @override
-  String get humidity => 'Humidity';
+  String get humidity => 'आर्द्रता';
 
   @override
-  String get wind => 'Wind';
+  String get wind => 'वारा';
 
   @override
   String get uv => 'UV';
@@ -276,25 +278,25 @@ class LEn extends L {
   String get aqi => 'AQI';
 
   @override
-  String get sunrise => 'Sunrise';
+  String get sunrise => 'सूर्योदय';
 
   @override
-  String get sunset => 'Sunset';
+  String get sunset => 'सूर्यास्त';
 
   @override
-  String get high => 'High';
+  String get high => 'कमाल';
 
   @override
-  String get low => 'Low';
+  String get low => 'किमान';
 
   @override
-  String get rainChance => 'Rain';
+  String get rainChance => 'पाऊस';
 
   @override
-  String get next24Hours => 'Next 24 hours';
+  String get next24Hours => 'पुढील २४ तास';
 
   @override
-  String get sevenDays => '7 days';
+  String get sevenDays => '७ दिवस';
 
   @override
   String validUntil(String time) {
@@ -321,7 +323,7 @@ class LEn extends L {
   }
 
   @override
-  String get placesTitle => 'Saved places';
+  String get placesTitle => 'जतन केलेली ठिकाणे';
 
   @override
   String placesSubtitle(int max) {
@@ -368,7 +370,7 @@ class LEn extends L {
   String get remove => 'Remove';
 
   @override
-  String get mapTitle => 'Radar & warnings';
+  String get mapTitle => 'रडार आणि इशारे';
 
   @override
   String get mapToggleRadar => 'Toggle the radar layer';
@@ -399,7 +401,7 @@ class LEn extends L {
   String get openMap => 'Open map';
 
   @override
-  String get settingsUnits => 'Units';
+  String get settingsUnits => 'एकके';
 
   @override
   String get unitsMetric => 'Metric (°C, km/h)';
@@ -465,10 +467,10 @@ class LEn extends L {
   String get change => 'Change';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'रद्द करा';
 
   @override
-  String get demoTitle => 'Demo controls';
+  String get demoTitle => 'डेमो नियंत्रणे';
 
   @override
   String get demoSubtitle =>
@@ -534,10 +536,10 @@ class LEn extends L {
   String get wsOffline => 'not connected';
 
   @override
-  String get warningMovedToTop => 'A warning moved to the top of your feed.';
+  String get warningMovedToTop => 'एक इशारा तुमच्या फीडमध्ये सर्वात वर आला.';
 
   @override
-  String get view => 'View';
+  String get view => 'पहा';
 
   @override
   String sampleDataBanner(String url) {
@@ -881,7 +883,7 @@ class LEn extends L {
   String get noHourlyData => 'No hourly data.';
 
   @override
-  String get now => 'Now';
+  String get now => 'आत्ता';
 
   @override
   String itemsCount(int count) {
@@ -1118,7 +1120,7 @@ class LEn extends L {
 
   @override
   String get moreLanguagesNote =>
-      'More languages arrive as the translations land; anything untranslated falls back to English.';
+      'अनुवाद पूर्ण होताच अधिक भाषा जोडल्या जातील; अनुवादित नसलेले इंग्रजीत दिसेल.';
 
   @override
   String get yes => 'yes';

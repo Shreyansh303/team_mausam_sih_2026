@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/formatters.dart';
 import '../../../data/models/card.dart';
+import '../../../l10n/gen/app_localizations.dart';
 
 /// docs/06_MOBILE_SPEC.md §Renderers — `generic`: "title/subtitle/insight + key-value grid of
 /// `data` scalars (**never crash on unknown cards**)".
@@ -27,9 +28,9 @@ class DataKeyValueGrid extends StatelessWidget {
 
   /// Renders `num`/`String`/`bool` directly; a list or map becomes "3 items" / "5 fields" so a
   /// deeply nested payload still produces something readable instead of a stack trace.
-  static String? describe(Object? value) {
+  static String? describe(Object? value, L l) {
     if (value == null) return null;
-    if (value is bool) return value ? 'yes' : 'no';
+    if (value is bool) return value ? l.yes : l.no;
     if (value is num) return Fmt.num1(value);
     if (value is String) {
       if (value.isEmpty) return null;
@@ -38,25 +39,26 @@ class DataKeyValueGrid extends StatelessWidget {
       if (RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) return Fmt.dayLong(value);
       return value;
     }
-    if (value is List) return value.isEmpty ? null : '${value.length} items';
-    if (value is Map) return value.isEmpty ? null : '${value.length} fields';
+    if (value is List) return value.isEmpty ? null : l.itemsCount(value.length);
+    if (value is Map) return value.isEmpty ? null : l.fieldsCount(value.length);
     return value.toString();
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final entries = <MapEntry<String, String>>[];
     for (final entry in data.entries) {
       if (entries.length >= maxEntries) break;
-      final described = describe(entry.value);
+      final described = describe(entry.value, l);
       if (described == null) continue;
       entries.add(MapEntry(Fmt.humanize(entry.key), described));
     }
 
     if (entries.isEmpty) {
       return Text(
-        'No further detail available.',
+        l.noFurtherDetail,
         style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
       );
     }

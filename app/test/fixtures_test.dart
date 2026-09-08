@@ -292,7 +292,7 @@ void main() {
       final windows = (card.data['windows'] as List).cast<Map<String, dynamic>>();
       expect(find.byType(TimelineBar), findsOneWidget);
       expect(find.byType(TimelineWindowRow), findsNWidgets(windows.length));
-      expect(find.text('Morning Drop'), findsWidgets);
+      expect(find.text('Morning drop'), findsWidgets);
       expect(
         find.textContaining('Overall: ${card.data['overall_verdict'].toString()[0].toUpperCase()}'),
         findsOneWidget,

@@ -19,9 +19,17 @@ class MetricRenderer extends StatelessWidget {
   static ({String value, String unit})? _headline(HomeCard card) {
     final d = card.data;
 
-    ({String value, String unit})? pick(String key, String unit, {bool integer = false}) {
-      final v = asNum(d[key]);
-      if (v == null) return null;
+    /// `convert` turns the payload's metric number into the displayed one, so the imperial
+    /// setting changes the value and the unit together (docs/04 always answers in metric).
+    ({String value, String unit})? pick(
+      String key,
+      String unit, {
+      bool integer = false,
+      num? Function(num?)? convert,
+    }) {
+      final raw = asNum(d[key]);
+      if (raw == null) return null;
+      final v = convert == null ? raw : (convert(raw) ?? raw);
       return (value: integer ? '${v.round()}' : Fmt.num1(v), unit: unit);
     }
 
@@ -33,9 +41,10 @@ class MetricRenderer extends StatelessWidget {
       case 'visibility':
         return pick('visibility_km', 'km');
       case 'wind':
-        return pick('speed_kph', 'km/h', integer: true);
+        return pick('speed_kph', Fmt.speedUnit,
+            integer: true, convert: Fmt.toDisplaySpeed);
       case 'water_temp':
-        return pick('sst_c', '°C');
+        return pick('sst_c', Fmt.tempUnit, convert: Fmt.toDisplayTemp);
       case 'pollen':
         return pick('index', '');
       case 'sun_times':
@@ -49,10 +58,18 @@ class MetricRenderer extends StatelessWidget {
       (key: 'index', unit: ''),
       (key: 'visibility_km', unit: 'km'),
       (key: 'humidity_pct', unit: '%'),
-      (key: 'speed_kph', unit: 'km/h'),
-      (key: 'temp_c', unit: '°C'),
+      (key: 'speed_kph', unit: Fmt.speedUnit),
+      (key: 'temp_c', unit: Fmt.tempUnit),
     ]) {
-      final got = pick(entry.key, entry.unit);
+      final got = pick(
+        entry.key,
+        entry.unit,
+        convert: switch (entry.key) {
+          'speed_kph' => Fmt.toDisplaySpeed,
+          'temp_c' => Fmt.toDisplayTemp,
+          _ => null,
+        },
+      );
       if (got != null) return got;
     }
     return null;

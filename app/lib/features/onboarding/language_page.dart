@@ -10,10 +10,15 @@ import 'onboarding_scaffold.dart';
 class LanguagePage extends ConsumerWidget {
   const LanguagePage({super.key});
 
-  /// Endonyms, so a Hindi speaker can find their language without reading English.
+  /// Endonyms, so a speaker can find their language without reading English.
+  /// docs/06 §i18n ships five ARBs; `en`/`hi` are complete and the other three are partial,
+  /// with `flutter gen-l10n` falling back to English per key.
   static const List<({String code, String label, String english})> languages = [
     (code: 'en', label: 'English', english: 'English'),
     (code: 'hi', label: 'हिन्दी', english: 'Hindi'),
+    (code: 'mr', label: 'मराठी', english: 'Marathi'),
+    (code: 'ta', label: 'தமிழ்', english: 'Tamil'),
+    (code: 'bn', label: 'বাংলা', english: 'Bengali'),
   ];
 
   @override
@@ -51,7 +56,7 @@ class LanguagePage extends ConsumerWidget {
             ),
           const SizedBox(height: 12),
           Text(
-            'More languages (Marathi, Tamil, Bengali) arrive with the full card set.',
+            L.of(context).moreLanguagesNote,
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],

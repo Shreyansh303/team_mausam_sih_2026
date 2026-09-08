@@ -5,6 +5,8 @@ import '../../../core/icons.dart';
 import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import 'parts.dart';
+import '../../../l10n/gen/app_localizations.dart';
+import '../../../l10n/labels.dart';
 
 /// docs/06_MOBILE_SPEC.md §Renderers — `nowcast`: "3-h text with severity chip".
 ///
@@ -42,11 +44,12 @@ class NowcastRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final d = card.data;
     final text = asStringOrNull(d['text']);
     if (text == null) {
-      return const RendererEmpty(message: 'No nowcast issued for this location.');
+      return RendererEmpty(message: l.noNowcast);
     }
     final severity = asStringOrNull(d['severity']) ?? 'none';
     final color = severityColor(severity);
@@ -60,14 +63,14 @@ class NowcastRenderer extends StatelessWidget {
         Row(
           children: [
             Pill(
-              label: severity == 'none' ? 'All clear' : Fmt.humanize(severity),
+              label: severity == 'none' ? l.allClear : levelLabel(l, severity),
               color: color,
               icon: severityIcon(severity),
             ),
             const Spacer(),
             if (validTill != null)
               Text(
-                'Valid till ${Fmt.time(validTill)}',
+                l.validTill(Fmt.time(validTill)),
                 style: theme.textTheme.labelSmall
                     ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
               ),
@@ -83,7 +86,7 @@ class NowcastRenderer extends StatelessWidget {
             children: [
               for (final h in hazards)
                 Pill(
-                  label: Fmt.humanize(h),
+                  label: hazardLabel(l, h),
                   color: color,
                   icon: AppIcons.hazard(h),
                   dense: true,
@@ -94,7 +97,7 @@ class NowcastRenderer extends StatelessWidget {
         if (issuedAt != null) ...[
           const SizedBox(height: 8),
           Text(
-            'Issued ${Fmt.time(issuedAt)}'
+            '${l.issuedAt(Fmt.time(issuedAt))}'
             '${asStringOrNull(d['source']) == null ? '' : ' · ${Fmt.humanize(asStringOrNull(d['source']))}'}',
             style: theme.textTheme.labelSmall
                 ?.copyWith(color: theme.colorScheme.onSurfaceVariant),

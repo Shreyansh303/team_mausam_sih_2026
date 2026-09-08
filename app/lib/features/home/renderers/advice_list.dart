@@ -5,6 +5,8 @@ import '../../../core/icons.dart';
 import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import 'parts.dart';
+import '../../../l10n/gen/app_localizations.dart';
+import '../../../l10n/labels.dart';
 
 /// docs/06_MOBILE_SPEC.md §Renderers — `advice_list`:
 /// "icon + title + detail rows (packing grouped per place)".
@@ -27,8 +29,9 @@ class AdviceListRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
-    final groups = AdviceGroup.parse(card);
+    final groups = AdviceGroup.parse(card, l);
     final tips = asStringList(card.data['tips']);
     final total = groups.fold<int>(0, (sum, g) => sum + g.items.length);
 
@@ -36,7 +39,7 @@ class AdviceListRenderer extends StatelessWidget {
     // entry per saved place, and "Panaji — nothing special to pack" is the useful answer.
     final headings = groups.where((g) => g.heading != null).length;
     if (total == 0 && tips.isEmpty && headings == 0) {
-      return const RendererEmpty(message: 'Nothing to flag right now.');
+      return RendererEmpty(message: l.nothingToFlag);
     }
 
     var budget = expanded ? total : _cardRows;
@@ -63,7 +66,7 @@ class AdviceListRenderer extends StatelessWidget {
       if (group.items.isEmpty) {
         rendered.add(Padding(
           padding: const EdgeInsets.only(bottom: 6),
-          child: Text(group.emptyMessage ?? 'Nothing to add.',
+          child: Text(group.emptyMessage ?? l.nothingToAdd,
               style: theme.textTheme.bodySmall
                   ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
         ));
@@ -84,7 +87,7 @@ class AdviceListRenderer extends StatelessWidget {
         if (hidden > 0)
           Padding(
             padding: const EdgeInsets.only(top: 2),
-            child: Text('+$hidden more',
+            child: Text(l.moreItems(hidden),
                 style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.primary)),
           ),
         if (tips.isNotEmpty) ...[
@@ -249,7 +252,7 @@ class AdviceGroup {
       ? raw.map(asMapOrNull).whereType<Map<String, dynamic>>().toList()
       : const <Map<String, dynamic>>[];
 
-  static List<AdviceGroup> parse(HomeCard card) {
+  static List<AdviceGroup> parse(HomeCard card, L l) {
     final d = card.data;
 
     switch (card.type) {
@@ -258,15 +261,15 @@ class AdviceGroup {
         return <AdviceGroup>[
           for (final place in _rows(d['places']))
             AdviceGroup(
-              heading: asStringOrNull(place['place_name']) ?? 'Place',
+              heading: asStringOrNull(place['place_name']) ?? l.placeFallback,
               subheading: asNum(place['days']) == null
                   ? null
-                  : 'next ${asInt(place['days'])} days',
-              emptyMessage: 'Nothing special to pack.',
+                  : l.nextDays(asInt(place['days']) ?? 0),
+              emptyMessage: l.nothingToPack,
               items: <AdviceItem>[
                 for (final item in _rows(place['items']))
                   AdviceItem(
-                    title: asStringOrNull(item['item']) ?? 'Item',
+                    title: asStringOrNull(item['item']) ?? l.itemFallback,
                     icon: AppIcons.byName(asStringOrNull(item['icon']),
                         fallback: Icons.luggage_outlined),
                     color: _info,
@@ -282,11 +285,11 @@ class AdviceGroup {
             items: <AdviceItem>[
               for (final alert in _rows(d['alerts']))
                 AdviceItem(
-                  title: asStringOrNull(alert['place_name']) ?? 'Saved place',
+                  title: asStringOrNull(alert['place_name']) ?? l.savedPlaceFallback,
                   icon: AppIcons.hazard(_firstOf(asStringList(alert['hazards']))),
                   color: levelColor(asStringOrNull(alert['risk'])),
                   detail: asStringOrNull(alert['detail']),
-                  badge: '${Fmt.humanize(asStringOrNull(alert['risk']) ?? 'low')} risk',
+                  badge: l.riskWithLevel(levelLabel(l, asStringOrNull(alert['risk']) ?? 'low')),
                   tags: asStringList(alert['hazards']),
                 ),
             ],
@@ -298,12 +301,12 @@ class AdviceGroup {
         final zone = asStringOrNull(d['zone']);
         return <AdviceGroup>[
           AdviceGroup(
-            heading: season == null ? null : '${Fmt.humanize(season)} season',
-            subheading: zone == null ? null : '${Fmt.humanize(zone)} zone',
+            heading: season == null ? null : l.seasonWithName(seasonLabel(l, season)),
+            subheading: zone == null ? null : l.zoneWithName(Fmt.humanize(zone)),
             items: <AdviceItem>[
               for (final crop in _rows(d['crops']))
                 AdviceItem(
-                  title: asStringOrNull(crop['name']) ?? 'Crop',
+                  title: asStringOrNull(crop['name']) ?? l.cropFallback,
                   icon: stageIcon(asStringOrNull(crop['stage'])),
                   color: _ok,
                   detail: asStringOrNull(crop['action']),

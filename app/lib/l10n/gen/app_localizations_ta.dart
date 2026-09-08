@@ -5,45 +5,46 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for English (`en`).
-class LEn extends L {
-  LEn([String locale = 'en']) : super(locale);
+/// The translations for Tamil (`ta`).
+class LTa extends L {
+  LTa([String locale = 'ta']) : super(locale);
 
   @override
-  String get appTitle => 'Mausam Personalized';
+  String get appTitle => 'மௌசம் பர்சனலைஸ்டு';
 
   @override
-  String get onboardingLanguageTitle => 'Choose your language';
+  String get onboardingLanguageTitle => 'உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்';
 
   @override
   String get onboardingLanguageSubtitle =>
-      'You can change this later in Settings.';
+      'இதைப் பின்னர் அமைப்புகளில் மாற்றலாம்.';
 
   @override
-  String get onboardingPersonaTitle => 'What should we watch for you?';
+  String get onboardingPersonaTitle =>
+      'உங்களுக்காக நாங்கள் எதைக் கவனிக்க வேண்டும்?';
 
   @override
   String get onboardingPersonaSubtitle =>
-      'Pick 1 to 3. The first one you pick is your primary.';
+      '1 முதல் 3 வரை தேர்வு செய்யவும். முதல் தேர்வே முதன்மையானது.';
 
   @override
-  String get onboardingLocationTitle => 'Where are you?';
+  String get onboardingLocationTitle => 'நீங்கள் எங்கே இருக்கிறீர்கள்?';
 
   @override
   String get onboardingLocationSubtitle =>
-      'We use this to fetch weather for your area.';
+      'இதன் மூலம் உங்கள் பகுதியின் வானிலையைப் பெறுகிறோம்.';
 
   @override
-  String get continueLabel => 'Continue';
+  String get continueLabel => 'தொடரவும்';
 
   @override
-  String get back => 'Back';
+  String get back => 'பின்';
 
   @override
-  String get finish => 'Finish';
+  String get finish => 'முடிக்கவும்';
 
   @override
-  String get skip => 'Skip';
+  String get skip => 'தவிர்';
 
   @override
   String get personaLimitReached => 'You can pick up to 3.';
@@ -57,13 +58,13 @@ class LEn extends L {
   }
 
   @override
-  String get useMyLocation => 'Use my location';
+  String get useMyLocation => 'எனது இருப்பிடத்தைப் பயன்படுத்து';
 
   @override
-  String get searchCity => 'Search for a city';
+  String get searchCity => 'நகரத்தைத் தேடு';
 
   @override
-  String get popularCities => 'Popular cities';
+  String get popularCities => 'முக்கிய நகரங்கள்';
 
   @override
   String get locationPermissionDenied =>
@@ -77,61 +78,63 @@ class LEn extends L {
   String get locatingYou => 'Finding you…';
 
   @override
-  String get homeTitle => 'Home';
+  String get homeTitle => 'முகப்பு';
 
   @override
-  String get moreForYou => 'More for you';
+  String get moreForYou => 'உங்களுக்கு மேலும்';
 
   @override
-  String get showMore => 'Show more';
+  String get showMore => 'மேலும் காட்டு';
 
   @override
-  String get showLess => 'Show less';
+  String get showLess => 'குறைவாகக் காட்டு';
 
   @override
-  String get details => 'Details';
+  String get details => 'விவரங்கள்';
 
   @override
-  String get share => 'Share';
+  String get share => 'பகிர்';
 
   @override
-  String get pinToTop => 'Pin to top';
+  String get pinToTop => 'மேலே பொருத்து';
 
   @override
-  String get unpin => 'Unpin';
+  String get unpin => 'பொருத்தலை நீக்கு';
 
   @override
-  String get hideCard => 'Hide this card';
+  String get hideCard => 'இந்த அட்டையை மறை';
 
   @override
-  String get restoreHidden => 'Restore hidden cards';
+  String get restoreHidden => 'மறைத்த அட்டைகளை மீட்டெடு';
 
   @override
-  String get whyThisCard => 'Why am I seeing this?';
+  String get whyThisCard => 'இது ஏன் எனக்குத் தெரிகிறது?';
 
   @override
-  String get drivenBy => 'Driven by';
+  String get drivenBy => 'இதனால்';
 
   @override
-  String get estimated => 'Estimated';
+  String get estimated => 'மதிப்பிடப்பட்டது';
 
   @override
-  String get pinned => 'Pinned';
+  String get pinned => 'பொருத்தப்பட்டது';
 
   @override
-  String get allClear => 'All clear';
+  String get allClear => 'அனைத்தும் சரி';
 
   @override
-  String get offlineBanner => 'You are offline — showing saved data.';
+  String get offlineBanner =>
+      'நீங்கள் ஆஃப்லைனில் உள்ளீர்கள் — சேமித்த தரவு காட்டப்படுகிறது.';
 
   @override
-  String get staleBanner => 'Could not refresh. Showing saved data.';
+  String get staleBanner =>
+      'புதுப்பிக்க முடியவில்லை. சேமித்த தரவு காட்டப்படுகிறது.';
 
   @override
-  String get retry => 'Retry';
+  String get retry => 'மீண்டும் முயற்சி';
 
   @override
-  String get updatedJustNow => 'Updated just now';
+  String get updatedJustNow => 'இப்போதுதான் புதுப்பிக்கப்பட்டது';
 
   @override
   String updatedMinutesAgo(int minutes) {
@@ -144,7 +147,7 @@ class LEn extends L {
   }
 
   @override
-  String get sampleDataBadge => 'Sample data';
+  String get sampleDataBadge => 'மாதிரி தரவு';
 
   @override
   String viewingAs(String persona) {
@@ -158,10 +161,10 @@ class LEn extends L {
   String get clearRoleView => 'Clear';
 
   @override
-  String get settingsTitle => 'Settings';
+  String get settingsTitle => 'அமைப்புகள்';
 
   @override
-  String get settingsLanguage => 'Language';
+  String get settingsLanguage => 'மொழி';
 
   @override
   String get settingsBackendUrl => 'Backend URL';
@@ -174,73 +177,73 @@ class LEn extends L {
       'Point this at the machine running the FastAPI backend. On a phone use the PC\'s LAN IP.';
 
   @override
-  String get settingsPersonas => 'Your interests';
+  String get settingsPersonas => 'உங்கள் ஆர்வங்கள்';
 
   @override
-  String get settingsAbout => 'About';
+  String get settingsAbout => 'பற்றி';
 
   @override
-  String get save => 'Save';
+  String get save => 'சேமி';
 
   @override
-  String get saved => 'Saved';
+  String get saved => 'சேமிக்கப்பட்டது';
 
   @override
   String get invalidUrl => 'Enter a valid http(s) URL.';
 
   @override
-  String get errorGeneric => 'Something went wrong.';
+  String get errorGeneric => 'ஏதோ தவறு நடந்தது.';
 
   @override
   String get errorNoData => 'No weather data available right now.';
 
   @override
-  String get loading => 'Loading…';
+  String get loading => 'ஏற்றுகிறது…';
 
   @override
-  String get personaHealth => 'Health';
+  String get personaHealth => 'ஆரோக்கியம்';
 
   @override
   String get personaHealthTag => 'Air quality, pollen and health advice';
 
   @override
-  String get personaFitness => 'Fitness';
+  String get personaFitness => 'உடற்பயிற்சி';
 
   @override
   String get personaFitnessTag => 'Best windows to run, ride or train';
 
   @override
-  String get personaBeach => 'Beach & sea';
+  String get personaBeach => 'கடற்கரை';
 
   @override
   String get personaBeachTag => 'Waves, tides and sea temperature';
 
   @override
-  String get personaTraveler => 'Traveller';
+  String get personaTraveler => 'பயணி';
 
   @override
   String get personaTravelerTag => 'Saved places, packing and travel risk';
 
   @override
-  String get personaParent => 'Parent';
+  String get personaParent => 'பெற்றோர்';
 
   @override
   String get personaParentTag => 'School run, rain alerts and warnings';
 
   @override
-  String get personaAgriculture => 'Farming';
+  String get personaAgriculture => 'விவசாயம்';
 
   @override
   String get personaAgricultureTag => 'Soil, rainfall outlook and frost';
 
   @override
-  String get personaCommuter => 'Commuter';
+  String get personaCommuter => 'பயணம்';
 
   @override
   String get personaCommuterTag => 'Traffic, visibility and storms';
 
   @override
-  String get personaEventPlanner => 'Event planner';
+  String get personaEventPlanner => 'நிகழ்வு திட்டமிடுபவர்';
 
   @override
   String get personaEventPlannerTag => 'Long-range outlook and rain chance';
@@ -261,13 +264,13 @@ class LEn extends L {
   String get severitySevere => 'Severe';
 
   @override
-  String get feelsLike => 'Feels like';
+  String get feelsLike => 'உணரப்படுவது';
 
   @override
-  String get humidity => 'Humidity';
+  String get humidity => 'ஈரப்பதம்';
 
   @override
-  String get wind => 'Wind';
+  String get wind => 'காற்று';
 
   @override
   String get uv => 'UV';
@@ -276,25 +279,25 @@ class LEn extends L {
   String get aqi => 'AQI';
 
   @override
-  String get sunrise => 'Sunrise';
+  String get sunrise => 'சூரிய உதயம்';
 
   @override
-  String get sunset => 'Sunset';
+  String get sunset => 'சூரிய அஸ்தமனம்';
 
   @override
-  String get high => 'High';
+  String get high => 'அதிகபட்சம்';
 
   @override
-  String get low => 'Low';
+  String get low => 'குறைந்தபட்சம்';
 
   @override
-  String get rainChance => 'Rain';
+  String get rainChance => 'மழை';
 
   @override
-  String get next24Hours => 'Next 24 hours';
+  String get next24Hours => 'அடுத்த 24 மணி';
 
   @override
-  String get sevenDays => '7 days';
+  String get sevenDays => '7 நாட்கள்';
 
   @override
   String validUntil(String time) {
@@ -321,7 +324,7 @@ class LEn extends L {
   }
 
   @override
-  String get placesTitle => 'Saved places';
+  String get placesTitle => 'சேமித்த இடங்கள்';
 
   @override
   String placesSubtitle(int max) {
@@ -368,7 +371,7 @@ class LEn extends L {
   String get remove => 'Remove';
 
   @override
-  String get mapTitle => 'Radar & warnings';
+  String get mapTitle => 'ரேடார் மற்றும் எச்சரிக்கைகள்';
 
   @override
   String get mapToggleRadar => 'Toggle the radar layer';
@@ -399,7 +402,7 @@ class LEn extends L {
   String get openMap => 'Open map';
 
   @override
-  String get settingsUnits => 'Units';
+  String get settingsUnits => 'அலகுகள்';
 
   @override
   String get unitsMetric => 'Metric (°C, km/h)';
@@ -465,10 +468,10 @@ class LEn extends L {
   String get change => 'Change';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'ரத்து';
 
   @override
-  String get demoTitle => 'Demo controls';
+  String get demoTitle => 'டெமோ கட்டுப்பாடுகள்';
 
   @override
   String get demoSubtitle =>
@@ -534,10 +537,11 @@ class LEn extends L {
   String get wsOffline => 'not connected';
 
   @override
-  String get warningMovedToTop => 'A warning moved to the top of your feed.';
+  String get warningMovedToTop =>
+      'ஒரு எச்சரிக்கை உங்கள் ஊட்டத்தின் மேலே வந்தது.';
 
   @override
-  String get view => 'View';
+  String get view => 'பார்';
 
   @override
   String sampleDataBanner(String url) {
@@ -881,7 +885,7 @@ class LEn extends L {
   String get noHourlyData => 'No hourly data.';
 
   @override
-  String get now => 'Now';
+  String get now => 'இப்போது';
 
   @override
   String itemsCount(int count) {
@@ -1118,7 +1122,7 @@ class LEn extends L {
 
   @override
   String get moreLanguagesNote =>
-      'More languages arrive as the translations land; anything untranslated falls back to English.';
+      'மொழிபெயர்ப்புகள் முடிந்ததும் மேலும் மொழிகள் சேரும்; மொழிபெயர்க்கப்படாதவை ஆங்கிலத்தில் காட்டப்படும்.';
 
   @override
   String get yes => 'yes';

@@ -37,8 +37,9 @@ class AppConfig {
   /// Cache is served instantly, then refreshed. Anything older than this is flagged stale.
   static const Duration cacheStaleAfter = Duration(minutes: 30);
 
-  /// Supported UI locales for B1. docs/06 lists mr/ta/bn for B2.
-  static const List<String> supportedLanguages = <String>['en', 'hi'];
+  /// docs/06 §i18n — five ARBs. `en` and `hi` are complete; `mr`, `ta` and `bn` are
+  /// best-effort and fall back to English per key (`flutter gen-l10n`).
+  static const List<String> supportedLanguages = <String>['en', 'hi', 'mr', 'ta', 'bn'];
 
   static const List<int> personaPickRange = <int>[1, 3];
 }

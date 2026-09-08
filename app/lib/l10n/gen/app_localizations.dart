@@ -5,8 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_bn.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_hi.dart';
+import 'app_localizations_mr.dart';
+import 'app_localizations_ta.dart';
 
 // ignore_for_file: type=lint
 
@@ -93,8 +96,11 @@ abstract class L {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('bn'),
     Locale('en'),
     Locale('hi'),
+    Locale('mr'),
+    Locale('ta'),
   ];
 
   /// App display name (Team Mausam prototype, not IMD)
@@ -1104,6 +1110,1056 @@ abstract class L {
   /// In en, this message translates to:
   /// **'Ranking details'**
   String get engineFooterSemantics;
+
+  /// No description provided for @aqiGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get aqiGood;
+
+  /// No description provided for @aqiSatisfactory.
+  ///
+  /// In en, this message translates to:
+  /// **'Satisfactory'**
+  String get aqiSatisfactory;
+
+  /// No description provided for @aqiModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get aqiModerate;
+
+  /// No description provided for @aqiPoor.
+  ///
+  /// In en, this message translates to:
+  /// **'Poor'**
+  String get aqiPoor;
+
+  /// No description provided for @aqiVeryPoor.
+  ///
+  /// In en, this message translates to:
+  /// **'Very poor'**
+  String get aqiVeryPoor;
+
+  /// No description provided for @aqiSevere.
+  ///
+  /// In en, this message translates to:
+  /// **'Severe'**
+  String get aqiSevere;
+
+  /// No description provided for @comfortUncomfortable.
+  ///
+  /// In en, this message translates to:
+  /// **'Uncomfortable'**
+  String get comfortUncomfortable;
+
+  /// No description provided for @comfortFair.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get comfortFair;
+
+  /// No description provided for @comfortComfortable.
+  ///
+  /// In en, this message translates to:
+  /// **'Comfortable'**
+  String get comfortComfortable;
+
+  /// No description provided for @comfortIdeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Ideal'**
+  String get comfortIdeal;
+
+  /// No description provided for @soilVeryDry.
+  ///
+  /// In en, this message translates to:
+  /// **'Very dry'**
+  String get soilVeryDry;
+
+  /// No description provided for @soilDry.
+  ///
+  /// In en, this message translates to:
+  /// **'Dry'**
+  String get soilDry;
+
+  /// No description provided for @soilAdequate.
+  ///
+  /// In en, this message translates to:
+  /// **'Adequate'**
+  String get soilAdequate;
+
+  /// No description provided for @soilWet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wet'**
+  String get soilWet;
+
+  /// No description provided for @soilSaturated.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturated'**
+  String get soilSaturated;
+
+  /// No description provided for @seaCalm.
+  ///
+  /// In en, this message translates to:
+  /// **'Calm'**
+  String get seaCalm;
+
+  /// No description provided for @seaSmooth.
+  ///
+  /// In en, this message translates to:
+  /// **'Smooth'**
+  String get seaSmooth;
+
+  /// No description provided for @seaSlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Slight'**
+  String get seaSlight;
+
+  /// No description provided for @seaModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get seaModerate;
+
+  /// No description provided for @seaRough.
+  ///
+  /// In en, this message translates to:
+  /// **'Rough'**
+  String get seaRough;
+
+  /// No description provided for @seaVeryRough.
+  ///
+  /// In en, this message translates to:
+  /// **'Very rough'**
+  String get seaVeryRough;
+
+  /// No description provided for @seaHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get seaHigh;
+
+  /// No description provided for @qualityGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'Great'**
+  String get qualityGreat;
+
+  /// No description provided for @qualityGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get qualityGood;
+
+  /// No description provided for @qualityFair.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get qualityFair;
+
+  /// No description provided for @qualityPoor.
+  ///
+  /// In en, this message translates to:
+  /// **'Poor'**
+  String get qualityPoor;
+
+  /// No description provided for @levelLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get levelLow;
+
+  /// No description provided for @levelMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get levelMedium;
+
+  /// No description provided for @levelHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get levelHigh;
+
+  /// No description provided for @levelSevere.
+  ///
+  /// In en, this message translates to:
+  /// **'Severe'**
+  String get levelSevere;
+
+  /// No description provided for @levelNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get levelNone;
+
+  /// No description provided for @intensityLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get intensityLight;
+
+  /// No description provided for @intensityModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get intensityModerate;
+
+  /// No description provided for @intensityHeavy.
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy'**
+  String get intensityHeavy;
+
+  /// No description provided for @intensityVeryHeavy.
+  ///
+  /// In en, this message translates to:
+  /// **'Very heavy'**
+  String get intensityVeryHeavy;
+
+  /// No description provided for @hazardHeavyRain.
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy rain'**
+  String get hazardHeavyRain;
+
+  /// No description provided for @hazardVeryHeavyRain.
+  ///
+  /// In en, this message translates to:
+  /// **'Very heavy rain'**
+  String get hazardVeryHeavyRain;
+
+  /// No description provided for @hazardThunderstorm.
+  ///
+  /// In en, this message translates to:
+  /// **'Thunderstorm'**
+  String get hazardThunderstorm;
+
+  /// No description provided for @hazardLightning.
+  ///
+  /// In en, this message translates to:
+  /// **'Lightning'**
+  String get hazardLightning;
+
+  /// No description provided for @hazardHeatwave.
+  ///
+  /// In en, this message translates to:
+  /// **'Heatwave'**
+  String get hazardHeatwave;
+
+  /// No description provided for @hazardColdWave.
+  ///
+  /// In en, this message translates to:
+  /// **'Cold wave'**
+  String get hazardColdWave;
+
+  /// No description provided for @hazardFog.
+  ///
+  /// In en, this message translates to:
+  /// **'Fog'**
+  String get hazardFog;
+
+  /// No description provided for @hazardDustStorm.
+  ///
+  /// In en, this message translates to:
+  /// **'Dust storm'**
+  String get hazardDustStorm;
+
+  /// No description provided for @hazardCyclone.
+  ///
+  /// In en, this message translates to:
+  /// **'Cyclone'**
+  String get hazardCyclone;
+
+  /// No description provided for @hazardStrongWind.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong wind'**
+  String get hazardStrongWind;
+
+  /// No description provided for @hazardSnow.
+  ///
+  /// In en, this message translates to:
+  /// **'Snow'**
+  String get hazardSnow;
+
+  /// No description provided for @hazardFlood.
+  ///
+  /// In en, this message translates to:
+  /// **'Flood'**
+  String get hazardFlood;
+
+  /// No description provided for @seasonWinter.
+  ///
+  /// In en, this message translates to:
+  /// **'Winter'**
+  String get seasonWinter;
+
+  /// No description provided for @seasonPreMonsoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-monsoon'**
+  String get seasonPreMonsoon;
+
+  /// No description provided for @seasonMonsoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Monsoon'**
+  String get seasonMonsoon;
+
+  /// No description provided for @seasonPostMonsoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Post-monsoon'**
+  String get seasonPostMonsoon;
+
+  /// No description provided for @windowMorningDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning drop'**
+  String get windowMorningDrop;
+
+  /// No description provided for @windowAfternoonPickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon pickup'**
+  String get windowAfternoonPickup;
+
+  /// No description provided for @windowMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get windowMorning;
+
+  /// No description provided for @windowEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get windowEvening;
+
+  /// No description provided for @windowEarlyMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Early morning'**
+  String get windowEarlyMorning;
+
+  /// No description provided for @windowLateMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Late morning'**
+  String get windowLateMorning;
+
+  /// No description provided for @windowAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon'**
+  String get windowAfternoon;
+
+  /// No description provided for @windowNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Night'**
+  String get windowNight;
+
+  /// No description provided for @nothingToFlag.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to flag right now.'**
+  String get nothingToFlag;
+
+  /// No description provided for @nothingToAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to add.'**
+  String get nothingToAdd;
+
+  /// No description provided for @moreItems.
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} more'**
+  String moreItems(int count);
+
+  /// No description provided for @placeFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Place'**
+  String get placeFallback;
+
+  /// No description provided for @nextDays.
+  ///
+  /// In en, this message translates to:
+  /// **'next {days} days'**
+  String nextDays(int days);
+
+  /// No description provided for @nothingToPack.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing special to pack.'**
+  String get nothingToPack;
+
+  /// No description provided for @itemFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Item'**
+  String get itemFallback;
+
+  /// No description provided for @savedPlaceFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved place'**
+  String get savedPlaceFallback;
+
+  /// No description provided for @riskWithLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'{level} risk'**
+  String riskWithLevel(String level);
+
+  /// No description provided for @seasonWithName.
+  ///
+  /// In en, this message translates to:
+  /// **'{season} season'**
+  String seasonWithName(String season);
+
+  /// No description provided for @zoneWithName.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} zone'**
+  String zoneWithName(String zone);
+
+  /// No description provided for @cropFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop'**
+  String get cropFallback;
+
+  /// No description provided for @warningInForce.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning in force'**
+  String get warningInForce;
+
+  /// No description provided for @peaksAround.
+  ///
+  /// In en, this message translates to:
+  /// **'Peaks around {time}'**
+  String peaksAround(String time);
+
+  /// No description provided for @airTemp.
+  ///
+  /// In en, this message translates to:
+  /// **'Air temp'**
+  String get airTemp;
+
+  /// No description provided for @heatIndex.
+  ///
+  /// In en, this message translates to:
+  /// **'Heat index'**
+  String get heatIndex;
+
+  /// No description provided for @frostRiskWithLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'{level} frost risk'**
+  String frostRiskWithLevel(String level);
+
+  /// No description provided for @expectedNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected on {day} night'**
+  String expectedNight(String day);
+
+  /// No description provided for @minTemp.
+  ///
+  /// In en, this message translates to:
+  /// **'Min temp'**
+  String get minTemp;
+
+  /// No description provided for @cloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud'**
+  String get cloud;
+
+  /// No description provided for @fromTime.
+  ///
+  /// In en, this message translates to:
+  /// **'From {time}'**
+  String fromTime(String time);
+
+  /// No description provided for @untilTime.
+  ///
+  /// In en, this message translates to:
+  /// **'until {time}'**
+  String untilTime(String time);
+
+  /// No description provided for @peakAtTime.
+  ///
+  /// In en, this message translates to:
+  /// **'· peak {time}'**
+  String peakAtTime(String time);
+
+  /// No description provided for @rainWithIntensity.
+  ///
+  /// In en, this message translates to:
+  /// **'{intensity} rain'**
+  String rainWithIntensity(String intensity);
+
+  /// No description provided for @peakChance.
+  ///
+  /// In en, this message translates to:
+  /// **'Peak chance'**
+  String get peakChance;
+
+  /// No description provided for @expected.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected'**
+  String get expected;
+
+  /// No description provided for @alertFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert'**
+  String get alertFallback;
+
+  /// No description provided for @noDailyRainfall.
+  ///
+  /// In en, this message translates to:
+  /// **'No daily rainfall data.'**
+  String get noDailyRainfall;
+
+  /// No description provided for @axisRainChance.
+  ///
+  /// In en, this message translates to:
+  /// **'Chance of rain, % per day'**
+  String get axisRainChance;
+
+  /// No description provided for @focusDayWithLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus day · {label}'**
+  String focusDayWithLabel(String label);
+
+  /// No description provided for @onTheDay.
+  ///
+  /// In en, this message translates to:
+  /// **'On the day'**
+  String get onTheDay;
+
+  /// No description provided for @axisRainfallMm.
+  ///
+  /// In en, this message translates to:
+  /// **'Rainfall, mm per day'**
+  String get axisRainfallMm;
+
+  /// No description provided for @wettestDayWithDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Wettest day · {day}'**
+  String wettestDayWithDate(String day);
+
+  /// No description provided for @next24h.
+  ///
+  /// In en, this message translates to:
+  /// **'Next 24 h'**
+  String get next24h;
+
+  /// No description provided for @next72h.
+  ///
+  /// In en, this message translates to:
+  /// **'Next 72 h'**
+  String get next72h;
+
+  /// No description provided for @next7d.
+  ///
+  /// In en, this message translates to:
+  /// **'Next 7 d'**
+  String get next7d;
+
+  /// No description provided for @rainDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain days'**
+  String get rainDays;
+
+  /// No description provided for @countOfTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {total}'**
+  String countOfTotal(int count, int total);
+
+  /// No description provided for @noDailyData.
+  ///
+  /// In en, this message translates to:
+  /// **'No daily data.'**
+  String get noDailyData;
+
+  /// No description provided for @noHourlyData.
+  ///
+  /// In en, this message translates to:
+  /// **'No hourly data.'**
+  String get noHourlyData;
+
+  /// No description provided for @now.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get now;
+
+  /// No description provided for @itemsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items'**
+  String itemsCount(int count);
+
+  /// No description provided for @fieldsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} fields'**
+  String fieldsCount(int count);
+
+  /// No description provided for @noFurtherDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'No further detail available.'**
+  String get noFurtherDetail;
+
+  /// No description provided for @noReading.
+  ///
+  /// In en, this message translates to:
+  /// **'No reading available.'**
+  String get noReading;
+
+  /// No description provided for @aqiScaleNote.
+  ///
+  /// In en, this message translates to:
+  /// **'{scale} AQI · 0–500'**
+  String aqiScaleNote(String scale);
+
+  /// No description provided for @comfortScaleNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Comfort index · 0–100'**
+  String get comfortScaleNote;
+
+  /// No description provided for @soilScaleNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Volumetric water content, surface 0–1 cm'**
+  String get soilScaleNote;
+
+  /// No description provided for @dominant.
+  ///
+  /// In en, this message translates to:
+  /// **'Dominant'**
+  String get dominant;
+
+  /// No description provided for @rootZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Root zone'**
+  String get rootZone;
+
+  /// No description provided for @soilTemp.
+  ///
+  /// In en, this message translates to:
+  /// **'Soil temp'**
+  String get soilTemp;
+
+  /// No description provided for @sinceRain.
+  ///
+  /// In en, this message translates to:
+  /// **'Since rain'**
+  String get sinceRain;
+
+  /// No description provided for @daysShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} d'**
+  String daysShort(int count);
+
+  /// No description provided for @noNowcast.
+  ///
+  /// In en, this message translates to:
+  /// **'No nowcast issued for this location.'**
+  String get noNowcast;
+
+  /// No description provided for @validTill.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid till {time}'**
+  String validTill(String time);
+
+  /// No description provided for @issuedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued {time}'**
+  String issuedAt(String time);
+
+  /// No description provided for @noSavedPlaces.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved places yet.'**
+  String get noSavedPlaces;
+
+  /// No description provided for @localTimeAt.
+  ///
+  /// In en, this message translates to:
+  /// **'local time {time}'**
+  String localTimeAt(String time);
+
+  /// No description provided for @highLow.
+  ///
+  /// In en, this message translates to:
+  /// **'High / low'**
+  String get highLow;
+
+  /// No description provided for @activeWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Active warning'**
+  String get activeWarning;
+
+  /// No description provided for @rainWithin2h.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain within 2 h'**
+  String get rainWithin2h;
+
+  /// No description provided for @rainWithin2hValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain within 2 h · {pct}'**
+  String rainWithin2hValue(String pct);
+
+  /// No description provided for @radarFrameAt.
+  ///
+  /// In en, this message translates to:
+  /// **'RainViewer · frame {time}'**
+  String radarFrameAt(String time);
+
+  /// No description provided for @frameOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Frame {index} of {total}'**
+  String frameOf(int index, int total);
+
+  /// No description provided for @frames.
+  ///
+  /// In en, this message translates to:
+  /// **'Frames'**
+  String get frames;
+
+  /// No description provided for @noMarineData.
+  ///
+  /// In en, this message translates to:
+  /// **'No marine data for this location.'**
+  String get noMarineData;
+
+  /// No description provided for @period.
+  ///
+  /// In en, this message translates to:
+  /// **'Period'**
+  String get period;
+
+  /// No description provided for @seaTemp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sea temp'**
+  String get seaTemp;
+
+  /// No description provided for @swell.
+  ///
+  /// In en, this message translates to:
+  /// **'Swell'**
+  String get swell;
+
+  /// No description provided for @current.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get current;
+
+  /// No description provided for @fromDirection.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get fromDirection;
+
+  /// No description provided for @safeSwim.
+  ///
+  /// In en, this message translates to:
+  /// **'Safe for swimming'**
+  String get safeSwim;
+
+  /// No description provided for @notSafeSwim.
+  ///
+  /// In en, this message translates to:
+  /// **'Not safe for swimming'**
+  String get notSafeSwim;
+
+  /// No description provided for @waveHeightNextHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Wave height, next {hours} h'**
+  String waveHeightNextHours(int hours);
+
+  /// No description provided for @surf.
+  ///
+  /// In en, this message translates to:
+  /// **'Surf'**
+  String get surf;
+
+  /// No description provided for @highestWaves.
+  ///
+  /// In en, this message translates to:
+  /// **'Highest waves'**
+  String get highestWaves;
+
+  /// No description provided for @around.
+  ///
+  /// In en, this message translates to:
+  /// **'Around'**
+  String get around;
+
+  /// No description provided for @douglasScale.
+  ///
+  /// In en, this message translates to:
+  /// **'Douglas sea scale'**
+  String get douglasScale;
+
+  /// No description provided for @noTideTable.
+  ///
+  /// In en, this message translates to:
+  /// **'No tide table for this location.'**
+  String get noTideTable;
+
+  /// No description provided for @metresNow.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} m now'**
+  String metresNow(String value);
+
+  /// No description provided for @tideHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get tideHigh;
+
+  /// No description provided for @tideLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get tideLow;
+
+  /// No description provided for @nextTide.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: {type} tide at {time} ({height} m)'**
+  String nextTide(String type, String time, String height);
+
+  /// No description provided for @turningPoints.
+  ///
+  /// In en, this message translates to:
+  /// **'Turning points'**
+  String get turningPoints;
+
+  /// No description provided for @noWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'No window in the forecast period.'**
+  String get noWindow;
+
+  /// No description provided for @overallWithVerdict.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall: {verdict}'**
+  String overallWithVerdict(String verdict);
+
+  /// No description provided for @temp.
+  ///
+  /// In en, this message translates to:
+  /// **'Temp'**
+  String get temp;
+
+  /// No description provided for @delay.
+  ///
+  /// In en, this message translates to:
+  /// **'Delay'**
+  String get delay;
+
+  /// No description provided for @minutesShort.
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} min'**
+  String minutesShort(int count);
+
+  /// No description provided for @visibility.
+  ///
+  /// In en, this message translates to:
+  /// **'Visibility'**
+  String get visibility;
+
+  /// No description provided for @impactWithLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'{level} impact'**
+  String impactWithLevel(String level);
+
+  /// No description provided for @hourlyScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Hourly score'**
+  String get hourlyScore;
+
+  /// No description provided for @hourlyScoreHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'100 = perfect conditions; the window bands above are the best runs of hours.'**
+  String get hourlyScoreHelp;
+
+  /// No description provided for @traffic.
+  ///
+  /// In en, this message translates to:
+  /// **'Traffic'**
+  String get traffic;
+
+  /// No description provided for @congestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Congestion'**
+  String get congestion;
+
+  /// No description provided for @schoolDay.
+  ///
+  /// In en, this message translates to:
+  /// **'School day'**
+  String get schoolDay;
+
+  /// No description provided for @notSchoolDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Not a school day'**
+  String get notSchoolDay;
+
+  /// No description provided for @rainPerHourMm.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain per hour (mm)'**
+  String get rainPerHourMm;
+
+  /// No description provided for @rainChancePct.
+  ///
+  /// In en, this message translates to:
+  /// **'Chance of rain (%)'**
+  String get rainChancePct;
+
+  /// No description provided for @expectedRainfallMm.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected rainfall (mm)'**
+  String get expectedRainfallMm;
+
+  /// No description provided for @hourByHourFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Hour by hour on the focus day'**
+  String get hourByHourFocus;
+
+  /// No description provided for @nextHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Next hours'**
+  String get nextHours;
+
+  /// No description provided for @next7Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Next 7 days'**
+  String get next7Days;
+
+  /// No description provided for @scale.
+  ///
+  /// In en, this message translates to:
+  /// **'Scale'**
+  String get scale;
+
+  /// No description provided for @bestHoursToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Best hours today'**
+  String get bestHoursToday;
+
+  /// No description provided for @cachedSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'cached'**
+  String get cachedSuffix;
+
+  /// No description provided for @severityWarningWord.
+  ///
+  /// In en, this message translates to:
+  /// **'{severity} warning. {title}'**
+  String severityWarningWord(String severity, String title);
+
+  /// No description provided for @moreLanguagesNote.
+  ///
+  /// In en, this message translates to:
+  /// **'More languages arrive as the translations land; anything untranslated falls back to English.'**
+  String get moreLanguagesNote;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'no'**
+  String get no;
+
+  /// No description provided for @verdictCaution.
+  ///
+  /// In en, this message translates to:
+  /// **'Caution'**
+  String get verdictCaution;
+
+  /// No description provided for @verdictAvoid.
+  ///
+  /// In en, this message translates to:
+  /// **'Avoid'**
+  String get verdictAvoid;
+
+  /// No description provided for @severityYellow.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow'**
+  String get severityYellow;
+
+  /// No description provided for @severityOrange.
+  ///
+  /// In en, this message translates to:
+  /// **'Orange'**
+  String get severityOrange;
+
+  /// No description provided for @severityRed.
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get severityRed;
+
+  /// No description provided for @levelModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get levelModerate;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {
@@ -1116,7 +2172,7 @@ class _LDelegate extends LocalizationsDelegate<L> {
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'hi'].contains(locale.languageCode);
+      <String>['bn', 'en', 'hi', 'mr', 'ta'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_LDelegate old) => false;
@@ -1125,10 +2181,16 @@ class _LDelegate extends LocalizationsDelegate<L> {
 L lookupL(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'bn':
+      return LBn();
     case 'en':
       return LEn();
     case 'hi':
       return LHi();
+    case 'mr':
+      return LMr();
+    case 'ta':
+      return LTa();
   }
 
   throw FlutterError(

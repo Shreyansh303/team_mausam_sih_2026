@@ -5,6 +5,7 @@ import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import '../renderers/alert.dart';
 import '../renderers/charts.dart';
+import '../../../l10n/gen/app_localizations.dart';
 
 /// Full-screen body for the `alert` renderer (docs/02 cards 15 `heat_alert`, 23 `rain_alert`,
 /// 26 `frost_alert`, 30 `storm_fog_alert`): the whole advice list, every stat, and — for the
@@ -17,7 +18,7 @@ class AlertDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final spec = AlertSpec.of(card);
+    final spec = AlertSpec.of(card, L.of(context));
     final rows = _rows(card.data['hourly']);
 
     final mm = <SeriesPoint>[];
@@ -36,13 +37,13 @@ class AlertDetail extends StatelessWidget {
         AlertRenderer(card: card, expanded: true),
         if (mm.isNotEmpty) ...[
           const SizedBox(height: 24),
-          Text('Rain per hour (mm)', style: theme.textTheme.titleSmall),
+          Text(L.of(context).rainPerHourMm, style: theme.textTheme.titleSmall),
           const SizedBox(height: 10),
           SeriesBarChart(points: mm, color: spec.color, height: 150, barWidth: 12),
         ],
         if (prob.length >= 2) ...[
           const SizedBox(height: 24),
-          Text('Chance of rain (%)', style: theme.textTheme.titleSmall),
+          Text(L.of(context).rainChancePct, style: theme.textTheme.titleSmall),
           const SizedBox(height: 10),
           SeriesLineChart(
             points: prob,

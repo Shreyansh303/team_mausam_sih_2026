@@ -5,6 +5,7 @@ import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import '../renderers/bar_chart.dart';
 import '../renderers/charts.dart';
+import '../../../l10n/gen/app_localizations.dart';
 
 /// Full-screen body for the `bar_chart` renderer (docs/02 cards 25 `rainfall_outlook`,
 /// 32 `rain_probability`): the daily bars at full height, the *other* daily series the card
@@ -42,7 +43,7 @@ class BarChartDetail extends StatelessWidget {
         BarChartRenderer(card: card, expanded: true),
         if (secondary.isNotEmpty) ...[
           const SizedBox(height: 24),
-          Text(isProbability ? 'Expected rainfall (mm)' : 'Chance of rain (%)',
+          Text(isProbability ? L.of(context).expectedRainfallMm : L.of(context).rainChancePct,
               style: theme.textTheme.titleSmall),
           const SizedBox(height: 10),
           SeriesBarChart(
@@ -55,7 +56,7 @@ class BarChartDetail extends StatelessWidget {
         ],
         if (hourly.length >= 2) ...[
           const SizedBox(height: 24),
-          Text('Hour by hour on the focus day', style: theme.textTheme.titleSmall),
+          Text(L.of(context).hourByHourFocus, style: theme.textTheme.titleSmall),
           const SizedBox(height: 10),
           SeriesLineChart(
             points: hourly,

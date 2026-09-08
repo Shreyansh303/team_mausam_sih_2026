@@ -45,7 +45,7 @@ class FreshnessChip extends StatelessWidget {
 
     final (IconData icon, String suffix) = switch (result.source) {
       HomeSource.network => (Icons.cloud_done_outlined, ''),
-      HomeSource.cache => (Icons.save_outlined, ' · cached'),
+      HomeSource.cache => (Icons.save_outlined, ' · ${l.cachedSuffix}'),
       HomeSource.fixture => (Icons.science_outlined, ' · ${l.sampleDataBadge}'),
     };
 

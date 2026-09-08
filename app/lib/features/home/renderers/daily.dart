@@ -4,6 +4,7 @@ import '../../../core/formatters.dart';
 import '../../../core/icons.dart';
 import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
+import '../../../l10n/gen/app_localizations.dart';
 
 /// docs/06_MOBILE_SPEC.md §Renderers — `daily`: "7 rows (icon, hi/lo bar, rain %)".
 /// `data.days[]` per docs/02 cards 5 and 31 (`extended_forecast` uses the same renderer with
@@ -22,7 +23,7 @@ class DailyRenderer extends StatelessWidget {
         ? raw.map(asMapOrNull).whereType<Map<String, dynamic>>().take(maxRows).toList()
         : const <Map<String, dynamic>>[];
     if (days.isEmpty) {
-      return Text('No daily data.', style: theme.textTheme.bodySmall);
+      return Text(L.of(context).noDailyData, style: theme.textTheme.bodySmall);
     }
 
     // Shared scale so the hi/lo bars are comparable across rows.

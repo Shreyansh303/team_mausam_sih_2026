@@ -5,6 +5,7 @@ import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import '../renderers/charts.dart';
 import '../renderers/gauge.dart';
+import '../../../l10n/gen/app_localizations.dart';
 
 /// Full-screen body for the `gauge` renderer (docs/02 cards 7 `aqi`, 24 `soil_moisture`,
 /// 33 `comfort_index`): the same arc drawn large, the scale's band legend, and the card's own
@@ -15,7 +16,8 @@ class GaugeDetail extends StatelessWidget {
   final HomeCard card;
 
   /// `hourly[{time, aqi}]` / `daily[{date, index}]` → chart points, whichever the card carries.
-  static ({List<SeriesPoint> points, String title, int labelEvery})? _series(HomeCard card) {
+  static ({List<SeriesPoint> points, String title, int labelEvery})? _series(
+      HomeCard card, L l) {
     final d = card.data;
 
     List<Map<String, dynamic>> rows(Object? raw) => raw is List
@@ -31,7 +33,7 @@ class GaugeDetail extends StatelessWidget {
         points.add(SeriesPoint(value: v, label: Fmt.hourLabel(asStringOrNull(h['time']))));
       }
       if (points.length >= 2) {
-        return (points: points, title: 'Next hours', labelEvery: 3);
+        return (points: points, title: l.nextHours, labelEvery: 3);
       }
     }
 
@@ -44,7 +46,7 @@ class GaugeDetail extends StatelessWidget {
         points.add(SeriesPoint(value: v, label: Fmt.dayShort(asStringOrNull(day['date']))));
       }
       if (points.length >= 2) {
-        return (points: points, title: 'Next 7 days', labelEvery: 1);
+        return (points: points, title: l.next7Days, labelEvery: 1);
       }
     }
     return null;
@@ -52,9 +54,10 @@ class GaugeDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
-    final spec = GaugeSpec.of(card);
-    final series = _series(card);
+    final spec = GaugeSpec.of(card, l);
+    final series = _series(card, l);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +65,7 @@ class GaugeDetail extends StatelessWidget {
         GaugeRenderer(card: card, large: true),
         if (spec != null) ...[
           const SizedBox(height: 18),
-          Text('Scale', style: theme.textTheme.titleSmall),
+          Text(l.scale, style: theme.textTheme.titleSmall),
           const SizedBox(height: 8),
           GaugeLegend(spec: spec),
         ],
@@ -102,7 +105,7 @@ class _BestHours extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 22),
-        Text('Best hours today', style: theme.textTheme.titleSmall),
+        Text(L.of(context).bestHoursToday, style: theme.textTheme.titleSmall),
         const SizedBox(height: 8),
         for (final row in rows)
           Padding(

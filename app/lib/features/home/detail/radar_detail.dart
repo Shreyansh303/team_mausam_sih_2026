@@ -4,6 +4,7 @@ import '../../../core/formatters.dart';
 import '../../../data/models/card.dart';
 import '../renderers/parts.dart';
 import '../renderers/radar.dart';
+import '../../../l10n/gen/app_localizations.dart';
 
 /// Full-screen body for the `radar` renderer (docs/02 card 6): the same RainViewer frames on a
 /// taller, pannable map with a frame slider — the loop docs/06 asks the map page to own, at the
@@ -22,6 +23,7 @@ class _RadarDetailState extends State<RadarDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final spec = RadarSpec.of(widget.card);
 
@@ -45,7 +47,7 @@ class _RadarDetailState extends State<RadarDetail> {
         const SizedBox(height: 12),
         Row(
           children: [
-            Text('Frame ${index + 1} of ${spec.frames.length}',
+            Text(l.frameOf(index + 1, spec.frames.length),
                 style: theme.textTheme.titleSmall),
             const Spacer(),
             Text(Fmt.dateTime(spec.frames[index].time),
@@ -67,13 +69,13 @@ class _RadarDetailState extends State<RadarDetail> {
           children: [
             if (spec.rainWithin2hPct != null)
               StatCell(
-                label: 'Rain within 2 h',
+                label: l.rainWithin2h,
                 value: Fmt.pct(spec.rainWithin2hPct),
                 icon: Icons.radar,
               ),
             const SizedBox(width: 24),
             StatCell(
-              label: 'Frames',
+              label: l.frames,
               value: '${spec.frames.length}',
               icon: Icons.movie_filter_outlined,
             ),
@@ -81,8 +83,7 @@ class _RadarDetailState extends State<RadarDetail> {
         ),
         const SizedBox(height: 12),
         Text(
-          'Base map © OpenStreetMap contributors · radar frames from RainViewer. '
-          'Times are the frame\'s own timestamp.',
+          l.mapAttribution,
           style:
               theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
         ),

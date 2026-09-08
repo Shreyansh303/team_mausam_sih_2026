@@ -4,6 +4,7 @@ import '../../../core/formatters.dart';
 import '../../../core/icons.dart';
 import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
+import '../../../l10n/gen/app_localizations.dart';
 
 /// docs/06_MOBILE_SPEC.md §Renderers — `hourly`:
 /// "horizontal 24-h strip (icon, temp, rain %)".
@@ -21,7 +22,7 @@ class HourlyRenderer extends StatelessWidget {
         ? raw.map(asMapOrNull).whereType<Map<String, dynamic>>().toList()
         : const <Map<String, dynamic>>[];
     if (hours.isEmpty) {
-      return Text('No hourly data.', style: theme.textTheme.bodySmall);
+      return Text(L.of(context).noHourlyData, style: theme.textTheme.bodySmall);
     }
 
     return SizedBox(
@@ -43,7 +44,7 @@ class HourlyRenderer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  i == 0 ? 'Now' : Fmt.hourLabel(asStringOrNull(h['time'])),
+                  i == 0 ? L.of(context).now : Fmt.hourLabel(asStringOrNull(h['time'])),
                   style: theme.textTheme.labelSmall
                       ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 ),

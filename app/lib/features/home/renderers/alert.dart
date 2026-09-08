@@ -5,6 +5,8 @@ import '../../../core/icons.dart';
 import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import 'parts.dart';
+import '../../../l10n/gen/app_localizations.dart';
+import '../../../l10n/labels.dart';
 
 /// docs/06_MOBILE_SPEC.md §Renderers — `alert`:
 /// "severity tile with level, peak time, advice bullets".
@@ -25,7 +27,7 @@ class AlertRenderer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final spec = AlertSpec.of(card);
+    final spec = AlertSpec.of(card, L.of(context));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,7 +107,7 @@ class AlertTile extends StatelessWidget {
           // which is a stronger claim than the app's own threshold and is labelled as such.
           if (spec.officialWarning)
             Pill(
-              label: 'Warning in force',
+              label: L.of(context).warningInForce,
               color: spec.color,
               icon: Icons.campaign_outlined,
               dense: true,
@@ -172,7 +174,7 @@ class AlertSpec {
     }
   }
 
-  static AlertSpec of(HomeCard card) {
+  static AlertSpec of(HomeCard card, L l) {
     final d = card.data;
     final advice = asStringList(d['advice']);
     final official = asBool(d['warning']);
@@ -182,17 +184,17 @@ class AlertSpec {
         final level = asStringOrNull(d['level']) ?? 'caution';
         final peak = asStringOrNull(d['peak_time']);
         return AlertSpec(
-          level: Fmt.humanize(level),
+          level: levelLabel(l, level),
           color: levelColor(level),
           icon: Icons.thermostat,
-          when: peak == null ? null : 'Peaks around ${Fmt.time(peak)}',
+          when: peak == null ? null : l.peaksAround(Fmt.time(peak)),
           officialWarning: official,
           stats: <KeyValue>[
             if (asNum(d['feels_like_c']) != null)
-              KeyValue('Feels like', Fmt.temp(asNum(d['feels_like_c']))),
-            if (asNum(d['temp_c']) != null) KeyValue('Air temp', Fmt.temp(asNum(d['temp_c']))),
+              KeyValue(l.feelsLike, Fmt.temp(asNum(d['feels_like_c']))),
+            if (asNum(d['temp_c']) != null) KeyValue(l.airTemp, Fmt.temp(asNum(d['temp_c']))),
             if (asNum(d['heat_index_c']) != null)
-              KeyValue('Heat index', Fmt.temp(asNum(d['heat_index_c']))),
+              KeyValue(l.heatIndex, Fmt.temp(asNum(d['heat_index_c']))),
           ],
           advice: advice,
         );
@@ -201,16 +203,16 @@ class AlertSpec {
         final risk = asStringOrNull(d['risk']) ?? 'none';
         final night = asStringOrNull(d['expected_night']);
         return AlertSpec(
-          level: '${Fmt.humanize(risk)} frost risk',
+          level: l.frostRiskWithLevel(levelLabel(l, risk)),
           color: levelColor(risk),
           icon: Icons.ac_unit,
-          when: night == null ? null : 'Expected ${Fmt.dayLong(night)} night',
+          when: night == null ? null : l.expectedNight(Fmt.dayLong(night)),
           officialWarning: official,
           stats: <KeyValue>[
-            if (asNum(d['tmin_c']) != null) KeyValue('Min temp', Fmt.temp(asNum(d['tmin_c']))),
-            if (asNum(d['wind_kph']) != null) KeyValue('Wind', Fmt.kph(asNum(d['wind_kph']))),
+            if (asNum(d['tmin_c']) != null) KeyValue(l.minTemp, Fmt.temp(asNum(d['tmin_c']))),
+            if (asNum(d['wind_kph']) != null) KeyValue(l.wind, Fmt.kph(asNum(d['wind_kph']))),
             if (asNum(d['cloud_pct']) != null)
-              KeyValue('Cloud', Fmt.pct(asNum(d['cloud_pct']))),
+              KeyValue(l.cloud, Fmt.pct(asNum(d['cloud_pct']))),
           ],
           advice: advice,
         );
@@ -221,21 +223,21 @@ class AlertSpec {
         final end = asStringOrNull(d['next_rain_end']);
         final peak = asStringOrNull(d['peak_time']);
         final when = <String>[
-          if (start != null) 'From ${Fmt.time(start)}',
-          if (end != null) 'until ${Fmt.time(end)}',
-          if (peak != null) '· peak ${Fmt.time(peak)}',
+          if (start != null) l.fromTime(Fmt.time(start)),
+          if (end != null) l.untilTime(Fmt.time(end)),
+          if (peak != null) l.peakAtTime(Fmt.time(peak)),
         ].join(' ');
         return AlertSpec(
-          level: '${Fmt.humanize(intensity)} rain',
+          level: l.rainWithIntensity(intensityLabel(l, intensity)),
           color: levelColor(intensity),
           icon: Icons.water_drop_outlined,
           when: when.isEmpty ? null : when,
           officialWarning: official,
           stats: <KeyValue>[
             if (asNum(d['peak_prob_pct']) != null)
-              KeyValue('Peak chance', Fmt.pct(asNum(d['peak_prob_pct']))),
+              KeyValue(l.peakChance, Fmt.pct(asNum(d['peak_prob_pct']))),
             if (asNum(d['expected_mm']) != null)
-              KeyValue('Expected', Fmt.mm(asNum(d['expected_mm']))),
+              KeyValue(l.expected, Fmt.mm(asNum(d['expected_mm']))),
           ],
           advice: advice,
         );
@@ -247,7 +249,7 @@ class AlertSpec {
         final start = asStringOrNull(window?['start']);
         final end = asStringOrNull(window?['end']);
         return AlertSpec(
-          level: '${Fmt.humanize(hazard ?? 'hazard')} ${level.toLowerCase()}',
+          level: '${hazardLabel(l, hazard)} ${levelLabel(l, level).toLowerCase()}',
           color: levelColor(level),
           icon: AppIcons.hazard(hazard),
           when: start == null ? null : '${Fmt.time(start)} – ${Fmt.time(end)}',
@@ -261,7 +263,7 @@ class AlertSpec {
     final level =
         asStringOrNull(d['level']) ?? asStringOrNull(d['risk']) ?? asStringOrNull(d['intensity']);
     return AlertSpec(
-      level: Fmt.humanize(level ?? 'Alert'),
+      level: level == null ? l.alertFallback : levelLabel(l, level),
       color: levelColor(level),
       icon: Icons.warning_amber_rounded,
       detail: asStringOrNull(d['detail']),

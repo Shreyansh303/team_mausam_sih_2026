@@ -40,6 +40,7 @@ class RadarRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final spec = RadarSpec.of(card);
 
@@ -60,7 +61,7 @@ class RadarRenderer extends StatelessWidget {
           children: [
             if (spec?.rainWithin2hPct != null)
               Pill(
-                label: 'Rain within 2 h · ${Fmt.pct(spec!.rainWithin2hPct)}',
+                label: l.rainWithin2hValue(Fmt.pct(spec!.rainWithin2hPct)),
                 color: (spec.rainWithin2hPct ?? 0) >= 60
                     ? const Color(0xFFF28C28)
                     : theme.colorScheme.primary,
@@ -73,14 +74,15 @@ class RadarRenderer extends StatelessWidget {
               // `map/ map_page`), which is where "Open map" belongs.
               onPressed: () => context.push('/map'),
               icon: const Icon(Icons.open_in_full, size: 16),
-              label: Text(L.of(context).openMap),
+              label: Text(l.openMap),
               style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
             ),
           ],
         ),
         if (spec != null && spec.hasFrames && tilesEnabled)
           Text(
-            'RainViewer · frame ${Fmt.dateTime(spec.frames[(frameIndex ?? spec.frames.length - 1)].time)}',
+            l.radarFrameAt(Fmt.dateTime(
+                spec.frames[(frameIndex ?? spec.frames.length - 1)].time)),
             style: theme.textTheme.labelSmall
                 ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),

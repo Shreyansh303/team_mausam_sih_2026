@@ -5,6 +5,8 @@ import '../../../core/theme.dart';
 import '../../../data/models/card.dart';
 import '../renderers/parts.dart';
 import '../renderers/places.dart';
+import '../../../l10n/gen/app_localizations.dart';
+import '../../../l10n/labels.dart';
 
 /// Full-screen body for the `places` renderer (docs/02 card 19 `saved_places`): the same places
 /// as a vertical list, where each row has room for the local time, the hi/lo, the rain chance
@@ -16,10 +18,11 @@ class PlacesDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final places = PlacesRenderer.parse(card);
     if (places.isEmpty) {
-      return const RendererEmpty(message: 'No saved places yet.');
+      return RendererEmpty(message: l.noSavedPlaces);
     }
 
     return Column(
@@ -48,7 +51,7 @@ class PlacesDetail extends StatelessWidget {
                           Text(
                             <String>[
                               if (p.country != null) p.country!,
-                              'local time ${Fmt.time(p.localTime)}',
+                              l.localTimeAt(Fmt.time(p.localTime)),
                             ].join(' · '),
                             style: theme.textTheme.labelSmall
                                 ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
@@ -65,16 +68,16 @@ class PlacesDetail extends StatelessWidget {
                   runSpacing: 8,
                   children: [
                     StatCell(
-                      label: 'High / low',
+                      label: l.highLow,
                       value: '${Fmt.temp(p.tmaxC, degreeOnly: true)} / '
                           '${Fmt.temp(p.tminC, degreeOnly: true)}',
                     ),
                     if (p.precipProbPct != null)
-                      StatCell(label: 'Rain chance', value: Fmt.pct(p.precipProbPct)),
+                      StatCell(label: l.rainChance, value: Fmt.pct(p.precipProbPct)),
                     if (p.highestSeverity != null)
                       StatCell(
-                        label: 'Active warning',
-                        value: Fmt.humanize(p.highestSeverity),
+                        label: l.activeWarning,
+                        value: severityLabel(l, p.highestSeverity),
                         color: AppTheme.warningSeverityColor(p.highestSeverity),
                       ),
                   ],

@@ -4,6 +4,7 @@ import '../../../core/formatters.dart';
 import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import '../renderers/tides.dart';
+import '../../../l10n/gen/app_localizations.dart';
 
 /// Full-screen body for the `tides` renderer (docs/02 card 17 `tides`): the curve at full
 /// height, the published turning points as a table, and the model disclaimer spelled out rather
@@ -25,7 +26,7 @@ class TidesDetail extends StatelessWidget {
         TidesRenderer(card: card, expanded: true),
         if (curve != null) ...[
           const SizedBox(height: 24),
-          Text('Turning points', style: theme.textTheme.titleSmall),
+          Text(L.of(context).turningPoints, style: theme.textTheme.titleSmall),
           const SizedBox(height: 8),
           for (final e in curve.events)
             Padding(
@@ -40,7 +41,9 @@ class TidesDetail extends StatelessWidget {
                   const SizedBox(width: 8),
                   SizedBox(
                     width: 64,
-                    child: Text(e.isHigh ? 'High' : 'Low', style: theme.textTheme.bodyMedium),
+                    child: Text(
+                        e.isHigh ? L.of(context).tideHigh : L.of(context).tideLow,
+                        style: theme.textTheme.bodyMedium),
                   ),
                   Expanded(
                     child: Text(Fmt.dateTime(e.time.toIso8601String()),

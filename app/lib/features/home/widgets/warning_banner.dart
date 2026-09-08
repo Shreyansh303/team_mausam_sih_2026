@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/theme.dart';
 import '../../../data/models/warning.dart';
 import '../../../l10n/gen/app_localizations.dart';
+import '../../../l10n/labels.dart';
 
 /// docs/06_MOBILE_SPEC.md §Home behaviour — "Banner: shown when `banner != null`; tap scrolls
 /// to pinned warnings; Share button."
@@ -36,7 +37,7 @@ class WarningBanner extends StatelessWidget {
 
     return Semantics(
       liveRegion: true,
-      label: '${banner.severity} warning. ${banner.title}',
+      label: l.severityWarningWord(severityLabel(l, banner.severity), banner.title),
       child: Material(
         color: color,
         borderRadius: BorderRadius.circular(14),

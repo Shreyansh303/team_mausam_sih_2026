@@ -5,6 +5,8 @@ import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import '../renderers/parts.dart';
 import '../renderers/sea.dart';
+import '../../../l10n/gen/app_localizations.dart';
+import '../../../l10n/labels.dart';
 
 /// Full-screen body for the `sea` renderer (docs/02 card 16 `sea_conditions`): the 24-h wave
 /// curve at full height with its axis, plus the Douglas scale the `sea_state` badge comes from
@@ -14,19 +16,21 @@ class SeaDetail extends StatelessWidget {
 
   final HomeCard card;
 
-  /// docs/02 card 16 — the Douglas bands, in metres.
-  static const List<KeyValue> douglas = <KeyValue>[
-    KeyValue('Calm', '< 0.1 m'),
-    KeyValue('Smooth', '< 0.5 m'),
-    KeyValue('Slight', '< 1.25 m'),
-    KeyValue('Moderate', '< 2.5 m'),
-    KeyValue('Rough', '< 4 m'),
-    KeyValue('Very Rough', '< 6 m'),
-    KeyValue('High', '≥ 6 m'),
+  /// docs/02 card 16 — the Douglas bands, in metres. The key is the payload's own
+  /// `sea_state` value, so the highlight below can match it; the label is localized.
+  static const List<({String key, String range})> douglas = <({String key, String range})>[
+    (key: 'calm', range: '< 0.1 m'),
+    (key: 'smooth', range: '< 0.5 m'),
+    (key: 'slight', range: '< 1.25 m'),
+    (key: 'moderate', range: '< 2.5 m'),
+    (key: 'rough', range: '< 4 m'),
+    (key: 'very_rough', range: '< 6 m'),
+    (key: 'high', range: '≥ 6 m'),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final series = SeaRenderer.waveSeries(card);
     final state = asStringOrNull(card.data['sea_state']);
@@ -48,14 +52,17 @@ class SeaDetail extends StatelessWidget {
           const SizedBox(height: 18),
           Row(
             children: [
-              StatCell(label: 'Highest waves', value: '${Fmt.num1(peak)} m', icon: Icons.waves),
+              StatCell(
+                  label: l.highestWaves,
+                  value: '${Fmt.num1(peak)} m',
+                  icon: Icons.waves),
               const SizedBox(width: 24),
-              StatCell(label: 'Around', value: peakAt, icon: Icons.schedule),
+              StatCell(label: l.around, value: peakAt, icon: Icons.schedule),
             ],
           ),
         ],
         const SizedBox(height: 24),
-        Text('Douglas sea scale', style: theme.textTheme.titleSmall),
+        Text(l.douglasScale, style: theme.textTheme.titleSmall),
         const SizedBox(height: 8),
         Wrap(
           spacing: 10,
@@ -63,10 +70,11 @@ class SeaDetail extends StatelessWidget {
           children: [
             for (final band in douglas)
               Pill(
-                label: '${band.label} ${band.value}',
-                color: SeaRenderer.seaStateColor(band.label),
+                label: '${seaStateLabel(l, band.key)} ${band.range}',
+                color: SeaRenderer.seaStateColor(band.key.replaceAll('_', ' ')),
                 dense: true,
-                filled: state != null && band.label.toLowerCase() == state.toLowerCase(),
+                filled: state != null &&
+                    band.key == state.toLowerCase().replaceAll(' ', '_'),
               ),
           ],
         ),

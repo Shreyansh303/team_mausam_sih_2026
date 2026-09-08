@@ -7,6 +7,7 @@ import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import 'charts.dart';
 import 'parts.dart';
+import '../../../l10n/gen/app_localizations.dart';
 
 /// docs/06_MOBILE_SPEC.md §Renderers — `tides`:
 /// "24-h tide curve with high/low markers and 'Estimated' chip".
@@ -28,6 +29,7 @@ class TidesRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final d = card.data;
     final curve = TideCurve.of(card);
@@ -37,7 +39,7 @@ class TidesRenderer extends StatelessWidget {
     final disclaimer = asStringOrNull(d['disclaimer']);
 
     if (curve == null) {
-      return const RendererEmpty(message: 'No tide table for this location.');
+      return RendererEmpty(message: l.noTideTable);
     }
 
     return Column(
@@ -46,7 +48,7 @@ class TidesRenderer extends StatelessWidget {
         Row(
           children: [
             if (nowHeight != null)
-              Text('${Fmt.num1(nowHeight)} m now',
+              Text(l.metresNow(Fmt.num1(nowHeight)),
                   style: theme.textTheme.titleSmall),
             if (trend != null) ...[
               const SizedBox(width: 8),
@@ -58,9 +60,9 @@ class TidesRenderer extends StatelessWidget {
               ),
             ],
             const Spacer(),
-            const Pill(
-              label: 'Estimated',
-              color: Color(0xFF8E8E8E),
+            Pill(
+              label: l.estimated,
+              color: const Color(0xFF8E8E8E),
               icon: Icons.calculate_outlined,
               dense: true,
             ),
@@ -90,7 +92,8 @@ class TidesRenderer extends StatelessWidget {
                   ),
                   const SizedBox(width: 3),
                   Text(
-                    '${e.isHigh ? 'High' : 'Low'} ${Fmt.time(e.time.toIso8601String())}',
+                    '${e.isHigh ? l.tideHigh : l.tideLow} '
+                    '${Fmt.time(e.time.toIso8601String())}',
                     style: theme.textTheme.labelMedium,
                   ),
                   const SizedBox(width: 4),
@@ -106,9 +109,11 @@ class TidesRenderer extends StatelessWidget {
         if (next != null) ...[
           const SizedBox(height: 8),
           Text(
-            'Next: ${asStringOrNull(next['type']) == 'high' ? 'high' : 'low'} tide at '
-            '${Fmt.time(asStringOrNull(next['time']))} '
-            '(${Fmt.num1(asNum(next['height_m']))} m)',
+            l.nextTide(
+              asStringOrNull(next['type']) == 'high' ? l.tideHigh : l.tideLow,
+              Fmt.time(asStringOrNull(next['time'])),
+              Fmt.num1(asNum(next['height_m'])),
+            ),
             style: theme.textTheme.bodySmall,
           ),
         ],

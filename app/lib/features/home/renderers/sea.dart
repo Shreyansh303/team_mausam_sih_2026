@@ -5,6 +5,8 @@ import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import 'charts.dart';
 import 'parts.dart';
+import '../../../l10n/gen/app_localizations.dart';
+import '../../../l10n/labels.dart';
 
 /// docs/06_MOBILE_SPEC.md §Renderers — `sea`:
 /// "sea-state badge, wave height/period, SST, swim/surf pills, 24-h wave sparkline".
@@ -65,12 +67,13 @@ class SeaRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final d = card.data;
     final state = asStringOrNull(d['sea_state']);
     final waveHeight = asNum(d['wave_height_m']);
     if (state == null && waveHeight == null) {
-      return const RendererEmpty(message: 'No marine data for this location.');
+      return RendererEmpty(message: l.noMarineData);
     }
     final color = seaStateColor(state);
     final series = waveSeries(card);
@@ -89,7 +92,11 @@ class SeaRenderer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (state != null)
-                  Pill(label: state, color: color, icon: Icons.waves, filled: true),
+                  Pill(
+                      label: seaStateLabel(l, state),
+                      color: color,
+                      icon: Icons.waves,
+                      filled: true),
                 const SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -114,15 +121,15 @@ class SeaRenderer extends StatelessWidget {
                   runSpacing: 8,
                   children: [
                     if (asNum(d['wave_period_s']) != null)
-                      StatCell(label: 'Period', value: '${Fmt.num1(asNum(d['wave_period_s']))} s'),
+                      StatCell(label: l.period, value: '${Fmt.num1(asNum(d['wave_period_s']))} s'),
                     if (asNum(d['sst_c']) != null)
-                      StatCell(label: 'Sea temp', value: Fmt.temp(asNum(d['sst_c']))),
+                      StatCell(label: l.seaTemp, value: Fmt.temp(asNum(d['sst_c']))),
                     if (asNum(d['swell_height_m']) != null)
-                      StatCell(label: 'Swell', value: '${Fmt.num1(asNum(d['swell_height_m']))} m'),
+                      StatCell(label: l.swell, value: '${Fmt.num1(asNum(d['swell_height_m']))} m'),
                     if (asNum(d['current_kph']) != null)
-                      StatCell(label: 'Current', value: Fmt.kph(asNum(d['current_kph']))),
+                      StatCell(label: l.current, value: Fmt.kph(asNum(d['current_kph']))),
                     if (direction.isNotEmpty)
-                      StatCell(label: 'From', value: direction),
+                      StatCell(label: l.fromDirection, value: direction),
                   ],
                 ),
               ),
@@ -136,7 +143,7 @@ class SeaRenderer extends StatelessWidget {
           children: [
             if (safe != null)
               Pill(
-                label: safe ? 'Safe for swimming' : 'Not safe for swimming',
+                label: safe ? l.safeSwim : l.notSafeSwim,
                 color: safe ? const Color(0xFF2E7D32) : const Color(0xFFD32F2F),
                 icon: safe ? Icons.pool : Icons.do_not_disturb_on_outlined,
                 dense: true,
@@ -147,7 +154,7 @@ class SeaRenderer extends StatelessWidget {
         if (series.length >= 2) ...[
           const SizedBox(height: 12),
           Text(
-            'Wave height, next ${series.length} h',
+            l.waveHeightNextHours(series.length),
             style: theme.textTheme.labelSmall
                 ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),
@@ -192,7 +199,7 @@ class SurfStars extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Surf',
+          Text(L.of(context).surf,
               style: theme.textTheme.labelSmall
                   ?.copyWith(color: color, fontWeight: FontWeight.w600)),
           const SizedBox(width: 5),

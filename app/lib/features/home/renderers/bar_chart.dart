@@ -5,6 +5,8 @@ import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import 'charts.dart';
 import 'parts.dart';
+import '../../../l10n/gen/app_localizations.dart';
+import '../../../l10n/labels.dart';
 
 /// docs/06_MOBILE_SPEC.md §Renderers — `bar_chart`:
 /// "daily mm/probability bars with focus day highlighted".
@@ -24,10 +26,11 @@ class BarChartRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
-    final spec = BarChartSpec.of(card);
+    final spec = BarChartSpec.of(card, l);
     if (spec == null || spec.points.isEmpty) {
-      return const RendererEmpty(message: 'No daily rainfall data.');
+      return RendererEmpty(message: l.noDailyRainfall);
     }
 
     return Column(
@@ -37,7 +40,7 @@ class BarChartRenderer extends StatelessWidget {
           children: [
             if (spec.verdict != null)
               Pill(
-                label: Fmt.humanize(spec.verdict),
+                label: qualityLabel(l, spec.verdict),
                 color: spec.color,
                 icon: Icons.umbrella_outlined,
                 dense: true,
@@ -141,7 +144,7 @@ class BarChartSpec {
       ? raw.map(asMapOrNull).whereType<Map<String, dynamic>>().toList()
       : const <Map<String, dynamic>>[];
 
-  static BarChartSpec? of(HomeCard card) {
+  static BarChartSpec? of(HomeCard card, L l) {
     final d = card.data;
 
     if (card.type == 'rain_probability') {
@@ -162,19 +165,19 @@ class BarChartSpec {
       return BarChartSpec(
         points: points,
         color: verdictColor(verdict),
-        axisNote: 'Chance of rain, % per day',
+        axisNote: l.axisRainChance,
         maxY: 100,
         focusIndex: focusIndex < 0 ? null : focusIndex,
         focusLabel: asStringOrNull(d['focus_label']) == null
             ? null
-            : 'Focus day · ${asStringOrNull(d['focus_label'])}',
+            : l.focusDayWithLabel(asStringOrNull(d['focus_label']) ?? ''),
         verdict: verdict,
         advice: asStringOrNull(d['advice']),
         stats: <KeyValue>[
           if (focusIndex >= 0)
-            KeyValue('On the day', Fmt.pct(asNum(days[focusIndex]['prob_pct']))),
+            KeyValue(l.onTheDay, Fmt.pct(asNum(days[focusIndex]['prob_pct']))),
           if (focusIndex >= 0 && asNum(days[focusIndex]['mm']) != null)
-            KeyValue('Expected', Fmt.mm(asNum(days[focusIndex]['mm']))),
+            KeyValue(l.expected, Fmt.mm(asNum(days[focusIndex]['mm']))),
         ],
       );
     }
@@ -193,21 +196,21 @@ class BarChartSpec {
     return BarChartSpec(
       points: points,
       color: _blue,
-      axisNote: 'Rainfall, mm per day',
+      axisNote: l.axisRainfallMm,
       focusIndex: anyRain ? wettest : null,
       focusLabel: anyRain
-          ? 'Wettest day · ${Fmt.dayLong(asStringOrNull(days[wettest]['date']))}'
+          ? l.wettestDayWithDate(Fmt.dayLong(asStringOrNull(days[wettest]['date'])))
           : null,
       advice: asStringOrNull(d['advice']),
       stats: <KeyValue>[
         if (asNum(d['next_24h_mm']) != null)
-          KeyValue('Next 24 h', Fmt.mm(asNum(d['next_24h_mm']))),
+          KeyValue(l.next24h, Fmt.mm(asNum(d['next_24h_mm']))),
         if (asNum(d['next_72h_mm']) != null)
-          KeyValue('Next 72 h', Fmt.mm(asNum(d['next_72h_mm']))),
+          KeyValue(l.next72h, Fmt.mm(asNum(d['next_72h_mm']))),
         if (asNum(d['next_7d_mm']) != null)
-          KeyValue('Next 7 d', Fmt.mm(asNum(d['next_7d_mm']))),
+          KeyValue(l.next7d, Fmt.mm(asNum(d['next_7d_mm']))),
         if (asNum(d['rain_days']) != null)
-          KeyValue('Rain days', '${asInt(d['rain_days'])} of ${days.length}'),
+          KeyValue(l.rainDays, l.countOfTotal(asInt(d['rain_days']) ?? 0, days.length)),
       ],
     );
   }

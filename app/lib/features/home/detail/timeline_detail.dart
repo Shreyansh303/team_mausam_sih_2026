@@ -6,6 +6,7 @@ import '../../../data/models/json.dart';
 import '../renderers/charts.dart';
 import '../renderers/parts.dart';
 import '../renderers/timeline.dart';
+import '../../../l10n/gen/app_localizations.dart';
 
 /// Full-screen body for the `timeline` renderer (docs/02 cards 12 `best_workout_window`,
 /// 22 `school_commute`, 28 `commute_conditions`): every window with all of its stats and
@@ -17,6 +18,7 @@ class TimelineDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final d = card.data;
     final scores = _points(d['hourly_scores'], 'score');
@@ -29,10 +31,10 @@ class TimelineDetail extends StatelessWidget {
         TimelineRenderer(card: card, expanded: true),
         if (scores.length >= 2) ...[
           const SizedBox(height: 24),
-          Text('Hourly score', style: theme.textTheme.titleSmall),
+          Text(l.hourlyScore, style: theme.textTheme.titleSmall),
           const SizedBox(height: 4),
           Text(
-            '100 = perfect conditions; the window bands above are the runs that stay above 55.',
+            l.hourlyScoreHelp,
             style: theme.textTheme.bodySmall
                 ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),
@@ -48,21 +50,21 @@ class TimelineDetail extends StatelessWidget {
         ],
         if (traffic != null && traffic.isNotEmpty) ...[
           const SizedBox(height: 24),
-          Text('Traffic', style: theme.textTheme.titleSmall),
+          Text(l.traffic, style: theme.textTheme.titleSmall),
           const SizedBox(height: 8),
           Row(
             children: [
               StatCell(
-                label: 'Congestion',
+                label: l.congestion,
                 value: Fmt.pct(asNum(traffic['congestion_pct'])),
                 icon: Icons.traffic_outlined,
               ),
               const SizedBox(width: 20),
               // CLAUDE.md §6 — the traffic index is modelled, and it says so.
               if (asStringOrNull(traffic['source']) == 'estimated')
-                const Pill(
-                  label: 'Estimated',
-                  color: Color(0xFF8E8E8E),
+                Pill(
+                  label: l.estimated,
+                  color: const Color(0xFF8E8E8E),
                   icon: Icons.calculate_outlined,
                   dense: true,
                 ),
@@ -75,7 +77,7 @@ class TimelineDetail extends StatelessWidget {
             children: [
               Icon(isSchoolDay ? Icons.school_outlined : Icons.beach_access_outlined, size: 16),
               const SizedBox(width: 6),
-              Text(isSchoolDay ? 'School day' : 'Not a school day',
+              Text(isSchoolDay ? l.schoolDay : l.notSchoolDay,
                   style: theme.textTheme.bodyMedium),
             ],
           ),

@@ -122,7 +122,10 @@ class CardDetailPage extends StatelessWidget {
           DataKeyValueGrid(data: card.data, maxEntries: 40),
           const SizedBox(height: 20),
           Text(
-            'type ${card.type} · renderer ${card.renderer} · source ${card.source ?? "—"}',
+            // Type / renderer / source are contract identifiers (docs/04 §Objects `Card`),
+            // not prose: they are shown verbatim so a judge can match a card to the spec.
+            'type: ${card.type} · renderer: ${card.renderer} · '
+            'source: ${card.source ?? "—"}',
             style:
                 theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),

@@ -4,6 +4,9 @@ import '../../../core/formatters.dart';
 import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import '../renderers/advice_list.dart';
+import '../../../l10n/gen/app_localizations.dart';
+import '../../../l10n/labels.dart';
+import 'package:intl/intl.dart';
 
 /// Full-screen body for the `advice_list` renderer (docs/02 cards 11 `health_advisory`,
 /// 20 `travel_alerts`, 21 `packing_suggestions`, 27 `planting_guidance`): every row of every
@@ -14,20 +17,23 @@ class AdviceListDetail extends StatelessWidget {
 
   final HomeCard card;
 
-  static const List<String> _months = <String>[
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
-  ];
+  /// Month names come from `intl` in the active locale rather than an ARB list of twelve.
+  static String _monthName(BuildContext context, int month) =>
+      DateFormat.MMMM(Localizations.localeOf(context).toLanguageTag())
+          .format(DateTime(2026, month));
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final d = card.data;
     final context_ = <String>[
-      if (asStringOrNull(d['season']) != null) '${Fmt.humanize(asStringOrNull(d['season']))} season',
-      if (asStringOrNull(d['zone']) != null) '${Fmt.humanize(asStringOrNull(d['zone']))} zone',
+      if (asStringOrNull(d['season']) != null)
+        l.seasonWithName(seasonLabel(l, asStringOrNull(d['season']))),
+      if (asStringOrNull(d['zone']) != null)
+        l.zoneWithName(Fmt.humanize(asStringOrNull(d['zone']))),
       if (asInt(d['month']) != null && asInt(d['month'])! >= 1 && asInt(d['month'])! <= 12)
-        _months[asInt(d['month'])! - 1],
+        _monthName(context, asInt(d['month'])!),
     ];
 
     return Column(

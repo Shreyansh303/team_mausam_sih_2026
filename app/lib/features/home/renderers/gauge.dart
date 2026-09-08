@@ -6,6 +6,8 @@ import '../../../core/formatters.dart';
 import '../../../data/models/card.dart';
 import '../../../data/models/json.dart';
 import 'parts.dart';
+import '../../../l10n/gen/app_localizations.dart';
+import '../../../l10n/labels.dart';
 
 /// docs/06_MOBILE_SPEC.md §Renderers — `gauge`:
 /// "semicircular gauge with category colour and value (aqi CPCB colours, comfort, soil moisture)".
@@ -25,10 +27,11 @@ class GaugeRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
-    final spec = GaugeSpec.of(card);
+    final spec = GaugeSpec.of(card, l);
     if (spec == null) {
-      return const RendererEmpty(message: 'No reading available.');
+      return RendererEmpty(message: l.noReading);
     }
     final advice = asStringOrNull(card.data['advice']);
 
@@ -164,35 +167,36 @@ class GaugeSpec {
     return stops.isEmpty ? const Color(0xFF1565C0) : stops.last.color;
   }
 
-  /// docs/02 card 7 — the CPCB bands, which are also `AppTheme.aqiColor`.
-  static const List<GaugeStop> cpcb = <GaugeStop>[
-    GaugeStop(50, Color(0xFF2E7D32), 'Good'),
-    GaugeStop(100, Color(0xFF9CCC65), 'Satisfactory'),
-    GaugeStop(200, Color(0xFFF5C518), 'Moderate'),
-    GaugeStop(300, Color(0xFFF28C28), 'Poor'),
-    GaugeStop(400, Color(0xFFD32F2F), 'Very Poor'),
-    GaugeStop(500, Color(0xFF7B1FA2), 'Severe'),
-  ];
+  /// docs/02 card 7 — the CPCB bands, which are also `AppTheme.aqiColor`. The band *names*
+  /// are UI text, not payload values, so they are resolved through the ARBs (docs/06 §i18n).
+  static List<GaugeStop> cpcb(L l) => <GaugeStop>[
+        GaugeStop(50, const Color(0xFF2E7D32), l.aqiGood),
+        GaugeStop(100, const Color(0xFF9CCC65), l.aqiSatisfactory),
+        GaugeStop(200, const Color(0xFFF5C518), l.aqiModerate),
+        GaugeStop(300, const Color(0xFFF28C28), l.aqiPoor),
+        GaugeStop(400, const Color(0xFFD32F2F), l.aqiVeryPoor),
+        GaugeStop(500, const Color(0xFF7B1FA2), l.aqiSevere),
+      ];
 
   /// docs/02 card 33 — Uncomfortable < 40 · Fair < 60 · Comfortable < 80 · Ideal.
-  static const List<GaugeStop> comfort = <GaugeStop>[
-    GaugeStop(40, Color(0xFFD32F2F), 'Uncomfortable'),
-    GaugeStop(60, Color(0xFFF28C28), 'Fair'),
-    GaugeStop(80, Color(0xFF9CCC65), 'Comfortable'),
-    GaugeStop(100, Color(0xFF2E7D32), 'Ideal'),
-  ];
+  static List<GaugeStop> comfort(L l) => <GaugeStop>[
+        GaugeStop(40, const Color(0xFFD32F2F), l.comfortUncomfortable),
+        GaugeStop(60, const Color(0xFFF28C28), l.comfortFair),
+        GaugeStop(80, const Color(0xFF9CCC65), l.comfortComfortable),
+        GaugeStop(100, const Color(0xFF2E7D32), l.comfortIdeal),
+      ];
 
   /// docs/02 card 24 — very_dry < 0.10 · dry < 0.18 · adequate < 0.30 · wet < 0.40 · saturated.
   /// Drawn on a 0–60 % volumetric scale so the useful range fills the arc.
-  static const List<GaugeStop> soil = <GaugeStop>[
-    GaugeStop(10, Color(0xFFB25E19), 'Very dry'),
-    GaugeStop(18, Color(0xFFF28C28), 'Dry'),
-    GaugeStop(30, Color(0xFF2E7D32), 'Adequate'),
-    GaugeStop(40, Color(0xFF29B6F6), 'Wet'),
-    GaugeStop(60, Color(0xFF1565C0), 'Saturated'),
-  ];
+  static List<GaugeStop> soil(L l) => <GaugeStop>[
+        GaugeStop(10, const Color(0xFFB25E19), l.soilVeryDry),
+        GaugeStop(18, const Color(0xFFF28C28), l.soilDry),
+        GaugeStop(30, const Color(0xFF2E7D32), l.soilAdequate),
+        GaugeStop(40, const Color(0xFF29B6F6), l.soilWet),
+        GaugeStop(60, const Color(0xFF1565C0), l.soilSaturated),
+      ];
 
-  static GaugeSpec? of(HomeCard card) {
+  static GaugeSpec? of(HomeCard card, L l) {
     final d = card.data;
 
     switch (card.type) {
@@ -205,11 +209,12 @@ class GaugeSpec {
           min: 0,
           max: 500,
           valueText: '${aqi.round()}',
-          category: asStringOrNull(d['category']) ?? _bandName(cpcb, aqi),
-          scaleNote: '${asStringOrNull(d['scale']) ?? 'CPCB'} AQI · 0–500',
-          stops: cpcb,
+          category: _band(l, aqiBandLabel, asStringOrNull(d['category'])) ??
+              _bandName(cpcb(l), aqi),
+          scaleNote: l.aqiScaleNote(asStringOrNull(d['scale']) ?? 'CPCB'),
+          stops: cpcb(l),
           stats: <GaugeStat>[
-            if (dominant != null) GaugeStat('Dominant', dominant),
+            if (dominant != null) GaugeStat(l.dominant, dominant),
             if (asNum(d['pm2_5']) != null) GaugeStat('PM2.5', '${Fmt.num1(asNum(d['pm2_5']))} µg/m³'),
             if (asNum(d['pm10']) != null) GaugeStat('PM10', '${Fmt.num1(asNum(d['pm10']))} µg/m³'),
             if (asNum(d['o3']) != null) GaugeStat('O₃', '${Fmt.num1(asNum(d['o3']))} µg/m³'),
@@ -227,16 +232,17 @@ class GaugeSpec {
           min: 0,
           max: 100,
           valueText: '${index.round()}',
-          category: asStringOrNull(d['category']) ?? _bandName(comfort, index),
-          scaleNote: 'Comfort index · 0–100',
-          stops: comfort,
+          category: _band(l, comfortBandLabel, asStringOrNull(d['category'])) ??
+              _bandName(comfort(l), index),
+          scaleNote: l.comfortScaleNote,
+          stops: comfort(l),
           stats: <GaugeStat>[
             if (asNum(d['feels_like_c']) != null)
-              GaugeStat('Feels like', Fmt.temp(asNum(d['feels_like_c']))),
+              GaugeStat(l.feelsLike, Fmt.temp(asNum(d['feels_like_c']))),
             if (asNum(d['humidity_pct']) != null)
-              GaugeStat('Humidity', Fmt.pct(asNum(d['humidity_pct']))),
-            if (asNum(d['wind_kph']) != null) GaugeStat('Wind', Fmt.kph(asNum(d['wind_kph']))),
-            if (asNum(d['uv']) != null) GaugeStat('UV', Fmt.num1(asNum(d['uv']))),
+              GaugeStat(l.humidity, Fmt.pct(asNum(d['humidity_pct']))),
+            if (asNum(d['wind_kph']) != null) GaugeStat(l.wind, Fmt.kph(asNum(d['wind_kph']))),
+            if (asNum(d['uv']) != null) GaugeStat(l.uv, Fmt.num1(asNum(d['uv']))),
           ],
         );
 
@@ -251,15 +257,15 @@ class GaugeSpec {
           max: 60,
           valueText: '${pct.round()}',
           unit: '%',
-          category: Fmt.humanize(asStringOrNull(d['status'])),
-          scaleNote: 'Volumetric water content, surface 0–1 cm',
-          stops: soil,
+          category: soilBandLabel(l, asStringOrNull(d['status'])),
+          scaleNote: l.soilScaleNote,
+          stops: soil(l),
           stats: <GaugeStat>[
-            if (root != null) GaugeStat('Root zone', '${(root * 100).round()}%'),
+            if (root != null) GaugeStat(l.rootZone, '${(root * 100).round()}%'),
             if (asNum(d['soil_temp_c']) != null)
-              GaugeStat('Soil temp', Fmt.temp(asNum(d['soil_temp_c']))),
+              GaugeStat(l.soilTemp, Fmt.temp(asNum(d['soil_temp_c']))),
             if (asNum(d['days_since_rain']) != null)
-              GaugeStat('Since rain', '${asInt(d['days_since_rain'])} d'),
+              GaugeStat(l.sinceRain, l.daysShort(asInt(d['days_since_rain']) ?? 0)),
           ],
         );
     }
@@ -273,8 +279,15 @@ class GaugeSpec {
       max: fallback > 100 ? 500 : 100,
       valueText: Fmt.num1(fallback),
       category: asStringOrNull(d['category']) ?? asStringOrNull(d['status']) ?? '',
-      stops: fallback > 100 ? cpcb : comfort,
+      stops: fallback > 100 ? cpcb(l) : comfort(l),
     );
+  }
+
+  /// A published band name (`very_poor`, `Very Poor`, …) → the localized label, or `null` when
+  /// the payload does not carry one and the value's own band has to be used instead.
+  static String? _band(L l, String Function(L, String?) labeller, String? raw) {
+    if (raw == null || raw.isEmpty) return null;
+    return labeller(l, raw.toLowerCase().replaceAll(' ', '_'));
   }
 
   static String _bandName(List<GaugeStop> stops, double v) {
