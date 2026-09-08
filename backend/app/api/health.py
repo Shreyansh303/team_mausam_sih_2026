@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any
 
 from fastapi import APIRouter
 
 from app.config import settings
-from app.core.timeutil import UTC, iso
+from app.core.timeutil import iso, now_in, tz_for
 from app.providers import imd
 from app.state import demo_state
 
@@ -20,7 +19,10 @@ async def health() -> dict[str, Any]:
     return {
         "status": "ok",
         "version": settings.app_version,
-        "time": iso(datetime.now(UTC)),
+        # 04 §Base: every timestamp in this API carries a location offset, and the demo
+        # clock is read as IST. /health has no location, so it reports the same IST clock
+        # the WebSocket `hello.server_time` does instead of drifting to UTC.
+        "time": iso(now_in(tz_for("Asia/Kolkata"))),
         "providers": {
             "imd": imd.status(),
             "open_meteo": "available",

@@ -18,7 +18,9 @@ def test_health(client):
     assert set(body["providers"]) == {"imd", "open_meteo", "marine", "air"}
     assert body["scenario"] == "live"
     assert body["now_override"] is None
-    assert body["time"].endswith("+00:00")
+    # C1: /health used to answer in UTC while every other clock in the product (and the
+    # WebSocket `hello.server_time`) is IST — confusing on the first curl of a demo.
+    assert body["time"].endswith("+05:30")
 
 
 def test_health_is_also_served_without_the_api_prefix(client):

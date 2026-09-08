@@ -14,6 +14,7 @@ class FreshnessChip extends StatelessWidget {
     required this.result,
     this.onRefresh,
     this.live = false,
+    this.nowOverride,
   });
 
   final HomeResult result;
@@ -22,19 +23,28 @@ class FreshnessChip extends StatelessWidget {
   /// `true` while `/ws/alerts` is connected — the green dot a judge can point at.
   final bool live;
 
+  /// The demo clock, when one is set (the demo sheet's own, or an admin `now_override`
+  /// frame off `/ws/alerts`). Ages are measured against it, because the payload's
+  /// `freshness` block is stamped with the demo clock too — without this the chip reads
+  /// "Updated 16 h ago" the moment a judge sets the clock to 07:30.
+  final String? nowOverride;
+
   String _label(L l) {
-    final minutes =
-        Fmt.minutesSince(result.home.newestFreshness) ?? _minutesSinceStored();
+    final reference = Fmt.instant(nowOverride);
+    final minutes = Fmt.minutesSince(result.home.newestFreshness, now: reference) ??
+        _minutesSinceStored(reference);
     if (minutes == null) return l.loading;
     if (minutes < 1) return l.updatedJustNow;
     if (minutes < 60) return l.updatedMinutesAgo(minutes);
     return l.updatedHoursAgo(minutes ~/ 60);
   }
 
-  int? _minutesSinceStored() {
+  int? _minutesSinceStored(DateTime? reference) {
     final storedAt = result.storedAt;
     if (storedAt == null) return null;
-    final m = DateTime.now().difference(storedAt).inMinutes;
+    final m = (reference ?? DateTime.now().toUtc())
+        .difference(storedAt.toUtc())
+        .inMinutes;
     return m < 0 ? 0 : m;
   }
 

@@ -137,7 +137,13 @@ class _HomePageState extends ConsumerState<HomePage> {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             if (async.hasValue)
-              FreshnessChip(result: async.value!, onRefresh: _refresh, live: live.isLive),
+              FreshnessChip(
+                result: async.value!,
+                onRefresh: _refresh,
+                live: live.isLive,
+                // The demo sheet's clock, or an admin `now_override` off the socket.
+                nowOverride: query.nowOverride ?? live.nowOverride,
+              ),
           ],
         ),
         actions: [

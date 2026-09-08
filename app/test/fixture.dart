@@ -38,5 +38,8 @@ List<MapEntry<String, Map<String, dynamic>>> loadDocsFixtures() {
   ];
 }
 
+/// One named payload out of `docs/fixtures/`, e.g. `loadDocsFixture('home_parent.json')`.
+Map<String, dynamic> loadDocsFixture(String name) => _readJson(File('$docsFixtureDir/$name'));
+
 Map<String, dynamic> _readJson(File file) =>
     jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
