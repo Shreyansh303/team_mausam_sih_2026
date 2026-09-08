@@ -116,5 +116,22 @@
   "learnedFromYou": "आपने इसे {taps} बार खोला और {dismisses} बार नीचे किया।",
   "@learnedFromYou": {"placeholders": {"taps": {"type": "int"}, "dismisses": {"type": "int"}}},
   "rankScore": "रैंक स्कोर {score} · अर्जेंसी {urgency}",
-  "@rankScore": {"placeholders": {"score": {"type": "String"}, "urgency": {"type": "String"}}}
+  "@rankScore": {"placeholders": {"score": {"type": "String"}, "urgency": {"type": "String"}}},
+
+  "placesTitle": "सहेजे गए स्थान",
+  "placesSubtitle": "आपके {max} पसंदीदा स्थानों का मौसम — यही यात्रा कार्ड भी चलाते हैं।",
+  "@placesSubtitle": {"placeholders": {"max": {"type": "int"}}},
+  "placesEmpty": "अभी कोई स्थान सहेजा नहीं गया। नीचे खोजकर जोड़ें।",
+  "placesAdd": "स्थान जोड़ें",
+  "placesFull": "आप {max} स्थानों की सीमा तक पहुँच गए हैं।",
+  "@placesFull": {"placeholders": {"max": {"type": "int"}}},
+  "placesAddFailed": "यह स्थान सहेजा नहीं जा सका। बैकएंड कनेक्शन जाँचें।",
+  "placesRemoveFailed": "यह स्थान हटाया नहीं जा सका।",
+  "placeKindHome": "घर",
+  "placeKindWork": "कार्यस्थल",
+  "placeKindSchool": "स्कूल",
+  "placeKindTravel": "यात्रा",
+  "placeKindOther": "अन्य",
+  "coastal": "तटीय",
+  "remove": "हटाएँ"
 }

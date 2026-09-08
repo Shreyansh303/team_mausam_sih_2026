@@ -678,6 +678,90 @@ abstract class L {
   /// In en, this message translates to:
   /// **'Rank score {score} · urgency {urgency}'**
   String rankScore(String score, String urgency);
+
+  /// No description provided for @placesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved places'**
+  String get placesTitle;
+
+  /// No description provided for @placesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather for up to {max} places you care about — they also power the traveller cards.'**
+  String placesSubtitle(int max);
+
+  /// No description provided for @placesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved places yet. Search below to add one.'**
+  String get placesEmpty;
+
+  /// No description provided for @placesAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a place'**
+  String get placesAdd;
+
+  /// No description provided for @placesFull.
+  ///
+  /// In en, this message translates to:
+  /// **'You have reached the limit of {max} saved places.'**
+  String placesFull(int max);
+
+  /// No description provided for @placesAddFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save that place. Check the backend connection.'**
+  String get placesAddFailed;
+
+  /// No description provided for @placesRemoveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not remove that place.'**
+  String get placesRemoveFailed;
+
+  /// No description provided for @placeKindHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get placeKindHome;
+
+  /// No description provided for @placeKindWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get placeKindWork;
+
+  /// No description provided for @placeKindSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'School'**
+  String get placeKindSchool;
+
+  /// No description provided for @placeKindTravel.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get placeKindTravel;
+
+  /// No description provided for @placeKindOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get placeKindOther;
+
+  /// No description provided for @coastal.
+  ///
+  /// In en, this message translates to:
+  /// **'Coastal'**
+  String get coastal;
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

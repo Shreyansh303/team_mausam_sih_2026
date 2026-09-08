@@ -129,6 +129,19 @@ class ApiClient {
     return _asMap(res.data);
   }
 
+  Future<Map<String, dynamic>> deleteJson(
+    String path, {
+    Map<String, dynamic>? query,
+    CancelToken? cancelToken,
+  }) async {
+    final res = await _send(() => _dio.delete<dynamic>(
+          url(path),
+          queryParameters: _clean(query),
+          cancelToken: cancelToken,
+        ));
+    return _asMap(res.data);
+  }
+
   Future<Response<dynamic>> _send(Future<Response<dynamic>> Function() run) async {
     try {
       return await run();

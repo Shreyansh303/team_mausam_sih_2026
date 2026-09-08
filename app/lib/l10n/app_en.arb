@@ -117,5 +117,22 @@
   "learnedFromYou": "You opened this {taps} times and pushed it down {dismisses} times.",
   "@learnedFromYou": {"placeholders": {"taps": {"type": "int"}, "dismisses": {"type": "int"}}},
   "rankScore": "Rank score {score} · urgency {urgency}",
-  "@rankScore": {"placeholders": {"score": {"type": "String"}, "urgency": {"type": "String"}}}
+  "@rankScore": {"placeholders": {"score": {"type": "String"}, "urgency": {"type": "String"}}},
+
+  "placesTitle": "Saved places",
+  "placesSubtitle": "Weather for up to {max} places you care about — they also power the traveller cards.",
+  "@placesSubtitle": {"placeholders": {"max": {"type": "int"}}},
+  "placesEmpty": "No saved places yet. Search below to add one.",
+  "placesAdd": "Add a place",
+  "placesFull": "You have reached the limit of {max} saved places.",
+  "@placesFull": {"placeholders": {"max": {"type": "int"}}},
+  "placesAddFailed": "Could not save that place. Check the backend connection.",
+  "placesRemoveFailed": "Could not remove that place.",
+  "placeKindHome": "Home",
+  "placeKindWork": "Work",
+  "placeKindSchool": "School",
+  "placeKindTravel": "Travel",
+  "placeKindOther": "Other",
+  "coastal": "Coastal",
+  "remove": "Remove"
 }

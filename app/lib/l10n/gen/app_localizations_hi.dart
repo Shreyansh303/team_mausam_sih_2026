@@ -320,4 +320,51 @@ class LHi extends L {
   String rankScore(String score, String urgency) {
     return 'रैंक स्कोर $score · अर्जेंसी $urgency';
   }
+
+  @override
+  String get placesTitle => 'सहेजे गए स्थान';
+
+  @override
+  String placesSubtitle(int max) {
+    return 'आपके $max पसंदीदा स्थानों का मौसम — यही यात्रा कार्ड भी चलाते हैं।';
+  }
+
+  @override
+  String get placesEmpty => 'अभी कोई स्थान सहेजा नहीं गया। नीचे खोजकर जोड़ें।';
+
+  @override
+  String get placesAdd => 'स्थान जोड़ें';
+
+  @override
+  String placesFull(int max) {
+    return 'आप $max स्थानों की सीमा तक पहुँच गए हैं।';
+  }
+
+  @override
+  String get placesAddFailed =>
+      'यह स्थान सहेजा नहीं जा सका। बैकएंड कनेक्शन जाँचें।';
+
+  @override
+  String get placesRemoveFailed => 'यह स्थान हटाया नहीं जा सका।';
+
+  @override
+  String get placeKindHome => 'घर';
+
+  @override
+  String get placeKindWork => 'कार्यस्थल';
+
+  @override
+  String get placeKindSchool => 'स्कूल';
+
+  @override
+  String get placeKindTravel => 'यात्रा';
+
+  @override
+  String get placeKindOther => 'अन्य';
+
+  @override
+  String get coastal => 'तटीय';
+
+  @override
+  String get remove => 'हटाएँ';
 }

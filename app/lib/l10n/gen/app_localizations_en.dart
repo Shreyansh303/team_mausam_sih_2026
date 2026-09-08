@@ -319,4 +319,51 @@ class LEn extends L {
   String rankScore(String score, String urgency) {
     return 'Rank score $score · urgency $urgency';
   }
+
+  @override
+  String get placesTitle => 'Saved places';
+
+  @override
+  String placesSubtitle(int max) {
+    return 'Weather for up to $max places you care about — they also power the traveller cards.';
+  }
+
+  @override
+  String get placesEmpty => 'No saved places yet. Search below to add one.';
+
+  @override
+  String get placesAdd => 'Add a place';
+
+  @override
+  String placesFull(int max) {
+    return 'You have reached the limit of $max saved places.';
+  }
+
+  @override
+  String get placesAddFailed =>
+      'Could not save that place. Check the backend connection.';
+
+  @override
+  String get placesRemoveFailed => 'Could not remove that place.';
+
+  @override
+  String get placeKindHome => 'Home';
+
+  @override
+  String get placeKindWork => 'Work';
+
+  @override
+  String get placeKindSchool => 'School';
+
+  @override
+  String get placeKindTravel => 'Travel';
+
+  @override
+  String get placeKindOther => 'Other';
+
+  @override
+  String get coastal => 'Coastal';
+
+  @override
+  String get remove => 'Remove';
 }
