@@ -157,10 +157,12 @@ unticked items but files present:
   **No contract mismatches found**: a live `/home` and `docs/fixtures/home_severe.json` have
   identical key sets at every level (top level, `Card`, `context`, `freshness`, `engine`,
   `banner`), so `docs/04` needed no edit.
-- [x] backend i18n gaps B2b logged, all three fixed + tests (see the B3 commits and Deviations):
+- [x] backend i18n gaps B2b logged, all three fixed + tests (see the B3 commits and Deviations),
+  plus everything else the sweep turned up:
   AQI pollutant key/value · `hazard.rain`/`hazard.haze` · Hindi advice, window reasons, crop
   actions, planting tips, packing items, flight-risk detail, nowcast text, scenario warning copy
-  and date labels. `pytest -q` **326 passed**; `docs/fixtures/*.json` regenerated and
+  and date labels, and the warnings + packing items a traveller's saved places carry.
+  `pytest -q` **327 passed**; `docs/fixtures/*.json` regenerated and
   `app/assets/fixtures/home_sample.json` refreshed from `home_severe.json` (B1 deviation).
 - [x] WS re-rank re-verified in the web build against the live backend: push → orange banner →
   re-fetch → `commute_conditions` pinned "Severe" → SnackBar "A warning moved to the top of your
@@ -175,7 +177,12 @@ unticked items but files present:
 - [x] `.github/workflows/flutter.yml` — push/PR on `app/**`: job `apk` (checkout · temurin JDK 17 ·
   `subosito/flutter-action@v2` pinned to **3.47.2** stable with cache · pub get · analyze · test ·
   `build apk --release` · upload `app-release-apk`) and job `web` (`build web`, uploaded too).
-  YAML validated locally; GitHub Actions cannot be executed from this machine.
+  YAML validated locally, and the **first run went green on GitHub on its own**:
+  <https://github.com/Shreyansh303/team_mausam_sih_2026/actions/runs/34258504848> — both jobs
+  success, artifacts `app-release-apk` (28.6 MB zipped) and `web-build` (14.6 MB). The
+  `compileSdk = 37` worry from H0 gotcha 2 did **not** reproduce on `ubuntu-latest`; the APK step
+  took ~25 min cold (Gradle + platform download), the web job ~3 min. The backend workflow is
+  green on the same commits.
 - [x] README "Run it yourself → 2. App" rewritten for a first-time Flutter user (a)–(f) +
   `scripts/setup_android_emulator.{ps1,sh}` / `run_emulator.{ps1,sh}` + flutter CI badge +
   screenshot grid rebuilt on the b2b/b3 shots.
@@ -364,9 +371,11 @@ unticked items but files present:
 
 ### C1 — what B3 hands you (2026-09-08)
 
-**Everything is green on this Mac.** `pytest -q` **326 passed** · `flutter analyze` clean ·
+**Everything is green on this Mac.** `pytest -q` **327 passed** · `flutter analyze` clean ·
 `flutter test` **90 passed** · `flutter build web` ✓ · `flutter build apk --release` ✓ ·
-`flutter build apk --debug` ✓. No app↔backend contract mismatch exists — see Deviations.
+`flutter build apk --debug` ✓. **Both GitHub workflows are green too** (`backend` and the new
+`flutter`, first run, APK + web artifacts uploaded). No app↔backend contract mismatch exists —
+see Deviations.
 
 **Artefacts C1 can use straight away**
 
@@ -438,11 +447,10 @@ lands on a card instead (that happened in B3).
   `app/build/app/intermediates`, the debug APK, `outputs/apk/debug`, `outputs/mapping` and
   `outputs/native-debug-symbols` afterwards and got back to ~3.2 GB free. **Run `flutter clean`
   first and delete the intermediates after** — or the next build fails on ENOSPC, not on code.
-- **CI cannot be run from here.** `.github/workflows/flutter.yml` is validated YAML but the first
-  real run is on GitHub. The risk to watch is the `compileSdk = 37` platform: on this Mac AGP
-  installed `platforms/android-37.0` and needed a hand-made `android-37` alias (H0 gotcha 2). If
-  the runner hits `Failed to find target with hash string 'android-37'`, add an explicit
-  `sdkmanager "platforms;android-37"` step (or `android-actions/setup-android`) before the build.
+- **CI is green but slow.** The `apk` job needs ~25 min cold (Gradle + the `android-37` platform
+  download); the `web` job ~3 min. H0's `android-37` vs `android-37.0` gotcha did not reproduce on
+  `ubuntu-latest`. If a future runner image ever hits `Failed to find target with hash string
+  'android-37'`, add an explicit `sdkmanager "platforms;android-37"` step before the build.
 - `traveler` still has no saved places on a fresh guest, so `saved_places` / `packing_suggestions` /
   `travel_alerts` are absent until you add two places (Places page, or `POST /me/places`). Do that
   before recording the traveller part of the demo — the packing item list is now localized too.
