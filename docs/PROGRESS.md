@@ -28,7 +28,7 @@ unticked items but files present:
 - [x] B2a ten pending renderers + detail pages (one commit each)
 - [x] B2b animations · events · why-sheet actions · places · map · settings · demo sheet · WS client · low-bandwidth · a11y · l10n · icon/splash
 - [x] B3 integration + APK + CI (+ the backend i18n gaps B2b logged)
-- [ ] C1 e2e QA
+- [~] C1 e2e QA (paused 2026-09-09)
 - [ ] C2 docs + pitch
 - [ ] S* stretch
 - [x] H0 fresh-machine bootstrap (new owner; see docs/HANDOFF.md §4) — done on the macOS machine
