@@ -53,6 +53,7 @@
  "nowcast": {
   "text": "No significant weather in next 3 hours",
   "severity": "none",
-  "hazards": []
+  "hazards": [],
+  "text_key": "nowcast.text.none"
  }
 }

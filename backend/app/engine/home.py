@@ -13,7 +13,7 @@ from app.core.i18n import t
 from app.core.timeutil import iso
 from app.engine import ENGINE_VERSION
 from app.engine.builders import BUILDERS
-from app.engine.builders.base import CardContent
+from app.engine.builders.base import CardContent, localized_warning
 from app.engine.catalog import CardDef
 from app.engine.context import Bundle, Context, UserProfile
 from app.engine.explain import reasons_for
@@ -94,6 +94,7 @@ def banner_for(ctx: Context) -> Banner | None:
             best, best_rank = warning, r
     if not best:
         return None
+    best = localized_warning(ctx.lang, best)
     return Banner(
         warning_id=str(best.get("id", "")),
         severity=str(best.get("severity", "orange")),

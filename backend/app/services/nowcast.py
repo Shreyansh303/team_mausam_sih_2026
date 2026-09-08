@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from typing import Any
 
+from app.core import i18n
 from app.core.timeutil import hhmm, iso, parse_any
 from app.services.util import FOG_CODES, THUNDER_CODES, next_hours
 
@@ -22,25 +23,35 @@ def derive(*, hourly: list[dict[str, Any]], now: datetime, hours: int = 3) -> di
     hazards: list[str] = []
     severity = "none"
     text = "No significant weather in next 3 hours"
+    text_token = i18n.token("nowcast.text.none")
 
     if codes & THUNDER_CODES:
         severity = "severe"
         hazards.append("thunderstorm")
         text = "Thunderstorm likely"
+        text_token = i18n.token("nowcast.text.thunderstorm")
     elif max_prob >= 60 or (codes & RAIN_CODES):
         severity = "moderate"
         hazards.append("rain")
         when = _first_rain_time(rows)
         text = f"Rain likely by {when}" if when else "Rain likely"
+        text_token = (
+            i18n.token("nowcast.text.rain_by", time=when)
+            if when
+            else i18n.token("nowcast.text.rain")
+        )
     elif codes & FOG_CODES:
         severity = "moderate"
         hazards.append("fog")
         text = "Fog likely to persist"
+        text_token = i18n.token("nowcast.text.fog")
 
     return {
         "issued_at": iso(now),
         "valid_till": iso(valid_till),
+        # `text` is the English rendering; `text_token` is what the card builder localizes.
         "text": text,
+        "text_token": text_token,
         "severity": severity,
         "hazards": hazards,
         "source": "derived",

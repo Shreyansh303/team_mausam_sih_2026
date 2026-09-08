@@ -17,7 +17,7 @@ from datetime import datetime, timedelta
 from typing import Any
 
 from app.config import settings
-from app.core import cache
+from app.core import cache, i18n
 from app.core.geo import compass, is_coastal
 from app.core.timeutil import UTC, iso, parse_local, tz_for
 from app.providers import imd as imd_provider
@@ -694,6 +694,12 @@ def _storm_fog(
         "window": {"start": window_start or iso(now), "end": window_end or iso(now)},
         "detail": (warn or {}).get("description")
         or f"{hazard.replace('_', ' ').title()} signalled in the next 12 hours.",
+        # deferred translation of `detail` — the card builder passes the localized hazard in
+        "detail_token": (
+            i18n.token(f"scenario.warning.{warn['hazard']}.description")
+            if warn and warn.get("source") == "scenario"
+            else (None if warn else i18n.token("insight.storm_fog_alert.fallback"))
+        ),
         "warning": bool(warn),
         "advice": _storm_advice(hazard),
         "urgency": {"watch": 0.5, "warning": 0.7, "severe": 0.9}[level],
@@ -883,7 +889,11 @@ async def build_snapshot(
     if nc is None:
         nc = nowcast_svc.derive(hourly=snap["hourly"], now=ref_now)
     if scen and scen.get("nowcast"):
-        nc = {**nc, **scen["nowcast"], "source": "scenario"}
+        scen_nc = dict(scen["nowcast"])
+        # A scenario names its own i18n key; without one the card falls back to `text`.
+        text_key = scen_nc.pop("text_key", None)
+        nc = {**nc, **scen_nc, "source": "scenario"}
+        nc["text_token"] = i18n.token(str(text_key)) if text_key else None
         nc.setdefault("issued_at", iso(ref_now))
         nc.setdefault("valid_till", iso(ref_now + timedelta(hours=3)))
     snap["nowcast"] = nc

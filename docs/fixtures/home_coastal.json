@@ -1600,7 +1600,7 @@
       ],
       "insight": {
         "headline": "Air quality is Satisfactory (60)",
-        "detail": "pollutant.O3 is the dominant pollutant at — µg/m³.",
+        "detail": "Ozone is the dominant pollutant at 60 µg/m³.",
         "icon": "aqi"
       },
       "data": {

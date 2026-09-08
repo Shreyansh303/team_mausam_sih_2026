@@ -6,6 +6,7 @@ from datetime import datetime
 from typing import Any
 
 from app.core.geo import planting_calendar
+from app.core.i18n import token
 
 ZONES = ("north", "south", "east", "west", "central", "northeast", "hills")
 
@@ -102,26 +103,25 @@ def build(
     month = now.month
     calendar = planting_calendar()
     crops = list((calendar.get(zone) or {}).get(str(month)) or [])[:4]
-    tips: list[str] = []
+    #: Tips are deferred translations (05 §i18n) — the card builder resolves them.
+    tips: list[dict[str, Any]] = []
 
     status = soil_status(soil_surface)
     if status == "very_dry":
-        tips.append("Topsoil is very dry — irrigate before sowing or transplanting.")
+        tips.append(token("planting.tip.very_dry"))
     elif status == "dry":
-        tips.append("Topsoil is dry — a light irrigation will help germination.")
+        tips.append(token("planting.tip.dry"))
     elif status in ("wet", "saturated"):
-        tips.append("Soil is wet — hold back irrigation and check field drainage.")
+        tips.append(token("planting.tip.wet"))
 
     if rain_next_72h_mm is not None:
         if rain_next_72h_mm >= 35:
-            tips.append(
-                f"Delay irrigation: {rain_next_72h_mm:.0f} mm of rain expected in the next 3 days."
-            )
+            tips.append(token("planting.tip.delay_irrigation", mm=f"{rain_next_72h_mm:.0f}"))
         elif rain_next_72h_mm < 5 and status in ("very_dry", "dry"):
-            tips.append("Little rain in the next 3 days — plan irrigation.")
+            tips.append(token("planting.tip.plan_irrigation"))
 
     if not tips:
-        tips.append("Conditions are normal for this stage — follow the usual schedule.")
+        tips.append(token("planting.tip.normal"))
 
     return {
         "season": season_for(month),

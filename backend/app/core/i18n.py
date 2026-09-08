@@ -53,6 +53,28 @@ def t(lang: str | None, key: str, **kw: Any) -> str:
     return value
 
 
+def token(key: str, **params: Any) -> dict[str, Any]:
+    """A *deferred* translation.
+
+    Derived-metric services run before the request language is known (the snapshot is cached
+    across languages), so they emit `{"key": …, "params": {…}}` and the card builders resolve
+    it with `resolve()` once `ctx.lang` is available.
+    """
+    return {"key": key, "params": params} if params else {"key": key}
+
+
+def resolve(lang: str | None, value: Any) -> str:
+    """Resolve a `token()` (or pass a plain string through unchanged)."""
+    if isinstance(value, dict) and "key" in value:
+        params = value.get("params") or {}
+        return t(lang, str(value["key"]), **params)
+    return "" if value is None else str(value)
+
+
+def resolve_all(lang: str | None, values: Any) -> list[str]:
+    return [resolve(lang, v) for v in (values or [])]
+
+
 def has(lang: str, key: str) -> bool:
     return key in catalog(normalize_lang(lang))
 

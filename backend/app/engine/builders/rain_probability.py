@@ -8,7 +8,7 @@ from __future__ import annotations
 from datetime import date, timedelta
 
 from app.core.i18n import t
-from app.engine.builders.base import CardContent, num
+from app.engine.builders.base import CardContent, daylabel, num
 from app.engine.context import Bundle, Context, UserProfile
 
 DAYS = 7
@@ -63,10 +63,7 @@ def build(bundle: Bundle, ctx: Context, profile: UserProfile) -> CardContent:
 
     prob = (row or {}).get("prob_pct")
     verdict = verdict_for(prob)
-    try:
-        label = date.fromisoformat(focus).strftime("%a %d %b")
-    except ValueError:  # pragma: no cover - defensive
-        label = focus
+    label = daylabel(lang, focus, with_dow=True)
 
     data = {
         "focus_date": focus,

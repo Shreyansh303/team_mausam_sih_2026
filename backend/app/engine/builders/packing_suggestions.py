@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from app.core.i18n import t
+from app.core.i18n import resolve, t
 from app.engine.builders.base import CardContent
 from app.engine.context import Bundle, Context, UserProfile
 
@@ -15,7 +15,15 @@ def build(bundle: Bundle, ctx: Context, profile: UserProfile) -> CardContent:
     total = 0
     for place in bundle.places:
         block = place.get("packing") or {}
-        items = list(block.get("items") or [])
+        # the service defers both strings (05 §i18n); 02 §21 publishes `{item, icon, reason}`
+        items = [
+            {
+                "item": t(lang, str(i.get("item_key", ""))),
+                "icon": i.get("icon", "suitcase"),
+                "reason": resolve(lang, i.get("reason")),
+            }
+            for i in (block.get("items") or [])
+        ]
         total += len(items)
         places.append(
             {

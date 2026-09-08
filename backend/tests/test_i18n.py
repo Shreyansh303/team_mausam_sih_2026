@@ -11,6 +11,8 @@ import re
 import pytest
 
 from app.core import i18n
+from app.providers import scenarios
+from app.services import aqi_cpcb
 from app.engine.catalog import CARD_TYPES, PERSONAS
 from tests.conftest import DELHI, PANAJI
 
@@ -123,3 +125,169 @@ def test_hindi_home_returns_hindi_titles(client, guest):
     assert body["context"]["lang"] == "hi"
     for card in body["cards"]:
         assert devanagari.search(card["title"]), card["type"]
+
+
+# ------------------------------------------------------- B3: the three gaps B2b logged
+
+
+@pytest.mark.parametrize("scenario", sorted(scenarios.available()))
+@pytest.mark.parametrize("lang", ["en", "hi"])
+def test_no_i18n_key_leaks_under_any_scenario(client, guest, lang, scenario):
+    """`clear_pleasant` has no hazards, which is how `hazard.rain` reached the nowcast
+    subtitle unnoticed. Every scripted situation has to render cleanly too."""
+    res = client.get(
+        "/api/v1/home",
+        params={
+            "lat": DELHI[0],
+            "lon": DELHI[1],
+            "lang": lang,
+            "personas": "parent,commuter,agriculture",
+            "now_override": NOW,
+            "scenario": scenario,
+        },
+        headers=guest["headers"],
+    )
+    assert res.status_code == 200, res.text
+    leaks = [
+        leak
+        for leak in _leaked_keys(res.json())
+        if not any(leak.split(" = ")[0].endswith(p) for p in ALLOWED_PATHS)
+    ]
+    assert not leaks, f"unresolved i18n keys in {lang}/{scenario}: {leaks[:10]}"
+
+
+def test_every_nowcast_hazard_has_a_label():
+    """Every hazard a nowcast can emit — derived or scripted — needs a `hazard.*` key."""
+    emitted = {"thunderstorm", "rain", "fog"}
+    for name in scenarios.available():
+        emitted |= set(((scenarios.load(name) or {}).get("nowcast") or {}).get("hazards") or [])
+    for hazard in sorted(emitted):
+        assert i18n.has("en", f"hazard.{hazard}"), f"en is missing hazard.{hazard}"
+        assert i18n.has("hi", f"hazard.{hazard}"), f"hi is missing hazard.{hazard}"
+
+
+def test_every_scenario_nowcast_names_a_key_that_exists():
+    for name in scenarios.available():
+        nowcast = (scenarios.load(name) or {}).get("nowcast")
+        if not nowcast:
+            continue
+        key = nowcast.get("text_key")
+        assert key, f"{name}.json nowcast has no text_key"
+        assert i18n.has("en", key) and i18n.has("hi", key), f"{name}: {key} missing"
+
+
+def test_aqi_insight_names_the_pollutant_and_its_value(client, guest):
+    """B2b saw `pollutant.O3 is the dominant pollutant at — µg/m³`: the builder was handed the
+    CPCB *display label* ("O3"), which is neither an i18n key nor a snapshot field."""
+    res = client.get(
+        "/api/v1/home",
+        params={
+            "lat": DELHI[0],
+            "lon": DELHI[1],
+            "lang": "en",
+            "personas": "health",
+            "now_override": NOW,
+            "scenario": "severe_aqi",
+        },
+        headers=guest["headers"],
+    )
+    assert res.status_code == 200, res.text
+    card = next(
+        c
+        for c in res.json()["cards"] + res.json()["more_cards"] + res.json()["pinned"]
+        if c["type"] == "aqi"
+    )
+    detail = card["insight"]["detail"]
+    assert "pollutant." not in detail, detail
+    assert "—" not in detail, detail
+    label = card["data"]["dominant_pollutant"]
+    key = aqi_cpcb.POLLUTANT_KEY[label]
+    assert i18n.t("en", f"pollutant.{key}") in detail
+    assert f"{card['data'][key]:.0f}" in detail or key == "co"
+
+
+def test_hindi_advice_and_reasons_are_hindi(client, guest):
+    """The Hindi screenshot still showed English window reasons, crop actions and nowcast text."""
+    devanagari = re.compile(r"[ऀ-ॿ]")
+    res = client.get(
+        "/api/v1/home",
+        params={
+            "lat": DELHI[0],
+            "lon": DELHI[1],
+            "lang": "hi",
+            "personas": "parent,commuter,agriculture",
+            "now_override": NOW,
+            "scenario": "heavy_rain",
+        },
+        headers=guest["headers"],
+    )
+    assert res.status_code == 200, res.text
+    body = res.json()
+    cards = {c["type"]: c for c in body["pinned"] + body["cards"] + body["more_cards"]}
+    cards[body["hero"]["type"]] = body["hero"]
+
+    for card_type, path in (
+        ("school_commute", lambda c: c["data"]["windows"][0]["reasons"]),
+        ("commute_conditions", lambda c: c["data"]["windows"][0]["reasons"]),
+        ("planting_guidance", lambda c: [x["action"] for x in c["data"]["crops"]]),
+        ("planting_guidance", lambda c: c["data"]["tips"]),
+        ("nowcast", lambda c: [c["data"]["text"], c["insight"]["headline"]]),
+        ("warnings", lambda c: [c["insight"]["headline"], c["insight"]["detail"]]),
+    ):
+        card = cards.get(card_type)
+        assert card, f"{card_type} not in the payload"
+        for value in path(card):
+            assert devanagari.search(value), f"{card_type}: {value!r} is not Hindi"
+
+    assert body["banner"] and devanagari.search(body["banner"]["title"]), body["banner"]
+
+
+def test_english_scenario_copy_is_unchanged(client, guest):
+    """The catalog now owns the scenario copy — English must read exactly as the JSON did."""
+    res = client.get(
+        "/api/v1/home",
+        params={
+            "lat": DELHI[0],
+            "lon": DELHI[1],
+            "lang": "en",
+            "personas": "parent",
+            "now_override": NOW,
+            "scenario": "thunderstorm",
+        },
+        headers=guest["headers"],
+    )
+    body = res.json()
+    assert body["banner"]["title"] == "Orange warning: thunderstorm with lightning"
+    nowcast = next(
+        c
+        for c in body["pinned"] + body["cards"] + body["more_cards"]
+        if c["type"] == "nowcast"
+    )
+    assert nowcast["data"]["text"] == "Thunderstorm likely"
+    assert nowcast["subtitle"] == "Thunderstorm, Lightning"
+
+
+def test_date_labels_are_localized(client, guest):
+    """`strftime("%a %d %b")` is locale-blind — the event-planner card showed "Sat 12 Sep"
+    inside an otherwise Hindi screen."""
+    res = client.get(
+        "/api/v1/home",
+        params={
+            "lat": DELHI[0],
+            "lon": DELHI[1],
+            "lang": "hi",
+            "personas": "event_planner",
+            "now_override": NOW,
+            "event_date": "2026-09-12",
+        },
+        headers=guest["headers"],
+    )
+    assert res.status_code == 200, res.text
+    body = res.json()
+    card = next(
+        c
+        for c in body["pinned"] + body["cards"] + body["more_cards"]
+        if c["type"] == "rain_probability"
+    )
+    assert card["data"]["focus_label"] == "शनि 12 सित", card["data"]["focus_label"]
+    assert i18n.t("en", "dow.sat") == "Sat"

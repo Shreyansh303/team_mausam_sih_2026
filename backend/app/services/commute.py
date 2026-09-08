@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
+from app.core.i18n import token
 from app.core.timeutil import iso, next_occurrence
 from app.services.util import FOG_CODES, THUNDER_CODES, has_code, hours_between, vmax, vmin
 
@@ -84,34 +85,36 @@ def impact_for(
     wind_kph: float | None,
     thunderstorm: bool,
     severe_warning: bool,
-) -> tuple[str, list[str]]:
-    reasons: list[str] = []
+) -> tuple[str, list[dict[str, Any]]]:
+    """Impact plus its reasons as deferred translations (05 §i18n) — the card builder
+    resolves them with the request language."""
+    reasons: list[dict[str, Any]] = []
     if severe_warning:
-        reasons.append("Storm/fog warning in force")
+        reasons.append(token("reason.storm_fog_warning"))
     if visibility_km is not None and visibility_km < 0.5:
-        reasons.append(f"Visibility {visibility_km:.1f} km")
+        reasons.append(token("reason.visibility", km=f"{visibility_km:.1f}"))
     if reasons:
         return "severe", reasons
 
     if precip_prob_pct is not None and precip_prob_pct >= 70:
-        reasons.append(f"Rain chance {int(precip_prob_pct)}%")
+        reasons.append(token("reason.rain_chance", pct=int(precip_prob_pct)))
     if visibility_km is not None and visibility_km < 1:
-        reasons.append(f"Visibility {visibility_km:.1f} km")
+        reasons.append(token("reason.visibility", km=f"{visibility_km:.1f}"))
     if thunderstorm:
-        reasons.append("Thunderstorm expected")
+        reasons.append(token("reason.thunderstorm"))
     if reasons:
         return "high", reasons
 
     if precip_prob_pct is not None and precip_prob_pct >= 40:
-        reasons.append(f"Rain chance {int(precip_prob_pct)}%")
+        reasons.append(token("reason.rain_chance", pct=int(precip_prob_pct)))
     if visibility_km is not None and visibility_km < 2:
-        reasons.append(f"Visibility {visibility_km:.1f} km")
+        reasons.append(token("reason.visibility", km=f"{visibility_km:.1f}"))
     if wind_kph is not None and wind_kph >= 40:
-        reasons.append(f"Wind {int(wind_kph)} km/h")
+        reasons.append(token("reason.wind", kph=int(wind_kph)))
     if reasons:
         return "moderate", reasons
 
-    return "low", ["Clear run expected"]
+    return "low", [token("reason.commute.clear")]
 
 
 def delay_minutes(*, peak: bool, weather: str | None) -> int:

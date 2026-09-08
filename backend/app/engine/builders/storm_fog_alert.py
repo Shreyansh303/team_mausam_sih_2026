@@ -24,15 +24,22 @@ def build(bundle: Bundle, ctx: Context, profile: UserProfile) -> CardContent:
     level = block.get("level") or "watch"
     window = block.get("window") or {}
 
+    localized_hazard = t(lang, "hazard." + hazard)
+    detail_token = block.get("detail_token") or {}
+    detail_text = str(block.get("detail") or "")
+    if detail_token.get("key"):
+        resolved = t(lang, str(detail_token["key"]), hazard=localized_hazard)
+        if resolved != detail_token["key"]:
+            detail_text = resolved
+
     data = {
         "hazard": hazard,
         "level": level,
         "window": {"start": window.get("start"), "end": window.get("end")},
-        "detail": block.get("detail", ""),
+        "detail": detail_text,
         "warning": bool(block.get("warning")),
         "advice": [t(lang, k) for k in ADVICE_KEYS.get(hazard, ["advice.storm.shelter"])],
     }
-    localized_hazard = t(lang, "hazard." + hazard)
     localized_level = t(lang, "storm.level." + level)
     return CardContent(
         data=data,

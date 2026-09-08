@@ -39,6 +39,7 @@
   "severity": "moderate",
   "hazards": [
    "haze"
-  ]
+  ],
+  "text_key": "scenario.severe_aqi.nowcast"
  }
 }

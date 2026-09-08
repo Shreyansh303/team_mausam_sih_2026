@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
+from app.core.i18n import token
 from app.core.timeutil import iso, next_occurrence
 from app.services.util import THUNDER_CODES, has_code, hours_between, vmax, vmin
 
@@ -27,40 +28,42 @@ def verdict_for(
     aqi_category: str | None,
     thunderstorm: bool,
     severe_warning: bool,
-) -> tuple[str, list[str]]:
-    reasons: list[str] = []
+) -> tuple[str, list[dict[str, Any]]]:
+    """Verdict plus its reasons as deferred translations (05 §i18n) — the card builder
+    resolves them with the request language."""
+    reasons: list[dict[str, Any]] = []
     if severe_warning:
-        reasons.append("Orange/red warning in force")
+        reasons.append(token("reason.severe_warning"))
     if thunderstorm:
-        reasons.append("Thunderstorm expected")
+        reasons.append(token("reason.thunderstorm"))
     if visibility_km is not None and visibility_km < 0.5:
-        reasons.append(f"Visibility {visibility_km:.1f} km")
+        reasons.append(token("reason.visibility", km=f"{visibility_km:.1f}"))
     if reasons:
         return "avoid", reasons
 
     if precip_prob_pct is not None and precip_prob_pct >= 70:
-        reasons.append(f"Rain chance {int(precip_prob_pct)}%")
+        reasons.append(token("reason.rain_chance", pct=int(precip_prob_pct)))
     if visibility_km is not None and visibility_km < 1:
-        reasons.append(f"Visibility {visibility_km:.1f} km")
+        reasons.append(token("reason.visibility", km=f"{visibility_km:.1f}"))
     if feels_like_c is not None and feels_like_c >= 42:
-        reasons.append(f"Feels like {feels_like_c:.0f}°C")
+        reasons.append(token("reason.feels_like", temp=f"{feels_like_c:.0f}"))
     if aqi_category == "Severe":
-        reasons.append("Air quality Severe")
+        reasons.append(token("reason.aqi_severe"))
     if reasons:
         return "poor", reasons
 
     if precip_prob_pct is not None and precip_prob_pct >= 40:
-        reasons.append(f"Rain chance {int(precip_prob_pct)}%")
+        reasons.append(token("reason.rain_chance", pct=int(precip_prob_pct)))
     if aqi_category == "Very Poor":
-        reasons.append("Air quality Very Poor")
+        reasons.append(token("reason.aqi_very_poor"))
     if feels_like_c is not None and feels_like_c >= 38:
-        reasons.append(f"Feels like {feels_like_c:.0f}°C")
+        reasons.append(token("reason.feels_like", temp=f"{feels_like_c:.0f}"))
     if visibility_km is not None and visibility_km < 2:
-        reasons.append(f"Visibility {visibility_km:.1f} km")
+        reasons.append(token("reason.visibility", km=f"{visibility_km:.1f}"))
     if reasons:
         return "caution", reasons
 
-    return "good", ["Calm and clear through the window"]
+    return "good", [token("reason.school.calm")]
 
 
 def build(

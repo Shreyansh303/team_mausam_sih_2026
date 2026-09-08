@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
+from app.core import i18n
 from app.core.timeutil import daypart, iso, season
 from app.services import (
     comfort,
@@ -453,11 +454,15 @@ def test_packing_rules():
          "precip_sum_mm": 0.0, "condition_code": 0},
     ]
     hourly = [{"humidity_pct": 85.0}]
-    items = {i["item"] for i in packing.build(
-        daily=daily, hourly=hourly, aqi_category="Very Poor")["items"]}
-    assert {"Raincoat / umbrella", "Warm layers", "Heavy jacket", "Sunscreen & hat",
-            "Light cotton clothes", "Windbreaker", "N95 mask", "Waterproof boots",
-            "Extra water / ORS"} <= items
+    built = packing.build(daily=daily, hourly=hourly, aqi_category="Very Poor")["items"]
+    # the service defers translation: items carry i18n keys, the card builder resolves them
+    items = {i["item_key"] for i in built}
+    assert {"packing.item.raincoat", "packing.item.warm_layers", "packing.item.heavy_jacket",
+            "packing.item.sunscreen_hat", "packing.item.light_cotton",
+            "packing.item.windbreaker", "packing.item.n95_mask",
+            "packing.item.waterproof_boots", "packing.item.water_ors"} <= items
+    assert all(i["reason"]["key"].startswith("packing.reason.") for i in built)
+    assert i18n.t("en", "packing.item.raincoat") == "Raincoat / umbrella"
 
 
 def test_planting_zone_season_and_soil_tips():
@@ -475,7 +480,8 @@ def test_planting_zone_season_and_soil_tips():
     assert out["zone"] == "north" and out["season"] == "kharif"
     assert 2 <= len(out["crops"]) <= 4
     assert out["soil_status"] == "very_dry"
-    assert any("Delay irrigation" in tip for tip in out["tips"])
+    assert any(tip["key"] == "planting.tip.delay_irrigation" for tip in out["tips"])
+    assert i18n.resolve("en", out["tips"][-1]).startswith("Delay irrigation")
 
 
 @pytest.mark.parametrize(

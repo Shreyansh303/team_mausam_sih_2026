@@ -1500,7 +1500,7 @@
       ],
       "insight": {
         "headline": "Air quality is Satisfactory (75)",
-        "detail": "pollutant.CO is the dominant pollutant at — µg/m³.",
+        "detail": "Carbon monoxide is the dominant pollutant at 1542 µg/m³.",
         "icon": "aqi"
       },
       "data": {

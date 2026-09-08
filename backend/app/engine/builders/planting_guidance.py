@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from app.core.i18n import t
+import re
+
+from app.core.i18n import resolve_all, t
 from app.engine.builders.base import CardContent
 from app.engine.context import Bundle, Context, UserProfile
 
@@ -14,21 +16,14 @@ def build(bundle: Bundle, ctx: Context, profile: UserProfile) -> CardContent:
     block = bundle.block("planting")
     season = block.get("season") or "kharif"
     zone = block.get("zone") or "north"
-    crops = [
-        {
-            "name": c.get("name"),
-            "stage": c.get("stage"),
-            "action": c.get("action"),
-        }
-        for c in (block.get("crops") or [])
-    ][:MAX_CROPS]
+    crops = [_localized_crop(lang, c) for c in (block.get("crops") or [])][:MAX_CROPS]
 
     data = {
         "season": season,
         "zone": zone,
         "month": block.get("month") or ctx.now.month,
         "crops": crops,
-        "tips": list(block.get("tips") or []),
+        "tips": resolve_all(lang, block.get("tips")),
     }
     localized_season = t(lang, "season.crop." + season)
     localized_zone = t(lang, "zone." + zone)
@@ -56,3 +51,18 @@ def build(bundle: Bundle, ctx: Context, profile: UserProfile) -> CardContent:
         source="estimated",
         estimated=True,
     )
+
+
+def _localized_crop(lang: str, crop: dict) -> dict:
+    """Crop names and their stage action come out of `planting_calendar.json` in English;
+    both resolve through the catalog, falling back to the calendar's own wording."""
+    raw_name = str(crop.get("name") or "")
+    stage = str(crop.get("stage") or "grow")
+    name_key = "crop." + re.sub(r"[^a-z0-9]+", "_", raw_name.lower()).strip("_")
+    name = t(lang, name_key)
+    if name == name_key:
+        name = raw_name
+    action = t(lang, "planting.action." + stage, crop=name)
+    if action == "planting.action." + stage:
+        action = crop.get("action") or ""
+    return {"name": name, "stage": stage, "action": action}

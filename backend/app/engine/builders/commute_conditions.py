@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from app.core.i18n import t
+from app.core.i18n import resolve_all, t
 from app.engine.builders.base import CardContent, hhmm
 from app.engine.context import Bundle, Context, UserProfile
 
@@ -23,6 +23,9 @@ def build(bundle: Bundle, ctx: Context, profile: UserProfile) -> CardContent:
     lang = ctx.lang
     block = bundle.block("commute")
     windows = [{k: w.get(k) for k in WINDOW_KEYS} for w in (block.get("windows") or [])]
+    for window in windows:
+        # the service emits deferred translations; 02 asks for plain strings here
+        window["reasons"] = resolve_all(lang, window.get("reasons"))
     overall = block.get("overall_impact") or "low"
     traffic = block.get("traffic") or {"congestion_pct": 0, "source": "estimated"}
     delay = max((int(w.get("delay_min") or 0) for w in windows), default=0)

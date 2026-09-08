@@ -40,6 +40,9 @@ POLLUTANT_LABEL = {
     "co": "CO",
 }
 
+#: Display label → the snapshot/i18n key it came from ("PM2.5" → "pm2_5").
+POLLUTANT_KEY = {label: key for key, label in POLLUTANT_LABEL.items()}
+
 
 def sub_index(pollutant: str, value: float | None) -> float | None:
     """CPCB sub-index for one pollutant. `co` must already be in mg/m³."""

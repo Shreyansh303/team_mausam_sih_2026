@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
+from app.core.i18n import token
 from app.services.util import (
     FOG_CODES,
     SNOW_CODES,
@@ -76,7 +77,10 @@ def build(
     return {
         "risk": risk,
         "hazards": sorted(set(hazards)),
+        # `detail` is the English rendering; `detail_tokens` is what the card builder localizes
+        # (05 §i18n): the first entry is the lead, the rest are the "; "-joined bits.
         "detail": detail,
+        "detail_tokens": _detail_tokens(risk, hazards, vis, gust, prob),
         "visibility_km": None if vis is None else round(vis, 2),
         "gust_kph": gust,
         "precip_prob_pct": prob,
@@ -104,3 +108,24 @@ def _detail(
         bits.append(", ".join(h.replace("_", " ") for h in hazards))
     lead = "Delays likely" if risk == "high" else "Minor delays possible"
     return f"{lead}: {'; '.join(bits)}." if bits else f"{lead}."
+
+
+def _detail_tokens(
+    risk: str,
+    hazards: list[str],
+    vis: float | None,
+    gust: float | None,
+    prob: float | None,
+) -> list[dict[str, Any]]:
+    if risk == "low":
+        return [token("flight.detail.none")]
+    bits: list[dict[str, Any]] = []
+    if vis is not None and vis < 3:
+        bits.append(token("flight.bit.visibility", km=f"{vis:.1f}"))
+    if gust is not None and gust >= 45:
+        bits.append(token("flight.bit.gusts", kph=int(gust)))
+    if prob is not None and prob >= 70:
+        bits.append(token("flight.bit.rain", pct=int(prob)))
+    if not bits and hazards:
+        bits += [token("hazard." + h) for h in hazards]
+    return [token("flight.lead." + ("high" if risk == "high" else "medium")), *bits]

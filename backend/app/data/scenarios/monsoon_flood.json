@@ -56,6 +56,7 @@
   "hazards": [
    "very_heavy_rain",
    "flood"
-  ]
+  ],
+  "text_key": "scenario.monsoon_flood.nowcast"
  }
 }

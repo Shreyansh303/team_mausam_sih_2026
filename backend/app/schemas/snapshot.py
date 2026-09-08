@@ -130,6 +130,9 @@ class Nowcast(BaseModel):
     issued_at: str
     valid_till: str
     text: str
+    #: Deferred translation of `text` (`{"key": …, "params": {…}}`) — the card builder
+    #: resolves it with the request language, like `Tides.disclaimer_key`.
+    text_token: dict[str, Any] | None = None
     severity: str = "none"  # none | moderate | severe
     hazards: list[str] = Field(default_factory=list)
     source: str = "derived"

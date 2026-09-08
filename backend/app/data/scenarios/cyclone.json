@@ -64,6 +64,7 @@
    "cyclone",
    "strong_wind",
    "very_heavy_rain"
-  ]
+  ],
+  "text_key": "scenario.cyclone.nowcast"
  }
 }

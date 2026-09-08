@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
 
-from app.core.i18n import t
+from app.core.i18n import resolve, t
 from app.core.timeutil import parse_any
 from app.engine.context import Bundle, Context, UserProfile
 
@@ -47,13 +47,29 @@ def hhmm(value: str | None) -> str:
         return "—"
 
 
-def daylabel(value: str | None) -> str:
+#: Weekday / month abbreviations resolve through the catalog — `strftime` is locale-blind here.
+DOW = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")
+MONTHS = ("jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec")
+
+
+def daylabel(lang: str, value: str | None, *, with_dow: bool = False) -> str:
+    """`2026-09-12` → `12 Sep`, or `Sat 12 Sep` with `with_dow` — localized (05 §i18n)."""
     if not value:
         return "—"
     try:
-        return parse_any(value).strftime("%d %b")
+        moment = parse_any(value)
     except (TypeError, ValueError):
         return str(value)
+    month = t(lang, "month." + MONTHS[moment.month - 1])
+    if with_dow:
+        return t(
+            lang,
+            "date.dow_day_month",
+            dow=t(lang, "dow." + DOW[moment.weekday()]),
+            day=moment.day,
+            month=month,
+        )
+    return t(lang, "date.day_month", day=moment.day, month=month)
 
 
 def num(value: Any, digits: int = 0) -> str:
@@ -84,3 +100,31 @@ def local_now(ctx: Context) -> datetime:
 
 def advice_list(lang: str, keys: list[str], **kw: Any) -> list[str]:
     return [t(lang, k, **kw) for k in keys]
+
+
+def flight_detail(lang: str, block: dict[str, Any]) -> str:
+    """Compose `flight_risk.detail_tokens` into one sentence in `lang` (05 §i18n)."""
+    tokens = list(block.get("detail_tokens") or [])
+    if not tokens:
+        return str(block.get("detail") or "")
+    lead = resolve(lang, tokens[0])
+    bits = [resolve(lang, tok) for tok in tokens[1:]]
+    return f"{lead}: {'; '.join(bits)}." if bits else lead
+
+
+def localized_warning(lang: str, warning: dict[str, Any]) -> dict[str, Any]:
+    """Scenario warnings carry canned copy; the catalog holds it under
+    `scenario.warning.<hazard>.{title,description}`. IMD and admin-pushed warnings are written
+    by a human and pass through untouched."""
+    if warning.get("source") != "scenario":
+        return warning
+    hazard = str(warning.get("hazard") or "other")
+    out = dict(warning)
+    for field, key in (
+        ("title", f"scenario.warning.{hazard}.title"),
+        ("description", f"scenario.warning.{hazard}.description"),
+    ):
+        value = t(lang, key)
+        if value != key:
+            out[field] = value
+    return out

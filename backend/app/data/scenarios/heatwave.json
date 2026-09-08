@@ -52,6 +52,7 @@
   "severity": "severe",
   "hazards": [
    "heatwave"
-  ]
+  ],
+  "text_key": "scenario.heatwave.nowcast"
  }
 }

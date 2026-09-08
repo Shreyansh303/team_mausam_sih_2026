@@ -53,6 +53,7 @@
   "hazards": [
    "thunderstorm",
    "lightning"
-  ]
+  ],
+  "text_key": "nowcast.text.thunderstorm"
  }
 }

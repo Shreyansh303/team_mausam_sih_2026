@@ -28,7 +28,7 @@
     "lang": "en"
   },
   "banner": {
-    "warning_id": "wrn_f05befdd59",
+    "warning_id": "wrn_6e36a7d75f",
     "severity": "orange",
     "title": "Orange warning: thunderstorm with lightning",
     "color_hex": "#F28C28"
@@ -384,7 +384,7 @@
       "data": {
         "warnings": [
           {
-            "id": "wrn_f05befdd59",
+            "id": "wrn_6e36a7d75f",
             "severity": "orange",
             "hazard": "thunderstorm",
             "title": "Orange warning: thunderstorm with lightning",
@@ -667,7 +667,7 @@
       ],
       "insight": {
         "headline": "Air quality is Moderate (178)",
-        "detail": "pollutant.PM2.5 is the dominant pollutant at — µg/m³.",
+        "detail": "PM2.5 is the dominant pollutant at 84 µg/m³.",
         "icon": "aqi"
       },
       "data": {

@@ -59,6 +59,7 @@
   "severity": "moderate",
   "hazards": [
    "fog"
-  ]
+  ],
+  "text_key": "scenario.dense_fog.nowcast"
  }
 }

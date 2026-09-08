@@ -53,6 +53,7 @@
   "severity": "moderate",
   "hazards": [
    "cold_wave"
-  ]
+  ],
+  "text_key": "scenario.frost.nowcast"
  }
 }
