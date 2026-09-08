@@ -533,4 +533,24 @@ class LHi extends L {
 
   @override
   String get wsOffline => 'जुड़ा नहीं';
+
+  @override
+  String get warningMovedToTop => 'एक चेतावनी आपकी फ़ीड में सबसे ऊपर आ गई।';
+
+  @override
+  String get view => 'देखें';
+
+  @override
+  String sampleDataBanner(String url) {
+    return 'नमूना डेटा — $url पर बैकएंड उपलब्ध नहीं है।';
+  }
+
+  @override
+  String get liteBadge => 'लाइट';
+
+  @override
+  String get liveUpdates => 'लाइव अपडेट जुड़े हैं';
+
+  @override
+  String get engineFooterSemantics => 'रैंकिंग विवरण';
 }

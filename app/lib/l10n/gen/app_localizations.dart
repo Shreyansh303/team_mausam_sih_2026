@@ -1068,6 +1068,42 @@ abstract class L {
   /// In en, this message translates to:
   /// **'not connected'**
   String get wsOffline;
+
+  /// No description provided for @warningMovedToTop.
+  ///
+  /// In en, this message translates to:
+  /// **'A warning moved to the top of your feed.'**
+  String get warningMovedToTop;
+
+  /// No description provided for @view.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get view;
+
+  /// No description provided for @sampleDataBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample data — the backend at {url} is not reachable.'**
+  String sampleDataBanner(String url);
+
+  /// No description provided for @liteBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Lite'**
+  String get liteBadge;
+
+  /// No description provided for @liveUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Live updates connected'**
+  String get liveUpdates;
+
+  /// No description provided for @engineFooterSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Ranking details'**
+  String get engineFooterSemantics;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

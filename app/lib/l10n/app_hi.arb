@@ -187,5 +187,13 @@
   "wsConnecting": "जुड़ रहा है…",
   "wsReconnecting": "फिर जुड़ रहा है…",
   "wsUnauthorized": "नया टोकन चाहिए",
-  "wsOffline": "जुड़ा नहीं"
+  "wsOffline": "जुड़ा नहीं",
+
+  "warningMovedToTop": "एक चेतावनी आपकी फ़ीड में सबसे ऊपर आ गई।",
+  "view": "देखें",
+  "sampleDataBanner": "नमूना डेटा — {url} पर बैकएंड उपलब्ध नहीं है।",
+  "@sampleDataBanner": {"placeholders": {"url": {"type": "String"}}},
+  "liteBadge": "लाइट",
+  "liveUpdates": "लाइव अपडेट जुड़े हैं",
+  "engineFooterSemantics": "रैंकिंग विवरण"
 }

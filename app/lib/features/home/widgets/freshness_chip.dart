@@ -9,10 +9,18 @@ import '../../../l10n/gen/app_localizations.dart';
 /// It also says *where* the payload came from, because during a demo the difference between a
 /// live backend, a cached copy and the bundled sample is exactly what a judge will ask about.
 class FreshnessChip extends StatelessWidget {
-  const FreshnessChip({super.key, required this.result, this.onRefresh});
+  const FreshnessChip({
+    super.key,
+    required this.result,
+    this.onRefresh,
+    this.live = false,
+  });
 
   final HomeResult result;
   final VoidCallback? onRefresh;
+
+  /// `true` while `/ws/alerts` is connected — the green dot a judge can point at.
+  final bool live;
 
   String _label(L l) {
     final minutes =
@@ -43,6 +51,20 @@ class FreshnessChip extends StatelessWidget {
 
     return Row(
       children: [
+        if (live) ...[
+          Semantics(
+            label: l.liveUpdates,
+            child: Container(
+              width: 7,
+              height: 7,
+              decoration: const BoxDecoration(
+                color: Color(0xFF2E7D32),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          const SizedBox(width: 5),
+        ],
         Icon(icon, size: 14, color: theme.colorScheme.onSurfaceVariant),
         const SizedBox(width: 5),
         Flexible(

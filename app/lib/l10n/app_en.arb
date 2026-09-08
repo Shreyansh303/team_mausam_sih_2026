@@ -188,5 +188,13 @@
   "wsConnecting": "connecting…",
   "wsReconnecting": "reconnecting…",
   "wsUnauthorized": "needs a new token",
-  "wsOffline": "not connected"
+  "wsOffline": "not connected",
+
+  "warningMovedToTop": "A warning moved to the top of your feed.",
+  "view": "View",
+  "sampleDataBanner": "Sample data — the backend at {url} is not reachable.",
+  "@sampleDataBanner": {"placeholders": {"url": {"type": "String"}}},
+  "liteBadge": "Lite",
+  "liveUpdates": "Live updates connected",
+  "engineFooterSemantics": "Ranking details"
 }

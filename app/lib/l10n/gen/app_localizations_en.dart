@@ -532,4 +532,24 @@ class LEn extends L {
 
   @override
   String get wsOffline => 'not connected';
+
+  @override
+  String get warningMovedToTop => 'A warning moved to the top of your feed.';
+
+  @override
+  String get view => 'View';
+
+  @override
+  String sampleDataBanner(String url) {
+    return 'Sample data — the backend at $url is not reachable.';
+  }
+
+  @override
+  String get liteBadge => 'Lite';
+
+  @override
+  String get liveUpdates => 'Live updates connected';
+
+  @override
+  String get engineFooterSemantics => 'Ranking details';
 }
