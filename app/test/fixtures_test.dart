@@ -186,6 +186,25 @@ void main() {
     }
   });
 
+  // C1 regression. The judge demo runs on a demo clock (docs/00 step 2, "Home at 7:30 AM"),
+  // and the hero used to keep the *live* observation while `context.now` said 07:30 — a moon
+  // over a dawn feed. The reading and the clock have to agree in every reference payload.
+  test('the hero reading agrees with context.now', () {
+    const dayParts = <String>{'dawn', 'morning', 'midday', 'afternoon'};
+    const nightParts = <String>{'night', 'late'};
+    for (final entry in fixtures) {
+      final home = HomeResponse.fromJson(entry.value);
+      final hero = home.hero!;
+      final isDay = hero.data['is_day'];
+      final daypart = home.context.daypart;
+      if (isDay == null || !(dayParts.contains(daypart) || nightParts.contains(daypart))) continue;
+      expect(isDay, dayParts.contains(daypart),
+          reason: '${entry.key}: hero.is_day=$isDay under daypart "$daypart"');
+      expect(hero.data['icon'], isDay == true ? isNot('moon') : isNot('sun'),
+          reason: '${entry.key}: hero icon under daypart "$daypart"');
+    }
+  });
+
   test('every payload round-trips through toJson', () {
     for (final entry in fixtures) {
       final home = HomeResponse.fromJson(entry.value);

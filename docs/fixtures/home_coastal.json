@@ -49,23 +49,23 @@
     "insight": {
       "headline": "26°C, feels like 26°C — Clear sky",
       "detail": "Humidity 45%, wind 8 km/h; AQI Satisfactory (60).",
-      "icon": "moon"
+      "icon": "sun"
     },
     "data": {
       "temp_c": 26.0,
       "feels_like_c": 26.5,
       "condition_code": 0,
       "condition_text": "Clear sky",
-      "icon": "moon",
+      "icon": "sun",
       "humidity_pct": 45.0,
       "wind_kph": 8.0,
-      "wind_dir": "S",
+      "wind_dir": "ESE",
       "uv_index": 5.0,
       "visibility_km": 20.0,
       "pressure_hpa": 1013.0,
       "tmax_c": 29.0,
       "tmin_c": 19.0,
-      "is_day": false,
+      "is_day": true,
       "aqi": 60,
       "aqi_category": "Satisfactory",
       "sunrise": "2026-09-07T06:22:00+05:30",
@@ -443,6 +443,34 @@
           {
             "time": "2026-09-09T00:00:00+05:30",
             "uv": 4.0
+          },
+          {
+            "time": "2026-09-09T01:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-09T02:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-09T03:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-09T04:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-09T05:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-09T06:00:00+05:30",
+            "uv": 4.0
+          },
+          {
+            "time": "2026-09-09T07:00:00+05:30",
+            "uv": 4.0
           }
         ]
       },
@@ -477,7 +505,7 @@
       "type": "wind",
       "instance_id": "wind",
       "title": "Wind",
-      "subtitle": "8 km/h S",
+      "subtitle": "8 km/h ESE",
       "size": "small",
       "renderer": "metric",
       "urgency": 0.0,
@@ -491,15 +519,15 @@
         }
       ],
       "insight": {
-        "headline": "8 km/h from S — Light breeze",
+        "headline": "8 km/h from ESE — Light breeze",
         "detail": "Gusting to 14 km/h.",
         "icon": "wind"
       },
       "data": {
         "speed_kph": 8.0,
         "gust_kph": 14.0,
-        "direction_deg": 180,
-        "direction_text": "S",
+        "direction_deg": 121,
+        "direction_text": "ESE",
         "beaufort": 2,
         "beaufort_text": "Light breeze",
         "hourly": [
@@ -569,6 +597,34 @@
           },
           {
             "time": "2026-09-09T00:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-09T01:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-09T02:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-09T03:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-09T04:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-09T05:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-09T06:00:00+05:30",
+            "speed_kph": 8.0
+          },
+          {
+            "time": "2026-09-09T07:00:00+05:30",
             "speed_kph": 8.0
           }
         ],
@@ -974,6 +1030,76 @@
             "icon": "moon",
             "wind_kph": 8.0,
             "is_day": false
+          },
+          {
+            "time": "2026-09-09T01:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "moon",
+            "wind_kph": 8.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T02:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "moon",
+            "wind_kph": 8.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T03:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "moon",
+            "wind_kph": 8.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T04:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "moon",
+            "wind_kph": 8.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T05:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "moon",
+            "wind_kph": 8.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T06:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun",
+            "wind_kph": 8.0,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-09T07:00:00+05:30",
+            "temp_c": 26.0,
+            "precip_prob_pct": 5.0,
+            "precip_mm": 0.0,
+            "condition_code": 0,
+            "icon": "sun",
+            "wind_kph": 8.0,
+            "is_day": true
           }
         ]
       },
@@ -1128,7 +1254,7 @@
       "type": "best_workout_window",
       "instance_id": "best_workout_window",
       "title": "Best time to work out",
-      "subtitle": "08:00–01:00 · Great",
+      "subtitle": "08:00–08:00 · Great",
       "size": "medium",
       "renderer": "timeline",
       "urgency": 0.2,
@@ -1142,16 +1268,16 @@
         }
       ],
       "insight": {
-        "headline": "Best window 08:00–01:00",
-        "detail": "Score 91/100 · 26°C · AQI 60.",
+        "headline": "Best window 08:00–08:00",
+        "detail": "Score 89/100 · 26°C · AQI 60.",
         "icon": "run"
       },
       "data": {
         "windows": [
           {
             "start": "2026-09-08T08:00:00+05:30",
-            "end": "2026-09-09T01:00:00+05:30",
-            "score": 91,
+            "end": "2026-09-09T08:00:00+05:30",
+            "score": 89,
             "temp_c": 26.0,
             "aqi": 60,
             "uv": 4.0,
@@ -1161,8 +1287,8 @@
         ],
         "best": {
           "start": "2026-09-08T08:00:00+05:30",
-          "end": "2026-09-09T01:00:00+05:30",
-          "score": 91,
+          "end": "2026-09-09T08:00:00+05:30",
+          "score": 89,
           "temp_c": 26.0,
           "aqi": 60,
           "uv": 4.0,
@@ -1237,6 +1363,34 @@
           {
             "time": "2026-09-09T00:00:00+05:30",
             "score": 75
+          },
+          {
+            "time": "2026-09-09T01:00:00+05:30",
+            "score": 75
+          },
+          {
+            "time": "2026-09-09T02:00:00+05:30",
+            "score": 75
+          },
+          {
+            "time": "2026-09-09T03:00:00+05:30",
+            "score": 75
+          },
+          {
+            "time": "2026-09-09T04:00:00+05:30",
+            "score": 75
+          },
+          {
+            "time": "2026-09-09T05:00:00+05:30",
+            "score": 75
+          },
+          {
+            "time": "2026-09-09T06:00:00+05:30",
+            "score": 100
+          },
+          {
+            "time": "2026-09-09T07:00:00+05:30",
+            "score": 100
           }
         ],
         "no_good_window_reason": null
@@ -1612,7 +1766,7 @@
         "o3": 60.0,
         "no2": 18.0,
         "so2": 8.0,
-        "co": 0.126,
+        "co": 0.151,
         "hourly": [
           {
             "time": "2026-09-08T07:00:00+05:30",
@@ -2165,7 +2319,7 @@
       "type": "soil_moisture",
       "instance_id": "soil_moisture",
       "title": "Soil moisture",
-      "subtitle": "0.28 m³/m³ · Adequate",
+      "subtitle": "0.27 m³/m³ · Adequate",
       "size": "medium",
       "renderer": "gauge",
       "urgency": 0.0,
@@ -2179,15 +2333,15 @@
         }
       ],
       "insight": {
-        "headline": "Topsoil is Adequate (0.28 m³/m³)",
+        "headline": "Topsoil is Adequate (0.27 m³/m³)",
         "detail": "Soil moisture is adequate.",
         "icon": "soil"
       },
       "data": {
-        "surface_m3m3": 0.275,
-        "root_zone_m3m3": 0.288,
+        "surface_m3m3": 0.27,
+        "root_zone_m3m3": 0.284,
         "status": "adequate",
-        "soil_temp_c": 24.9,
+        "soil_temp_c": 25.3,
         "days_since_rain": null,
         "advice": "Soil moisture is adequate."
       },
@@ -2460,7 +2614,7 @@
   "hidden_types": [],
   "freshness": {
     "weather": "2026-09-08T07:30:00+05:30",
-    "air": "2026-09-07T01:30:00+05:30",
+    "air": "2026-09-08T07:00:00+05:30",
     "marine": "2026-09-07T01:30:00+05:30",
     "warnings": "2026-09-08T07:30:00+05:30"
   },

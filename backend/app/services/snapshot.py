@@ -105,8 +105,17 @@ def _km(metres: Any) -> float | None:
     return None if metres is None else round(float(metres) / 1000.0, 3)
 
 
-def normalize_forecast(payload: dict[str, Any], tzinfo: Any) -> dict[str, Any]:
-    """Open-Meteo forecast payload → Snapshot `current` / `hourly` / `daily`."""
+def normalize_forecast(
+    payload: dict[str, Any], tzinfo: Any, ref_now: datetime | None = None
+) -> dict[str, Any]:
+    """Open-Meteo forecast payload → Snapshot `current` / `hourly` / `daily`.
+
+    `ref_now` is the demo clock (`now_override`). When it is set the reading in `current` is
+    read off the forecast hour that matches it instead of Open-Meteo's live `current` block,
+    so the hero card, the 24-h strip and every derived metric agree with `context.now`
+    (docs/00 §Judge demo script step 2: "Home at 7:30 AM … hero shows now"). Without it
+    nothing changes: live data stays the real observation (CLAUDE.md §6 honest data).
+    """
     cur = payload.get("current") or {}
     hourly_block = payload.get("hourly") or {}
     daily_block = payload.get("daily") or {}
@@ -141,35 +150,61 @@ def normalize_forecast(payload: dict[str, Any], tzinfo: Any) -> dict[str, Any]:
         )
 
     cur_time = cur.get("time")
-    cur_dt = parse_local(cur_time, tzinfo) if cur_time else datetime.now(UTC).astimezone(tzinfo)
+    live_dt = parse_local(cur_time, tzinfo) if cur_time else datetime.now(UTC).astimezone(tzinfo)
+    cur_dt = ref_now.astimezone(tzinfo) if ref_now is not None else live_dt
     hour_key = cur_dt.replace(minute=0, second=0, microsecond=0)
     idx = next((i for i, h in enumerate(hours) if h["_dt"] == hour_key), None)
     if idx is None:
         idx = next((i for i, h in enumerate(hours) if h["_dt"] >= hour_key), 0)
     match = hours[idx] if hours else {}
 
-    code = cur.get("weather_code")
-    current = {
-        "time": iso(cur_dt),
-        "temp_c": cur.get("temperature_2m"),
-        "feels_like_c": cur.get("apparent_temperature"),
-        "humidity_pct": cur.get("relative_humidity_2m"),
-        "dew_point_c": comfort.dew_point_c(
-            cur.get("temperature_2m"), cur.get("relative_humidity_2m")
-        ),
-        "wind_kph": cur.get("wind_speed_10m"),
-        "wind_dir_deg": cur.get("wind_direction_10m"),
-        "gust_kph": cur.get("wind_gusts_10m"),
-        "pressure_hpa": cur.get("pressure_msl"),
-        # 05: current-hour uv_index / visibility come from the matching hourly row
-        "visibility_km": match.get("visibility_km"),
-        "uv_index": match.get("uv_index"),
-        "cloud_pct": cur.get("cloud_cover"),
-        "precip_mm": cur.get("precipitation"),
-        "condition_code": None if code is None else int(code),
-        "condition_text": condition_text(code),
-        "is_day": bool(cur.get("is_day", 1)),
-    }
+    if ref_now is not None and match:
+        # Demo clock: the forecast hour *is* "now".
+        code = match.get("condition_code")
+        current = {
+            "time": iso(cur_dt),
+            "temp_c": match.get("temp_c"),
+            "feels_like_c": match.get("feels_like_c"),
+            "humidity_pct": match.get("humidity_pct"),
+            "dew_point_c": match.get("dew_point_c")
+            if match.get("dew_point_c") is not None
+            else comfort.dew_point_c(match.get("temp_c"), match.get("humidity_pct")),
+            "wind_kph": match.get("wind_kph"),
+            "wind_dir_deg": match.get("wind_dir_deg"),
+            "gust_kph": match.get("gust_kph"),
+            # `pressure_msl` is a `current`-only field on Open-Meteo — no hourly series to read.
+            "pressure_hpa": cur.get("pressure_msl"),
+            "visibility_km": match.get("visibility_km"),
+            "uv_index": match.get("uv_index"),
+            "cloud_pct": match.get("cloud_pct"),
+            "precip_mm": match.get("precip_mm"),
+            "condition_code": None if code is None else int(code),
+            "condition_text": condition_text(code),
+            "is_day": bool(match.get("is_day")),
+        }
+    else:
+        code = cur.get("weather_code")
+        current = {
+            "time": iso(cur_dt),
+            "temp_c": cur.get("temperature_2m"),
+            "feels_like_c": cur.get("apparent_temperature"),
+            "humidity_pct": cur.get("relative_humidity_2m"),
+            "dew_point_c": comfort.dew_point_c(
+                cur.get("temperature_2m"), cur.get("relative_humidity_2m")
+            ),
+            "wind_kph": cur.get("wind_speed_10m"),
+            "wind_dir_deg": cur.get("wind_direction_10m"),
+            "gust_kph": cur.get("wind_gusts_10m"),
+            "pressure_hpa": cur.get("pressure_msl"),
+            # 05: current-hour uv_index / visibility come from the matching hourly row
+            "visibility_km": match.get("visibility_km"),
+            "uv_index": match.get("uv_index"),
+            "cloud_pct": cur.get("cloud_cover"),
+            "precip_mm": cur.get("precipitation"),
+            "condition_code": None if code is None else int(code),
+            "condition_text": condition_text(code),
+            "is_day": bool(cur.get("is_day", 1)),
+        }
 
     dtimes = _series(daily_block, "time")
     days: list[dict[str, Any]] = []
@@ -207,10 +242,40 @@ def normalize_forecast(payload: dict[str, Any], tzinfo: Any) -> dict[str, Any]:
     return {"current": current, "hourly": window, "daily": days, "now": cur_dt}
 
 
-def normalize_air(payload: dict[str, Any] | None, tzinfo: Any, now: datetime) -> dict[str, Any] | None:
+def normalize_air(
+    payload: dict[str, Any] | None,
+    tzinfo: Any,
+    now: datetime,
+    demo_clock: bool = False,
+) -> dict[str, Any] | None:
     if not payload:
         return None
     cur = payload.get("current") or {}
+    if demo_clock:
+        # Same rule as `normalize_forecast`: under a demo clock the hour that matches
+        # `context.now` is "now", so the AQI a judge sees belongs to the time on screen.
+        hour_key = now.astimezone(tzinfo).replace(minute=0, second=0, microsecond=0)
+        block = payload.get("hourly") or {}
+        stamps = _series(block, "time")
+        at = next(
+            (i for i, t in enumerate(stamps) if parse_local(t, tzinfo) == hour_key),
+            None,
+        )
+        if at is not None:
+            cur = {
+                "time": stamps[at],
+                **{
+                    field: _at(_series(block, field), at)
+                    for field in (
+                        "pm2_5",
+                        "pm10",
+                        "ozone",
+                        "nitrogen_dioxide",
+                        "sulphur_dioxide",
+                        "carbon_monoxide",
+                    )
+                },
+            }
     co_mg = aqi_cpcb.co_ugm3_to_mgm3(cur.get("carbon_monoxide"))
     computed = aqi_cpcb.compute(
         pm2_5=cur.get("pm2_5"),
@@ -769,12 +834,13 @@ async def build_snapshot(
         }
     )
 
-    norm = normalize_forecast(payload, tzinfo)
-    ref_now = (now.astimezone(tzinfo) if now else norm["now"]).replace(microsecond=0)
+    demo_clock = now.astimezone(tzinfo).replace(microsecond=0) if now else None
+    norm = normalize_forecast(payload, tzinfo, demo_clock)
+    ref_now = (demo_clock or norm["now"]).replace(microsecond=0)
 
     air_res = got.get("air")
     air = (
-        normalize_air(air_res.data, tzinfo, ref_now)
+        normalize_air(air_res.data, tzinfo, ref_now, demo_clock is not None)
         if air_res is not None and not isinstance(air_res, BaseException) and air_res.ok
         else None
     )

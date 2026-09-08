@@ -228,6 +228,37 @@ def test_home_ordering_is_pinned_then_hero_then_ranked(client, guest):
     assert body["hero"]["type"] == "current_conditions"
 
 
+def test_now_override_moves_the_hero_and_reorders_the_feed(client, guest):
+    """C1 regression — docs/00 §Judge demo script steps 2/3.
+
+    A morning demo clock has to change *both* halves of the screen: the hero reads the 07:30
+    forecast hour (daylight), and the school-run / workout cards outrank the night ordering.
+    """
+    morning = home(client, guest["headers"], personas="parent,fitness", now_override=NOW)
+    night = home(
+        client, guest["headers"], personas="parent,fitness",
+        now_override="2026-09-08T22:30:00+05:30",
+    )
+
+    assert morning["context"]["now"].startswith("2026-09-08T07:30")
+    assert morning["context"]["daypart"] == "dawn"
+    assert night["context"]["daypart"] == "late"
+
+    # hero content follows the clock, not the wall time of the recorded payload
+    assert morning["hero"]["data"]["is_day"] is True
+    assert night["hero"]["data"]["is_day"] is False
+    assert morning["hero"]["data"]["icon"] != night["hero"]["data"]["icon"]
+    assert morning["freshness"]["weather"].startswith("2026-09-08T07:30")
+
+    def rank(payload, wanted):
+        order = [c["type"] for c in payload["pinned"]] + [payload["hero"]["type"]]
+        order += [c["type"] for c in payload["cards"] + payload["more_cards"]]
+        return order.index(wanted)
+
+    for card in ("school_commute", "best_workout_window"):
+        assert rank(morning, card) < rank(night, card), card
+
+
 def test_home_place_id_and_missing_coordinates(client, guest):
     created = client.post(
         API + "/me/places",

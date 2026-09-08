@@ -2,10 +2,15 @@
 
 from __future__ import annotations
 
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 import pytest
 
 from app.services import snapshot as snapshot_svc
 from tests.conftest import DELHI, MUMBAI, PANAJI, SHIMLA
+
+IST = ZoneInfo("Asia/Kolkata")
 
 REQUIRED_DERIVED = {
     "comfort", "heat", "workout", "school_commute", "commute",
@@ -170,6 +175,51 @@ async def test_unknown_scenario_is_a_no_op_overlay():
     snap = await snapshot_svc.build_snapshot(*DELHI, scenario="does_not_exist")
     assert snap.warnings == []
     assert snap.sources["weather"] == "open-meteo"
+
+
+async def test_demo_clock_reads_current_off_that_hour():
+    """C1 regression — docs/00 §Judge demo script step 2: "Home at 7:30 AM … hero shows now".
+
+    The recorded payload's live observation is 2026-09-07T01:30 (night, 24.9 °C); the forecast
+    hour behind a 07:30 demo clock is daylight and 26.7 °C. Before the fix `current` kept the
+    live block, so the hero drew a moon while the feed claimed 07:30.
+    """
+    clock = datetime(2026, 9, 8, 7, 30, tzinfo=IST)
+    live = await snapshot_svc.build_snapshot(*DELHI)
+    demo = await snapshot_svc.build_snapshot(*DELHI, now=clock)
+
+    # No demo clock → the real observation, untouched (CLAUDE.md §6 honest data).
+    assert live.current.time.startswith("2026-09-07T01:30")
+    assert live.current.is_day is False
+    assert live.current.temp_c == 24.9
+
+    assert demo.current.time.startswith("2026-09-08T07:30")
+    assert demo.fetched_at.startswith("2026-09-08T07:30")
+    assert demo.current.is_day is True
+    assert demo.current.temp_c == 26.7
+    assert demo.current.visibility_km == 6.48
+    # the 24-h strip and the AQI series start at the demo hour too
+    assert demo.hourly[0].time.startswith("2026-09-08T07:00")
+    assert demo.air_quality.time.startswith("2026-09-08T07:00")
+    assert demo.air_quality.pm2_5 == 71.9
+    assert demo.air_quality.pm2_5 != live.air_quality.pm2_5
+
+
+async def test_demo_clock_at_night_keeps_is_day_false():
+    """The same path in the other direction — 22:30 must not be daylight."""
+    demo = await snapshot_svc.build_snapshot(*DELHI, now=datetime(2026, 9, 8, 22, 30, tzinfo=IST))
+    assert demo.current.time.startswith("2026-09-08T22:30")
+    assert demo.current.is_day is False
+    assert demo.current.temp_c == 28.7
+
+
+async def test_scenario_overlay_still_wins_over_the_demo_clock():
+    """The overlay is applied after normalization, so a scripted scenario is unaffected."""
+    snap = await snapshot_svc.build_snapshot(
+        *DELHI, scenario="clear_pleasant", now=datetime(2026, 9, 8, 7, 30, tzinfo=IST)
+    )
+    assert snap.current.temp_c == 26.0
+    assert snap.current.time.startswith("2026-09-08T07:30")
 
 
 @pytest.mark.parametrize("place", [DELHI, PANAJI])

@@ -28,7 +28,7 @@
     "lang": "en"
   },
   "banner": {
-    "warning_id": "wrn_6e36a7d75f",
+    "warning_id": "wrn_0286d63d22",
     "severity": "orange",
     "title": "Orange warning: thunderstorm with lightning",
     "color_hex": "#F28C28"
@@ -168,7 +168,7 @@
             "temp_c": 27.0,
             "precip_prob_pct": 80.0,
             "visibility_km": 3.0,
-            "aqi": 178,
+            "aqi": 138,
             "reasons": [
               "Orange/red warning in force",
               "Thunderstorm expected"
@@ -182,7 +182,7 @@
             "temp_c": 27.0,
             "precip_prob_pct": 80.0,
             "visibility_km": 3.0,
-            "aqi": 178,
+            "aqi": 138,
             "reasons": [
               "Orange/red warning in force",
               "Thunderstorm expected"
@@ -384,7 +384,7 @@
       "data": {
         "warnings": [
           {
-            "id": "wrn_6e36a7d75f",
+            "id": "wrn_0286d63d22",
             "severity": "orange",
             "hazard": "thunderstorm",
             "title": "Orange warning: thunderstorm with lightning",
@@ -452,7 +452,7 @@
     ],
     "insight": {
       "headline": "27°C, feels like 30°C — Thunderstorm",
-      "detail": "Humidity 84%, wind 38 km/h; AQI Moderate (178).",
+      "detail": "Humidity 84%, wind 38 km/h; AQI Moderate (138).",
       "icon": "thunderstorm"
     },
     "data": {
@@ -463,14 +463,14 @@
       "icon": "thunderstorm",
       "humidity_pct": 84.0,
       "wind_kph": 38.0,
-      "wind_dir": "NNW",
+      "wind_dir": "WSW",
       "uv_index": 1.0,
       "visibility_km": 3.0,
       "pressure_hpa": 1007.5,
       "tmax_c": 31.0,
       "tmin_c": 24.0,
-      "is_day": false,
-      "aqi": 178,
+      "is_day": true,
+      "aqi": 138,
       "aqi_category": "Moderate",
       "sunrise": "2026-09-07T06:02:00+05:30",
       "sunset": "2026-09-07T18:36:00+05:30",
@@ -644,7 +644,7 @@
       "type": "aqi",
       "instance_id": "aqi",
       "title": "Air quality",
-      "subtitle": "Moderate · 178",
+      "subtitle": "Moderate · 138",
       "size": "medium",
       "renderer": "gauge",
       "urgency": 0.3,
@@ -666,20 +666,20 @@
         }
       ],
       "insight": {
-        "headline": "Air quality is Moderate (178)",
-        "detail": "PM2.5 is the dominant pollutant at 84 µg/m³.",
+        "headline": "Air quality is Moderate (138)",
+        "detail": "PM2.5 is the dominant pollutant at 72 µg/m³.",
         "icon": "aqi"
       },
       "data": {
-        "aqi": 178,
+        "aqi": 138,
         "category": "Moderate",
         "dominant_pollutant": "PM2.5",
-        "pm2_5": 83.6,
-        "pm10": 83.6,
-        "o3": 10.0,
-        "no2": 84.2,
-        "so2": 55.1,
-        "co": 1.542,
+        "pm2_5": 71.9,
+        "pm10": 96.9,
+        "o3": 59.0,
+        "no2": 36.7,
+        "so2": 20.3,
+        "co": 0.95,
         "hourly": [
           {
             "time": "2026-09-08T07:00:00+05:30",
@@ -895,7 +895,7 @@
       "type": "rainfall_outlook",
       "instance_id": "rainfall_outlook",
       "title": "Rainfall outlook",
-      "subtitle": "136.0 mm / 72h",
+      "subtitle": "376.0 mm / 72h",
       "size": "medium",
       "renderer": "bar_chart",
       "urgency": 0.7,
@@ -909,13 +909,13 @@
         }
       ],
       "insight": {
-        "headline": "136.0 mm expected over the next 3 days",
+        "headline": "376.0 mm expected over the next 3 days",
         "detail": "7 rain day(s) and 315.0 mm in the coming week.",
         "icon": "heavy_rain"
       },
       "data": {
-        "next_24h_mm": 136.0,
-        "next_72h_mm": 136.0,
+        "next_24h_mm": 192.0,
+        "next_72h_mm": 376.0,
         "next_7d_mm": 315.0,
         "daily": [
           {
@@ -955,7 +955,7 @@
           }
         ],
         "rain_days": 7,
-        "advice": "About 136 mm of rain expected in 3 days — hold irrigation."
+        "advice": "About 376 mm of rain expected in 3 days — hold irrigation."
       },
       "actions": [
         {
@@ -1244,6 +1244,76 @@
             "icon": "thunderstorm",
             "wind_kph": 38.0,
             "is_day": false
+          },
+          {
+            "time": "2026-09-09T01:00:00+05:30",
+            "temp_c": 27.0,
+            "precip_prob_pct": 80.0,
+            "precip_mm": 8.0,
+            "condition_code": 95,
+            "icon": "thunderstorm",
+            "wind_kph": 38.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T02:00:00+05:30",
+            "temp_c": 27.0,
+            "precip_prob_pct": 80.0,
+            "precip_mm": 8.0,
+            "condition_code": 95,
+            "icon": "thunderstorm",
+            "wind_kph": 38.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T03:00:00+05:30",
+            "temp_c": 27.0,
+            "precip_prob_pct": 80.0,
+            "precip_mm": 8.0,
+            "condition_code": 95,
+            "icon": "thunderstorm",
+            "wind_kph": 38.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T04:00:00+05:30",
+            "temp_c": 27.0,
+            "precip_prob_pct": 80.0,
+            "precip_mm": 8.0,
+            "condition_code": 95,
+            "icon": "thunderstorm",
+            "wind_kph": 38.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T05:00:00+05:30",
+            "temp_c": 27.0,
+            "precip_prob_pct": 80.0,
+            "precip_mm": 8.0,
+            "condition_code": 95,
+            "icon": "thunderstorm",
+            "wind_kph": 38.0,
+            "is_day": false
+          },
+          {
+            "time": "2026-09-09T06:00:00+05:30",
+            "temp_c": 27.0,
+            "precip_prob_pct": 80.0,
+            "precip_mm": 8.0,
+            "condition_code": 95,
+            "icon": "thunderstorm",
+            "wind_kph": 38.0,
+            "is_day": true
+          },
+          {
+            "time": "2026-09-09T07:00:00+05:30",
+            "temp_c": 27.0,
+            "precip_prob_pct": 80.0,
+            "precip_mm": 8.0,
+            "condition_code": 95,
+            "icon": "thunderstorm",
+            "wind_kph": 38.0,
+            "is_day": true
           }
         ]
       },
@@ -1491,6 +1561,34 @@
           {
             "time": "2026-09-09T00:00:00+05:30",
             "score": 18
+          },
+          {
+            "time": "2026-09-09T01:00:00+05:30",
+            "score": 18
+          },
+          {
+            "time": "2026-09-09T02:00:00+05:30",
+            "score": 18
+          },
+          {
+            "time": "2026-09-09T03:00:00+05:30",
+            "score": 18
+          },
+          {
+            "time": "2026-09-09T04:00:00+05:30",
+            "score": 18
+          },
+          {
+            "time": "2026-09-09T05:00:00+05:30",
+            "score": 18
+          },
+          {
+            "time": "2026-09-09T06:00:00+05:30",
+            "score": 43
+          },
+          {
+            "time": "2026-09-09T07:00:00+05:30",
+            "score": 43
           }
         ],
         "no_good_window_reason": "No good outdoor window in the next 24 hours"
@@ -1611,6 +1709,34 @@
           {
             "time": "2026-09-09T00:00:00+05:30",
             "uv": 1.0
+          },
+          {
+            "time": "2026-09-09T01:00:00+05:30",
+            "uv": 1.0
+          },
+          {
+            "time": "2026-09-09T02:00:00+05:30",
+            "uv": 1.0
+          },
+          {
+            "time": "2026-09-09T03:00:00+05:30",
+            "uv": 1.0
+          },
+          {
+            "time": "2026-09-09T04:00:00+05:30",
+            "uv": 1.0
+          },
+          {
+            "time": "2026-09-09T05:00:00+05:30",
+            "uv": 1.0
+          },
+          {
+            "time": "2026-09-09T06:00:00+05:30",
+            "uv": 1.0
+          },
+          {
+            "time": "2026-09-09T07:00:00+05:30",
+            "uv": 1.0
           }
         ]
       },
@@ -1722,6 +1848,65 @@
       ],
       "personas": [
         "event_planner"
+      ],
+      "source": "scenario",
+      "estimated": false,
+      "updated_at": "2026-09-08T07:30:00+05:30"
+    },
+    {
+      "type": "soil_moisture",
+      "instance_id": "soil_moisture",
+      "title": "Soil moisture",
+      "subtitle": "0.40 m³/m³ · Saturated",
+      "size": "medium",
+      "renderer": "gauge",
+      "urgency": 0.3,
+      "severity": "advisory",
+      "pinned": false,
+      "score": 0.15,
+      "reasons": [
+        {
+          "code": "urgency:soil_moisture:advisory",
+          "text": "Soil moisture needs attention (an advisory)"
+        },
+        {
+          "code": "time:dawn",
+          "text": "Early-morning window"
+        }
+      ],
+      "insight": {
+        "headline": "Topsoil is Saturated (0.40 m³/m³)",
+        "detail": "Soil is saturated — check drainage to avoid root rot.",
+        "icon": "soil"
+      },
+      "data": {
+        "surface_m3m3": 0.402,
+        "root_zone_m3m3": 0.407,
+        "status": "saturated",
+        "soil_temp_c": 27.3,
+        "days_since_rain": 0,
+        "advice": "Soil is saturated — check drainage to avoid root rot."
+      },
+      "actions": [
+        {
+          "id": "details",
+          "label": "Details"
+        },
+        {
+          "id": "pin",
+          "label": "Pin"
+        },
+        {
+          "id": "dismiss",
+          "label": "Dismiss"
+        },
+        {
+          "id": "hide",
+          "label": "Hide this card"
+        }
+      ],
+      "personas": [
+        "agriculture"
       ],
       "source": "scenario",
       "estimated": false,
@@ -2048,7 +2233,7 @@
       "type": "wind",
       "instance_id": "wind",
       "title": "Wind",
-      "subtitle": "38 km/h NNW",
+      "subtitle": "38 km/h WSW",
       "size": "small",
       "renderer": "metric",
       "urgency": 0.0,
@@ -2057,15 +2242,15 @@
       "score": 0.0575,
       "reasons": [],
       "insight": {
-        "headline": "38 km/h from NNW — Fresh breeze",
+        "headline": "38 km/h from WSW — Fresh breeze",
         "detail": "Gusting to 68 km/h.",
         "icon": "wind"
       },
       "data": {
         "speed_kph": 38.0,
         "gust_kph": 68.0,
-        "direction_deg": 331,
-        "direction_text": "NNW",
+        "direction_deg": 244,
+        "direction_text": "WSW",
         "beaufort": 5,
         "beaufort_text": "Fresh breeze",
         "hourly": [
@@ -2135,6 +2320,34 @@
           },
           {
             "time": "2026-09-09T00:00:00+05:30",
+            "speed_kph": 38.0
+          },
+          {
+            "time": "2026-09-09T01:00:00+05:30",
+            "speed_kph": 38.0
+          },
+          {
+            "time": "2026-09-09T02:00:00+05:30",
+            "speed_kph": 38.0
+          },
+          {
+            "time": "2026-09-09T03:00:00+05:30",
+            "speed_kph": 38.0
+          },
+          {
+            "time": "2026-09-09T04:00:00+05:30",
+            "speed_kph": 38.0
+          },
+          {
+            "time": "2026-09-09T05:00:00+05:30",
+            "speed_kph": 38.0
+          },
+          {
+            "time": "2026-09-09T06:00:00+05:30",
+            "speed_kph": 38.0
+          },
+          {
+            "time": "2026-09-09T07:00:00+05:30",
             "speed_kph": 38.0
           }
         ],
@@ -2341,61 +2554,6 @@
       "updated_at": "2026-09-08T07:30:00+05:30"
     },
     {
-      "type": "soil_moisture",
-      "instance_id": "soil_moisture",
-      "title": "Soil moisture",
-      "subtitle": "0.40 m³/m³ · Wet",
-      "size": "medium",
-      "renderer": "gauge",
-      "urgency": 0.0,
-      "severity": "info",
-      "pinned": false,
-      "score": 0.0,
-      "reasons": [
-        {
-          "code": "time:dawn",
-          "text": "Early-morning window"
-        }
-      ],
-      "insight": {
-        "headline": "Topsoil is Wet (0.40 m³/m³)",
-        "detail": "Soil is wet — skip irrigation.",
-        "icon": "soil"
-      },
-      "data": {
-        "surface_m3m3": 0.397,
-        "root_zone_m3m3": 0.405,
-        "status": "wet",
-        "soil_temp_c": 23.9,
-        "days_since_rain": 0,
-        "advice": "Soil is wet — skip irrigation."
-      },
-      "actions": [
-        {
-          "id": "details",
-          "label": "Details"
-        },
-        {
-          "id": "pin",
-          "label": "Pin"
-        },
-        {
-          "id": "dismiss",
-          "label": "Dismiss"
-        },
-        {
-          "id": "hide",
-          "label": "Hide this card"
-        }
-      ],
-      "personas": [
-        "agriculture"
-      ],
-      "source": "scenario",
-      "estimated": false,
-      "updated_at": "2026-09-08T07:30:00+05:30"
-    },
-    {
       "type": "planting_guidance",
       "instance_id": "planting_guidance",
       "title": "Planting guidance",
@@ -2435,7 +2593,7 @@
         ],
         "tips": [
           "Soil is wet — hold back irrigation and check field drainage.",
-          "Delay irrigation: 136 mm of rain expected in the next 3 days."
+          "Delay irrigation: 376 mm of rain expected in the next 3 days."
         ]
       },
       "actions": [
@@ -2467,7 +2625,7 @@
   "hidden_types": [],
   "freshness": {
     "weather": "2026-09-08T07:30:00+05:30",
-    "air": "2026-09-07T01:30:00+05:30",
+    "air": "2026-09-08T07:00:00+05:30",
     "marine": null,
     "warnings": "2026-09-08T07:30:00+05:30"
   },
