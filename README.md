@@ -169,7 +169,7 @@ backend, **Flutter stable (3.47.x)** for the app.
 cd backend
 python -m venv .venv
 .venv/bin/python -m pip install -r requirements-dev.txt   # Windows: .venv\Scripts\python
-.venv/bin/python -m pytest -q                             # → 326 passed (fully offline)
+.venv/bin/python -m pytest -q                             # → 327 passed (fully offline)
 .venv/bin/python -m uvicorn app.main:app --reload --port 8000
 ```
 
@@ -438,7 +438,7 @@ Pure, deterministic Python in `backend/app/engine/` — no I/O, so it is fully u
 | C1 | End-to-end QA against the judge demo script (`docs/QA_REPORT.md`) | ⬜ next |
 | C2 | Pitch deck (`docs/08_PITCH.md`) | ⬜ |
 
-**Last verified gates** (2026-09-08, macOS/Apple Silicon): backend `pytest -q` → **326 passed**
+**Last verified gates** (2026-09-08, macOS/Apple Silicon): backend `pytest -q` → **327 passed**
 (offline — upstream payloads are replayed through `respx`, so CI needs no network or key); app
 `flutter analyze` clean, `flutter test` → **90 passed**, `flutter build web` ✓,
 `flutter build apk --release` ✓ (`app-release.apk`, **62.5 MB**, Gradle task 114 s) and
