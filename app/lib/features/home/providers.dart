@@ -16,6 +16,7 @@ import '../../data/repositories/locations_repo.dart';
 import '../../data/repositories/places_repo.dart';
 import '../../data/repositories/radar_repo.dart';
 import '../../data/repositories/settings_repo.dart';
+import 'renderers/radar.dart' show RadarRenderer;
 
 // ---------------------------------------------------------------- infrastructure
 
@@ -92,18 +93,25 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   Future<void> hydrate() async {
     state = await ref.read(settingsRepoProvider).load();
-    Fmt.imperial = state.isImperial;
+    _applyDisplayFlags(state);
   }
 
   Future<void> update(AppSettings next, {bool syncProfile = true}) async {
     state = next;
-    Fmt.imperial = next.isImperial;
+    _applyDisplayFlags(next);
     await ref.read(settingsRepoProvider).save(next);
     // Keep the server profile in step (docs/04 `PUT /me/profile`). Best-effort by design:
     // `updateProfile` swallows an unreachable backend so a demo without one still works.
     if (syncProfile && next.onboarded) {
       unawaited(ref.read(authRepoProvider).updateProfile(next.toProfilePatch()));
     }
+  }
+
+  /// Two display-only switches that renderers read without a `ref` (units and radar tiles), so
+  /// they keep working in widget tests built outside a ProviderScope.
+  static void _applyDisplayFlags(AppSettings s) {
+    Fmt.imperial = s.isImperial;
+    RadarRenderer.tilesEnabled = !s.lowBandwidth;
   }
 
   Future<void> setLanguage(String language) => update(state.copyWith(language: language));

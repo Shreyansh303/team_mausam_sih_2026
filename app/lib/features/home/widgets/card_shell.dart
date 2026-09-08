@@ -281,8 +281,10 @@ class _Header extends StatelessWidget {
           ),
         PopupMenuButton<String>(
           tooltip: l.cardMenu,
-          padding: EdgeInsets.zero,
-          icon: const Icon(Icons.more_vert, size: 20),
+          // 48 dp minimum target (Material a11y guidance, docs/06 §accessibility).
+          padding: const EdgeInsets.all(14),
+          iconSize: 20,
+          icon: const Icon(Icons.more_vert),
           onSelected: onAction,
           itemBuilder: (context) => <PopupMenuEntry<String>>[
             PopupMenuItem<String>(value: 'details', child: Text(l.details)),

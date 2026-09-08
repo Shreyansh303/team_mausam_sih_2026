@@ -22,7 +22,8 @@ class PersonaChips extends ConsumerWidget {
     final others = Persona.ids.where((p) => !mine.contains(p)).toList();
 
     return SizedBox(
-      height: 40,
+      // 48 dp so the chips are a comfortable tap target (docs/06 §accessibility).
+      height: 52,
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -33,9 +34,9 @@ class PersonaChips extends ConsumerWidget {
               child: FilterChip(
                 avatar: Icon(AppIcons.persona(id), size: 16),
                 label: Text(personaLabel(l, id)),
+                tooltip: personaTagline(l, id),
                 selected: role == null ? mine.contains(id) : role == id,
                 showCheckmark: false,
-                visualDensity: VisualDensity.compact,
                 onSelected: (_) {
                   final notifier = ref.read(roleViewProvider.notifier);
                   if (role == id) {

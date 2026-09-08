@@ -12,11 +12,14 @@ import 'package:mausam_app/data/repositories/home_repo.dart';
 import 'package:mausam_app/data/repositories/settings_repo.dart';
 import 'package:mausam_app/features/home/home_page.dart';
 import 'package:mausam_app/features/home/providers.dart';
+import 'package:mausam_app/features/home/live_alerts.dart';
+import 'package:mausam_app/features/home/renderers/radar.dart';
 import 'package:mausam_app/features/home/widgets/why_sheet.dart';
 import 'package:mausam_app/l10n/gen/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fixture.dart';
+import 'support.dart';
 
 /// A cache that lives in memory, so the widget test never touches path_provider.
 class _MemoryCache extends JsonFileCache {
@@ -77,6 +80,7 @@ void main() {
   });
 
   setUp(() {
+    RadarRenderer.tileProviderFactory = BlankTileProvider.new;
     SharedPreferences.setMockInitialValues(<String, Object>{
       'personas': <String>['parent', 'commuter'],
       'language': 'en',
@@ -107,6 +111,8 @@ void main() {
         homeRepoProvider.overrideWithValue(repo),
         eventsRepoProvider.overrideWithValue(_SilentEvents()),
         settingsProvider.overrideWith(_FixedSettings.new),
+        // No real WebSocket in a widget test (docs/06 §Home behaviour connects one on mount).
+        alertsSocketProvider.overrideWithValue(silentAlertsSocket()),
       ],
     );
   }

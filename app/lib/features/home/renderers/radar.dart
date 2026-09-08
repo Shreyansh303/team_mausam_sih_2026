@@ -33,6 +33,11 @@ class RadarRenderer extends StatelessWidget {
   /// production leaves it null, which gives flutter_map's own network provider.
   static TileProvider Function()? tileProviderFactory;
 
+  /// docs/06 §Home behaviour — "Low-bandwidth mode: `lite=1`, no radar tiles, no images".
+  /// A static rather than a provider read, so the renderer keeps working in the widget tests
+  /// that build it without a ProviderScope; `SettingsNotifier` keeps it in step.
+  static bool tilesEnabled = true;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -45,8 +50,8 @@ class RadarRenderer extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           child: SizedBox(
             height: height,
-            child: spec == null || !spec.hasFrames
-                ? RadarUnavailable(spec: spec)
+            child: spec == null || !spec.hasFrames || !tilesEnabled
+                ? RadarUnavailable(spec: spec, lite: !tilesEnabled)
                 : RadarMap(spec: spec, frameIndex: frameIndex ?? spec.frames.length - 1),
           ),
         ),
@@ -73,7 +78,7 @@ class RadarRenderer extends StatelessWidget {
             ),
           ],
         ),
-        if (spec != null && spec.hasFrames)
+        if (spec != null && spec.hasFrames && tilesEnabled)
           Text(
             'RainViewer · frame ${Fmt.dateTime(spec.frames[(frameIndex ?? spec.frames.length - 1)].time)}',
             style: theme.textTheme.labelSmall
@@ -148,9 +153,12 @@ class RadarMap extends StatelessWidget {
 
 /// Shown when there is no frame to paint — no radar coverage, `?lite=1`, or offline.
 class RadarUnavailable extends StatelessWidget {
-  const RadarUnavailable({super.key, this.spec});
+  const RadarUnavailable({super.key, this.spec, this.lite = false});
 
   final RadarSpec? spec;
+
+  /// `true` when the tiles were suppressed on purpose by low-bandwidth mode.
+  final bool lite;
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +173,7 @@ class RadarUnavailable extends StatelessWidget {
           Icon(Icons.radar, size: 26, color: theme.colorScheme.onSurfaceVariant),
           const SizedBox(height: 6),
           Text(
-            L.of(context).radarNoFrames,
+            lite ? L.of(context).lowBandwidthRadarOff : L.of(context).radarNoFrames,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall
                 ?.copyWith(color: theme.colorScheme.onSurfaceVariant),

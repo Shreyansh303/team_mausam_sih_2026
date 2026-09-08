@@ -28,6 +28,11 @@ class WarningBanner extends StatelessWidget {
     final l = L.of(context);
     final theme = Theme.of(context);
     final color = _parseHex(banner.colorHex) ?? AppTheme.warningSeverityColor(banner.severity);
+    // IMD yellow and orange are light: white text on them fails WCAG AA, so the foreground is
+    // chosen from the background's luminance instead of being hardcoded (docs/06 §a11y).
+    final onColor = ThemeData.estimateBrightnessForColor(color) == Brightness.dark
+        ? Colors.white
+        : Colors.black87;
 
     return Semantics(
       liveRegion: true,
@@ -42,21 +47,20 @@ class WarningBanner extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Row(
               children: [
-                const Icon(Icons.warning_amber_rounded, color: Colors.white),
+                Icon(Icons.warning_amber_rounded, color: onColor),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     banner.title,
                     style: theme.textTheme.titleSmall
-                        ?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
+                        ?.copyWith(color: onColor, fontWeight: FontWeight.w700),
                   ),
                 ),
                 if (onShare != null)
                   IconButton(
                     onPressed: onShare,
                     tooltip: l.share,
-                    visualDensity: VisualDensity.compact,
-                    icon: const Icon(Icons.share_outlined, color: Colors.white, size: 18),
+                    icon: Icon(Icons.share_outlined, color: onColor, size: 18),
                   ),
               ],
             ),
