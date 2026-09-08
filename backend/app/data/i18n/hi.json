@@ -228,6 +228,7 @@
   "flight.bit.gusts": "झोंके {kph} किमी/घंटा तक",
   "flight.bit.rain": "{pct}% बारिश की संभावना",
   "flight.bit.visibility": "दृश्यता {km} किमी तक",
+  "flight.detail.compose": "{lead}: {bits}।",
   "flight.detail.none": "अगले 12 घंटों में मौसम से कोई व्यवधान अपेक्षित नहीं।",
   "flight.lead.high": "देरी की संभावना",
   "flight.lead.medium": "मामूली देरी संभव",

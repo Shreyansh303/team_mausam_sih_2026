@@ -228,6 +228,7 @@
   "flight.bit.gusts": "gusts to {kph} km/h",
   "flight.bit.rain": "{pct}% rain chance",
   "flight.bit.visibility": "visibility down to {km} km",
+  "flight.detail.compose": "{lead}: {bits}.",
   "flight.detail.none": "No weather disruption expected in the next 12 hours.",
   "flight.lead.high": "Delays likely",
   "flight.lead.medium": "Minor delays possible",

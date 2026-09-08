@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from app.core.i18n import t
-from app.engine.builders.base import CardContent, flight_detail
+from app.engine.builders.base import CardContent, flight_detail, localized_warning
 from app.engine.context import Bundle, Context, UserProfile
 
 RANK = {"low": 0, "medium": 1, "high": 2}
@@ -25,7 +25,9 @@ def alerts_for(bundle: Bundle, ctx: Context) -> list[dict[str, Any]]:
                 "risk": risk,
                 "hazards": list(risk_block.get("hazards") or []),
                 "detail": flight_detail(ctx.lang, risk_block),
-                "warnings": list(place.get("warnings") or []),
+                "warnings": [
+                    localized_warning(ctx.lang, w) for w in (place.get("warnings") or [])
+                ],
             }
         )
     return sorted(out, key=lambda a: -RANK.get(a["risk"], 0))

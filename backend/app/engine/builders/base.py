@@ -109,7 +109,9 @@ def flight_detail(lang: str, block: dict[str, Any]) -> str:
         return str(block.get("detail") or "")
     lead = resolve(lang, tokens[0])
     bits = [resolve(lang, tok) for tok in tokens[1:]]
-    return f"{lead}: {'; '.join(bits)}." if bits else lead
+    if not bits:
+        return lead
+    return t(lang, "flight.detail.compose", lead=lead, bits="; ".join(bits))
 
 
 def localized_warning(lang: str, warning: dict[str, Any]) -> dict[str, Any]:

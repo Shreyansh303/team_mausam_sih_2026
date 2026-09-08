@@ -291,3 +291,46 @@ def test_date_labels_are_localized(client, guest):
     )
     assert card["data"]["focus_label"] == "शनि 12 सित", card["data"]["focus_label"]
     assert i18n.t("en", "dow.sat") == "Sat"
+
+
+def test_saved_place_warnings_and_flight_detail_are_localized(client, guest):
+    """`travel_alerts` repeats each saved place's warnings; scenario copy there has to be
+    localized too, and the composed flight-risk sentence must end the way the language does."""
+    devanagari = re.compile(r"[ऀ-ॿ]")
+    for place in ({"name": "Mumbai", "lat": 19.08, "lon": 72.88, "kind": "travel"},):
+        res = client.post("/api/v1/me/places", json=place, headers=guest["headers"])
+        assert res.status_code in (200, 201), res.text
+
+    res = client.get(
+        "/api/v1/home",
+        params={
+            "lat": DELHI[0],
+            "lon": DELHI[1],
+            "lang": "hi",
+            "personas": "traveler",
+            "now_override": NOW,
+            "scenario": "dense_fog",
+        },
+        headers=guest["headers"],
+    )
+    assert res.status_code == 200, res.text
+    body = res.json()
+    cards = {c["type"]: c for c in body["pinned"] + body["cards"] + body["more_cards"]}
+
+    packing = cards.get("packing_suggestions")
+    assert packing, "packing_suggestions missing for a traveler with a saved place"
+    items = packing["data"]["places"][0]["items"]
+    assert items
+    for item in items:
+        assert devanagari.search(item["item"]), item
+        assert devanagari.search(item["reason"]), item
+
+    alerts = cards.get("travel_alerts")
+    if alerts and alerts["data"]["alerts"]:
+        alert = alerts["data"]["alerts"][0]
+        assert devanagari.search(alert["detail"]), alert["detail"]
+        assert alert["detail"].rstrip().endswith("।"), alert["detail"]
+        for warning in alert["warnings"]:
+            if warning.get("source") == "scenario":
+                assert devanagari.search(warning["title"]), warning["title"]
+                assert devanagari.search(warning["description"]), warning["description"]
