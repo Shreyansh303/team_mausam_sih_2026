@@ -1142,4 +1142,13 @@ class LBn extends L {
 
   @override
   String get levelModerate => 'Moderate';
+
+  @override
+  String get quickRadar => 'Radar';
+
+  @override
+  String get quickPlaces => 'Places';
+
+  @override
+  String get quickDemo => 'Demo';
 }

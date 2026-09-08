@@ -2160,6 +2160,24 @@ abstract class L {
   /// In en, this message translates to:
   /// **'Moderate'**
   String get levelModerate;
+
+  /// No description provided for @quickRadar.
+  ///
+  /// In en, this message translates to:
+  /// **'Radar'**
+  String get quickRadar;
+
+  /// No description provided for @quickPlaces.
+  ///
+  /// In en, this message translates to:
+  /// **'Places'**
+  String get quickPlaces;
+
+  /// No description provided for @quickDemo.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo'**
+  String get quickDemo;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

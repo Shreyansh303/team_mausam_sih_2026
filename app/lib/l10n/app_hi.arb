@@ -408,5 +408,9 @@
   "severityOrange": "नारंगी",
   "severityRed": "लाल",
 
-  "levelModerate": "मध्यम"
+  "levelModerate": "मध्यम",
+
+  "quickRadar": "रडार",
+  "quickPlaces": "स्थान",
+  "quickDemo": "डेमो"
 }

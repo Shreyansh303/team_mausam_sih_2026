@@ -1144,4 +1144,13 @@ class LHi extends L {
 
   @override
   String get levelModerate => 'मध्यम';
+
+  @override
+  String get quickRadar => 'रडार';
+
+  @override
+  String get quickPlaces => 'स्थान';
+
+  @override
+  String get quickDemo => 'डेमो';
 }

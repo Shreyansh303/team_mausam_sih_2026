@@ -24,7 +24,7 @@ class QuickActions extends ConsumerWidget {
           Expanded(
             child: _Action(
               icon: Icons.map_outlined,
-              label: l.mapTitle,
+              label: l.quickRadar,
               onTap: () => context.push('/map'),
             ),
           ),
@@ -32,7 +32,7 @@ class QuickActions extends ConsumerWidget {
           Expanded(
             child: _Action(
               icon: Icons.place_outlined,
-              label: l.placesTitle,
+              label: l.quickPlaces,
               onTap: () => context.push('/places'),
             ),
           ),
@@ -40,7 +40,7 @@ class QuickActions extends ConsumerWidget {
           Expanded(
             child: _Action(
               icon: lowBandwidth ? Icons.data_saver_on : Icons.science_outlined,
-              label: lowBandwidth ? l.liteBadge : l.demoTitle,
+              label: lowBandwidth ? l.liteBadge : l.quickDemo,
               onTap: () => DemoSheet.show(context),
             ),
           ),

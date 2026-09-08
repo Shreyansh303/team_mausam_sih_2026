@@ -409,5 +409,9 @@
   "severityOrange": "Orange",
   "severityRed": "Red",
 
-  "levelModerate": "Moderate"
+  "levelModerate": "Moderate",
+
+  "quickRadar": "Radar",
+  "quickPlaces": "Places",
+  "quickDemo": "Demo"
 }
