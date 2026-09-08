@@ -1,6 +1,7 @@
 # Mausam Personalized — a persona-aware home screen for IMD's *Mausam* app
 
 [![backend tests](https://github.com/Shreyansh303/team_mausam_sih_2026/actions/workflows/backend.yml/badge.svg)](https://github.com/Shreyansh303/team_mausam_sih_2026/actions/workflows/backend.yml)
+[![flutter](https://github.com/Shreyansh303/team_mausam_sih_2026/actions/workflows/flutter.yml/badge.svg)](https://github.com/Shreyansh303/team_mausam_sih_2026/actions/workflows/flutter.yml)
 
 **Smart India Hackathon 2026 · PS 26076 (MoES / India Meteorological Department) · Team Mausam**
 
@@ -49,24 +50,42 @@ a warning is pushed over a WebSocket, works offline from cache, and speaks Engli
   warning card to the top.
 - **Offline.** The last home payload is cached on device; a cold start with no network still renders
   with a freshness chip ("Updated 12 min ago"), falling back to a bundled sample payload.
-- **Multilingual.** English and Hindi are complete (471 backend strings each, plus app chrome);
-  Marathi, Tamil and Bengali are partial with per-key fallback to English.
+- **Multilingual.** English and Hindi are complete (597 backend strings each, plus 282 app-chrome
+  strings); Marathi, Tamil and Bengali are partial with per-key fallback to English. Card copy,
+  advice, window reasons, crop actions and even date labels are localized server-side.
 - **Honest data.** Tides, pollen and traffic are modelled — they carry `"source": "estimated"` and
   the UI shows an **Estimated** chip. Estimates are never presented as observations.
 
 ## Screenshots
 
-| Home (live backend) | Home (offline / cached) |
-|---|---|
-| ![Home](docs/screenshots/b1_home.png) | ![Offline home](docs/screenshots/b1_home_offline.png) |
+**The same morning, eight different home screens** — one backend, one location, only the personas
+change:
 
-| Health persona | Fitness persona | Beach persona |
+| Parent | Commuter | Health |
 |---|---|---|
-| ![Health](docs/screenshots/b2a_health.png) | ![Fitness](docs/screenshots/b2a_fitness.png) | ![Beach](docs/screenshots/b2a_beach.png) |
-| ![Health scrolled](docs/screenshots/b2a_health_scrolled.png) | ![Fitness scrolled](docs/screenshots/b2a_fitness_scrolled.png) | ![Beach scrolled](docs/screenshots/b2a_beach_scrolled.png) |
+| ![Parent](docs/screenshots/b2b_parent.png) | ![Commuter](docs/screenshots/b2b_commuter.png) | ![Health](docs/screenshots/b2b_health.png) |
 
-All shots are from the Flutter web build; the persona shots and the first home shot are real data
-from a locally running backend, the offline shot is the cached / bundled-sample path.
+| Fitness | Beach | Agriculture |
+|---|---|---|
+| ![Fitness](docs/screenshots/b2b_fitness.png) | ![Beach](docs/screenshots/b2b_beach.png) | ![Agriculture](docs/screenshots/b2b_agriculture.png) |
+
+| Traveller | Event planner | Offline (cache / bundled sample) |
+|---|---|---|
+| ![Traveller](docs/screenshots/b2b_traveler.png) | ![Event planner](docs/screenshots/b2b_event_planner.png) | ![Offline home](docs/screenshots/b1_home_offline.png) |
+
+**Live re-rank and the rest of the app:**
+
+| Before the warning is pushed | …seconds later, re-ranked | Hindi (`lang=hi`, thunderstorm) |
+|---|---|---|
+| ![Before](docs/screenshots/b2b_ws_before.png) | ![After the push](docs/screenshots/b2b_ws_rerank.png) | ![Hindi](docs/screenshots/b3_hindi_localized.png) |
+
+| Radar map | Saved places | Demo sheet |
+|---|---|---|
+| ![Map](docs/screenshots/b2b_map.png) | ![Places](docs/screenshots/b2b_places.png) | ![Demo sheet](docs/screenshots/b2b_demo_sheet.png) |
+
+All shots are the Flutter web build driven against a locally running backend, except the offline
+one (cached / bundled-sample path). `docs/screenshots/` also holds scrolled variants
+(`b2a_*_scrolled.png`).
 
 ## Architecture
 
@@ -133,8 +152,8 @@ docs/                     THE PLAN — specs are normative, code follows docs
 backend/                  FastAPI service (Python 3.13) — see backend/README.md
 app/                      Flutter app (package `mausam_app`)
 infra/                    docker-compose.yml, render.yaml
-scripts/                  Windows toolchain setup helpers
-.github/workflows/        CI (backend pytest, offline)
+scripts/                  toolchain setup (Windows) + optional Android emulator (.ps1 and .sh)
+.github/workflows/        CI: backend pytest (offline) · flutter analyze/test/APK/web
 ```
 
 ---
@@ -150,7 +169,7 @@ backend, **Flutter stable (3.47.x)** for the app.
 cd backend
 python -m venv .venv
 .venv/bin/python -m pip install -r requirements-dev.txt   # Windows: .venv\Scripts\python
-.venv/bin/python -m pytest -q                             # → 300 passed (fully offline)
+.venv/bin/python -m pytest -q                             # → 326 passed (fully offline)
 .venv/bin/python -m uvicorn app.main:app --reload --port 8000
 ```
 
@@ -175,63 +194,106 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ### 2. App
 
+**Never used Flutter before?** Install the SDK once —
+<https://docs.flutter.dev/get-started/install> — pick **stable 3.47.x**, then run
+`flutter doctor`. For option (a) you only need the **Chrome** tick; options (b)–(d) also need the
+**Android toolchain** tick (Android Studio's SDK + a JDK 17; `flutter doctor --android-licenses`
+accepts the licences). Nothing below needs administrator rights except the emulator's one-time
+virtualization step in (d).
+
 ```bash
 cd app
 flutter pub get
-flutter analyze          # clean
-flutter test             # 64 green at the last recorded run, incl. the fixture contract test
+flutter analyze          # "No issues found!"
+flutter test             # 90 green, incl. the fixture contract test
 ```
 
-**(a) Chrome — the fastest loop.** No Android toolchain needed.
+**(a) Chrome — the fastest loop, no Android toolchain.**
 
 ```bash
 cd app && flutter run -d chrome
 ```
 
-**(b) A real Android phone over USB.** Enable *Developer options → USB debugging* on the phone,
-plug it in, accept the RSA prompt, then:
+Press `r` to hot-reload, `R` to restart, `q` to quit. The default backend URL is
+`http://localhost:8000`; if the app shows "Sample data" it could not reach the backend — start it
+(step 1) or fix **Settings → Backend URL**.
+
+**(b) A real Android phone over USB — the best demo.**
+
+1. On the phone: **Settings → About phone → tap "Build number" seven times** to unlock
+   *Developer options*, then **Developer options → USB debugging → on**.
+2. Plug it into the laptop with a **data** cable and accept the *Allow USB debugging?* RSA prompt
+   on the phone (tick "always allow").
+3. Check the laptop can see it, then run:
 
 ```bash
-cd app && flutter devices        # your handset should be listed
-cd app && flutter run -d <device-id>
+cd app && flutter devices        # your handset should be listed, e.g. "SM_A155F (mobile)"
+cd app && flutter run            # or: flutter run -d <device-id> when more than one is attached
 ```
 
-Then set **Settings → Backend URL** in the app to `http://<your-laptop-LAN-IP>:8000` (see the URL
-rules below) — the phone cannot reach your laptop's `localhost`.
+If `flutter devices` shows nothing, re-plug the cable, confirm the prompt on screen, and run
+`adb devices` (`unauthorized` = the prompt was not accepted; `no permissions` on Linux = add the
+udev rule). Then set **Settings → Backend URL** in the app to `http://<your-laptop-LAN-IP>:8000`
+(see (f)) — a phone cannot reach the laptop's `localhost`.
 
-**(c) Install a debug APK.**
+**(c) Install the APK directly** (no Flutter toolchain on the machine that installs it).
+
+*From CI, no build needed:* open the repo's
+[**Actions → flutter**](https://github.com/Shreyansh303/team_mausam_sih_2026/actions/workflows/flutter.yml)
+run for the commit you want → **Artifacts → `app-release-apk`** → download and unzip →
+`app-release.apk`. (GitHub requires you to be signed in to download artifacts.)
+
+*Or build it yourself:*
 
 ```bash
-cd app && flutter build apk --debug
-# → app/build/app/outputs/flutter-apk/app-debug.apk   (~168 MB debug, all ABIs)
-adb install -r build/app/outputs/flutter-apk/app-debug.apk
+cd app && flutter build apk --release      # ~2 min warm; debug signing, fine for a demo
+# → app/build/app/outputs/flutter-apk/app-release.apk   (62.5 MB, all ABIs)
+adb install -r build/app/outputs/flutter-apk/app-release.apk
+# a debug build also works and is what you want for logs:
+cd app && flutter build apk --debug        # → app-debug.apk (~168 MB)
 ```
+
+To install without `adb`, copy the `.apk` to the phone and open it — Android asks you to allow
+"install unknown apps" for the file manager first. The app is signed with the **debug** key
+(`flutter build apk --release` falls back to it when no keystore is configured), so it installs
+side-by-side with nothing and can be uninstalled normally.
 
 The first Gradle run downloads ~2.7 GB and takes several minutes. If the Gradle **wrapper** itself
 fails to download its distribution, see the workaround in `docs/PROGRESS.md` → "Notes for next
-phase → H0". CI currently builds and tests the **backend** only
-(`.github/workflows/backend.yml`); the Flutter workflow that publishes the APK as a downloadable
-artifact lands with phase B3.
+phase → H0".
 
-**(d) Android emulator.** Needs an Android SDK system image and an AVD — neither ships with this
-repo, and no AVD is set up on the current dev machine, so treat this path as the least-travelled
-one. Pick the image architecture that matches your CPU (`x86_64` on Intel/AMD, `arm64-v8a` on Apple
-Silicon):
+**(d) Android emulator — optional, and the least-travelled path.** It needs a ~1.5 GB system image
+plus the emulator package, so skip it unless you have no phone. Helper scripts create and boot an
+AVD called `mausam_pixel`:
 
-```bash
-sdkmanager "emulator" "system-images;android-36;google_apis;x86_64"
-avdmanager create avd -n mausam_pixel -k "system-images;android-36;google_apis;x86_64"
-flutter emulators --launch mausam_pixel
-cd app && flutter run -d emulator-5554     # backend URL: http://10.0.2.2:8000
+```powershell
+# Windows (PowerShell 5.1+)
+.\scripts\setup_android_emulator.ps1      # sdkmanager: emulator + system image; avdmanager: AVD
+.\scripts\run_emulator.ps1                # boots it and waits for sys.boot_completed
 ```
 
-On Windows this additionally needs Windows Hypervisor Platform / virtualization enabled once (an
-admin step); [`docs/SETUP_WINDOWS.md`](docs/SETUP_WINDOWS.md) and
-`scripts/setup_flutter_windows.ps1` cover the rest of the toolchain.
+```bash
+# macOS / Linux
+./scripts/setup_android_emulator.sh       # picks arm64-v8a on Apple Silicon, x86_64 otherwise
+./scripts/run_emulator.sh
+```
+
+```bash
+cd app && flutter run -d emulator-5554    # backend URL: http://10.0.2.2:8000
+```
+
+**One-time administrator step for the emulator on Windows:** hardware acceleration needs the
+**Windows Hypervisor Platform** feature (Windows Features, or
+`dism /online /Enable-Feature /FeatureName:HypervisorPlatform /All` from an elevated prompt, then
+reboot) **and** virtualization enabled in the BIOS/UEFI (Intel VT-x / AMD SVM). Without it the
+emulator either refuses to start or is unusably slow. macOS needs nothing; Linux needs KVM
+(`sudo apt install qemu-kvm`, add yourself to the `kvm` group). This is the only step in the whole
+repo that asks for admin rights — the setup script's header repeats it.
 
 **(e) iOS** builds and simulators require **macOS with Xcode** (plus CocoaPods and a simulator
-runtime). The code is platform-neutral — `flutter run -d iphone` works when Xcode is complete — but
-judges are expected to use the Android APK or Chrome.
+runtime — `sudo gem install cocoapods`, and install a runtime from Xcode → Settings → Components).
+The code is platform-neutral and `flutter run -d iphone` works once `flutter doctor` is happy about
+Xcode, but there is no iOS build in CI and judges are expected to use the Android APK or Chrome.
 
 **(f) Backend URL rules.** The app stores the backend **origin** only (it appends `/api/v1` and
 derives `ws://`/`wss://` itself), and **Settings → Backend URL** overrides the default:
@@ -240,10 +302,21 @@ derives `ws://`/`wss://` itself), and **Settings → Backend URL** overrides the
 |---|---|
 | Flutter web / desktop on the same machine | `http://localhost:8000` |
 | Android **emulator** on the same machine | `http://10.0.2.2:8000` |
-| Real Android phone on the same Wi-Fi | `http://<laptop-LAN-IP>:8000` (`ipconfig` / `ifconfig`) |
+| Real Android phone on the same Wi-Fi | `http://<laptop-LAN-IP>:8000` |
 | Deployed backend | `https://<service>.onrender.com` |
 
-`CORS_ORIGINS=*` is the default, so Flutter web works with no proxy.
+Find the LAN IP with `ipconfig` (Windows, "IPv4 Address"), `ipconfig getifaddr en0` (macOS) or
+`hostname -I` (Linux) — something like `192.168.1.23`. Start the backend so it listens on that
+interface (`uvicorn app.main:app --host 0.0.0.0 --port 8000`), keep the phone on the **same Wi-Fi**,
+and check `http://<laptop-LAN-IP>:8000/api/v1/health` in the phone's browser before blaming the app.
+A firewall prompt on first run must be allowed for private networks. `CORS_ORIGINS=*` is the
+default, so Flutter web works with no proxy.
+
+**CI.** [`.github/workflows/backend.yml`](.github/workflows/backend.yml) runs the offline pytest
+suite on every push/PR that touches `backend/`;
+[`.github/workflows/flutter.yml`](.github/workflows/flutter.yml) runs `flutter analyze`,
+`flutter test`, `flutter build apk --release` (uploading `app-release.apk` as an artifact) and
+`flutter build web` on every push/PR that touches `app/`.
 
 **OS differences in one line:** the venv interpreter is `backend/.venv/bin/python` on macOS/Linux
 and `backend\.venv\Scripts\python.exe` on Windows; on Windows also read
@@ -360,15 +433,17 @@ Pure, deterministic Python in `backend/app/engine/` — no I/O, so it is fully u
 | B0 | Flutter toolchain + scaffold | ✅ done |
 | B1 | App foundation: models, API client, cache, onboarding, home shell, 6 renderers | ✅ done |
 | B2a | All 15 renderers + a detail page per renderer | ✅ done |
-| B2b | Animations, events pipeline, why-sheet actions, places, map, settings, demo sheet, WS client, low-bandwidth, a11y, full l10n, icon/splash | 🚧 in progress |
-| B3 | Live-backend integration, release APK, Flutter CI workflow | ⬜ next |
-| C1 | End-to-end QA against the judge demo script (`docs/QA_REPORT.md`) | ⬜ |
+| B2b | Animations, events pipeline, why-sheet actions, places, map, settings, demo sheet, WS client, low-bandwidth, a11y, full l10n, icon/splash | ✅ done |
+| B3 | Live-backend integration, backend i18n fixes, release APK, Flutter CI workflow | ✅ done |
+| C1 | End-to-end QA against the judge demo script (`docs/QA_REPORT.md`) | ⬜ next |
 | C2 | Pitch deck (`docs/08_PITCH.md`) | ⬜ |
 
-**Last verified gates:** backend `pytest -q` → **300 passed** (offline — upstream payloads are
-replayed through `respx`, so CI needs no network or key); app, as recorded on 2026-09-08:
-`flutter analyze` clean, `flutter test` → **64 passed**, `flutter build web` ✓ and
-`flutter build apk --debug` ✓ (`app-debug.apk`, ~168 MB). The live checklist is
+**Last verified gates** (2026-09-08, macOS/Apple Silicon): backend `pytest -q` → **326 passed**
+(offline — upstream payloads are replayed through `respx`, so CI needs no network or key); app
+`flutter analyze` clean, `flutter test` → **90 passed**, `flutter build web` ✓,
+`flutter build apk --release` ✓ (`app-release.apk`, **62.5 MB**, Gradle task 114 s) and
+`flutter build apk --debug` ✓ (~168 MB). The live-integration pass drove the web build against a
+running backend with zero console errors and zero failed requests. The checklist is
 [`docs/PROGRESS.md`](docs/PROGRESS.md) — it is the source of truth, not this table.
 
 **Roadmap / stretch:** **S1** ML ranker v2 (logistic regression on logged events, blended as

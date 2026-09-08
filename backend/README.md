@@ -243,4 +243,4 @@ recordings (offline, deterministic apart from the random `usr_`/`plc_` ids).
 | `planting_calendar.json` | 7 agro zones × 12 months × 2–4 crops with stage + action |
 | `imd_ids.json` | best-effort IMD station ids for 35 curated cities (district ids unknown until whitelisted) |
 | `scenarios/*.json` | the 10 demo scenarios from `docs/05_BACKEND_SPEC.md` |
-| `i18n/*.json` | `en` + `hi` complete (471 keys); `mr`, `ta`, `bn` partial with per-key fallback |
+| `i18n/*.json` | `en` + `hi` complete (597 keys); `mr`, `ta`, `bn` partial with per-key fallback |
