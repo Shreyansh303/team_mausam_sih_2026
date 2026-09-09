@@ -51,3 +51,11 @@ services:
         sync: false
       - key: TOMTOM_KEY
         sync: false
+      # Push (S3, docs/09_PUSH_NOTIFICATIONS.md). Unset = the "noop" transport, which is the
+      # default and needs nothing. To deliver through FCM, add the service-account JSON as a
+      # Render *secret file* (Environment → Secret Files, e.g. `fcm-service-account.json`,
+      # mounted at /etc/secrets/<name>) and set both of these. Never put the key itself here.
+      - key: FCM_SERVICE_ACCOUNT_FILE
+        sync: false           # e.g. /etc/secrets/fcm-service-account.json
+      - key: FCM_PROJECT_ID
+        sync: false           # e.g. mausam-personalized

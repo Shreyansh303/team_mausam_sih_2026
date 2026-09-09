@@ -29,7 +29,7 @@ root, so `GET /weather/snapshot?...` works with a bare curl too. Interactive doc
 
 | Method | Path | Phase | Purpose |
 |---|---|---|---|
-| GET | `/health` | A1 | status, version, provider availability, active scenario + demo clock |
+| GET | `/health` | A1 | status, version, provider availability, push transport + device count, active scenario + demo clock |
 | GET | `/locations/search?q=&limit=` | A1 | curated cities first, then Open-Meteo (India ranked first) |
 | GET | `/locations/reverse?lat=&lon=` | A1 | curated hit within 3 km, else BigDataCloud |
 | GET | `/locations/popular` | A1 | curated Indian cities (coastal + hill included) |
@@ -40,10 +40,12 @@ root, so `GET /weather/snapshot?...` works with a bare curl too. Interactive doc
 | GET/PUT | `/me`, `/me/profile`, `/me/card-prefs`, `/me/places` | A2 | profile, pins/hides, saved places (max 8) |
 | GET | `/home` | A2 | **the personalized home** — `lat/lon` or `place_id`, `lang`, `personas`, `now_override`, `scenario`, `event_date`, `lite=1` |
 | POST | `/events` | A2 | engagement batch (≤ 100); `pin/hide` also write card-prefs |
-| GET | `/admin/state` | A3 | `{scenario, now_override, warnings, connected_clients}` |
+| POST/DELETE | `/me/devices`, `/me/devices/{token}` | S3 | register / unregister this handset's push token (optional) |
+| GET | `/admin/state` | A3 | `{scenario, now_override, warnings, connected_clients, devices, push_transport}` |
 | POST | `/admin/scenario` `/admin/now-override` | A3 | global demo scenario + demo clock |
 | POST/DELETE | `/admin/warnings`, `/admin/warnings/{id}` | A3 | push / clear a warning (broadcasts on the WebSocket) |
 | POST | `/admin/reset-user` | A3 | clear one user's learning |
+| GET | `/admin/devices` | S3 | registered push devices (tokens redacted) |
 | GET | `/admin/console` | A3 | the single-file demo console |
 | WS | `/ws/alerts?token=&lat=&lon=` | A3 | live alerts |
 
@@ -67,6 +69,7 @@ BigDataCloud and RainViewer are all keyless. `DATA_GOV_IN_KEY` (CPCB station AQI
 | `HTTP_TIMEOUT_S` | `8` | per-provider timeout |
 | `IMD_ENABLED` / `IMD_BASE_URL` | `1` / `https://mausam.imd.gov.in/api` | see IMD integration below |
 | `DATA_GOV_IN_KEY` / `TOMTOM_KEY` | empty | optional upstreams |
+| `FCM_SERVICE_ACCOUNT_FILE` / `FCM_PROJECT_ID` | empty | optional push — both must be set to switch off the `noop` transport (below) |
 | `CACHE_TTL_*` | forecast 600 · air 900 · marine 1800 · geocode 86400 · radar 300 · imd 600 · snapshot 300 | seconds |
 
 ## Demo console (`/admin/console`)
@@ -132,6 +135,75 @@ state match), `warning_cleared`, `scenario_changed`, `now_override`. Client → 
 
 The registry is in-process (`app/api/ws.py`), so run **one** backend instance — which is what the
 Render free plan gives you.
+
+## Push notifications (FCM)
+
+The WebSocket above only reaches an app that is **open**. `services/push.py` is the second
+delivery path, for a phone whose app is closed. Design, message schema and the security notes:
+[`../docs/09_PUSH_NOTIFICATIONS.md`](../docs/09_PUSH_NOTIFICATIONS.md).
+
+**With no configuration** (the default, and what CI runs) the transport is `noop`: devices can
+still register, every admin broadcast is logged as `push (noop): warning_issued → N device(s)`
+and nothing leaves the process. `GET /health` says which transport is live:
+
+```jsonc
+"push": {"transport": "noop", "devices": 0}
+```
+
+### Turning on real delivery
+
+1. **Create the Firebase project** — <https://console.firebase.google.com> → *Add project*
+   (Analytics not needed). Project settings → *Cloud Messaging* → make sure the
+   **Firebase Cloud Messaging API (V1)** is enabled.
+2. **Add the Android app** with package name `com.teammausam.mausam_app` and download
+   `google-services.json`. That file belongs to the *app*, not the backend — it is only needed
+   once the Flutter side is wired (see below), and it must not be committed.
+3. **Download a service account** — Project settings → *Service accounts* →
+   *Generate new private key* → a JSON file with `client_email` and `private_key`. **This is a
+   secret**: keep it outside the repo (`.gitignore` does not save you if you paste it in a doc).
+4. **Point the backend at it**:
+
+   ```bash
+   # backend/.env
+   FCM_SERVICE_ACCOUNT_FILE=/absolute/path/to/fcm-service-account.json
+   FCM_PROJECT_ID=your-firebase-project-id
+   ```
+
+   On Render, upload the JSON as a *Secret File* and set `FCM_SERVICE_ACCOUNT_FILE` to its mount
+   path (`/etc/secrets/<name>`) — `infra/render.yaml` already declares both keys with no values.
+   Restart; `/health` should now report `"transport": "fcm"`.
+5. **Register a device and push**:
+
+   ```bash
+   TOKEN=$(curl -s -X POST localhost:8000/api/v1/auth/guest | python -c "import sys,json;print(json.load(sys.stdin)['token'])")
+   curl -X POST localhost:8000/api/v1/me/devices -H "Authorization: Bearer $TOKEN" \
+        -H "Content-Type: application/json" \
+        -d '{"token":"<fcm registration token>","platform":"android","lat":28.61,"lon":77.21,"lang":"hi"}'
+   curl -s localhost:8000/api/v1/admin/devices -H "X-Admin-Key: mausam-admin"
+   # then push a warning exactly as in the demo above — every registered device gets it
+   ```
+
+Auth is the documented OAuth2 flow, done with the libraries already pinned (PyJWT + httpx, no
+Google SDK): an RS256 assertion signed with the service-account key is exchanged at
+`oauth2.googleapis.com/token` for an access token (cached ≈1 h), then one
+`POST /v1/projects/{id}/messages:send` per device. A token FCM rejects with `404 UNREGISTERED`
+is deleted from the registry automatically. Any push failure is logged and swallowed — it never
+turns an admin call into a 500.
+
+### What the app side still needs
+
+Not wired yet, on purpose: adding `firebase_messaging` without a `google-services.json` breaks
+`flutter build apk`, and that file cannot be committed. When a Firebase project exists:
+
+* add `firebase_core` + `firebase_messaging` (+ `flutter_local_notifications`) and drop
+  `google-services.json` into `app/android/app/`;
+* request `POST_NOTIFICATIONS` on Android 13+, then `POST /me/devices` with the token, the current
+  `lat`/`lon` and the UI language — again on every `onTokenRefresh`, and `DELETE` on sign-out;
+* handle the **data-only** message: on `type == "warning_issued"` refetch `/home` and re-rank; if
+  `affects_you == "true"`, raise a *local* notification built from `data.title` / `data.severity`
+  in the user's language (the server deliberately sends no `notification` block, so the OS cannot
+  show a message in the wrong language);
+* key on `warning.id` — the WebSocket and the push can both deliver the same warning.
 
 ## Honest data
 

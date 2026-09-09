@@ -149,6 +149,8 @@ docs/                     THE PLAN — specs are normative, code follows docs
   06_MOBILE_SPEC.md       Flutter structure, screens, renderers, offline, i18n
   07_PHASES.md            phase-by-phase work packages
   08_PITCH.md             SIH idea-presentation content (problem → future scope)
+  09_PUSH_NOTIFICATIONS.md  FCM push design (S3): why the WebSocket is not enough, the
+                          transport swap, message schema, device registry, rollout checklist
   QA_REPORT.md            end-to-end walk of the judge demo script — verdict PASS
   TeamMausam_SIH2026_PS26076.pptx   the 6-slide SIH deck, generated from 08_PITCH.md
   PROGRESS.md             living checklist + per-phase handover notes
@@ -471,7 +473,9 @@ demo steps, ten scenarios, Hindi, offline, learning and low-bandwidth is
 
 **Roadmap / stretch:** **S1** ML ranker v2 (logistic regression on logged events, blended as
 `score += 0.2·(p_tap − 0.5)`, behind `ENGINE_ML=1`) · **S2** Android home-screen widget ·
-**S3** FCM push as the production alert transport (the WebSocket is the demoable stand-in) ·
+**S3** FCM push as the production alert transport, the WebSocket being the demoable stand-in
+([`docs/09_PUSH_NOTIFICATIONS.md`](docs/09_PUSH_NOTIFICATIONS.md) — backend transport, device
+registry and design doc are done; the app wiring waits on a Firebase project) ·
 **S4** more languages beyond en/hi/mr/ta/bn.
 
 ## IMD integration path

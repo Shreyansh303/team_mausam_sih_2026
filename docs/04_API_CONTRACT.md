@@ -9,7 +9,7 @@ with the proper HTTP status (400 validation, 401 auth, 404, 429, 502 upstream, 5
 ## Endpoints
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| GET | `/health` | – | `{status, version, time, providers:{imd, open_meteo, marine, air}, scenario, now_override}` |
+| GET | `/health` | – | `{status, version, time, providers:{imd, open_meteo, marine, air}, push:{transport, devices}, scenario, now_override}` |
 | POST | `/auth/guest` | – | `{token, user}` — creates a guest user |
 | POST | `/auth/request-otp` `{phone}` | – | `{ok:true, demo_otp:"123456"}` (`demo_otp` only when `DEMO_MODE=1`) |
 | POST | `/auth/verify-otp` `{phone, otp}` | – | `{token, user}`; merges a guest if `X-Guest-Token` header present |
@@ -18,6 +18,8 @@ with the proper HTTP status (400 validation, 401 auth, 404, 429, 502 upstream, 5
 | GET | `/me/card-prefs` | ✓ | `{pins:[type], hidden:[type]}` |
 | PUT | `/me/card-prefs` | ✓ | same body → same |
 | POST | `/me/reset-learning` | ✓ | clears engagement + prefs → `{ok:true}` |
+| POST | `/me/devices` | ✓ | *(optional, S3)* `{token, platform?, lat?, lon?, lang?}` → `Device` — register this handset's push token |
+| DELETE | `/me/devices/{token}` | ✓ | *(optional, S3)* `{ok:true}` — unregister one of **your own** tokens |
 | GET | `/me/places` | ✓ | `Place[]` |
 | POST | `/me/places` | ✓ | `{name, lat, lon, country, country_code, admin1, admin2, kind}` → `Place` (max 8) |
 | DELETE | `/me/places/{id}` | ✓ | `{ok:true}` |
@@ -28,12 +30,13 @@ with the proper HTTP status (400 validation, 401 auth, 404, 429, 502 upstream, 5
 | GET | `/weather/snapshot?lat=&lon=&scenario=` | – | `Snapshot` (for detail screens / debugging) |
 | GET | `/weather/radar` | – | `{host, past:[{time,path}], nowcast:[{time,path}], tile_template}` |
 | POST | `/events` | ✓ | `{events:[{type, action, ts, meta?}]}` → `{ok:true, engagement:{type:{taps,expands,dismisses,pins,impressions}}}` |
-| GET | `/admin/state` | admin | `{scenario, now_override, warnings:Warning[], connected_clients}` |
+| GET | `/admin/state` | admin | `{scenario, now_override, warnings:Warning[], connected_clients, devices, push_transport}` |
 | POST | `/admin/scenario` `{name}` | admin | sets global default scenario → state |
 | POST | `/admin/now-override` `{now: ISO or null}` | admin | global demo clock → state |
 | POST | `/admin/warnings` | admin | `{severity, hazard, title, description, district?, state?, lat?, lon?, radius_km=75, ttl_minutes=120}` → `Warning`; broadcasts on WS |
 | DELETE | `/admin/warnings/{id}` | admin | `{ok:true}`; broadcasts `warning_cleared` |
 | POST | `/admin/reset-user` `{user_id}` | admin | `{ok:true}` |
+| GET | `/admin/devices` | admin | *(optional, S3)* `{transport, count, devices:[AdminDevice]}` — registered push devices |
 | GET | `/admin/console` | – (key entered in page) | HTML demo console |
 | WS | `/ws/alerts?token=&lat=&lon=` | ✓ | live alerts (below) |
 
@@ -136,6 +139,46 @@ the client connected with (or its last `location` message) using the same rule a
 filter in `/home`: district match, state match for `cyclone|heatwave|cold_wave`, or within
 `radius_km`. `hello.server_time` is the demo clock when one is set, else real server time in IST.
 The server does not reply to `location`; the next `warning_issued` simply uses the new position.
+
+## Devices and push (optional — S3)
+
+Everything in this section is **optional**: with no Firebase configuration the backend keeps the
+registry, logs every intended send and delivers nothing, and the app does not have to call these
+routes at all. The WebSocket above is unchanged and remains the demo transport. Design and
+rationale: [`docs/09_PUSH_NOTIFICATIONS.md`](09_PUSH_NOTIFICATIONS.md).
+
+```jsonc
+Device      { "token": "<fcm registration token>", "platform": "android|ios|web",
+              "lat": 28.61|null, "lon": 77.21|null, "lang": "en", "updated_at": "…" }
+AdminDevice { "token_suffix": "…123456", "user_id": "usr_…", "platform": "android",
+              "lat": num|null, "lon": num|null, "lang": "en", "updated_at": "…" }
+```
+
+`POST /me/devices` is an **upsert on `token`**: re-registering updates the row, and a token that
+reappears under another account moves to it. `lang` defaults to the profile language and must be
+one of the supported locales (400 otherwise). At most 8 devices per user — the least recently
+updated is evicted. `DELETE /me/devices/{token}` only removes a token owned by the caller;
+another user's token is a `404`. Tokens are send-capabilities: `/admin/devices` and every log line
+show only the last six characters, and the full token is echoed only to the client that sent it.
+
+`GET /health` reports `"push": {"transport": "noop"|"fcm", "devices": n}`; `/admin/state` carries
+the same two values as `push_transport` and `devices`.
+
+Push messages are **data-only** and mirror the WebSocket types above, with every value a string
+(`null` → `""`):
+
+```jsonc
+{"type":"warning_issued","warning":"<the Warning object, JSON-encoded>","affects_you":"true",
+ "id":"wrn_…","severity":"orange","hazard":"thunderstorm","title":"…","color_hex":"#F28C28"}
+{"type":"warning_cleared","id":"…"}
+{"type":"scenario_changed","scenario":"heatwave"}
+{"type":"now_override","now":"…"|""}
+```
+
+`affects_you` is computed **per device** from the stored `lat`/`lon` with the same rule the
+WebSocket uses (district match, state match for `cyclone|heatwave|cold_wave`, or within
+`radius_km`); a device with no coordinate gets `"false"`. The app should key on `warning.id` and
+ignore a message it already handled — push and socket can both deliver the same warning.
 
 ## Engagement events (`POST /events`)
 `type` = card type, `action` ∈ `impression|tap|expand|dismiss|pin|unpin|hide|unhide`, `ts` ISO,
