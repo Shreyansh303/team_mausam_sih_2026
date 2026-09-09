@@ -13,7 +13,7 @@ import '../../data/models/warning.dart';
 import '../../data/repositories/radar_repo.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../home/providers.dart';
-import '../home/renderers/radar.dart' show RadarRenderer;
+import '../home/renderers/radar.dart' show RadarMap, RadarRenderer;
 
 /// docs/06_MOBILE_SPEC.md §Layout `map/ map_page (flutter_map: OSM tiles, RainViewer radar
 /// overlay with frame slider, warning circles/markers, user marker)`.
@@ -139,6 +139,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                       urlTemplate: osmTemplate,
                       userAgentPackageName: userAgent,
                       tileProvider: tileProvider,
+                      maxNativeZoom: RadarMap.osmMaxNativeZoom,
                       errorTileCallback: (_, _, _) {},
                     ),
                     if (_showRadar && frames != null && all.isNotEmpty)
@@ -146,6 +147,9 @@ class _MapPageState extends ConsumerState<MapPage> {
                         urlTemplate: frames.tileUrlFor(all[index]),
                         userAgentPackageName: userAgent,
                         tileProvider: tileProvider,
+                        // RainViewer stops at z7 and answers 200 with a
+                        // "Zoom Level Not Supported" PNG above it; upscale instead.
+                        maxNativeZoom: RadarMap.radarMaxNativeZoom,
                         errorTileCallback: (_, _, _) {},
                       ),
                     CircleLayer(

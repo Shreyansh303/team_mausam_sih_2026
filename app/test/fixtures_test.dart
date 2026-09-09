@@ -561,6 +561,21 @@ void main() {
       expect(find.textContaining('Rain within 2 h'), findsOneWidget);
     });
 
+    testWidgets('radar — every tile layer is capped at the zoom its server actually serves',
+        (tester) async {
+      // RainViewer answers HTTP 200 above z7 with a 256x256 PNG that reads
+      // "Zoom Level Not Supported", so errorTileCallback never fires and the
+      // placeholder is painted over the map. maxNativeZoom upscales instead.
+      await pumpType(tester, 'radar');
+      final layers = tester.widgetList<TileLayer>(find.byType(TileLayer)).toList();
+      expect(layers.length, 2, reason: 'an OSM base layer and a RainViewer overlay');
+      final osm = layers.firstWhere((l) => l.urlTemplate == RadarMap.osmTemplate);
+      final radar = layers.firstWhere((l) => l.urlTemplate != RadarMap.osmTemplate);
+      expect(osm.maxNativeZoom, RadarMap.osmMaxNativeZoom);
+      expect(radar.maxNativeZoom, RadarMap.radarMaxNativeZoom);
+      expect(RadarMap.radarMaxNativeZoom, 7);
+    });
+
     testWidgets('radar — degrades to a placeholder when there are no frames', (tester) async {
       final card = oneCardPerType['radar']!;
       final offline = HomeCard.fromJson(<String, dynamic>{

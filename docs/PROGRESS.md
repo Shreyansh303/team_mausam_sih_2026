@@ -332,6 +332,7 @@ unticked items but files present:
   see the note below
 
 ## Deviations from spec (record here)
+- **post-C2 fix (2026-09-09)** Radar tile layers now set `maxNativeZoom` (RainViewer 7, OSM 19). RainViewer answers HTTP 200 above z7 with a PNG reading "Zoom Level Not Supported", so `errorTileCallback` never fired and the placeholder was painted over the map from one pinch in (`initialZoom` is 7). flutter_map now upscales the z7 tile instead. Regression test in `app/test/fixtures_test.dart`.
 - **A1** Routers are mounted twice: at `/api/v1` (the 04 base) **and** at the root, so the bare
   verification URLs in 07 (`GET /weather/snapshot?...`) work with curl. No contract change.
 - **A1** `core/db.py` and `core/security.py` (listed in 05 §Layout) are **not** written yet — they

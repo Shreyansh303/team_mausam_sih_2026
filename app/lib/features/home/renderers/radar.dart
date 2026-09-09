@@ -105,6 +105,16 @@ class RadarMap extends StatelessWidget {
   final bool interactive;
 
   static const String osmTemplate = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+  /// Highest zoom each tile server actually renders.
+  ///
+  /// RainViewer stops at z7: past that `tilecache.rainviewer.com` answers
+  /// **HTTP 200** with a 256x256 PNG reading "Zoom Level Not Supported", so
+  /// `errorTileCallback` never fires and flutter_map paints the placeholder over
+  /// the map. `maxNativeZoom` makes it upscale the z7 tile instead of asking for
+  /// one that does not exist. OSM serves to z19 and answers 400 above it.
+  static const int radarMaxNativeZoom = 7;
+  static const int osmMaxNativeZoom = 19;
   static const String userAgent = 'com.teammausam.mausam_app';
 
   @override
@@ -128,6 +138,7 @@ class RadarMap extends StatelessWidget {
             urlTemplate: osmTemplate,
             userAgentPackageName: userAgent,
             tileProvider: provider?.call(),
+            maxNativeZoom: RadarMap.osmMaxNativeZoom,
             // Offline: a missing base tile leaves the surface colour, it does not throw.
             errorTileCallback: (_, _, _) {},
           ),
@@ -135,6 +146,7 @@ class RadarMap extends StatelessWidget {
             urlTemplate: spec.tileUrlFor(index),
             userAgentPackageName: userAgent,
             tileProvider: provider?.call(),
+            maxNativeZoom: RadarMap.radarMaxNativeZoom,
             errorTileCallback: (_, _, _) {},
           ),
           MarkerLayer(
