@@ -391,6 +391,17 @@ unticked items but files present:
   while the rows followed payload order, so one card said "afternoon then morning" on the bar and
   "morning then afternoon" in the list, over an axis reading 12:30 → 09:30. Renderer-only; the
   payload and `docs/04` are unchanged, and `docs/06` §Renderers was updated in the same commit.
+- **C1** **The demo clock only moves the reading when a forecast hour actually matches it.**
+  `normalize_forecast` used to snap an out-of-range `now_override` to the nearest hour it had —
+  midnight of the first forecast day — and publish it under the requested timestamp, so a "07:30"
+  demo drew a moon with UV 0 over a sunrise-lit feed. Out of range the **live observation stands**,
+  `current.time` reports the live time, and the hourly row behind `uv_index`/`visibility_km` moves
+  back with it (CLAUDE.md §6). `fetched_at`/`context.now` still carry the requested clock, so the
+  *ranking* is unaffected — only the reading. `normalize_air` already worked this way.
+- **C1** `DemoSheet.clockPresets` is **computed from today's date** (`clockHours` × `presetFor`),
+  not four hardcoded ISO literals. The literals carried 2026-09-08, so from 2026-09-09 onwards
+  every preset fell outside the forecast window and the deviation above silently took over. The
+  demo sheet's chip labels are unchanged (`07:30 · 13:00 · 18:30 · 22:00`).
 - **C1** `FreshnessChip` ages the payload against the **effective demo clock** (the demo sheet's
   override, an admin `now_override` frame off `/ws/alerts`, else the live payload's own
   `context.now`) rather than the device clock. The backend stamps `freshness` with `now_override`,

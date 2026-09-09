@@ -213,6 +213,27 @@ async def test_demo_clock_at_night_keeps_is_day_false():
     assert demo.current.temp_c == 28.7
 
 
+async def test_demo_clock_outside_the_forecast_window_keeps_the_live_reading():
+    """C1 regression — a demo clock we have no forecast hour for must not invent one.
+
+    The app's clock presets carry a fixed calendar date, so the day after they were written a
+    judge's "07:30" lands outside Open-Meteo's window. The nearest hour is then midnight of the
+    first day, and publishing that as 07:30 drew a moon over a sunrise-lit feed with UV 0.
+    Out of range, the live observation stands and `current.time` says so (CLAUDE.md §6).
+    """
+    live = await snapshot_svc.build_snapshot(*DELHI)
+    stale = await snapshot_svc.build_snapshot(*DELHI, now=datetime(2026, 9, 1, 7, 30, tzinfo=IST))
+
+    assert stale.current.time == live.current.time, "no forecast hour → the real observation"
+    assert stale.current.is_day == live.current.is_day
+    assert stale.current.temp_c == live.current.temp_c
+    # `uv_index`/`visibility_km` come from the matching hourly row — it must move back too.
+    assert stale.current.uv_index == live.current.uv_index
+    assert stale.current.visibility_km == live.current.visibility_km
+    # The engine still ranks against the requested clock: only the *reading* falls back.
+    assert stale.fetched_at.startswith("2026-09-01T07:30")
+
+
 async def test_scenario_overlay_still_wins_over_the_demo_clock():
     """The overlay is applied after normalization, so a scripted scenario is unaffected."""
     snap = await snapshot_svc.build_snapshot(

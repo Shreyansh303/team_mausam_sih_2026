@@ -152,11 +152,28 @@ def normalize_forecast(
     cur_time = cur.get("time")
     live_dt = parse_local(cur_time, tzinfo) if cur_time else datetime.now(UTC).astimezone(tzinfo)
     cur_dt = ref_now.astimezone(tzinfo) if ref_now is not None else live_dt
-    hour_key = cur_dt.replace(minute=0, second=0, microsecond=0)
-    idx = next((i for i, h in enumerate(hours) if h["_dt"] == hour_key), None)
-    if idx is None:
-        idx = next((i for i, h in enumerate(hours) if h["_dt"] >= hour_key), 0)
-    match = hours[idx] if hours else {}
+
+    def _row(at: datetime) -> tuple[int | None, int, dict[str, Any]]:
+        """(exact index or None, nearest index, nearest row) for a wall-clock hour."""
+        key = at.replace(minute=0, second=0, microsecond=0)
+        hit = next((i for i, h in enumerate(hours) if h["_dt"] == key), None)
+        near = (
+            hit
+            if hit is not None
+            else next((i for i, h in enumerate(hours) if h["_dt"] >= key), 0)
+        )
+        return hit, near, (hours[near] if hours else {})
+
+    # A demo clock may sit outside the forecast window (a preset left on yesterday's date, a
+    # judge picking a time three days out). Publishing the nearest hour we happen to have —
+    # usually midnight of the first day — as "07:30" would be a lie (CLAUDE.md §6). Only the
+    # *exact* hour may move the reading; otherwise the live observation stands, `current.time`
+    # says so, and the hourly row behind `uv_index`/`visibility_km` is the live one too. C1.
+    exact, idx, match = _row(cur_dt)
+    if ref_now is not None and exact is None:
+        cur_dt = live_dt
+        ref_now = None
+        _, idx, match = _row(cur_dt)
 
     if ref_now is not None and match:
         # Demo clock: the forecast hour *is* "now".

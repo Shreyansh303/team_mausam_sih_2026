@@ -36,13 +36,26 @@ class DemoSheet extends ConsumerWidget {
     'frost',
   ];
 
-  /// The demo clock docs/00 §Demo script uses (`07:30 IST`, the school run).
-  static const List<String> clockPresets = <String>[
-    '2026-09-08T07:30:00+05:30',
-    '2026-09-08T13:00:00+05:30',
-    '2026-09-08T18:30:00+05:30',
-    '2026-09-08T22:00:00+05:30',
-  ];
+  /// The demo clock docs/00 §Demo script uses (`07:30 IST`, the school run), and three more
+  /// hours that move the ranking (midday, evening, night).
+  ///
+  /// Built on **today's** date, never a hardcoded one: the backend only moves the reading to a
+  /// demo hour it actually has a forecast row for, so a preset carrying the day it was written
+  /// stops working the next morning — the feed falls back to the live observation and "07:30"
+  /// shows whatever the real clock says. C1.
+  static const List<String> clockHours = <String>['07:30', '13:00', '18:30', '22:00'];
+
+  /// Today at [hhmm] in IST — the offset docs/04 reads a bare demo clock as.
+  static String presetFor(String hhmm, {DateTime? today}) {
+    final d = today ?? DateTime.now();
+    final date = '${d.year.toString().padLeft(4, '0')}-'
+        '${d.month.toString().padLeft(2, '0')}-'
+        '${d.day.toString().padLeft(2, '0')}';
+    return '${date}T$hhmm:00+05:30';
+  }
+
+  static List<String> get clockPresets =>
+      <String>[for (final hhmm in clockHours) presetFor(hhmm)];
 
   static Future<void> show(BuildContext context) => showModalBottomSheet<void>(
         context: context,
