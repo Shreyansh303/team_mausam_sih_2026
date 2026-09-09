@@ -32,6 +32,7 @@ unticked items but files present:
 - [x] C2 docs + pitch
 - [ ] S* stretch
 - [x] S1 ML ranker v2 (ENGINE_ML=1; v1 default)
+- [x] S2 Android home-screen widget (hero + top pinned; verified by build only, no device)
 - [x] S3 FCM push (transport + device registry + design doc; app wiring pending a Firebase project)
 - [x] H0 fresh-machine bootstrap (new owner; see docs/HANDOFF.md §4) — done on the macOS machine
   2026-09-08 (see "Notes for next phase → H0 — this Mac"); was never needed on the original Windows machine.
@@ -255,6 +256,43 @@ unticked items but files present:
   and never touches `urgency` · the clamp holds both ways · reset (user and admin) clears the
   weights · same events → same weights · training bounded by `MAX_EVENTS` · `/health` +
   `/admin/state` report the flag — **386 passed** (371 + 15)
+
+## S2 checklist (Android home-screen widget, 2026-09-09)
+- [x] `home_widget` ^0.9.4 added and **it builds** on Flutter 3.47.2 / AGP 9.1.0 / Gradle 9.3.1 /
+  Kotlin 2.4.0 / compileSdk 37 — no fallback to a hand-rolled `AppWidgetProvider` + MethodChannel
+  was needed (see the deviation about the KGP warning it prints)
+- [x] `lib/data/widget/widget_snapshot.dart` — the compact snapshot: location, `updated_at` (the
+  payload's own newest `freshness`), lang, units, hero (temp/condition/icon/feels-like/hi-lo) and
+  the top pinned card (type, title, insight headline, severity, `color_hex`, `estimated`).
+  Selection: `pinned.first`, else `cards.first`; a `warnings` card takes the IMD warning colour
+- [x] `lib/data/widget/home_widget_bridge.dart` (+ `_io` / `_stub`) — the plugin behind a
+  conditional import, so the web build and `flutter test` never compile `dart:io`; a no-op bridge
+  on every non-Android target; publish never throws
+- [x] `HomeRepo` publishes on every successful load — network **and** cache, never the bundled
+  fixture — together with the config the background worker needs (backend URL, guest token,
+  lat/lon, personas, lang, units)
+- [x] Kotlin: `MausamWidgetProvider` (two layouts by cell height, severity bar, estimated label,
+  tap targets), `WidgetSnapshot.kt` (the serializer's twin), `WidgetTime.kt` (ISO parse + age +
+  the 6 h staleness rule, `SimpleDateFormat` because `java.time` needs API 26), `WidgetKeys.kt`
+- [x] `MausamWidgetWorker` — WorkManager unique periodic work, ~60 min, network-connected,
+  `GET /home?lite=1`, silent on failure; enqueued in `onEnabled`/`onUpdate`, cancelled in
+  `onDisabled`, so nothing runs unless a widget is placed
+- [x] layouts `mausam_widget_4x1` / `_4x2` / `_preview`, `res/xml/mausam_widget_info.xml`
+  (min 250x40dp, target 4x2, resizable, `updatePeriodMillis=0`, `previewLayout` + `previewImage`),
+  light + `values-night` colours, receiver + `android.appwidget.provider` meta-data in the manifest
+- [x] strings in `values/widget_strings.xml` + `values-hi/` (chrome only — card content arrives
+  localized from the backend); `Estimated` label per CLAUDE.md §6; no IMD mark anywhere (§9)
+- [x] taps: the card → `mausam://home`, the pinned row → `mausam://card/<type>`, which the home
+  page opens as that card's detail once the feed contains it
+- [x] tests `app/test/widget_snapshot_test.dart` (13) — pinned beats ranked · ranked fallback ·
+  warnings card carries `#F28C28` · severity bands · estimated · empty payload → empty snapshot ·
+  Hindi round-trip through the shared-storage JSON · lang/units travel · repo publishes on network
+  and on cache but **not** for the fixture · the shared-storage keys match the Kotlin side · the
+  deep-link parser
+- [x] docs: `docs/06` §Home-screen widget; README "Run it yourself" gained **(e) The home-screen
+  widget** (the section now runs (a)–(g))
+- [ ] **not verified on a device — there is no phone or emulator on this machine.** Everything
+  below "S2 — notes" is what a device test still has to check
 
 ## S3 checklist (FCM push — doc + optional code, 2026-09-09)
 - [x] `services/push.py` — `PushTransport` protocol · `NoopTransport` (default, one INFO line per
@@ -636,8 +674,114 @@ unticked items but files present:
   proves the cold start. The flag is reported by `/health` (`engine.ml`) and `/admin/state`
   (`engine_ml`); the *per-card* ML contribution is surfaced through `reasons`, which is what the
   why sheet actually reads.
+- **S2** `home_widget` 0.9.4 still applies the Kotlin Gradle Plugin, so every Android build now
+  prints "Your app uses the following plugins that apply Kotlin Gradle Plugin (KGP): home_widget /
+  Future versions of Flutter will fail to build...". It is a **warning**: `flutter build apk
+  --debug` succeeds on Flutter 3.47.2 today. If a later Flutter drops the escape hatch
+  (`android.builtInKotlin=false`, which the Flutter template already sets in
+  `app/android/gradle.properties`), the fallback is the plain `AppWidgetProvider` + MethodChannel
+  the phase brief allowed — the Kotlin side here is already hand-written and would survive; only
+  `saveWidgetData` / `updateWidget` / the launch URIs would need replacing.
+- **S2** The widget adds **no permission of its own**, but pulling in `home_widget` adds three
+  install-time (normal, never prompted) permissions through the manifest merge of its own
+  dependencies — `androidx.work` and `androidx.glance`: `WAKE_LOCK`, `RECEIVE_BOOT_COMPLETED` and
+  `FOREGROUND_SERVICE`. Measured against the pre-S2 release APK, which had only INTERNET,
+  ACCESS_FINE/COARSE_LOCATION and ACCESS_NETWORK_STATE. WorkManager genuinely needs the first two
+  (a wakelock while the job runs, and rescheduling after a reboot), so they are kept rather than
+  stripped with `tools:node="remove"`, which would break the hourly refresh. No runtime permission
+  and no new *dangerous* permission.
+- **S2** The background refresh is **WorkManager in Kotlin**, not `home_widget`'s Dart background
+  callback. The plugin's callback fires on a *click* on an interactive widget, and its
+  `scheduleWidgetUpdates` is an AlarmManager broadcast that only redraws — neither fetches. A
+  `Worker` doing the `GET /home?lite=1` itself is the smallest thing that meets the brief, and it
+  costs one `org.json` parser (`WidgetSnapshot.kt`) that has to stay in step with the Dart
+  serializer. Both directions of that contract are pinned by the Dart round-trip test and by the
+  shared `v` schema version.
+- **S2** The snapshot's `updated_at` is the payload's own newest `freshness` timestamp, **not** the
+  moment it was written. A cache replay therefore keeps showing the true age of the reading (and
+  can be born stale), which is the honest behaviour — the alternative would let a cached payload
+  look freshly observed on the home screen.
+- **S2** The bundled sample payload (`assets/fixtures/home_sample.json`) is deliberately **never**
+  published to the widget. A launcher tile has no room for a "Sample data" chip, and CLAUDE.md §6
+  forbids showing modelled data as observed; a widget with no real snapshot says "Open Mausam to
+  refresh" instead.
+- **S2** `updatePeriodMillis` is `0`, so the system never polls the widget. Redraws come from the
+  app (after every `/home` payload) and from the hourly worker. Consequence: the age label does not
+  tick on its own between those events — it is correct at every redraw, not every minute.
+- **S2** One provider serves both size classes; the layout is chosen from
+  `OPTION_APPWIDGET_MIN_HEIGHT` rather than the Android 12+ `RemoteViews(Map<SizeF, RemoteViews>)`
+  constructor, which would need API 31 branches for the same result. The 4x1 layout omits
+  `widget_pinned_title` (no room), and the renderer skips that id for that layout — RemoteViews
+  throws on an id the inflated layout does not contain.
+- **S2** The pinned-row deep link opens the card's **detail page**, but there is no go_router route
+  for details anywhere in this app (they are pushed with `MaterialPageRoute` from the card shell),
+  so `mausam://card/<type>` is resolved by the home page against the loaded feed instead of by the
+  router. A type that is not in the current payload falls back to plain home, as the brief allows.
 
 ## Notes for next phase
+
+### S2 — notes (Android home-screen widget, 2026-09-09)
+
+**Built and verified by build only. There is no phone and no emulator on this Mac** (`flutter
+devices` offers `macos` and `chrome`; no AVD, and a system image is ~1.5 GB on a volume with ~8 GB
+free), so nothing below the code level has ever been seen running. What a device test must check,
+in order:
+
+1. **Add it.** Long-press the home screen → Widgets → "Mausam Personalized" → drag out the tile.
+   Check that the Android 12+ picker shows the preview (`mausam_widget_preview`), that the 4x2 tile
+   lands with both rows, and that resizing it down to one cell switches to the 4x1 layout (the
+   swap happens in `onAppWidgetOptionsChanged`, keyed on `OPTION_APPWIDGET_MIN_HEIGHT` < 100 dp).
+2. **First content.** A widget added before the app has ever loaded a feed must show "Open Mausam
+   to refresh" and nothing else. Open the app, let `/home` land, and the tile should fill in within
+   a second (the publish → `updateWidget` broadcast → `onUpdate` path).
+3. **Severity colour.** Push the orange thunderstorm warning from the admin console (recipe in the
+   B3 notes above). The pinned row should become the `warnings` card with an **orange** (#F28C28)
+   bar — that is the one path where the widget colour comes from the payload rather than the
+   severity band.
+4. **Tap deep links.** Tapping the card opens the app at home; tapping the pinned row should land
+   on that card's **detail page**. Test it three ways: app not running (cold start →
+   `initiallyLaunchedFromHomeWidget`), app in the background (`onNewIntent` → the `widgetClicked`
+   stream), and app in the foreground. The card type has to exist in the loaded feed or it stays on
+   home — that is intended, not a failure.
+5. **Background refresh timing.** `WorkManager` periodic work has a **15-minute floor and no upper
+   guarantee**: the ~60 min interval is a *minimum*, and Doze can stretch it to hours on a idle
+   handset. Do not test it by waiting. Force it instead:
+   ```bash
+   adb shell dumpsys jobscheduler | grep -A5 mausam        # the job is registered
+   adb shell cmd jobscheduler run -f com.teammausam.mausam_app <jobId>
+   ```
+   Then check the tile's age label resets. Also confirm it does **not** run when no widget is
+   placed (remove the widget → `onDisabled` → `cancelUniqueWork`).
+6. **Stale + offline.** Turn the backend off, set the device clock forward 7 h (or wait), and the
+   tile must still draw the old reading *plus* "Open Mausam to refresh". Nothing should ever go
+   blank.
+7. **Hindi.** Switch the app language to Hindi, let `/home` land: the card content changes because
+   the backend localized it, and the widget's own chrome ("अनुमानित", the age line) changes because
+   the launcher inflates `values-hi/`. The chrome follows the *system* locale, the content the
+   *app* setting — on a phone set to English with the app set to Hindi they will not match. That is
+   a known and acceptable split; a fix would mean writing pre-formatted chrome strings into the
+   snapshot.
+8. **Dark mode.** The launcher's dark theme should give the tile the `values-night` palette.
+
+**Where things live.** Dart: `lib/data/widget/` (snapshot + bridge), publish point is
+`HomeRepo._publishToWidget`, tap handling is `_onWidgetLaunch` / `_openPendingWidgetCard` in
+`features/home/home_page.dart`. Kotlin:
+`android/app/src/main/kotlin/com/teammausam/mausam_app/{MausamWidgetProvider,MausamWidgetWorker,WidgetSnapshot,WidgetTime,WidgetKeys}.kt`.
+Resources: `res/layout/mausam_widget_*.xml`, `res/xml/mausam_widget_info.xml`,
+`res/values{,-hi,-night}/widget_*.xml`.
+
+**If you change the snapshot shape, change it twice** — `widget_snapshot.dart` and
+`WidgetSnapshot.kt` — and bump `v` / `SCHEMA_VERSION` together. The Kotlin side ignores a snapshot
+with a higher `v` rather than drawing half of it.
+
+**Gates on this Mac, this commit** (all re-run for S2, in `app/`, with the absolute Flutter path):
+`flutter analyze` → **No issues found!** · `flutter test` → **124 passed** (111 + 13) ·
+`flutter build web` → **✓ Built build/web** · `flutter build apk --debug` → **✓ Built
+app-debug.apk**, and `apkanalyzer manifest print` shows
+`com.teammausam.mausam_app.MausamWidgetProvider` with its `android.appwidget.provider` meta-data.
+The debug APK was deleted afterwards; **the B3 `app-release.apk` is untouched — never run
+`flutter clean`.**
+
 
 ### S1 — notes (ML ranker v2, 2026-09-09)
 

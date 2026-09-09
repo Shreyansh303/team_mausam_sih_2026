@@ -14,7 +14,9 @@ toolchain + Chrome OK; `flutter build web` and `flutter build apk --debug` succe
 flutter_riverpod, go_router, dio, shared_preferences, path_provider, connectivity_plus,
 geolocator, permission_handler, flutter_map, latlong2, fl_chart, intl + flutter_localizations
 (`flutter gen-l10n` via `l10n.yaml`), web_socket_channel, share_plus, url_launcher,
-flutter_animate, package_info_plus, cached_network_image. Card re-rank animation: use
+flutter_animate, package_info_plus, cached_network_image, **home_widget** (S2, Android home-screen
+widget — Android-only, imported behind a conditional import so the web build never sees its
+`dart:io`). Card re-rank animation: use
 `animated_reorderable_list` (or `great_list_view`) if it builds on the installed Flutter; otherwise a
 keyed `ListView` + `flutter_animate` slide/fade entrance + a highlight flash on cards whose
 position improved + a SnackBar "Warning moved to top". The pinned-warning arrival animation is
@@ -30,6 +32,7 @@ app/lib/
   data/ api_client.dart (Dio, auth interceptor, lang header, error mapping)
         models/ (hand-written fromJson: user, location, place, warning, card, home_response, snapshot subset)
         cache/ json_file_cache.dart (per key file under app documents dir; get/put with timestamp)
+        widget/ widget_snapshot.dart + home_widget_bridge.dart{,_io,_stub} (S2 — the Android home-screen widget's payload and its platform bridge)
         repositories/ auth_repo, profile_repo, home_repo (cache-first + refresh), places_repo, locations_repo, events_repo (batched, flushed every 10 s or on background), radar_repo
         ws/ alerts_socket.dart (reconnect w/ backoff, pong, exposes stream)
   features/
@@ -82,13 +85,57 @@ refetches home. Devanagari font bundled (Noto Sans Devanagari) for web; Android 
 `applicationId com.teammausam.mausam_app`, label "Mausam Personalized", `minSdk = flutter.minSdkVersion`
 (= **24**, Android 7.0, on Flutter 3.47 — see the note below; this section originally said 23), permissions:
 INTERNET, ACCESS_COARSE/FINE_LOCATION; `usesCleartextTraffic=true` (demo http backends); adaptive
-icon (simple cloud/sun glyph in IMD blue, generated as PNG in repo — no IMD logo).
+icon (simple cloud/sun glyph in IMD blue, generated as PNG in repo — no IMD logo); the
+`MausamWidgetProvider` receiver and its `android.appwidget.provider` meta-data (see §Home-screen
+widget).
 
 > **minSdk note (B0).** Flutter 3.47 runs `MinSdkVersionMigration` on every Android build, which
 > rewrites any hardcoded `minSdk` of 16–23 back to `minSdk = flutter.minSdkVersion`. A pinned 23
 > therefore cannot survive a build. `flutter.minSdkVersion` is 24 and Flutter warns below 24
 > (`warnMinSdkVersion = 24`, `errorMinSdkVersion = 23`), so the app targets **Android 7.0+**.
 > Do not re-pin 23 — it will be silently reverted. Recorded in `docs/PROGRESS.md` > Deviations.
+
+## Home-screen widget (Android, phase S2)
+A launcher widget that shows the last `/home` payload without opening the app: the **hero** card
+(temperature, condition, location, how old the reading is) and the **top pinned card** (title +
+one-line insight, in its severity colour). Package: `home_widget` ^0.9.4; provider class
+`com.teammausam.mausam_app.MausamWidgetProvider`.
+
+- **Data flow.** Every `/home` response the app accepts — network *or* cache, never the bundled
+  fixture — is reduced by `WidgetSnapshot.fromHome` (`lib/data/widget/widget_snapshot.dart`) to a
+  compact JSON blob and written through `HomeWidgetBridge` into the plugin's shared storage
+  (`HomeWidgetPreferences`), followed by an update broadcast. Selection: `hero` as-is; pinned =
+  `pinned.first`, else `cards.first`. A `warnings` card takes the IMD `color_hex` from its payload,
+  everything else the severity band from §theme; `estimated` travels with it (CLAUDE.md §6).
+  Alongside the snapshot the app stores what a Flutter-less process needs to refresh on its own:
+  backend URL, guest token, lat/lon, personas, language, units.
+- **Background refresh.** `MausamWidgetWorker` (Android `WorkManager`, unique periodic work, ~60
+  min, network-connected constraint) calls `GET /home?lite=1` with those values, rebuilds the same
+  snapshot in Kotlin (`WidgetSnapshot.kt` is the twin of the Dart serializer) and redraws. Silent
+  and best-effort: any failure leaves the previous snapshot alone. Enqueued from `onEnabled` /
+  `onUpdate`, cancelled in `onDisabled`, so nothing runs unless a widget is actually placed.
+- **Offline / stale.** The widget always draws the last snapshot it has. Over **6 h** old (or no
+  snapshot at all) it also shows "Open Mausam to refresh"; with no snapshot the content row is
+  hidden entirely. The age is computed from the payload's own newest `freshness` timestamp, so a
+  cache replay cannot make old data look fresh.
+- **Layouts.** One provider, two size classes chosen from `OPTION_APPWIDGET_MIN_HEIGHT`:
+  `mausam_widget_4x1` (one row) and `mausam_widget_4x2` (hero row + pinned row).
+  `res/xml/mausam_widget_info.xml` declares `minWidth 250dp`, `minHeight 40dp`,
+  `targetCellWidth/Height 4x2`, `resizeMode horizontal|vertical`, `updatePeriodMillis 0` (the app
+  and the worker drive updates; the system never polls) and a `previewLayout` for the Android 12+
+  picker. Colours come from `values/widget_colors.xml` + `values-night/`, so the widget follows the
+  launcher's light/dark setting.
+- **Taps.** The card opens `mausam://home`; the pinned row opens `mausam://card/<type>`, which the
+  home page turns into that card's detail page once the feed contains it (there is no go_router
+  route for details — they are pushed). Both are `HomeWidgetLaunchIntent` PendingIntents into
+  `MainActivity`.
+- **Strings.** The widget renders outside the Flutter engine and cannot reach the ARBs, so its own
+  chrome lives in `res/values/widget_strings.xml` + `res/values-hi/`. Card content is not translated
+  on the device — it arrives already localized from the backend (docs/04 `lang`).
+- **Limits.** Android only; there is no iOS widget. `package:home_widget` imports `dart:io`, so the
+  only import of it sits behind a conditional import (`home_widget_bridge_io.dart` /
+  `_stub.dart`) — the web build and `flutter test` get a no-op bridge and never compile the plugin.
+  RemoteViews has no chart, no map and no Flutter rendering: text, colour and the severity bar only.
 
 ## Definition of done for the app
 `flutter analyze` (no errors), `flutter test` green, `flutter build web` ok, `flutter build apk --debug`

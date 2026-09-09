@@ -247,7 +247,7 @@ cd app && flutter run            # or: flutter run -d <device-id> when more than
 If `flutter devices` shows nothing, re-plug the cable, confirm the prompt on screen, and run
 `adb devices` (`unauthorized` = the prompt was not accepted; `no permissions` on Linux = add the
 udev rule). Then set **Settings → Backend URL** in the app to `http://<your-laptop-LAN-IP>:8000`
-(see (f)) — a phone cannot reach the laptop's `localhost`.
+(see (g)) — a phone cannot reach the laptop's `localhost`.
 
 **(c) Install the APK directly** (no Flutter toolchain on the machine that installs it).
 
@@ -313,12 +313,19 @@ emulator either refuses to start or is unusably slow. macOS needs nothing; Linux
 (`sudo apt install qemu-kvm`, add yourself to the `kvm` group). This is the only step in the whole
 repo that asks for admin rights — the setup script's header repeats it.
 
-**(e) iOS** builds and simulators require **macOS with Xcode** (plus CocoaPods and a simulator
+**(e) The home-screen widget** (Android, optional). Once the app is installed and has loaded the
+feed once, long-press an empty spot on the home screen → **Widgets** → **Mausam Personalized**, and
+drag the 4x1 or 4x2 tile out. It shows the last `/home` payload — temperature, condition, location,
+how old the reading is, and the top pinned card in its severity colour — refreshes itself about once
+an hour, and opens the app (or that card's detail) when tapped. Details and limits:
+[`docs/06_MOBILE_SPEC.md`](docs/06_MOBILE_SPEC.md) §Home-screen widget.
+
+**(f) iOS** builds and simulators require **macOS with Xcode** (plus CocoaPods and a simulator
 runtime — `sudo gem install cocoapods`, and install a runtime from Xcode → Settings → Components).
 The code is platform-neutral and `flutter run -d iphone` works once `flutter doctor` is happy about
 Xcode, but there is no iOS build in CI and judges are expected to use the Android APK or Chrome.
 
-**(f) Backend URL rules.** The app stores the backend **origin** only (it appends `/api/v1` and
+**(g) Backend URL rules.** The app stores the backend **origin** only (it appends `/api/v1` and
 derives `ws://`/`wss://` itself), and **Settings → Backend URL** overrides the default:
 
 | Where the app runs | Backend URL |
