@@ -651,7 +651,15 @@ Disk at the end of C2: **~13 GB free**. The B3 release APK is still at
   `app-release.apk`, check first launch, the location-permission prompt, GPS onboarding and
   background event flushing — the only paths the web build cannot exercise. Until then the honest
   phrasing everywhere (README, pitch, deck) is "verified in the web build plus a static APK check".
-- **Release keystore.** `app/android/app/build.gradle.kts` still signs release with the debug key.
+- [x] **Release keystore** — `b15645b`. `app/android/app/build.gradle.kts` signs `release` from
+  `app/android/key.properties` (`storeFile`, `storePassword`, `keyAlias`, `keyPassword`) when that
+  file exists, and falls back to the debug key with a build-time warning when it does not — CI and a
+  fresh clone still build with no secrets. A key.properties missing a field fails the build instead
+  of signing half-configured. Both paths verified on this Mac with a throwaway keystore **outside**
+  the repo: `apksigner verify --print-certs` → `CN=Team Mausam prototype` with the file,
+  `CN=Android Debug` without. `keytool` recipe and the file format: README §Run it yourself → (c).
+  Gotcha: `flutter build apk` runs Gradle with `-q`, so `logger.warn` is swallowed — the fallback
+  notice uses `logger.quiet`.
 - [x] **Pins/hides survive a reinstall** — `217030e`. `main` awaits the guest token, then
   `seedCardPrefs()` (providers.dart) unions `ProfileRepo.cardPrefs().hidden` into
   `hiddenCardsProvider`. Pins are *not* seeded: they are server state (the ranker applies them and
