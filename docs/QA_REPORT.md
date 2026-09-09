@@ -343,9 +343,10 @@ Documented behaviour and scope boundaries. None of these is a failing demo step.
    and `key.properties`.
 9. **Unit symbols and compass points stay Latin under `hi`** — "38 km/h WNW", "384.0 mm / 72h".
    Deliberate; they are not untranslated prose.
-10. **README's string counts have drifted** — it says "597 backend strings each, plus 282 app-chrome
+10. **README's string counts had drifted** — it said "597 backend strings each, plus 282 app-chrome
     strings"; the current totals are **604** and **353**. Cosmetic, and left for C2's README pass so
-    that C1 does not touch prose outside a demo step it disproved.
+    that C1 does not touch prose outside a demo step it disproved. **Fixed in C2**, along with three
+    other stale README numbers C1 had not looked at (see PROGRESS → Deviations → C2).
 
 ---
 

@@ -29,7 +29,7 @@ unticked items but files present:
 - [x] B2b animations · events · why-sheet actions · places · map · settings · demo sheet · WS client · low-bandwidth · a11y · l10n · icon/splash
 - [x] B3 integration + APK + CI (+ the backend i18n gaps B2b logged)
 - [x] C1 e2e QA
-- [ ] C2 docs + pitch
+- [x] C2 docs + pitch
 - [ ] S* stretch
 - [x] H0 fresh-machine bootstrap (new owner; see docs/HANDOFF.md §4) — done on the macOS machine
   2026-09-08 (see "Notes for next phase → H0 — this Mac"); was never needed on the original Windows machine.
@@ -193,7 +193,28 @@ unticked items but files present:
   bundled), Hindi, dismiss-learning, places/map/settings/demo sheet, and a static release-APK check.
   **40 screenshots** at `docs/screenshots/c1_*.png`. Nine defects found and fixed, one commit and
   one regression test each (see Deviations and QA_REPORT §Defects).
-- [ ] README final · 08_PITCH.md · pptx
+- [x] **README final pass** — every number in it re-verified against the tree on 2026-09-09 and the
+  four stale ones fixed: i18n string counts (597/282 → **604/353**, greps in the C2 notes), backend
+  tests (327 → **348**), app tests (90 → **103**), and a **third hardcoded `2026-09-08`** demo-clock
+  date that C1's sweep missed, in the "Run it yourself → 1. Backend" smoke-test curl (now
+  `$(date +%F)`, with the reason spelled out). Also: `/home` latency and payload replaced with
+  measured numbers, the phase table finished (C1/C2 ✅, S1–S4 row added), the gates paragraph moved
+  to 2026-09-09 and made explicit that nothing was ever run on a handset, the 8-persona screenshot
+  grid repointed from the pre-C1 `b2b_*` shots to the post-fix `c1_step03_persona_*` set (plus
+  `c1_step05_ws_*`, `c1_step08_hindi_home`, `c1_step07_offline_cached`), and `08_PITCH.md`,
+  `QA_REPORT.md` and the `.pptx` added to the docs map. Everything else was already correct —
+  33 cards, 15 renderers, 8 personas, 10 scenarios, 212 cities, 35 IMD station ids, the engine
+  constants (0.15 blend · 0.4–1.6 clamp · pin at 0.8 · top 8), all re-checked, all right.
+- [x] **`docs/08_PITCH.md`** — SIH idea-presentation content: problem (00_VISION quoted verbatim),
+  solution, uniqueness (7 differentiators), technical approach (stack · request path · the full
+  formula · probed data sources), feasibility (a table of measured numbers, each with where it was
+  measured, plus risks/mitigations and an explicit "honest scope boundaries" list), impact (the 8
+  personas and the line that lands on each of their screens), future scope (S3 → S1 → S4 → S2, in
+  that priority order) and a sources table. No invented metrics, no invented team roster.
+- [x] **`docs/TeamMausam_SIH2026_PS26076.pptx`** — 6 slides (title/problem · proposed solution ·
+  technical approach · feasibility & viability · impact & benefits · demo + what's next), 7 of the
+  C1 screenshots embedded, speaker notes on every slide, 1.4 MB. Built with `pptxgenjs`; how to
+  rebuild it is in the C2 notes.
 
 ## Deviations from spec (record here)
 - **A1** Routers are mounted twice: at `/api/v1` (the 04 base) **and** at the root, so the bare
@@ -461,7 +482,113 @@ unticked items but files present:
   titles "AQI". `Fmt.humanize` was deliberately left alone — it is the fallback for *backend*
   enums, and `test/l10n_test.dart` pins its "Volcanic Ash" behaviour.
 
+- **C2** The README's 8-persona screenshot grid now uses the **`c1_step03_persona_*`** shots, not
+  the `b2b_*` ones it had. The `b2b_*` persona shots pre-date C1's D2, D8 and D9 fixes, so they can
+  show the duplicate "Estimated" pill, the out-of-order timeline and the rounding mismatch that
+  those commits removed — a README grid advertising bugs the repo no longer has. Same reason for
+  `c1_step05_ws_*` (was `b2b_ws_*`), `c1_step08_hindi_home.png` (was `b3_hindi_localized.png`,
+  pre-D4) and `c1_step07_offline_cached.png` (was `b1_home_offline.png`, the B1 shell). The map
+  cell keeps `b2b_map.png` — QA_REPORT records the map page as untouched by C1.
+- **C2** A **third** hardcoded `2026-09-08` demo-clock date was found in the README, in the
+  "Run it yourself → 1. Backend" smoke-test curl. C1 fixed the two in the demo-script section
+  (commit `091579e`) and this one sat in a different section, so its sweep missed it. It is now
+  `$(date +%F)` like the others, with a sentence saying why. Nothing in `app/` or `backend/` —
+  the app-side literals were already fixed in C1 (D5) and `test/demo_sheet_test.dart` greps for
+  them; **no equivalent guard exists for the README**, so a future date literal there is on the
+  next reviewer to catch.
+- **C2** The README's `/home` performance line said "~10 ms on a laptop". Re-measured on this Mac:
+  a **warm** `/home` is **2 ms** server-side and the **first** request for a (lat, lon, scenario)
+  is **~15 ms** while the snapshot cache is cold — which is also why QA_REPORT's 2 ms and its
+  17.7 ms after an admin push (cache invalidated) are both right. Note for anyone re-measuring:
+  a request carrying `now_override` misses the snapshot cache every time, so timing loops that
+  include a demo clock will read ~14 ms, never 2 ms.
+- **C2** No spec doc (00–07) was edited. Every drifted claim was in `README.md`. One
+  four-word edit was made to `docs/QA_REPORT.md` §Known limitations 10, which said the README's
+  string counts were "left for C2's README pass" — it now says **fixed in C2**, so the evidence
+  file does not read as an open defect after the defect is closed. Nothing else in QA_REPORT
+  changed. The `.pptx` is a **generated artefact** committed as a binary — regenerate it rather
+  than hand-editing the XML (recipe in the C2 notes).
+
 ## Notes for next phase
+
+### Stretch (S1–S4) — what C2 hands you (2026-09-09)
+
+**The prototype is finished and evidenced.** A1–C2 are all `[x]`. `docs/QA_REPORT.md` is the
+evidence file (verdict **PASS**, all ten demo steps), `docs/08_PITCH.md` is the pitch content with
+every number traced to where it was measured, and `docs/TeamMausam_SIH2026_PS26076.pptx` is the
+6-slide deck. Nothing is blocked. What follows is optional work.
+
+**Gates on this Mac, this commit** (re-run by C2, not copied forward):
+`cd backend && .venv/bin/python -m pytest -q` → **348 passed** (15.8 s) ·
+`cd app && ~/development/flutter/bin/flutter analyze` → **No issues found!** (3.5 s) ·
+`flutter test` → **103 passed** (36 s) · `flutter build web` → **✓ Built build/web** (62 s).
+Disk at the end of C2: **~13 GB free**. The B3 release APK is still at
+`app/build/app/outputs/flutter-apk/app-release.apk` — **never run `flutter clean`**, it deletes it.
+
+#### Priority order, and why
+
+1. **S3 · FCM push.** The one that actually matters for a deployment: the WebSocket only reaches an
+   app that is open, so today a warning cannot wake a closed handset. The server-side broadcast is
+   already a single point (the admin router calls the WS manager), and the payload is already
+   defined (`warning_issued` with `affects_you`, docs/04). This is a transport swap plus a Firebase
+   project, not an architecture change. Keep the WebSocket — it is what makes demo step 5 visible.
+2. **S1 · ML ranker v2.** Fully specified in docs/03 §"Learning (v2)": logistic regression on the
+   events already being logged, `score += 0.2·(p_tap − 0.5)`, behind `ENGINE_ML=1`. Two things to
+   preserve when you build it: v1 must stay the fallback (the engine's determinism tests depend on
+   it), and the blend must stay bounded, or a learned term could outrank a warning — the whole
+   safety argument in the pitch rests on that bound.
+3. **S4 · More languages.** `mr` / `ta` / `bn` carry 69 app and 54 backend keys each with per-key
+   fallback. The pipeline, the parity test (`app/test/l10n_test.dart`, `backend/tests/test_i18n.py`)
+   and the fallback all exist, so this is translation work. Current totals, verified in C2:
+   **604** backend keys (en, hi) and **353** app messages (en, hi); the partials carry **54**
+   backend keys and **69** app messages each. Re-count them with:
+
+   ```bash
+   # backend catalogs are flat dicts; app ARBs mix messages with "@"-prefixed metadata
+   python3 -c 'import json,glob;[print(f, len(json.load(open(f)))) for f in sorted(glob.glob("backend/app/data/i18n/*.json"))]'
+   python3 -c 'import json,glob;[print(f, len([k for k in json.load(open(f)) if not k.startswith("@")])) for f in sorted(glob.glob("app/lib/l10n/*.arb"))]'
+   ```
+
+   Do **not** count ARB keys with a bare `grep -c '"'` — it counts the `@`-metadata blocks too and
+   over-reports the partial locales by one.
+4. **S2 · Android home-screen widget.** Needs `hero` plus the top pinned card, which is what
+   `/home?lite=1` already returns. Platform-channel work on the Android side only.
+
+#### Smaller items already identified (do these before the stretch phases if a demo is near)
+
+- **Device smoke test.** The APK has never been installed. If a phone appears: install
+  `app-release.apk`, check first launch, the location-permission prompt, GPS onboarding and
+  background event flushing — the only paths the web build cannot exercise. Until then the honest
+  phrasing everywhere (README, pitch, deck) is "verified in the web build plus a static APK check".
+- **Release keystore.** `app/android/app/build.gradle.kts` still signs release with the debug key.
+- Seed `hiddenCardsProvider` from `ProfileRepo.cardPrefs()` in `main` so pins/hides survive a
+  reinstall (one call; QA_REPORT §Known limitations 3).
+- File the **IMD whitelisting request** (README §IMD integration path has the exact contents) and
+  fill the `district_id` values in `backend/app/data/imd_ids.json` when the list comes back.
+
+#### How the deck was built (to regenerate or edit it)
+
+The `.pptx` is generated, not hand-authored. Rebuild rather than editing the packed XML.
+
+- **Generator:** a ~470-line `pptxgenjs` script in the agent scratchpad (same convention C1 used
+  for its CDP screenshot driver — `scripts/` was outside C2's scope). `npm install pptxgenjs` into
+  a throwaway directory; nothing was added to the repo's toolchains.
+- **Content source:** `docs/08_PITCH.md`, section for section. Slides are
+  title/problem · proposed solution · technical approach · feasibility & viability · impact &
+  benefits · demo + what's next. Speaker notes on all six.
+- **Images:** seven `docs/screenshots/c1_*.png` (aspect 780×1688 = 0.4621, so
+  `width = height × 0.4621`).
+- **Gotchas that cost time.** (a) `pres.layout = "LAYOUT_WIDE"` **before** adding slides, or the
+  canvas is 10″ wide and off-canvas shapes are silently dropped. (b) Hex colours without `#` and
+  without alpha, or the file will not open. (c) `bullet: true` renders its glyph far outside a
+  `margin: 0` text box — a literal `"·  "` prefix with no bullet option is what looks right.
+  (d) pptxgenjs text boxes are **vertically centred** by default; pass `valign: "top"` on any box
+  taller than its text or you get a gap under the heading.
+- **Verification without LibreOffice** (this Mac has no `soffice`/`pdftoppm`): build one
+  single-slide `.pptx` per slide, then `qlmanage -t -s 1400 -o <dir> slide-N.pptx` renders each via
+  macOS Quick Look. That is how every slide here was eyeballed. Note Quick Look substitutes fonts
+  (it drew Calibri as a serif), so trust it for layout and overflow, not for typeface.
+- **Validation:** the pptx skill's `scripts/office/validate.py` → "All validations PASSED!".
 
 ### C2 — what C1 hands you (2026-09-09)
 
