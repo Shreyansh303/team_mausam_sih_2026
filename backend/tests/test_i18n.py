@@ -7,6 +7,7 @@ language and scanning the strings catches a builder that asks for a key nobody w
 from __future__ import annotations
 
 import re
+from datetime import datetime
 
 import pytest
 
@@ -334,3 +335,45 @@ def test_saved_place_warnings_and_flight_detail_are_localized(client, guest):
             if warning.get("source") == "scenario":
                 assert devanagari.search(warning["title"]), warning["title"]
                 assert devanagari.search(warning["description"]), warning["description"]
+
+
+def _travel_alerts_card(lang: str, place_count: int):
+    """Build `travel_alerts` straight from the builder with N at-risk saved places."""
+    from app.engine.builders import travel_alerts
+    from app.engine.context import Bundle, Context, UserProfile
+
+    places = [
+        {
+            "id": f"plc_{i}",
+            "name": name,
+            "flight_risk": {"risk": "high", "hazards": ["fog"], "visibility_m": 120},
+            "warnings": [],
+        }
+        for i, name in enumerate(["Mumbai", "London", "Chennai"][:place_count])
+    ]
+    bundle = Bundle(snap={}, extras={"places": places})
+    ctx = Context(
+        now=datetime.fromisoformat(NOW),
+        daypart="morning",
+        is_weekend=False,
+        season="monsoon",
+        location={},
+        lang=lang,
+    )
+    return travel_alerts.build(bundle, ctx, UserProfile(language=lang))
+
+
+@pytest.mark.parametrize("lang", ["en", "hi"])
+def test_travel_alerts_headline_is_never_plural_with_parentheses(lang):
+    """C1: the headline used to read "1 travel alert(s)". Singular and plural are now two
+    keys, so neither language shows a placeholder plural on the demo screen."""
+    one = _travel_alerts_card(lang, 1).headline
+    many = _travel_alerts_card(lang, 2).headline
+
+    assert "(s)" not in one and "(s)" not in many, (one, many)
+    assert not KEY_SHAPED.match(one) and not KEY_SHAPED.match(many), (one, many)
+    assert one != many, "singular and plural must not render identically"
+    assert one.startswith("1 "), one
+    assert many.startswith("2 "), many
+    # The place name is the *top* alert's, and both forms carry it.
+    assert "Mumbai" in one and "Mumbai" in many, (one, many)

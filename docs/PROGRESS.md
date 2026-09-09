@@ -367,6 +367,33 @@ unticked items but files present:
   `app/assets/fixtures/home_sample.json` re-copied from `home_severe.json` per the B1 deviation.
   The `usr_`/`plc_`/`wrn_` ids changed with them, as A3 noted they always do.
 
+- **C1** `Snapshot.current` is read off the **forecast hour matching `now_override`** when a demo
+  clock is set (`services/snapshot.normalize_forecast(..., ref_now=)`, same for `normalize_air`).
+  docs/00 step 2 puts the home at 07:30, but `/home` kept Open-Meteo's live `current` block, so the
+  hero drew a moon over a "dawn" feed and every derived metric disagreed with `context.now`.
+  **Without a demo clock nothing changes** — live data stays the real observation (CLAUDE.md §6).
+- **C1** `GET /health` reports **IST**, not UTC. 04 §Base says every timestamp carries a location
+  offset; `/health` has no location, so it uses the same `Asia/Kolkata` clock the WebSocket
+  `hello.server_time` does rather than drifting to UTC. No contract change (04 only names the field).
+- **C1** `engine/builders/base.num()` rounds ties **away from zero** (`ROUND_HALF_UP`), not to even.
+  The app formats the same value with Dart's `.round()`, so a hero reading "Feels like 31°" over a
+  sentence reading "feels like 30°C" for one 30.5 looked like a bug. `docs/fixtures/*.json` and
+  `app/assets/fixtures/home_sample.json` were regenerated with the change.
+- **C1** **Chip/copy ownership, recorded in `docs/06` §Renderers in the same commit.** Two cards
+  said the same thing twice: `tides` drew an "Estimated" pill that the card shell *and* the detail
+  header already draw from `card.estimated`, and `timeline` drew `data.advice`, which the engine
+  reuses verbatim as `insight.detail`. Both renderers now defer to the host when the host is
+  already showing it. No contract change — the payload is unchanged.
+- **C1** `FreshnessChip` ages the payload against the **effective demo clock** (the demo sheet's
+  override, an admin `now_override` frame off `/ws/alerts`, else the live payload's own
+  `context.now`) rather than the device clock. The backend stamps `freshness` with `now_override`,
+  so a judge moving the clock to 07:30 otherwise saw "Updated 16 h ago" on fresh data. A **cached or
+  bundled** payload has no usable clock of its own and still ages against the device, which is the
+  "Updated 12 min ago" docs/06 asks for.
+- **C1** `insight.travel_alerts.headline` is split into `.one` / `.other` (en + hi). The single key
+  rendered "1 travel alert(s) — Mumbai", which reads like an unfinished placeholder on the demo
+  screen. Additive to the catalogs; the card `data` shape is unchanged.
+
 ## Notes for next phase
 
 ### C1 — what B3 hands you (2026-09-08)
