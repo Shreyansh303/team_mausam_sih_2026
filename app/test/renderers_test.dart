@@ -5,6 +5,7 @@ import 'package:mausam_app/core/theme.dart';
 import 'package:mausam_app/data/models/card.dart';
 import 'package:mausam_app/data/models/home_response.dart';
 import 'package:mausam_app/features/home/renderers/registry.dart';
+import 'package:mausam_app/features/home/renderers/timeline.dart';
 import 'package:mausam_app/l10n/gen/app_localizations.dart';
 
 import 'fixture.dart';
@@ -209,5 +210,45 @@ void main() {
     )));
     await tester.pump();
     expect(find.text('Estimated'), findsOneWidget);
+  });
+
+  testWidgets('timeline orders windows by the clock and marks the ones on another day',
+      (tester) async {
+    // docs/02 card 22 publishes each window's *next occurrence*, so after 09:00 the morning
+    // drop is tomorrow while the afternoon pickup is still today. The bar draws windows at
+    // their real positions, so the rows must follow the same order — C1.
+    final raw = rawCard('home_parent.json', 'school_commute')
+      ..['data'] = <String, dynamic>{
+        'overall_verdict': 'caution',
+        'windows': <Map<String, dynamic>>[
+          <String, dynamic>{
+            'label': 'morning_drop',
+            'start': '2026-09-10T07:00:00+05:30',
+            'end': '2026-09-10T09:00:00+05:30',
+            'verdict': 'good',
+          },
+          <String, dynamic>{
+            'label': 'afternoon_pickup',
+            'start': '2026-09-09T13:00:00+05:30',
+            'end': '2026-09-09T16:00:00+05:30',
+            'verdict': 'caution',
+          },
+        ],
+      };
+
+    final card = HomeCard.fromJson(raw);
+    late List<TimelineWindow> parsed;
+    await tester.pumpWidget(_host(Builder(builder: (context) {
+      parsed = TimelineWindow.parse(card, L.of(context));
+      return RendererRegistry.build(context, card);
+    })));
+    await tester.pump();
+
+    expect(parsed.map((w) => w.title).toList(), <String>['Afternoon pickup', 'Morning drop'],
+        reason: 'today first, tomorrow second — the order the bar draws');
+
+    // The later day is labelled, so "07:00 – 09:00" under a bar starting at 12:30 makes sense.
+    expect(find.textContaining('Tomorrow 07:00'), findsWidgets);
+    expect(find.textContaining('Tomorrow 13:00'), findsNothing);
   });
 }

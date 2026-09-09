@@ -1975,6 +1975,12 @@ abstract class L {
   /// **'No window in the forecast period.'**
   String get noWindow;
 
+  /// No description provided for @tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get tomorrow;
+
   /// No description provided for @overallWithVerdict.
   ///
   /// In en, this message translates to:

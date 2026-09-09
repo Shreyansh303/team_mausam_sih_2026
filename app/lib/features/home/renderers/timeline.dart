@@ -38,6 +38,8 @@ class TimelineRenderer extends StatelessWidget {
     }
     final overall = asStringOrNull(card.data['overall_verdict']);
     final advice = asStringOrNull(card.data['advice']);
+    // Every day marker is relative to the first window on the bar.
+    final reference = windows.firstWhere((w) => w.start != null, orElse: () => windows.first).start;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +59,7 @@ class TimelineRenderer extends StatelessWidget {
         for (final w in windows)
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
-            child: TimelineWindowRow(window: w, expanded: expanded),
+            child: TimelineWindowRow(window: w, expanded: expanded, reference: reference),
           ),
         // The card shell already prints `insight.detail` under the headline, and the engine
         // usually reuses the same sentence for both (school_commute, commute_conditions).
@@ -226,7 +228,27 @@ class TimelineWindow {
           ));
       }
     }
+    // docs/02 card 22 publishes each window's *next occurrence*, so after 09:00 the morning
+    // drop is tomorrow and the afternoon pickup is today. `TimelineBar` draws them at their
+    // real positions, so the rows have to follow the same clock or the card contradicts
+    // itself — bar "afternoon then morning", list "morning then afternoon". C1.
+    out.sort((a, b) {
+      if (a.start == null || b.start == null) return 0;
+      return a.start!.compareTo(b.start!);
+    });
     return out;
+  }
+
+  /// The day marker a row (or an axis label) needs when the timeline crosses midnight:
+  /// `null` on the timeline's own day, "Tomorrow" the next day, else a short weekday.
+  static String? dayMarker(L l, DateTime? when, DateTime? reference) {
+    if (when == null || reference == null) return null;
+    final day = DateTime(when.year, when.month, when.day);
+    final base = DateTime(reference.year, reference.month, reference.day);
+    final delta = day.difference(base).inDays;
+    if (delta == 0) return null;
+    if (delta == 1) return l.tomorrow;
+    return Fmt.dayShort(when.toIso8601String());
   }
 }
 
@@ -278,6 +300,8 @@ class TimelineBar extends StatelessWidget {
     axisEnd = axisEnd.add(const Duration(minutes: 30));
     final total = axisEnd.difference(axisStart).inMinutes.toDouble();
     if (total <= 0) return SizedBox(height: height);
+    final endLabel = Fmt.time(axisEnd.toIso8601String());
+    final endMarker = TimelineWindow.dayMarker(L.of(context), axisEnd, axisStart);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -334,7 +358,7 @@ class TimelineBar extends StatelessWidget {
             Text(Fmt.time(axisStart.toIso8601String()),
                 style: theme.textTheme.labelSmall
                     ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-            Text(Fmt.time(axisEnd.toIso8601String()),
+            Text(endMarker == null ? endLabel : '$endMarker $endLabel',
                 style: theme.textTheme.labelSmall
                     ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
           ],
@@ -346,15 +370,27 @@ class TimelineBar extends StatelessWidget {
 
 /// One window under the bar: name, clock range, verdict pill and its stats.
 class TimelineWindowRow extends StatelessWidget {
-  const TimelineWindowRow({super.key, required this.window, this.expanded = false});
+  const TimelineWindowRow({
+    super.key,
+    required this.window,
+    this.expanded = false,
+    this.reference,
+  });
 
   final TimelineWindow window;
   final bool expanded;
 
+  /// The timeline's own day. A window on a later day is labelled, so "07:00 – 09:00" under a
+  /// bar that starts at 12:30 reads as tomorrow's school run rather than a broken sort.
+  final DateTime? reference;
+
   @override
   Widget build(BuildContext context) {
+    final l = L.of(context);
     final theme = Theme.of(context);
     final stats = expanded ? window.stats : window.stats.take(3).toList();
+    final marker = TimelineWindow.dayMarker(l, window.start, reference);
+    final range = marker == null ? window.range : '$marker ${window.range}';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,7 +407,9 @@ class TimelineWindowRow extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                window.range,
+                range,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodySmall
                     ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
               ),

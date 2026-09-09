@@ -371,6 +371,7 @@
   "@nextTide": {"placeholders": {"type": {"type": "String"}, "time": {"type": "String"}, "height": {"type": "String"}}},
   "turningPoints": "Turning points",
   "noWindow": "No window in the forecast period.",
+  "tomorrow": "Tomorrow",
   "overallWithVerdict": "Overall: {verdict}",
   "@overallWithVerdict": {"placeholders": {"verdict": {"type": "String"}}},
   "temp": "Temp",

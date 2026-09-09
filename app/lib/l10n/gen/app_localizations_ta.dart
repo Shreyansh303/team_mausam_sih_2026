@@ -1046,6 +1046,9 @@ class LTa extends L {
   String get noWindow => 'No window in the forecast period.';
 
   @override
+  String get tomorrow => 'Tomorrow';
+
+  @override
   String overallWithVerdict(String verdict) {
     return 'Overall: $verdict';
   }

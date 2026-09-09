@@ -370,6 +370,7 @@
   "@nextTide": {"placeholders": {"type": {"type": "String"}, "time": {"type": "String"}, "height": {"type": "String"}}},
   "turningPoints": "परिवर्तन बिंदु",
   "noWindow": "पूर्वानुमान अवधि में कोई उपयुक्त समय नहीं।",
+  "tomorrow": "कल",
   "overallWithVerdict": "कुल मिलाकर: {verdict}",
   "@overallWithVerdict": {"placeholders": {"verdict": {"type": "String"}}},
   "temp": "तापमान",

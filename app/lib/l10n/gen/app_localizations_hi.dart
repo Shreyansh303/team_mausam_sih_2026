@@ -1043,6 +1043,9 @@ class LHi extends L {
   String get noWindow => 'पूर्वानुमान अवधि में कोई उपयुक्त समय नहीं।';
 
   @override
+  String get tomorrow => 'कल';
+
+  @override
   String overallWithVerdict(String verdict) {
     return 'कुल मिलाकर: $verdict';
   }

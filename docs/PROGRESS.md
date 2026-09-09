@@ -384,6 +384,13 @@ unticked items but files present:
   header already draw from `card.estimated`, and `timeline` drew `data.advice`, which the engine
   reuses verbatim as `insight.detail`. Both renderers now defer to the host when the host is
   already showing it. No contract change — the payload is unchanged.
+- **C1** The `timeline` renderer **sorts its windows by start time** and prefixes any window that
+  falls on a later day with that day ("Tomorrow 07:00 – 09:00"); the bar's end-of-axis label does
+  the same. docs/02 card 22 publishes each window's *next occurrence*, so after 09:00 `morning_drop`
+  is tomorrow while `afternoon_pickup` is today — the bar drew them in true chronological order
+  while the rows followed payload order, so one card said "afternoon then morning" on the bar and
+  "morning then afternoon" in the list, over an axis reading 12:30 → 09:30. Renderer-only; the
+  payload and `docs/04` are unchanged, and `docs/06` §Renderers was updated in the same commit.
 - **C1** `FreshnessChip` ages the payload against the **effective demo clock** (the demo sheet's
   override, an admin `now_override` frame off `/ws/alerts`, else the live payload's own
   `context.now`) rather than the device clock. The backend stamps `freshness` with `now_override`,
