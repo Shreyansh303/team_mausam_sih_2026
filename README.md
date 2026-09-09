@@ -44,7 +44,7 @@ a warning is pushed over a WebSocket, works offline from cache, and speaks Engli
 - **Explainable.** Every card carries up to four reasons ("Because you follow Parenting",
   "Early-morning window", "AQI is Very Poor right now"); long-press opens *Why am I seeing this?*
 - **Learning.** Taps, expands, pins and dismissals are sent back and adjust the score immediately —
-  two dismissals demote a card, a pin pins it.
+  a few dismissals demote a card out of the feed, a pin pins it (measured: three, see step 6).
 - **Live re-rank.** An orange/red warning pushed from the admin console reaches every connected
   client over `/ws/alerts` in milliseconds; the app shows a banner, re-fetches and animates the
   warning card to the top.
@@ -81,7 +81,7 @@ change:
 
 | Radar map | Saved places | Demo sheet |
 |---|---|---|
-| ![Map](docs/screenshots/b2b_map.png) | ![Places](docs/screenshots/b2b_places.png) | ![Demo sheet](docs/screenshots/b2b_demo_sheet.png) |
+| ![Map](docs/screenshots/b2b_map.png) | ![Places](docs/screenshots/c1_step09_places_page.png) | ![Demo sheet](docs/screenshots/c1_extra_demo_sheet.png) |
 
 All shots are the Flutter web build driven against a locally running backend, except the offline
 one (cached / bundled-sample path). `docs/screenshots/` also holds scrolled variants
@@ -333,7 +333,10 @@ Backend running, admin console open on a laptop, app open on a phone or in Chrom
 1. **Onboard** — language → pick **Parent + Commuter** → location **Delhi** (GPS, search or a
    popular city).
 2. **Morning home** — set the demo clock to **07:30** (app demo sheet, admin console, or
-   `?now_override=2026-09-08T07:30:00+05:30`). *School run* and *Commute conditions* rank first,
+   `?now_override=<today>T07:30:00+05:30`). Use **today's** date: the backend only moves the
+   *reading* to a demo hour it has a forecast row for, and leaves the live observation standing
+   otherwise, so a stale date makes the clock look like it does nothing. *School run* and
+   *Commute conditions* rank first,
    each with its reasons; hero shows current conditions, nowcast and any rain alert below.
 3. **Switch persona** — tap the **Fitness** chip: best workout window, sun times, wind and heat
    alert move up. Then **Health**: AQI, pollen, UV, humidity.
@@ -362,11 +365,13 @@ Backend running, admin console open on a laptop, app open on a phone or in Chrom
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8000/api/v1/home?lat=28.61&lon=77.21&personas=commuter&scenario=dense_fog"
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8000/api/v1/home?lat=28.61&lon=77.21&personas=parent&now_override=2026-09-08T07:30:00+05:30"
+  "http://localhost:8000/api/v1/home?lat=28.61&lon=77.21&personas=parent&now_override=$(date +%F)T07:30:00+05:30"
 ```
 
 `now_override` is ISO-8601; a value without an offset is read as IST. `POST /admin/now-override`
-with `{"now": null}` clears the demo clock. Full script: [`docs/00_VISION.md`](docs/00_VISION.md).
+with `{"now": null}` clears the demo clock. Keep the date inside the 48-h forecast window — today
+or tomorrow: outside it the *ranking* still moves but the reading stays on the live observation
+rather than inventing one (the app's demo sheet builds its presets on today for this reason). Full script: [`docs/00_VISION.md`](docs/00_VISION.md).
 
 ---
 
