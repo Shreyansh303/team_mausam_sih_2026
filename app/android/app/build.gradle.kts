@@ -96,6 +96,13 @@ kotlin {
     }
 }
 
+dependencies {
+    // The home-screen widget's hourly background refresh (docs/06 §Home-screen widget).
+    // Pinned to the version home_widget already pulls in, so there is one WorkManager on the
+    // classpath, not two.
+    implementation("androidx.work:work-runtime-ktx:2.11.2")
+}
+
 flutter {
     source = "../.."
 }

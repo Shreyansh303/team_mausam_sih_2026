@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Light palette for the home-screen widget. RemoteViews are inflated against the launcher's
+     configuration, so `values-night/` gives the same widget a dark card for free.
+     Same family as lib/core/theme.dart (M3 seed #1565C0). -->
+<resources>
+    <color name="widget_background">#FFFFFFFF</color>
+    <color name="widget_on_surface">#FF1A1C1E</color>
+    <color name="widget_on_surface_variant">#FF5A6068</color>
+    <color name="widget_accent">#FF1565C0</color>
+    <color name="widget_divider">#1F000000</color>
+</resources>

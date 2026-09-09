@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- docs/06_MOBILE_SPEC.md §Home-screen widget → Layouts.
+
+     Two size classes from one provider: 4x1 (minHeight 40dp = one cell) and 4x2 (the target
+     placement). MausamWidgetProvider picks the layout from the host's reported cell height.
+
+     updatePeriodMillis="0": the system never polls. Redraws come from the app after every
+     /home payload and from the hourly WorkManager job — neither wakes the device the way the
+     30-minute AppWidget alarm would. -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="250dp"
+    android:minHeight="40dp"
+    android:targetCellWidth="4"
+    android:targetCellHeight="2"
+    android:minResizeWidth="180dp"
+    android:minResizeHeight="40dp"
+    android:maxResizeWidth="400dp"
+    android:maxResizeHeight="200dp"
+    android:resizeMode="horizontal|vertical"
+    android:widgetCategory="home_screen"
+    android:updatePeriodMillis="0"
+    android:initialLayout="@layout/mausam_widget_4x2"
+    android:previewLayout="@layout/mausam_widget_preview"
+    android:previewImage="@mipmap/ic_launcher"
+    android:description="@string/widget_description" />

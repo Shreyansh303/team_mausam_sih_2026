@@ -37,6 +37,25 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Home-screen widget (docs/06_MOBILE_SPEC.md §Home-screen widget). Renders the last
+             /home snapshot with RemoteViews and needs no permission of its own — the hourly
+             refresh reuses INTERNET, declared above.
+
+             exported="true" is the convention for an AppWidgetProvider: the only thing that
+             broadcasts APPWIDGET_UPDATE to it is the launcher/AppWidget framework, and the
+             receiver does nothing but redraw from app-private storage. -->
+        <receiver
+            android:name=".MausamWidgetProvider"
+            android:label="@string/widget_label"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/mausam_widget_info" />
+        </receiver>
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

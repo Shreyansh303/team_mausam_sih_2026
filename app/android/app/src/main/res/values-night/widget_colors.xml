@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dark palette for the home-screen widget (docs/06 §Home-screen widget → Layouts). -->
+<resources>
+    <color name="widget_background">#FF14181C</color>
+    <color name="widget_on_surface">#FFE4E7EA</color>
+    <color name="widget_on_surface_variant">#FFB2B9C0</color>
+    <color name="widget_accent">#FF90CAF9</color>
+    <color name="widget_divider">#33FFFFFF</color>
+</resources>

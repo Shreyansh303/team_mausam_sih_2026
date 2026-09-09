@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The severity bar down the left of the pinned row. Its colour is set at runtime from the
+     snapshot (`color_hex`), which for a warnings card is the IMD warning colour itself. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/widget_accent" />
+    <corners android:radius="2dp" />
+</shape>

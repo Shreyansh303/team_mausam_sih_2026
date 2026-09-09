@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hindi chrome for the home-screen widget. Content strings (condition, card titles, insights)
+     are not here: the backend returns them already localized (docs/04 `lang`). -->
+<resources>
+    <string name="widget_description">अभी का मौसम और आज की सबसे ज़रूरी बात।</string>
+
+    <string name="widget_open_to_refresh">ताज़ा करने के लिए मौसम खोलें</string>
+    <string name="widget_estimated">अनुमानित</string>
+
+    <string name="widget_age_now">अभी</string>
+    <string name="widget_age_minutes">%1$d मिनट पहले</string>
+    <string name="widget_age_hours">%1$d घंटे पहले</string>
+    <string name="widget_age_days">%1$d दिन पहले</string>
+
+    <string name="widget_preview_condition">गरज के साथ बौछार</string>
+    <string name="widget_preview_location">नई दिल्ली</string>
+    <string name="widget_preview_age">6 मिनट पहले</string>
+    <string name="widget_preview_pinned_title">मौसम चेतावनियाँ</string>
+    <string name="widget_preview_pinned_insight">ऑरेंज चेतावनी: बिजली के साथ गरज</string>
+</resources>
