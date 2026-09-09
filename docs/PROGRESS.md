@@ -444,6 +444,18 @@ unticked items but files present:
   as Devanagari under `hi` — a fall-through cannot come back silently. App-side only: this is a
   `Card.data` enum, which docs/04 §preamble leaves unlocalized on purpose (B2b deviation), so
   the payload and the contract are unchanged.
+- **C1** **The demo sheet's "Pick a time" chip still hardcoded `2026-09-08`.** The earlier C1 fix
+  computed `clockPresets` from today's date but left the custom-time `ActionChip` stamping the
+  literal, so from 2026-09-09 onwards a judge who picked a time by hand hit exactly the bug the
+  presets had been rescued from: the day is outside the forecast window, the backend leaves the
+  reading on live data (the deviation above), and the clock looks like a dead control. It now
+  builds its override with the same `presetFor`. `test/demo_sheet_test.dart` pins `presetFor`'s
+  output to today **and** greps `demo_sheet.dart` for any `'20xx-xx-xxT` literal, so the next
+  hardcoded date fails the gate instead of the demo.
+- **C1** `DemoSheet.scenarioLabel` (was the private `_humanize`) keeps a one-entry acronym map so
+  the `severe_aqi` chip reads **"Severe AQI"**, not "Severe Aqi", next to a card the same app
+  titles "AQI". `Fmt.humanize` was deliberately left alone — it is the fallback for *backend*
+  enums, and `test/l10n_test.dart` pins its "Volcanic Ash" behaviour.
 
 ## Notes for next phase
 

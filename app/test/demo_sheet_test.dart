@@ -55,4 +55,35 @@ void main() {
     expect(DemoSheet.scenarios.first, 'live');
     expect(DemoSheet.scenarios, hasLength(10));
   });
+
+  test('no scenario chip mangles an acronym the rest of the app capitalises', () {
+    // C1: the chip read "Severe Aqi" while the card it promotes is titled "AQI".
+    expect(DemoSheet.scenarioLabel('severe_aqi'), 'Severe AQI');
+    expect(DemoSheet.scenarioLabel('clear_pleasant'), 'Clear Pleasant');
+    expect(DemoSheet.scenarioLabel('live'), 'Live');
+    for (final name in DemoSheet.scenarios) {
+      final label = DemoSheet.scenarioLabel(name);
+      expect(label, isNotEmpty);
+      expect(label.contains('_'), isFalse, reason: '$name still shows a raw key');
+      expect(RegExp(r'\bAqi\b').hasMatch(label), isFalse,
+          reason: '$name renders "$label" — AQI is written in capitals everywhere else');
+    }
+  });
+
+  test('the custom time picker stamps today, like the presets do', () {
+    // C1: "Pick a time" hardcoded 2026-09-08 long after the presets stopped doing so. The
+    // backend only moves the reading to a demo hour it has a forecast row for, so a judge
+    // picking 07:30 by hand got the live observation and a clock that appeared to do nothing.
+    final today = DateTime.now();
+    final ymd = '${today.year.toString().padLeft(4, '0')}-'
+        '${today.month.toString().padLeft(2, '0')}-'
+        '${today.day.toString().padLeft(2, '0')}';
+    // The picker builds its override with exactly this call.
+    expect(DemoSheet.presetFor('07:30'), '${ymd}T07:30:00+05:30');
+    expect(DemoSheet.presetFor('23:05'), '${ymd}T23:05:00+05:30');
+
+    final source = File('lib/features/demo/demo_sheet.dart').readAsStringSync();
+    expect(RegExp(r"'20\d\d-\d\d-\d\dT").hasMatch(source), isFalse,
+        reason: 'demo_sheet.dart has a hardcoded ISO date again — build it with presetFor');
+  });
 }

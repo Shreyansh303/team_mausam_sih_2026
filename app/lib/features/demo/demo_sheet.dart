@@ -114,7 +114,7 @@ class DemoSheet extends ConsumerWidget {
                 children: [
                   for (final name in scenarios)
                     ChoiceChip(
-                      label: Text(_humanize(name)),
+                      label: Text(scenarioLabel(name)),
                       selected: (demo.scenario ?? 'live') == name,
                       onSelected: (_) => notifier.setScenario(name),
                     ),
@@ -152,7 +152,10 @@ class DemoSheet extends ConsumerWidget {
                       final hh = picked.hour.toString().padLeft(2, '0');
                       final mm = picked.minute.toString().padLeft(2, '0');
                       // docs/04: a `now` without an offset is read as IST; we send it explicitly.
-                      notifier.setNowOverride('2026-09-08T$hh:$mm:00+05:30');
+                      // Today's date, for the same reason `clockPresets` is computed rather than
+                      // written down — a hardcoded day falls outside the forecast window as soon
+                      // as it is yesterday, and the backend then leaves the reading on live data.
+                      notifier.setNowOverride(presetFor('$hh:$mm'));
                     },
                   ),
                 ],
@@ -254,9 +257,16 @@ class DemoSheet extends ConsumerWidget {
     }
   }
 
-  static String _humanize(String key) => key
+  /// Acronyms the rest of the app always writes in capitals. Without this the `severe_aqi`
+  /// chip read "Severe Aqi" next to an AQI card titled "AQI".
+  static const Map<String, String> _acronyms = <String, String>{'aqi': 'AQI'};
+
+  @visibleForTesting
+  static String scenarioLabel(String key) => key
       .split('_')
-      .map((w) => w.isEmpty ? w : '${w[0].toUpperCase()}${w.substring(1)}')
+      .map((w) => w.isEmpty
+          ? w
+          : _acronyms[w] ?? '${w[0].toUpperCase()}${w.substring(1)}')
       .join(' ');
 
   static String _statusLabel(L l, AlertsStatus status) => switch (status) {
