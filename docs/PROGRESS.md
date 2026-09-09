@@ -31,6 +31,7 @@ unticked items but files present:
 - [x] C1 e2e QA
 - [x] C2 docs + pitch
 - [ ] S* stretch
+- [x] S1 ML ranker v2 (ENGINE_ML=1; v1 default)
 - [x] S3 FCM push (transport + device registry + design doc; app wiring pending a Firebase project)
 - [x] H0 fresh-machine bootstrap (new owner; see docs/HANDOFF.md §4) — done on the macOS machine
   2026-09-08 (see "Notes for next phase → H0 — this Mac"); was never needed on the original Windows machine.
@@ -216,6 +217,44 @@ unticked items but files present:
   technical approach · feasibility & viability · impact & benefits · demo + what's next), 7 of the
   C1 screenshots embedded, speaker notes on every slide, 1.4 MB. Built with `pptxgenjs`; how to
   rebuild it is in the C2 notes.
+
+## S1 checklist (ML ranker v2 — `ENGINE_ML=1`, 2026-09-09)
+- [x] `engine/ml.py` — feature extraction from the events already logged (card-type one-hot ·
+  daypart/season/weekend from the event's own `ts` · persona one-hots + the v1 `relevance` ·
+  urgency band · per-card-type tap/expand/dismiss rates, pin flag and impression volume ·
+  recency `exp(-age_days/7)`), plain-Python sparse logistic regression (**no numpy, no
+  scikit-learn — nothing new is pinned**), deterministic SGD, class balancing and deterministic
+  negative sampling for implicit feedback
+- [x] `models/ranker_weights.py` — one row per user, `weights` as a readable JSON object
+  (`{feature: float}`), `stats` (per-type last-interaction epoch, feeds recency), `n_events`,
+  `version`, `trained_at`. Registered in `models/__init__.py`; new table, no migration needed
+- [x] cold start twice over: `p_tap = 0.5` (zero contribution) below `MIN_EVENTS = 8`, **and**
+  for any card type this user has never interacted with
+- [x] training triggered inline on `POST /events` when the flag is on — 5 epochs over the most
+  recent 300 events, **15 ms measured** at that cap, a 100-event batch round-trips in < 20 ms,
+  so no background task
+- [x] `scoring.evaluate` blends `score += clamp(0.2·(p_tap − 0.5), ±0.1)` — only when a model is
+  attached, only for cards that are **not pinned**, never for the hero, and never on `urgency`
+- [x] `explain.py` gains the `learning:up` / `learning:down` family carrying the signed value
+  ("Learned from your taps (+0.09)"); `reason.learning.up` / `.down` added to `en.json` + `hi.json`
+  (**606 keys each**, parity test green)
+- [x] `/me/reset-learning` and `/admin/reset-user` delete the weights row; `merge_guest` drops the
+  guest's row (its events move to the target and retrain from the union)
+- [x] `/health` reports `engine:{"ml":bool}`; `AdminState` reports `engine_ml`; `ENGINE_ML` in
+  `config.py` (+ `settings.ml_on`) and `.env.example`
+- [x] docs: `docs/03` §"Learning (v2)" rewritten to what was built (feature table, labels and
+  negative sampling, update rule, the three bounds, cold start) · `docs/04` additive note on the
+  new reason code, the `engine`/`engine_ml` fields and optional `meta.urgency` ·
+  `backend/README.md` §"Ranker v2 (ML)" (enable · what it learns · the bound · end-to-end curl ·
+  how to inspect the weights)
+- [x] tests: `backend/tests/test_ml.py` (15) — flag off is byte-identical **and** never reaches
+  `engine/ml.py` · flag on with no events is byte-identical (cold start) · sub-`MIN_EVENTS` is
+  byte-identical to the same request with the flag off · untrained card type stays on v1 · taps
+  raise `p_tap` and dismisses lower it · the learned reason reaches `/home` in en and hi · a
+  maximally favourable model cannot outrank an orange **or** red warning, cannot pin anything new
+  and never touches `urgency` · the clamp holds both ways · reset (user and admin) clears the
+  weights · same events → same weights · training bounded by `MAX_EVENTS` · `/health` +
+  `/admin/state` report the flag — **386 passed** (371 + 15)
 
 ## S3 checklist (FCM push — doc + optional code, 2026-09-09)
 - [x] `services/push.py` — `PushTransport` protocol · `NoopTransport` (default, one INFO line per
@@ -566,8 +605,106 @@ unticked items but files present:
   handset changed hands; the previous user must stop getting its alerts). Deletion is
   ownership-checked, and tokens are redacted to their last six characters in every log line and in
   `GET /admin/devices` — a push token is a send-capability, not an identifier to hand around.
+- **S1** **No new dependency.** `docs/03` §Learning v2 said scikit-learn; numpy is not even
+  pinned, so the model is plain-Python sparse SGD instead (~40 lines). The feature vector is ~15
+  non-zero entries and training is capped, so a library would buy nothing and cost a wheel on
+  every deploy. `requirements.txt` is unchanged. The doc was rewritten in the same commit.
+- **S1** `is_coastal` is **not** a feature, against the sketch in `docs/03`. It is a hard gate in
+  the catalog rather than a preference, and it is not recoverable from a logged event — the
+  training row would have been a constant, whose weight never leaves 0 anyway.
+- **S1** The **urgency band** is a feature, but it trains only from `meta.urgency`, which the app
+  does not send today: every logged event lands in `urg:unknown`, so the real bands sit at their
+  0 initialisation and contribute nothing until the client adds the field (`docs/04` records it as
+  optional). Deliberately *not* inferred at prediction time from the live urgency — a learned
+  weight on urgency is exactly what the bound exists to prevent.
+- **S1** Two cold starts, not one. Beyond the `MIN_EVENTS = 8` floor the docs ask for, a card type
+  the user has never interacted with also stays at `p_tap = 0.5`. Without it a model fitted on one
+  sparse log spends its always-on features (bias, daypart, season) as a "cards are usually not
+  tapped" prior, so an unseen card comes back near `p = 0.2` and would be demoted *and* labelled
+  "Learned from what you skip" — about a card that has never been on screen. Class balancing
+  (`ml.balance`) was tried first and is kept, but it does not fix this on its own.
+- **S1** Implicit feedback needs negatives, and a user who only taps produces none. Each positive
+  is therefore paired with one **sampled negative** on a card type the user has never engaged
+  with, rotating deterministically through the sorted candidate list — no RNG, so the determinism
+  test holds. Without it, ten taps on `aqi` lift every card equally and rank nothing.
+- **S1** The learned term is applied **only to unpinned, non-hero cards**. `docs/03` does not say
+  this; it is the cleanest statement of the bound (learning only ever reorders the non-urgent part
+  of the feed) and it makes the hero honest — the hero is lifted out of the ranking, so a learned
+  term there would move nothing while still claiming a line in the why sheet.
+- **S1** `HomeResponse.engine` is unchanged — still `{"version": "1.0", "weights": {...}}` — even
+  with the flag on. Anything else would break the "flag on, no events → byte-identical" test that
+  proves the cold start. The flag is reported by `/health` (`engine.ml`) and `/admin/state`
+  (`engine_ml`); the *per-card* ML contribution is surfaced through `reasons`, which is what the
+  why sheet actually reads.
 
 ## Notes for next phase
+
+### S1 — notes (ML ranker v2, 2026-09-09)
+
+**It is off by default and that is the design, not an unfinished edge.** `ENGINE_ML=0` is the
+shipped default; v1 is the fallback and the floor. With the flag off, `/home` is byte-identical to
+what it returned before this phase and `app/engine/ml.py` is not called at all — there is a test
+that monkeypatches every entry point in that module to raise and then drives a full `/home`.
+
+**Enable it**
+
+```bash
+cd backend && ENGINE_ML=1 .venv/bin/python -m uvicorn app.main:app --reload --port 8000
+# or: echo ENGINE_ML=1 >> backend/.env
+curl -s localhost:8000/health | python3 -c "import sys,json;print(json.load(sys.stdin)['engine'])"
+# {'ml': True}
+```
+
+`GET /admin/state` carries the same thing as `engine_ml`, so the demo console can show it.
+
+**The bound — this is the part to be able to say out loud.** `docs/08` §Risks claims a user cannot
+dismiss their way out of a red warning. Three things hold that up, and `tests/test_ml.py` proves
+each with a model that is maximally confident (`p_tap = 1.0`) about *every* card in the catalog:
+
+1. the term is clamped to **±0.1** (`clamp_adjustment`, `ML_MAX`);
+2. it is added to `score` and **never to `urgency`**, so nothing can be pushed past the
+   `urgency >= 0.8` pin threshold — the test asserts every card's urgency is bit-identical to v1;
+3. it is applied **only to cards that are not pinned**, and `docs/03` §Ordering renders the whole
+   pinned block above `cards`. A learned card is below a pinned warning *structurally*, not by
+   arithmetic — the comparison never happens.
+
+The pitch line stays true and gets sharper: an ML term that cannot exceed ±0.1 cannot bury a
+warning, and in fact it is never even weighed against one.
+
+**What the app could show next (nothing in `app/` was touched).** The backend now emits one extra
+reason code on a card, `learning:up` / `learning:down`, whose `text` already carries the signed
+contribution — "Learned from your taps (+0.09)", localized en/hi. The why sheet renders
+`reasons[].text` today, so **it needs no change to display it**. Three things a mobile phase could
+add on top:
+
+1. A distinct icon/colour for the `learning:*` family in the why sheet, so "the ranker learned
+   this" reads differently from "this is urgent". The codes are stable and prefixed for exactly
+   this.
+2. Send `meta.urgency` (the float the card was rendered with) on `POST /events`. It is already
+   accepted and already a feature; today every event lands in `urg:unknown` and the real bands
+   train to nothing. `docs/04` documents it as optional and additive.
+3. A settings toggle would be the wrong shape — the flag is a *server* deployment choice, and a
+   per-user opt-out belongs in the profile, not in `ENGINE_ML`. `POST /me/reset-learning` already
+   is the user-facing "forget what you know about me", and it now clears the v2 weights too.
+
+**Gotchas for whoever touches this next**
+
+- `UserProfile.ml` is the only new engine input, and `api/home.py` is the only place that fills it
+  (from `ml.model_for(db, user.id)`, and only when the flag is on). The engine stays pure — do not
+  put a DB call in `app/engine/scoring.py`.
+- Training runs **inline** on `POST /events`. Measured at the `MAX_EVENTS = 300` cap: **15 ms**,
+  with a 100-event batch round-tripping in under 20 ms. If the feature set or `EPOCHS` grows, that
+  is the number to re-measure before deciding it still does not need a worker.
+- `MODEL_VERSION` is stored on the row. Bump it whenever `feature_vector()` changes — a stale row
+  is then ignored (`RankerModel.ready` is False) until the next `POST /events` retrains it, rather
+  than silently mixing old weights with new feature names.
+- The weights table is a plain JSON column, so inspection is a `sqlite3` one-liner; the exact
+  snippet is in `backend/README.md` §"Ranker v2 (ML)".
+- The determinism guarantee depends on `Event.id` ordering and on there being **no RNG** anywhere
+  in `engine/ml.py` — including the negative sampler, which rotates through a sorted list. Keep it
+  that way; `test_same_events_produce_the_same_weights` is the guard.
+- Gates on this Mac, this commit: `cd backend && .venv/bin/python -m pytest -q` → **386 passed**
+  (371 pre-S1 + 15 new). `app/` was not touched, so the Flutter gates are unchanged from C2.
 
 ### S3 — what it hands the app side (2026-09-09)
 
