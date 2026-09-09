@@ -50,9 +50,10 @@ a warning is pushed over a WebSocket, works offline from cache, and speaks Engli
   warning card to the top.
 - **Offline.** The last home payload is cached on device; a cold start with no network still renders
   with a freshness chip ("Updated 12 min ago"), falling back to a bundled sample payload.
-- **Multilingual.** English and Hindi are complete (597 backend strings each, plus 282 app-chrome
-  strings); Marathi, Tamil and Bengali are partial with per-key fallback to English. Card copy,
-  advice, window reasons, crop actions and even date labels are localized server-side.
+- **Multilingual.** English and Hindi are complete (604 backend strings each, plus 353 app-chrome
+  strings); Marathi, Tamil and Bengali are partial (54 backend / 69 app keys) with per-key fallback
+  to English. Card copy, advice, window reasons, crop actions and even date labels are localized
+  server-side.
 - **Honest data.** Tides, pollen and traffic are modelled — they carry `"source": "estimated"` and
   the UI shows an **Estimated** chip. Estimates are never presented as observations.
 
@@ -63,29 +64,30 @@ change:
 
 | Parent | Commuter | Health |
 |---|---|---|
-| ![Parent](docs/screenshots/b2b_parent.png) | ![Commuter](docs/screenshots/b2b_commuter.png) | ![Health](docs/screenshots/b2b_health.png) |
+| ![Parent](docs/screenshots/c1_step03_persona_parent.png) | ![Commuter](docs/screenshots/c1_step03_persona_commuter.png) | ![Health](docs/screenshots/c1_step03_persona_health.png) |
 
 | Fitness | Beach | Agriculture |
 |---|---|---|
-| ![Fitness](docs/screenshots/b2b_fitness.png) | ![Beach](docs/screenshots/b2b_beach.png) | ![Agriculture](docs/screenshots/b2b_agriculture.png) |
+| ![Fitness](docs/screenshots/c1_step03_persona_fitness.png) | ![Beach](docs/screenshots/c1_step03_persona_beach.png) | ![Agriculture](docs/screenshots/c1_step03_persona_agriculture.png) |
 
-| Traveller | Event planner | Offline (cache / bundled sample) |
+| Traveller | Event planner | Offline (cache) |
 |---|---|---|
-| ![Traveller](docs/screenshots/b2b_traveler.png) | ![Event planner](docs/screenshots/b2b_event_planner.png) | ![Offline home](docs/screenshots/b1_home_offline.png) |
+| ![Traveller](docs/screenshots/c1_step03_persona_traveler.png) | ![Event planner](docs/screenshots/c1_step03_persona_event_planner.png) | ![Offline home](docs/screenshots/c1_step07_offline_cached.png) |
 
 **Live re-rank and the rest of the app:**
 
-| Before the warning is pushed | …seconds later, re-ranked | Hindi (`lang=hi`, thunderstorm) |
+| Before the warning is pushed | …seconds later, re-ranked | Hindi (`lang=hi`) |
 |---|---|---|
-| ![Before](docs/screenshots/b2b_ws_before.png) | ![After the push](docs/screenshots/b2b_ws_rerank.png) | ![Hindi](docs/screenshots/b3_hindi_localized.png) |
+| ![Before](docs/screenshots/c1_step05_ws_before.png) | ![After the push](docs/screenshots/c1_step05_ws_rerank.png) | ![Hindi](docs/screenshots/c1_step08_hindi_home.png) |
 
 | Radar map | Saved places | Demo sheet |
 |---|---|---|
 | ![Map](docs/screenshots/b2b_map.png) | ![Places](docs/screenshots/c1_step09_places_page.png) | ![Demo sheet](docs/screenshots/c1_extra_demo_sheet.png) |
 
 All shots are the Flutter web build driven against a locally running backend, except the offline
-one (cached / bundled-sample path). `docs/screenshots/` also holds scrolled variants
-(`b2a_*_scrolled.png`).
+one (backend killed, rendering from the on-device cache). The `c1_*` set is the end-to-end QA walk
+in [`docs/QA_REPORT.md`](docs/QA_REPORT.md) — 40 shots, one per demo step and variant;
+`docs/screenshots/` also holds earlier per-phase shots and scrolled variants (`b2a_*_scrolled.png`).
 
 ## Architecture
 
@@ -113,7 +115,9 @@ one (cached / bundled-sample path). `docs/screenshots/` also holds scrolled vari
 
 **Request path:** `GET /home` → snapshot (cached upstream calls) → derived metrics → engine
 (relevance × context + urgency + learning) → localized card payloads → `pinned` / `hero` / `cards` /
-`more_cards`. Warm `/home` is ~10 ms on a laptop; the app never computes ranking itself, so IMD
+`more_cards`. Measured on an M1 MacBook Air: warm `/home` **2 ms** server-side, **~15 ms** on the
+first request for a location (snapshot cache cold), payload **34.5 KB** (**13.5 KB** under `lite=1`)
+against the < 60 KB / < 400 ms p95 targets in docs/01. The app never computes ranking itself, so IMD
 could add or reorder a card **without an app release**.
 
 ### Data sources
@@ -144,6 +148,9 @@ docs/                     THE PLAN — specs are normative, code follows docs
   05_BACKEND_SPEC.md      FastAPI structure, providers, derived-metric formulas
   06_MOBILE_SPEC.md       Flutter structure, screens, renderers, offline, i18n
   07_PHASES.md            phase-by-phase work packages
+  08_PITCH.md             SIH idea-presentation content (problem → future scope)
+  QA_REPORT.md            end-to-end walk of the judge demo script — verdict PASS
+  TeamMausam_SIH2026_PS26076.pptx   the 6-slide SIH deck, generated from 08_PITCH.md
   PROGRESS.md             living checklist + per-phase handover notes
   HANDOFF.md              how to continue this repo cold
   SETUP_WINDOWS.md        Windows toolchain setup
@@ -169,7 +176,7 @@ backend, **Flutter stable (3.47.x)** for the app.
 cd backend
 python -m venv .venv
 .venv/bin/python -m pip install -r requirements-dev.txt   # Windows: .venv\Scripts\python
-.venv/bin/python -m pytest -q                             # → 327 passed (fully offline)
+.venv/bin/python -m pytest -q                             # → 348 passed (fully offline)
 .venv/bin/python -m uvicorn app.main:app --reload --port 8000
 ```
 
@@ -189,8 +196,12 @@ Smoke test with a guest token:
 ```bash
 TOKEN=$(curl -s -X POST http://localhost:8000/api/v1/auth/guest | python3 -c "import sys,json;print(json.load(sys.stdin)['token'])")
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8000/api/v1/home?lat=28.61&lon=77.21&personas=parent,commuter&now_override=2026-09-08T07:30:00+05:30"
+  "http://localhost:8000/api/v1/home?lat=28.61&lon=77.21&personas=parent,commuter&now_override=$(date +%F)T07:30:00+05:30"
 ```
+
+`$(date +%F)` is deliberate — the demo clock has to land inside the 48-h forecast window or the
+*ranking* moves while the *reading* stays on the live observation (see [Judge demo
+script](#judge-demo-script-5-minutes)). A hardcoded date makes the clock look like it does nothing.
 
 ### 2. App
 
@@ -205,7 +216,7 @@ virtualization step in (d).
 cd app
 flutter pub get
 flutter analyze          # "No issues found!"
-flutter test             # 90 green, incl. the fixture contract test
+flutter test             # 103 green, incl. the fixture contract test
 ```
 
 **(a) Chrome — the fastest loop, no Android toolchain.**
@@ -443,15 +454,19 @@ Pure, deterministic Python in `backend/app/engine/` — no I/O, so it is fully u
 | B2a | All 15 renderers + a detail page per renderer | ✅ done |
 | B2b | Animations, events pipeline, why-sheet actions, places, map, settings, demo sheet, WS client, low-bandwidth, a11y, full l10n, icon/splash | ✅ done |
 | B3 | Live-backend integration, backend i18n fixes, release APK, Flutter CI workflow | ✅ done |
-| C1 | End-to-end QA against the judge demo script (`docs/QA_REPORT.md`) | ⬜ next |
-| C2 | Pitch deck (`docs/08_PITCH.md`) | ⬜ |
+| C1 | End-to-end QA against the judge demo script — **verdict PASS**, 9 defects found and fixed ([`docs/QA_REPORT.md`](docs/QA_REPORT.md)) | ✅ done |
+| C2 | README pass, pitch content ([`docs/08_PITCH.md`](docs/08_PITCH.md)) and the SIH deck | ✅ done |
+| S1–S4 | Stretch: ML ranker v2 · home-screen widget · FCM push · more languages | ⬜ |
 
-**Last verified gates** (2026-09-08, macOS/Apple Silicon): backend `pytest -q` → **327 passed**
+**Last verified gates** (2026-09-09, macOS/Apple Silicon): backend `pytest -q` → **348 passed**
 (offline — upstream payloads are replayed through `respx`, so CI needs no network or key); app
-`flutter analyze` clean, `flutter test` → **90 passed**, `flutter build web` ✓,
-`flutter build apk --release` ✓ (`app-release.apk`, **62.5 MB**, Gradle task 114 s) and
-`flutter build apk --debug` ✓ (~168 MB). The live-integration pass drove the web build against a
-running backend with zero console errors and zero failed requests. The checklist is
+`flutter analyze` clean, `flutter test` → **103 passed**, `flutter build web` ✓. The release APK
+(`app-release.apk`, **62 496 756 B**, 3 ABIs, minSdk 24 / targetSdk 36) was built and verified in
+B3 and re-checked statically in C1; it has **not** been installed on a physical device — no phone
+or emulator image is available on this machine, so everything on-screen in this repo was observed
+in the **web build plus a static APK check**, never on a handset. The end-to-end walk of all ten
+demo steps, ten scenarios, Hindi, offline, learning and low-bandwidth is
+[`docs/QA_REPORT.md`](docs/QA_REPORT.md). The checklist is
 [`docs/PROGRESS.md`](docs/PROGRESS.md) — it is the source of truth, not this table.
 
 **Roadmap / stretch:** **S1** ML ranker v2 (logistic regression on logged events, blended as
