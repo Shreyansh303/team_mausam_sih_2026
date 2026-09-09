@@ -131,7 +131,7 @@
       "data": {
         "places": [
           {
-            "id": "plc_d7f6903e648d",
+            "id": "plc_3e4271a7a220",
             "name": "Panaji",
             "lat": 15.49,
             "lon": 73.83,
@@ -146,7 +146,7 @@
             "highest_severity": null
           },
           {
-            "id": "plc_941f7af107f3",
+            "id": "plc_fcee82bc2109",
             "name": "Mumbai",
             "lat": 19.08,
             "lon": 72.88,
@@ -216,13 +216,13 @@
       "data": {
         "places": [
           {
-            "place_id": "plc_d7f6903e648d",
+            "place_id": "plc_3e4271a7a220",
             "place_name": "Panaji",
             "days": 3,
             "items": []
           },
           {
-            "place_id": "plc_941f7af107f3",
+            "place_id": "plc_fcee82bc2109",
             "place_name": "Mumbai",
             "days": 3,
             "items": []

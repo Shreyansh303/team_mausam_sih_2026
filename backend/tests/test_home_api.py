@@ -270,15 +270,37 @@ def test_card_copy_rounds_the_way_the_app_does(client, guest):
 
     from app.engine.builders.base import num
 
+    # Exactly representable halves round away from zero, like Dart's `.round()`.
     assert num(30.5) == "31"
     assert num(29.5) == "30"
     assert num(-0.5) == "-1"
+
+    # One decimal must match Dart's `toStringAsFixed(1)`, which rounds the **binary** double.
+    # Verified against `dart run`: 2.35 → "2.4", 1.25 → "1.3", 0.05 → "0.1", but 6.05 → "6.0"
+    # because 6.05 is really 6.04999…. Quantizing `Decimal(str(v))` would print "6.1" and put
+    # a "6.1" headline over a "6.0" value on the UV card (C1).
     assert num(2.35, 1) == "2.4"
+    assert num(1.25, 1) == "1.3"
+    assert num(0.05, 1) == "0.1"
+    assert num(6.05, 1) == "6.0"
 
     hero = home(client, guest["headers"])["hero"]
     feels = hero["data"]["feels_like_c"]
     dart_round = math.floor(feels + 0.5) if feels >= 0 else math.ceil(feels - 0.5)
     assert f"{dart_round}°C" in hero["insight"]["headline"], hero["insight"]["headline"]
+
+    # And the whole UV card must agree with itself: subtitle, headline and the value the app
+    # draws all come from `uv_now`.
+    body = home(client, guest["headers"], personas="health")
+    for card in body["pinned"] + body["cards"] + body["more_cards"]:
+        if card["type"] != "uv_index":
+            continue
+        value = card["data"]["uv_now"]
+        shown = f"{float(value):.1f}" if round(float(value), 1) != round(float(value)) else None
+        drawn = num(value, 1)
+        assert drawn in card["subtitle"], (drawn, card["subtitle"])
+        assert drawn in card["insight"]["headline"], (drawn, card["insight"]["headline"])
+        assert shown is None or drawn == shown, (drawn, shown)
 
 
 def test_home_place_id_and_missing_coordinates(client, guest):

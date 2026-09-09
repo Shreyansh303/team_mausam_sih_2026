@@ -375,10 +375,15 @@ unticked items but files present:
 - **C1** `GET /health` reports **IST**, not UTC. 04 §Base says every timestamp carries a location
   offset; `/health` has no location, so it uses the same `Asia/Kolkata` clock the WebSocket
   `hello.server_time` does rather than drifting to UTC. No contract change (04 only names the field).
-- **C1** `engine/builders/base.num()` rounds ties **away from zero** (`ROUND_HALF_UP`), not to even.
-  The app formats the same value with Dart's `.round()`, so a hero reading "Feels like 31°" over a
-  sentence reading "feels like 30°C" for one 30.5 looked like a bug. `docs/fixtures/*.json` and
-  `app/assets/fixtures/home_sample.json` were regenerated with the change.
+- **C1** `engine/builders/base.num()` quantizes the **exact binary double**
+  (`Decimal(float(v))`, `ROUND_HALF_UP`) so card copy reads exactly as the app renders the same
+  value with Dart's `.round()` / `toStringAsFixed(n)`. Two symptoms, one cause: a hero saying
+  "Feels like 31°" over a sentence saying "feels like 30°C" for one 30.5 (Python's banker's
+  `f"{30.5:.0f}"`), and — after the first attempt at this fix quantized `Decimal(str(v))` instead
+  — a UV card whose value read "6.0" under a headline saying "6.1", because 6.05 is really
+  6.04999… and only the shortest-repr path rounds it up. Verified against `dart run`: 30.5 → 31,
+  2.35 → 2.4, 1.25 → 1.3, 0.05 → 0.1, **6.05 → 6.0**. `docs/fixtures/*.json` and
+  `app/assets/fixtures/home_sample.json` were regenerated.
 - **C1** **Chip/copy ownership, recorded in `docs/06` §Renderers in the same commit.** Two cards
   said the same thing twice: `tides` drew an "Estimated" pill that the card shell *and* the detail
   header already draw from `card.estimated`, and `timeline` drew `data.advice`, which the engine

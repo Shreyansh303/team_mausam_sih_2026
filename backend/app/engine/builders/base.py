@@ -74,17 +74,24 @@ def daylabel(lang: str, value: str | None, *, with_dow: bool = False) -> str:
 
 
 def num(value: Any, digits: int = 0) -> str:
-    """Format a number for card copy.
+    """Format a number for card copy the way the app formats the same value.
 
-    Ties round **away from zero**, not to even: the app formats the same value with Dart's
-    `.round()`, and a hero that says "Feels like 31°" above a sentence that says "feels like
-    30°C" (Python's `f"{30.5:.0f}"`) reads like a bug. C1.
+    The app renders these through Dart's `.round()` / `toStringAsFixed(n)`, so a card that
+    disagrees with its own big number reads like a bug: a hero saying "Feels like 31°" over a
+    sentence saying "feels like 30°C" (Python's banker's `f"{30.5:.0f}"`), or a UV card whose
+    value is "6.0" under a headline saying "6.1".
+
+    Both come out right by quantizing the **exact binary double** — `Decimal(float(v))`, not
+    `Decimal(str(v))` — half-up. 30.5 is exactly representable, so it rounds to 31 like
+    `.round()`; 6.05 is really 6.04999…, so it rounds to 6.0 like `toStringAsFixed(1)`.
+    Reconstructing the shortest repr first would round it to 6.1 and reintroduce the mismatch.
+    C1.
     """
     if value is None:
         return "—"
     try:
         quantum = Decimal(1).scaleb(-digits)
-        return f"{Decimal(str(float(value))).quantize(quantum, rounding=ROUND_HALF_UP):.{digits}f}"
+        return f"{Decimal(float(value)).quantize(quantum, rounding=ROUND_HALF_UP):.{digits}f}"
     except (TypeError, ValueError, ArithmeticError, InvalidOperation):
         return str(value)
 
