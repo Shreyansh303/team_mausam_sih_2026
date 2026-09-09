@@ -130,7 +130,11 @@ def build(bundle: Bundle, ctx: Context, profile: UserProfile) -> CardContent:
     return CardContent(
         data={"items": items},
         subtitle=t(lang, "health_advisory.count", count=len(items)),
-        headline=t(lang, "insight.health_advisory.headline", count=len(items)),
+        headline=t(
+            lang,
+            "insight.health_advisory.headline." + ("one" if len(items) == 1 else "other"),
+            count=len(items),
+        ),
         detail=first.get("detail", ""),
         icon=first.get("icon", "mask"),
         source="mixed",

@@ -36,7 +36,11 @@ def build(bundle: Bundle, ctx: Context, profile: UserProfile) -> CardContent:
         data={"days": days},
         subtitle=f"{num(tmin)}° – {num(tmax)}°",
         headline=t(lang, "insight.daily_forecast.headline", tmin=num(tmin), tmax=num(tmax)),
-        detail=t(lang, "insight.daily_forecast.detail", days=rain_days),
+        detail=t(
+            lang,
+            "insight.daily_forecast.detail." + ("one" if rain_days == 1 else "other"),
+            days=rain_days,
+        ),
         icon="calendar",
         source=bundle.snap.get("sources", {}).get("weather", "open-meteo"),
     )

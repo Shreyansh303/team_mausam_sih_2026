@@ -377,3 +377,39 @@ def test_travel_alerts_headline_is_never_plural_with_parentheses(lang):
     assert many.startswith("2 "), many
     # The place name is the *top* alert's, and both forms carry it.
     assert "Mumbai" in one and "Mumbai" in many, (one, many)
+
+
+def test_no_catalog_string_fakes_a_plural_with_parentheses():
+    """C1: `"{count} saved place(s)"` reads like an unfinished string on a demo screen.
+
+    Every count-bearing line has an explicit `.one` / `.other` pair instead. This scans the
+    catalogs rather than one rendered payload, so a new key cannot reintroduce the pattern in a
+    card the fixtures happen not to build.
+    """
+    offenders = {}
+    for lang in ("en", "hi"):
+        for key, value in i18n.catalog(lang).items():
+            if not isinstance(value, str):
+                continue
+            if "(s)" in value or "(ies)" in value or "(es)" in value:
+                offenders[f"{lang}:{key}"] = value
+    assert not offenders, f"fake plurals in the catalogs: {offenders}"
+
+
+@pytest.mark.parametrize("lang", ["en", "hi"])
+@pytest.mark.parametrize(
+    "stem",
+    [
+        "insight.travel_alerts.headline",
+        "insight.saved_places.headline",
+        "insight.saved_places.detail_warning",
+        "insight.daily_forecast.detail",
+        "insight.health_advisory.headline",
+        "insight.rainfall_outlook.detail",
+    ],
+)
+def test_count_headlines_have_both_plural_forms(lang, stem):
+    catalog = i18n.catalog(lang)
+    for form in ("one", "other"):
+        assert f"{stem}.{form}" in catalog, f"{lang} is missing {stem}.{form}"
+    assert stem not in catalog, f"{lang} still carries the un-split {stem}"

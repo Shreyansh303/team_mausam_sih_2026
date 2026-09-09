@@ -30,8 +30,12 @@ def build(bundle: Bundle, ctx: Context, profile: UserProfile) -> CardContent:
             "insight.rainfall_outlook.headline",
             mm=num(block.get("next_72h_mm"), 1),
         ),
-        detail=t(lang, "insight.rainfall_outlook.detail", days=rain_days,
-                 mm=num(block.get("next_7d_mm"), 1)),
+        detail=t(
+            lang,
+            "insight.rainfall_outlook.detail." + ("one" if rain_days == 1 else "other"),
+            days=rain_days,
+            mm=num(block.get("next_7d_mm"), 1),
+        ),
         icon="heavy_rain",
         source=bundle.snap.get("sources", {}).get("weather", "open-meteo"),
     )

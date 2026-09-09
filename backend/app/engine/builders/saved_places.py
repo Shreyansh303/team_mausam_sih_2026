@@ -32,7 +32,8 @@ def build(bundle: Bundle, ctx: Context, profile: UserProfile) -> CardContent:
     if warned:
         detail = t(
             lang,
-            "insight.saved_places.detail_warning",
+            # C1: "1 place(s) have an active warning" read like an unfinished string.
+            "insight.saved_places.detail_warning." + ("one" if len(warned) == 1 else "other"),
             count=len(warned),
             place=warned[0].get("name", ""),
         )
@@ -49,7 +50,11 @@ def build(bundle: Bundle, ctx: Context, profile: UserProfile) -> CardContent:
     return CardContent(
         data={"places": places},
         subtitle=t(lang, "saved_places.count", count=len(places)),
-        headline=t(lang, "insight.saved_places.headline", count=len(places)),
+        headline=t(
+            lang,
+            "insight.saved_places.headline." + ("one" if len(places) == 1 else "other"),
+            count=len(places),
+        ),
         detail=detail,
         icon="pin",
         source="open-meteo",

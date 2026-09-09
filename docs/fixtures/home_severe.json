@@ -28,7 +28,7 @@
     "lang": "en"
   },
   "banner": {
-    "warning_id": "wrn_ba2fb41720",
+    "warning_id": "wrn_5fae17d201",
     "severity": "orange",
     "title": "Orange warning: thunderstorm with lightning",
     "color_hex": "#F28C28"
@@ -384,7 +384,7 @@
       "data": {
         "warnings": [
           {
-            "id": "wrn_ba2fb41720",
+            "id": "wrn_5fae17d201",
             "severity": "orange",
             "hazard": "thunderstorm",
             "title": "Orange warning: thunderstorm with lightning",
@@ -910,7 +910,7 @@
       ],
       "insight": {
         "headline": "376.0 mm expected over the next 3 days",
-        "detail": "7 rain day(s) and 315.0 mm in the coming week.",
+        "detail": "7 rain days and 315.0 mm in the coming week.",
         "icon": "heavy_rain"
       },
       "data": {
@@ -1000,7 +1000,7 @@
         }
       ],
       "insight": {
-        "headline": "3 health advisory(ies) for today",
+        "headline": "3 health advisories for today",
         "detail": "Breathing discomfort possible for people with asthma or heart disease.",
         "icon": "mask"
       },
@@ -1364,7 +1364,7 @@
       ],
       "insight": {
         "headline": "This week: 24° to 31°",
-        "detail": "7 rainy day(s) in the next seven.",
+        "detail": "7 rainy days in the next seven.",
         "icon": "calendar"
       },
       "data": {

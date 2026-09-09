@@ -124,7 +124,7 @@
         }
       ],
       "insight": {
-        "headline": "1 health advisory(ies) for today",
+        "headline": "1 health advisory for today",
         "detail": "High pollen — keep windows shut in the morning and shower after being out.",
         "icon": "pollen"
       },
@@ -1118,7 +1118,7 @@
       ],
       "insight": {
         "headline": "This week: 19° to 29°",
-        "detail": "0 rainy day(s) in the next seven.",
+        "detail": "0 rainy days in the next seven.",
         "icon": "calendar"
       },
       "data": {
@@ -1920,7 +1920,7 @@
       "reasons": [],
       "insight": {
         "headline": "0.0 mm expected over the next 3 days",
-        "detail": "0 rain day(s) and 0.0 mm in the coming week.",
+        "detail": "0 rain days and 0.0 mm in the coming week.",
         "icon": "heavy_rain"
       },
       "data": {

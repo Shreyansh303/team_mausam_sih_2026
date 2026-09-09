@@ -414,6 +414,15 @@ unticked items but files present:
   so a judge moving the clock to 07:30 otherwise saw "Updated 16 h ago" on fresh data. A **cached or
   bundled** payload has no usable clock of its own and still ages against the device, which is the
   "Updated 12 min ago" docs/06 asks for.
+- **C1** **No catalog string fakes a plural with parentheses any more.** Six count-bearing lines
+  read `"{count} saved place(s)"`, `"{days} rainy day(s)…"`, `"{count} health advisory(ies)…"` and
+  so on — an unfinished-looking string on a demo screen. Each is now an explicit `.one` / `.other`
+  pair in en **and** hi (Hindi does not inflect these, so both forms carry the same sentence), and
+  `test_no_catalog_string_fakes_a_plural_with_parentheses` scans the whole catalog so a new key
+  cannot bring the pattern back. `docs/fixtures/*.json` and `app/assets/fixtures/home_sample.json`
+  were regenerated. Affected: `saved_places.headline`, `saved_places.detail_warning`,
+  `daily_forecast.detail`, `health_advisory.headline`, `rainfall_outlook.detail` (and
+  `travel_alerts.headline`, below).
 - **C1** `insight.travel_alerts.headline` is split into `.one` / `.other` (en + hi). The single key
   rendered "1 travel alert(s) — Mumbai", which reads like an unfinished placeholder on the demo
   screen. Additive to the catalogs; the card `data` shape is unchanged.

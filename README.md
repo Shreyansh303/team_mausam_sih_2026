@@ -342,8 +342,11 @@ Backend running, admin console open on a laptop, app open on a phone or in Chrom
 5. **Push a warning** — admin console → preset **Orange thunderstorm — Delhi** → *Push warning*. The
    app receives `warning_issued` with `affects_you: true`, shows the banner and **animates the
    warning card to the top**. Delete the row to revert (or let its TTL expire).
-6. **Show the learning** — long-press *Pollen* → *Why am I seeing this?* → *Show less* twice → it
-   drops into "More for you". Pin a card and it jumps to the top.
+6. **Show the learning** — long-press *Pollen* → *Why am I seeing this?* → *Show less*. Each tap
+   subtracts from the card's score (docs/03: `0.25·tanh(x/8)`, so two taps are −0.16) and the sheet
+   shows the running count; keep tapping until it drops into "More for you" — **two taps move it,
+   three usually push it over**, because how far it has to fall depends on the cards around it.
+   *Pin* is the instant one: the card jumps to the top on the next refresh, *Unpin* puts it back.
 7. **Offline** — airplane mode: the home still renders from cache with "Updated N min ago".
 8. **Hindi** — switch language; chrome *and* card copy/insights are localized.
 9. **Traveller** — saved places Mumbai + London → packing suggestions ("Carry a raincoat in

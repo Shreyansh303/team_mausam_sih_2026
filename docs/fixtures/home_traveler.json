@@ -124,14 +124,14 @@
         }
       ],
       "insight": {
-        "headline": "2 saved place(s)",
+        "headline": "2 saved places",
         "detail": "Panaji is the warmest at 26°C.",
         "icon": "pin"
       },
       "data": {
         "places": [
           {
-            "id": "plc_2f2b1ae83290",
+            "id": "plc_d7f6903e648d",
             "name": "Panaji",
             "lat": 15.49,
             "lon": 73.83,
@@ -146,7 +146,7 @@
             "highest_severity": null
           },
           {
-            "id": "plc_c0be7d5539b0",
+            "id": "plc_941f7af107f3",
             "name": "Mumbai",
             "lat": 19.08,
             "lon": 72.88,
@@ -216,13 +216,13 @@
       "data": {
         "places": [
           {
-            "place_id": "plc_2f2b1ae83290",
+            "place_id": "plc_d7f6903e648d",
             "place_name": "Panaji",
             "days": 3,
             "items": []
           },
           {
-            "place_id": "plc_c0be7d5539b0",
+            "place_id": "plc_941f7af107f3",
             "place_name": "Mumbai",
             "days": 3,
             "items": []
@@ -273,7 +273,7 @@
       ],
       "insight": {
         "headline": "This week: 19° to 29°",
-        "detail": "0 rainy day(s) in the next seven.",
+        "detail": "0 rainy days in the next seven.",
         "icon": "calendar"
       },
       "data": {
@@ -1040,7 +1040,7 @@
         }
       ],
       "insight": {
-        "headline": "1 health advisory(ies) for today",
+        "headline": "1 health advisory for today",
         "detail": "High pollen — keep windows shut in the morning and shower after being out.",
         "icon": "pollen"
       },
@@ -2316,7 +2316,7 @@
       "reasons": [],
       "insight": {
         "headline": "0.0 mm expected over the next 3 days",
-        "detail": "0 rain day(s) and 0.0 mm in the coming week.",
+        "detail": "0 rain days and 0.0 mm in the coming week.",
         "icon": "heavy_rain"
       },
       "data": {
