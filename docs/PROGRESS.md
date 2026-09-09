@@ -28,7 +28,7 @@ unticked items but files present:
 - [x] B2a ten pending renderers + detail pages (one commit each)
 - [x] B2b animations · events · why-sheet actions · places · map · settings · demo sheet · WS client · low-bandwidth · a11y · l10n · icon/splash
 - [x] B3 integration + APK + CI (+ the backend i18n gaps B2b logged)
-- [~] C1 e2e QA (paused 2026-09-09)
+- [x] C1 e2e QA
 - [ ] C2 docs + pitch
 - [ ] S* stretch
 - [x] H0 fresh-machine bootstrap (new owner; see docs/HANDOFF.md §4) — done on the macOS machine
@@ -188,7 +188,11 @@ unticked items but files present:
   screenshot grid rebuilt on the b2b/b3 shots.
 
 ## C1 / C2
-- [ ] QA_REPORT.md with every demo step verified
+- [x] QA_REPORT.md with every demo step verified — `docs/QA_REPORT.md`, **all 10 steps PASS**
+  against a live backend + the real web build, plus all 10 scenarios, `lite=1`, offline (cache and
+  bundled), Hindi, dismiss-learning, places/map/settings/demo sheet, and a static release-APK check.
+  **40 screenshots** at `docs/screenshots/c1_*.png`. Nine defects found and fixed, one commit and
+  one regression test each (see Deviations and QA_REPORT §Defects).
 - [ ] README final · 08_PITCH.md · pptx
 
 ## Deviations from spec (record here)
@@ -458,6 +462,98 @@ unticked items but files present:
   enums, and `test/l10n_test.dart` pins its "Volcanic Ash" behaviour.
 
 ## Notes for next phase
+
+### C2 — what C1 hands you (2026-09-09)
+
+**Read `docs/QA_REPORT.md` first.** It is the evidence file for everything below: a row per demo
+step with the doc quoted, what was observed, pass/fail, the screenshot and the fix commit.
+
+**Gates on this Mac, this commit.** `pytest -q` **348 passed** (12.2 s) · `flutter analyze` clean ·
+`flutter test` **103 passed** · `flutter build web` ✓. The release APK from B3 is still on disk at
+`app/build/app/outputs/flutter-apk/app-release.apk` and was **not** rebuilt (the volume is at
+~8.4 GB free — do not run `flutter build apk` or `flutter clean` without checking `df -h /` first,
+and never `flutter clean`, which deletes that APK).
+
+#### What the pitch can claim, with evidence
+
+Every one of these was **measured on this machine on 2026-09-09**, not estimated. Numbers first,
+because a judge will ask.
+
+| Claim | Number | Where it is evidenced |
+|---|---|---|
+| Backend tests, fully offline | **348 passed** | `pytest -q` |
+| App tests · static analysis | **103 passed** · analyze clean | `flutter test` / `flutter analyze` |
+| Card types · renderers | **33** · **15** | `app/engine/catalog.py`, docs/02 |
+| Personas | **8** (1–3 selectable) | QA_REPORT step 3 — all eight photographed |
+| Scenarios, all verified to render | **10** | QA_REPORT §Scenario overlays |
+| Languages offered · complete | **5** · **2** (en, hi: 604 backend + 353 app strings each) | QA_REPORT step 8 |
+| Cities in the offline gazetteer | **212** (106 popular) | `backend/app/data/cities.json` |
+| Warm `/home` | **2 ms** server-side, **4.6 ms** median round trip, **3.6 ms** under `lite=1` | QA_REPORT §Headline numbers |
+| `/home` right after a live warning push | **17.7 ms** | QA_REPORT step 5e |
+| Release APK | **62 496 756 B**, 3 ABIs, minSdk 24 / targetSdk 36 | QA_REPORT §Release APK |
+| Learning: dismisses needed to demote a card out of the feed | **3** (rank 3 → 8, score 0.470 → 0.268) | QA_REPORT step 6c |
+| QA screenshots this phase | **40** | `docs/screenshots/c1_*.png` |
+
+**Two claims worth leading with, because they are unusual and they are true here:**
+1. **Server-driven ranking.** The app never computes a score. `pinned / hero / cards / more_cards`
+   arrives ranked from `/home`, so IMD could add, reorder or retire a card **without an app
+   release**. Nothing in the Flutter tree hardcodes a card order.
+2. **Honest data, enforced.** Tides, pollen and traffic are modelled and say so — `"source":
+   "estimated"`, an **Estimated** chip, and on tides a disclaimer naming INCOIS and the Survey of
+   India. IMD was returning `401` for the entire QA run and the app never once pretended otherwise.
+
+#### Best screenshots to feature
+
+| Slot | File | Why |
+|---|---|---|
+| **Hero / opening slide** | `c1_step02_morning_0730_parent_commuter.png` | The whole thesis in one frame: 07:30, School run first, reasons visible, hero showing a dawn reading |
+| **The one-line demo of personalization** | `c1_step03_persona_parent.png` + `c1_step03_persona_fitness.png` + `c1_step03_persona_health.png` | Same backend, same location, same minute — three completely different feeds |
+| **Live re-rank (the money shot)** | `c1_step05_ws_before.png` → `c1_step05_ws_rerank.png` | Before/after pair, orange banner, pinned commute card, "A warning moved to the top of your feed · View" |
+| **Severity at full strength** | `c1_step11_scenario_heatwave.png` | Red banner + two pinned cards + the re-rank SnackBar, and `scenario` shown honestly as the source |
+| **Explainability** | `c1_step06_why_sheet_pollen.png` → `c1_step06_humidity_demoted_to_more.png` | "Why am I seeing this?" and the card actually moving afterwards |
+| **Honest data** | `c1_step04_coastal_tides_estimated.png` | Estimated chip + the INCOIS disclaimer, on a genuinely pretty card |
+| **Coastal gating** | `c1_step04_coastal_panaji_home.png` | Sea/tides/water-temp appear only because the location is coastal |
+| **Multilingual** | `c1_step08_hindi_home.png` + `c1_step08_hindi_cards.png` | Chrome *and* card copy, advice bullets and reason chips in Hindi |
+| **Works without a network** | `c1_step07_offline_cached.png` | "Updated just now · cached" + "Could not refresh. Showing saved data." |
+| **Built for Indian bandwidth** | `c1_extra_low_bandwidth_map.png` | The map saying "Low-bandwidth mode: radar tiles are off." |
+| **Traveller story** | `c1_step09_packing_suggestions.png` | "London · Raincoat / umbrella · Rain chance up to 53% in 3 days" — the demo script's own line, delivered |
+
+`b2b_demo_sheet.png` and `b2b_places.png` are **stale** — the README grid was already repointed at
+`c1_extra_demo_sheet.png` and `c1_step09_places_page.png`. Do not reuse the `b2b_*` pair in the deck.
+
+#### Things C2 should fix or decide
+
+- **README string counts have drifted.** It says "597 backend strings each, plus 282 app-chrome
+  strings"; the real numbers are **604** and **353**. C1 deliberately left this alone (its README
+  scope was demo steps that proved wrong). Fix it in the README pass.
+- **No device smoke test exists.** The APK was verified statically only (package id, label, SDKs,
+  ABIs, permissions, signature) — there is no phone and no emulator image on this Mac, and only
+  ~8.4 GB free. If a phone turns up before the pitch, install it once and check first launch, the
+  location-permission prompt and GPS onboarding; those are the only paths the web build cannot
+  exercise. Say "verified in the web build + static APK check" rather than "tested on device".
+- **The APK is debug-signed** (07 §B3 allows it). If the deck claims "installable", that is true;
+  if it claims "release-ready", it is not — a Play build needs a keystore.
+- **`mr`/`ta`/`bn` are best-effort.** Say "5 languages, 2 complete" — the partial three fall back
+  per key and a judge switching to Tamil will see mostly English. Do not claim five complete.
+- **The demo needs a network.** Open-Meteo and RainViewer are keyless but live. Rehearse the
+  offline path (step 7) as a *feature*, and know that the bundled sample is parent / New Delhi /
+  `thunderstorm`, not whatever was last on screen.
+
+#### Rehearsal notes for whoever runs the live demo
+
+- Start the backend first, point the app at **`http://127.0.0.1:8000`** (never `localhost`), and
+  wait for the **green dot** on the freshness chip — that is `/ws/alerts` connected and it is what
+  makes step 5 work.
+- **Delete any pushed warning before moving on.** A live warning pins cards and changes every later
+  screen; `GET /admin/state` lists the ids, `DELETE /admin/warnings/{id}` clears them.
+- The demo clock's presets and its "Pick a time" picker are both built on **today**, so 07:30 works
+  on any date now. A hand-written `now_override` still has to be inside the 48-h forecast window or
+  the ranking moves while the reading stays live (deliberate — see Deviations).
+- Step 6 takes **three** "Show less" taps to push a card into "More for you", not two. Both the
+  README and this file now say so; do not promise two on stage.
+- The traveller step needs **two saved places added first** (Places page → Travel → Mumbai, London).
+  A fresh guest has none, and `saved_places` / `packing_suggestions` / `travel_alerts` simply are
+  not there until it does.
 
 ### C1 — what B3 hands you (2026-09-08)
 
