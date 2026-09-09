@@ -3,10 +3,18 @@
 Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked (say why in Notes)
 
 ## Resume instructions (for a fresh orchestrator session)
-1. Read `CLAUDE.md`, this file, `docs/07_PHASES.md`.
+1. Read `CLAUDE.md`, `docs/HANDOFF.md`, this file, `docs/07_PHASES.md`.
 2. `git status` / `git log --oneline` to see the last checkpoint.
-3. Spawn the next phase whose box is not `[x]`, following the order in 07. A1 ∥ B0 may run in parallel; so may A2 ∥ B1 and A3 ∥ B2.
-4. Implementation agents run on the Opus model. The orchestrator only plans, reviews reports, and commits.
+3. Every planned phase is `[x]` as of 2026-09-09 (`7dea043`); the only open box is the stretch line,
+   which stands for **S4**. Spawn from `docs/HANDOFF.md` §1 "What is open", in its recommended
+   order: (1) file the IMD whitelisting request · (2) the device smoke test of `app-release.apk`
+   plus the S2 widget checklist · (3) send `meta.urgency` on `POST /events` · (4) deploy the backend
+   from `infra/render.yaml` · (5) the S3 app wiring (needs a Firebase project and a
+   `google-services.json`, which must never be committed) · (6) a release keystore, only for a store
+   build · (7) S4 — finish the mr/ta/bn catalogs. A backend item and an app item may run in
+   parallel; never two agents in one tree, and each must `git add` only its own paths by name.
+4. Implementation agents run on a cheaper capable model; the orchestrator runs on a strong model and
+   only plans, reviews reports, and commits.
 
 ## Recovery after an interrupted agent (usage limit, crash)
 An interrupted agent loses its conversation, not its files. To resume a phase that is `[~]` or has
