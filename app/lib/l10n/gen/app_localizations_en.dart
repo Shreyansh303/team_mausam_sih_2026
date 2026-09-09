@@ -647,6 +647,24 @@ class LEn extends L {
   String get levelNone => 'None';
 
   @override
+  String get heatLevelCaution => 'Caution';
+
+  @override
+  String get heatLevelExtremeCaution => 'Extreme Caution';
+
+  @override
+  String get heatLevelDanger => 'Danger';
+
+  @override
+  String get heatLevelExtremeDanger => 'Extreme Danger';
+
+  @override
+  String get stormLevelWatch => 'Watch';
+
+  @override
+  String get stormLevelWarning => 'Warning';
+
+  @override
   String get intensityLight => 'Light';
 
   @override

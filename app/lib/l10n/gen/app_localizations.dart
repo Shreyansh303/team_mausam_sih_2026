@@ -1297,6 +1297,42 @@ abstract class L {
   /// **'None'**
   String get levelNone;
 
+  /// No description provided for @heatLevelCaution.
+  ///
+  /// In en, this message translates to:
+  /// **'Caution'**
+  String get heatLevelCaution;
+
+  /// No description provided for @heatLevelExtremeCaution.
+  ///
+  /// In en, this message translates to:
+  /// **'Extreme Caution'**
+  String get heatLevelExtremeCaution;
+
+  /// No description provided for @heatLevelDanger.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger'**
+  String get heatLevelDanger;
+
+  /// No description provided for @heatLevelExtremeDanger.
+  ///
+  /// In en, this message translates to:
+  /// **'Extreme Danger'**
+  String get heatLevelExtremeDanger;
+
+  /// No description provided for @stormLevelWatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch'**
+  String get stormLevelWatch;
+
+  /// No description provided for @stormLevelWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get stormLevelWarning;
+
   /// No description provided for @intensityLight.
   ///
   /// In en, this message translates to:

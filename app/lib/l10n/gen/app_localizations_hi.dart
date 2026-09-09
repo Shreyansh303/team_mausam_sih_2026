@@ -648,6 +648,24 @@ class LHi extends L {
   String get levelNone => 'कोई नहीं';
 
   @override
+  String get heatLevelCaution => 'सावधानी';
+
+  @override
+  String get heatLevelExtremeCaution => 'अत्यधिक सावधानी';
+
+  @override
+  String get heatLevelDanger => 'खतरा';
+
+  @override
+  String get heatLevelExtremeDanger => 'अत्यधिक खतरा';
+
+  @override
+  String get stormLevelWatch => 'निगरानी';
+
+  @override
+  String get stormLevelWarning => 'चेतावनी';
+
+  @override
   String get intensityLight => 'हल्की';
 
   @override

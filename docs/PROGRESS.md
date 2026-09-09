@@ -431,6 +431,19 @@ unticked items but files present:
 - **C1** `insight.travel_alerts.headline` is split into `.one` / `.other` (en + hi). The single key
   rendered "1 travel alert(s) — Mumbai", which reads like an unfinished placeholder on the demo
   screen. Additive to the catalogs; the card `data` shape is unchanged.
+- **C1** **Two alert ladders spoke English inside a Hindi card.** `AlertSpec.of` reads every
+  alert card's band with `levelLabel`, but that helper only knew the
+  `none|low|medium|moderate|high|severe` ladder. docs/02 card 15 `heat_alert.level` is the NWS
+  heat-index ladder (`caution|extreme_caution|danger|extreme_danger`) and card 25
+  `storm_fog_alert.level` is `watch|warning` — both fell through to `Fmt.humanize`, which is
+  English by construction. Under `?lang=hi` the heat card therefore drew "Extreme Caution"
+  directly under a backend-localized subtitle reading "अत्यधिक सावधानी", and the fog card read
+  "कोहरा warning". Six ARB keys added in en + hi (mirroring the backend's own
+  `heat.level.*` / `storm.level.*` strings, which were already complete), six arms added to
+  `levelLabel`, and `test/l10n_test.dart` now asserts that every band docs/02 publishes renders
+  as Devanagari under `hi` — a fall-through cannot come back silently. App-side only: this is a
+  `Card.data` enum, which docs/04 §preamble leaves unlocalized on purpose (B2b deviation), so
+  the payload and the contract are unchanged.
 
 ## Notes for next phase
 

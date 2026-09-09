@@ -133,4 +133,59 @@ void main() {
     // A value this build has never seen still reads as words, not a raw key.
     expect(hazardLabel(l, 'volcanic_ash'), 'Volcanic Ash');
   });
+
+  // docs/02 §Per-card specification publishes three band ladders through the alert cards, and
+  // `AlertSpec.of` reads all three with `levelLabel`. Two of them — card 15's NWS heat ladder
+  // and card 25's watch/warning — had no arm, so a Hindi heat card drew "Extreme Caution"
+  // under a subtitle that already said "अत्यधिक सावधानी". Anything that falls through to
+  // `Fmt.humanize` is English by construction, so the check is: the Hindi rendering must
+  // actually be Hindi.
+  testWidgets('every alert-card band docs/02 publishes is translated, not humanized',
+      (tester) async {
+    const ladders = <String>[
+      // card 15 heat_alert.level
+      'caution', 'extreme_caution', 'danger', 'extreme_danger',
+      // card 25 storm_fog_alert.level
+      'watch', 'warning',
+      // card 19 frost_alert.risk / card 28 commute impact
+      'none', 'low', 'moderate', 'high', 'severe',
+    ];
+    final rendered = <String, Map<String, String>>{};
+
+    for (final code in <String>['en', 'hi']) {
+      late L l;
+      await tester.pumpWidget(MaterialApp(
+        locale: Locale(code),
+        supportedLocales: L.supportedLocales,
+        localizationsDelegates: const <LocalizationsDelegate<Object>>[
+          L.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        home: Builder(builder: (context) {
+          l = L.of(context);
+          return const SizedBox.shrink();
+        }),
+      ));
+      await tester.pump();
+      rendered[code] = <String, String>{
+        for (final v in ladders) v: levelLabel(l, v),
+      };
+    }
+
+    final devanagari = RegExp(r'[ऀ-ॿ]');
+    for (final value in ladders) {
+      final hi = rendered['hi']![value]!;
+      expect(hi, isNotEmpty, reason: '$value renders empty in Hindi');
+      expect(
+        devanagari.hasMatch(hi),
+        isTrue,
+        reason: '$value renders as "$hi" in Hindi — levelLabel has no arm for it, so it fell '
+            'through to Fmt.humanize and put English inside a Hindi card',
+      );
+      // Same ladder, same value, still distinct text per locale.
+      expect(hi, isNot(rendered['en']![value]));
+    }
+  });
 }

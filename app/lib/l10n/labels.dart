@@ -61,6 +61,13 @@ String qualityLabel(L l, String? key) => switch (key?.toLowerCase()) {
     };
 
 /// low | medium | high — used by travel risk, commute impact and frost risk.
+///
+/// Two more ladders arrive through the same field and are resolved here rather than in a
+/// second helper, because `AlertSpec.of` reads every alert card's band with this one call:
+/// docs/02 card 15 `heat_alert.level` is the NWS heat-index ladder
+/// (`caution|extreme_caution|danger|extreme_danger`) and docs/02 card 25
+/// `storm_fog_alert.level` is `watch|warning`. Neither had an arm, so both fell through to
+/// `Fmt.humanize` and drew English inside an otherwise-Hindi card.
 String levelLabel(L l, String? key) => switch (key?.toLowerCase()) {
       'low' => l.levelLow,
       'medium' => l.levelMedium,
@@ -68,6 +75,12 @@ String levelLabel(L l, String? key) => switch (key?.toLowerCase()) {
       'high' => l.levelHigh,
       'severe' => l.levelSevere,
       'none' => l.levelNone,
+      'caution' => l.heatLevelCaution,
+      'extreme_caution' => l.heatLevelExtremeCaution,
+      'danger' => l.heatLevelDanger,
+      'extreme_danger' => l.heatLevelExtremeDanger,
+      'watch' => l.stormLevelWatch,
+      'warning' => l.stormLevelWarning,
       _ => Fmt.humanize(key),
     };
 
