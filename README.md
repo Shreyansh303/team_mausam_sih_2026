@@ -271,6 +271,16 @@ To install without `adb`, copy the `.apk` to the phone and open it — Android a
 (`flutter build apk --release` falls back to it when no keystore is configured), so it installs
 side-by-side with nothing and can be uninstalled normally.
 
+*To sign it with your own key* (needed only to publish), create a keystore **outside the repo** and
+point `app/android/key.properties` at it — both are gitignored, and `app/android/app/build.gradle.kts`
+picks the key up on the next `--release` build (it prints a warning when the file is absent):
+
+```bash
+keytool -genkey -v -keystore ~/mausam-release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias mausam
+# app/android/key.properties — storeFile absolute, or relative to app/android/app/
+printf 'storeFile=%s\nstorePassword=CHANGEME\nkeyAlias=mausam\nkeyPassword=CHANGEME\n' ~/mausam-release.jks > app/android/key.properties
+```
+
 The first Gradle run downloads ~2.7 GB and takes several minutes. If the Gradle **wrapper** itself
 fails to download its distribution, see the workaround in `docs/PROGRESS.md` → "Notes for next
 phase → H0".

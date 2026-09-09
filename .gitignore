@@ -25,6 +25,7 @@ app/android/local.properties
 app/android/key.properties
 app/android/app/.cxx/
 app/android/**/*.keystore
+app/android/**/*.jks
 app/ios/Pods/
 app/ios/.symlinks/
 app/ios/Flutter/ephemeral/
