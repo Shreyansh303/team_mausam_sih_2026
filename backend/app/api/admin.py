@@ -5,6 +5,9 @@ Every mutating route does the same three things in the same order:
     2. drop the assembled-snapshot cache — a snapshot cached before the write would otherwise be
        served for up to `CACHE_TTL_SNAPSHOT` seconds without the new warning
     3. broadcast on the WebSocket (`api/ws.py`) — never from `app/engine/`, which stays pure
+    4. hand the same message to the push transport (`services/push.py`), which reaches devices
+       whose app is closed. Noop (log only) until a Firebase project is configured — S3,
+       `docs/09_PUSH_NOTIFICATIONS.md`.
 """
 
 from __future__ import annotations
@@ -32,9 +35,11 @@ from app.schemas.admin import (
     ScenarioBody,
     WarningCreate,
 )
+from app.schemas.device import AdminDevice, AdminDevices
 from app.schemas.user import OkResponse
 from app.schemas.warning import Warning
 from app.services import admin_warnings as admin_svc
+from app.services import push as push_svc
 from app.services import users as users_svc
 from app.state import demo_state
 
@@ -61,6 +66,8 @@ def _state(db: Session) -> AdminState:
         now_override=demo_state.now_override,
         warnings=[Warning.model_validate(w) for w in admin_svc.active_warnings(db)],
         connected_clients=ws.connected_clients(),
+        devices=push_svc.device_count(db),
+        push_transport=push_svc.transport().name,
     )
 
 
@@ -91,6 +98,7 @@ async def set_scenario(body: ScenarioBody, db: Session = Depends(get_db)) -> Adm
     demo_state.scenario = name
     _invalidate_snapshots()
     await ws.broadcast("scenario_changed", {"scenario": name})
+    await push_svc.notify(db, "scenario_changed", {"scenario": name})
     log.info("admin scenario -> %s", name)
     return _state(db)
 
@@ -109,6 +117,7 @@ async def set_now_override(body: NowOverrideBody, db: Session = Depends(get_db))
     demo_state.now_override = value
     _invalidate_snapshots()
     await ws.broadcast("now_override", {"now": value})
+    await push_svc.notify(db, "now_override", {"now": value})
     log.info("admin now_override -> %s", value)
     return _state(db)
 
@@ -134,9 +143,11 @@ async def push_warning(body: WarningCreate, db: Session = Depends(get_db)) -> Wa
     warning = row.to_warning()
     _invalidate_snapshots()
     delivered = await ws.broadcast_warning(warning)
+    pushed = await push_svc.notify_warning(db, warning)
     log.info(
-        "admin warning %s %s/%s pushed to %d ws client(s)",
+        "admin warning %s %s/%s pushed to %d ws client(s) and %d device(s) via %s",
         warning["id"], warning["severity"], warning["hazard"], delivered,
+        pushed.sent, push_svc.transport().name,
     )
     return Warning.model_validate(warning)
 
@@ -149,8 +160,34 @@ async def clear_warning(warning_id: str, db: Session = Depends(get_db)) -> OkRes
         raise NotFoundError(f"Unknown warning '{warning_id}'")
     _invalidate_snapshots()
     await ws.broadcast("warning_cleared", {"id": warning_id})
+    await push_svc.notify(db, "warning_cleared", {"id": warning_id})
     log.info("admin warning %s cleared", warning_id)
     return OkResponse(ok=True)
+
+
+# --------------------------------------------------------------------------- devices
+
+
+@router.get("/devices", response_model=AdminDevices, dependencies=[Depends(require_admin)])
+async def list_devices(db: Session = Depends(get_db)) -> AdminDevices:
+    """Registered push devices (S3). Tokens are send-capabilities — only the tail is returned."""
+    rows = push_svc.all_devices(db)
+    return AdminDevices(
+        transport=push_svc.transport().name,
+        count=len(rows),
+        devices=[
+            AdminDevice(
+                token_suffix=push_svc.redact(d.token),
+                user_id=d.user_id,
+                platform=d.platform,
+                lat=d.lat,
+                lon=d.lon,
+                lang=d.lang,
+                updated_at=d.updated_at,
+            )
+            for d in rows
+        ],
+    )
 
 
 # --------------------------------------------------------------------------- users

@@ -4,18 +4,21 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
 from app.config import settings
+from app.core.db import get_db
 from app.core.timeutil import iso, now_in, tz_for
 from app.providers import imd
+from app.services import push as push_svc
 from app.state import demo_state
 
 router = APIRouter(tags=["health"])
 
 
 @router.get("/health")
-async def health() -> dict[str, Any]:
+async def health(db: Session = Depends(get_db)) -> dict[str, Any]:
     return {
         "status": "ok",
         "version": settings.app_version,
@@ -29,6 +32,9 @@ async def health() -> dict[str, Any]:
             "marine": "available",
             "air": "available",
         },
+        # S3 — which push transport is live and how many devices are registered
+        # (`noop` until FCM_SERVICE_ACCOUNT_FILE + FCM_PROJECT_ID are set).
+        "push": {"transport": push_svc.transport().name, "devices": push_svc.device_count(db)},
         "scenario": demo_state.scenario,
         "now_override": demo_state.now_override,
     }

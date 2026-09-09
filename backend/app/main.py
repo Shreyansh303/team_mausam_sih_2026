@@ -14,7 +14,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app import __version__
-from app.api import admin, auth, events, health, home, locations, me, places, weather, ws
+from app.api import (
+    admin,
+    auth,
+    devices,
+    events,
+    health,
+    home,
+    locations,
+    me,
+    places,
+    weather,
+    ws,
+)
 from app.config import BASE_DIR, settings
 from app.core import cache
 from app.core.db import init_db
@@ -69,6 +81,7 @@ def create_app() -> FastAPI:
         auth.router,
         me.router,
         places.router,
+        devices.router,
         home.router,
         events.router,
         admin.router,

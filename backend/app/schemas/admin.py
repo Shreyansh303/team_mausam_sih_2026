@@ -54,3 +54,6 @@ class AdminState(BaseModel):
     now_override: str | None = None
     warnings: list[Warning] = Field(default_factory=list)
     connected_clients: int = 0
+    #: S3 — registered push devices and the active transport (`noop` until FCM is configured).
+    devices: int = 0
+    push_transport: str = "noop"

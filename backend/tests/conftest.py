@@ -18,6 +18,7 @@ from app.api import ws
 from app.config import settings
 from app.core import cache, db, geo, i18n
 from app.providers import imd, scenarios
+from app.services import push
 from app.state import demo_state
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -30,6 +31,9 @@ SLUGS: dict[tuple[float, float], str] = {
     (19.08, 72.88): "mumbai",
     (51.51, -0.13): "london",
 }
+
+#: What the mocked Google token endpoint hands back (tests assert the Bearer header carries it).
+FAKE_ACCESS_TOKEN = "ya29.test-access-token"
 
 DELHI = (28.61, 77.21)
 PANAJI = (15.49, 73.83)
@@ -73,10 +77,12 @@ def reset_state():
     geo.coastal_points.cache_clear()
     demo_state.reset()
     ws.manager.reset()
+    push.reset_transport()
     yield
     cache.clear_all()
     demo_state.reset()
     ws.manager.reset()
+    push.reset_transport()
 
 
 @pytest.fixture(autouse=True)
@@ -108,6 +114,21 @@ def mock_upstream():
         mock.get(settings.open_meteo_geocode_url).mock(side_effect=_geocode)
         mock.get(settings.rainviewer_url).mock(side_effect=lambda req: _reply(load("radar")))
         mock.route(host="mausam.imd.gov.in").mock(side_effect=_imd)
+        # S3 push (services/push.py). Named so a test can assert on the captured requests
+        # (`mock_upstream["fcm_send"].calls`) or re-`mock()` them to return a failure.
+        mock.post(host="oauth2.googleapis.com", name="google_token").mock(
+            return_value=httpx.Response(
+                200,
+                json={
+                    "access_token": FAKE_ACCESS_TOKEN,
+                    "expires_in": 3600,
+                    "token_type": "Bearer",
+                },
+            )
+        )
+        mock.post(host="fcm.googleapis.com", name="fcm_send").mock(
+            return_value=httpx.Response(200, json={"name": "projects/demo/messages/0:1"})
+        )
         yield mock
 
 

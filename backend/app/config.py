@@ -39,6 +39,12 @@ class Settings(BaseSettings):
     data_gov_in_key: str = ""
     tomtom_key: str = ""
 
+    # --- push (S3; empty = the noop transport, which is the zero-key default) ----------
+    #: Path to a Firebase service-account JSON. Never commit one — see .env.example.
+    fcm_service_account_file: str = ""
+    #: Firebase project id. FCM is used only when BOTH of these are set.
+    fcm_project_id: str = ""
+
     # --- IMD ---------------------------------------------------------------
     imd_base_url: str = "https://mausam.imd.gov.in/api"
     imd_enabled: int = 1
