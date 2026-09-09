@@ -107,6 +107,7 @@
     <h2>5 &middot; Connected clients</h2>
     <div class="big" id="clients">0</div>
     <div class="muted">WebSocket <code>/ws/alerts</code> &middot; refreshed every 5 s</div>
+    <div class="muted" id="devices">push devices: 0 &middot; transport noop</div>
     <div class="row" style="margin-top:10px">
       <button id="wsToggle">Connect this page to /ws/alerts</button>
     </div>
@@ -458,6 +459,9 @@
     state.scenario = s.scenario;
     state.now_override = s.now_override;
     $("clients").textContent = s.connected_clients;
+    // S3 — registered push devices reach an app that is closed (docs/09_PUSH_NOTIFICATIONS.md).
+    $("devices").textContent =
+      "push devices: " + (s.devices || 0) + " \u00b7 transport " + (s.push_transport || "noop");
     $("conn").textContent = "connected · " + s.scenario;
     $("conn").className = "muted ok";
     paintScenario();

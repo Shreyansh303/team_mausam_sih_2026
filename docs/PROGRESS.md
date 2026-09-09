@@ -31,6 +31,7 @@ unticked items but files present:
 - [x] C1 e2e QA
 - [x] C2 docs + pitch
 - [ ] S* stretch
+- [x] S3 FCM push (transport + device registry + design doc; app wiring pending a Firebase project)
 - [x] H0 fresh-machine bootstrap (new owner; see docs/HANDOFF.md §4) — done on the macOS machine
   2026-09-08 (see "Notes for next phase → H0 — this Mac"); was never needed on the original Windows machine.
   Toolchain + every gate green (pytest 300, analyze clean, 64 tests, web, and a real
@@ -215,6 +216,35 @@ unticked items but files present:
   technical approach · feasibility & viability · impact & benefits · demo + what's next), 7 of the
   C1 screenshots embedded, speaker notes on every slide, 1.4 MB. Built with `pptxgenjs`; how to
   rebuild it is in the C2 notes.
+
+## S3 checklist (FCM push — doc + optional code, 2026-09-09)
+- [x] `services/push.py` — `PushTransport` protocol · `NoopTransport` (default, one INFO line per
+  broadcast, zero credentials) · `FcmTransport` (FCM HTTP v1 data messages, RS256 service-account
+  assertion → cached OAuth2 access token → `POST /v1/projects/{id}/messages:send`, ≤ 8 concurrent,
+  `404 UNREGISTERED` prunes the row). Selected **only** when `FCM_SERVICE_ACCOUNT_FILE` **and**
+  `FCM_PROJECT_ID` are set and the file exists; anything else stays on noop (a missing file logs a
+  WARNING). A transport failure is logged and swallowed — it never 500s an admin call.
+- [x] `models/device.py` + `schemas/device.py` + `api/devices.py`: `POST /me/devices` (upsert on
+  token, ≤ 8 per user, oldest evicted) · `DELETE /me/devices/{token}` (ownership-checked, 404 for
+  someone else's token), both behind the bearer token; mounted twice like every other router
+- [x] `GET /admin/devices` (tokens redacted to the last six chars) · `devices` + `push_transport`
+  in `AdminState` and in the console's *Connected clients* panel · `push:{transport,devices}` in
+  `/health`
+- [x] every admin broadcast also calls the transport — `warning_issued` (with per-device
+  `affects_you` via `warnings.applies_to`), `warning_cleared`, `scenario_changed`, `now_override`
+  (the last three data-only). **`api/ws.py` is untouched** — the WebSocket is still demo step 5
+- [x] `docs/09_PUSH_NOTIFICATIONS.md` (why WS is not enough · transport swap · message schema ·
+  registration · `affects_you` · Android/iOS delivery · security · rollout checklist · mermaid
+  sequence diagram), linked from the README docs map and the roadmap line
+- [x] `docs/04` §Devices and push (additive, marked optional/S3) · `backend/README.md`
+  §Push notifications (FCM) · `.env.example` + `infra/render.yaml` placeholders, **no values**
+- [x] tests: `backend/tests/test_push.py` — transport selection by env (all five combinations),
+  noop called on every admin push, the exact FCM v1 request (mocked host: URL, `Authorization:
+  Bearer`, data-only body, decoded RS256 assertion), access-token reuse, device CRUD + ownership +
+  cap, `affects_you` near/far/no-location and statewide, stale-token pruning, transient failures,
+  `/health` push block — **371 passed** (348 + 23)
+- [ ] app wiring (`firebase_messaging` + `google-services.json`) — **out of scope on purpose**,
+  see the note below
 
 ## Deviations from spec (record here)
 - **A1** Routers are mounted twice: at `/api/v1` (the 04 base) **and** at the root, so the bare
@@ -509,7 +539,68 @@ unticked items but files present:
   changed. The `.pptx` is a **generated artefact** committed as a binary — regenerate it rather
   than hand-editing the XML (recipe in the C2 notes).
 
+- **S3** One dependency added: the existing `PyJWT>=2.9,<3` pin became **`PyJWT[crypto]`**, which
+  pulls `cryptography` (50.0.1 here). Nothing already pinned can sign RS256 — PyJWT does HS256 out
+  of the box and needs its `crypto` extra for RSA — and this was the smaller change than adding
+  `google-auth` (which would also have needed `requests`/`urllib3` for a transport, while the
+  backend speaks `httpx` everywhere). The OAuth2 flow is therefore ~40 lines in
+  `services/push.py`, no Google SDK. Cost: one extra wheel in `pip install -r requirements.txt`
+  (~4 MB, prebuilt for every CI platform). It is **not** needed at runtime unless FCM is turned on.
+- **S3** Additive contract changes, all in `docs/04` in the same commit: `/health` gained
+  `push:{transport,devices}`; `/admin/state` gained `devices` and `push_transport`;
+  `POST /me/devices`, `DELETE /me/devices/{token}` and `GET /admin/devices` are new and marked
+  *optional, S3*. Nothing existing changed shape, so `docs/fixtures/*.json` are still valid and
+  the app needs no change to keep working.
+- **S3** Push messages are **data-only** — no `notification` block, on purpose. An OS-rendered
+  notification is written in whatever language the server picked; this product has five locales
+  and a per-user language, and the app already ships the strings, so the app builds the
+  notification itself from `data` (`Device.lang` records which language to use). The trade-off is
+  spelled out in `docs/09` §3 and §6: on iOS a background push is best-effort and a red warning
+  will eventually need a `notification` block (a two-line change in `push.fcm_body()`).
+- **S3** `app/` was deliberately **not** touched. Adding `firebase_messaging` without a
+  `google-services.json` breaks `flutter build apk`, and that file cannot be committed — so the
+  app side is documented (`backend/README.md`, `docs/09` §9) and left for whoever creates the
+  Firebase project. The APK, `flutter analyze` and `flutter test` are unaffected by S3.
+- **S3** A registration token identifies an *install*, not a user, so `POST /me/devices` is an
+  upsert on the token and a token that reappears under another account **moves** to it (the
+  handset changed hands; the previous user must stop getting its alerts). Deletion is
+  ownership-checked, and tokens are redacted to their last six characters in every log line and in
+  `GET /admin/devices` — a push token is a send-capability, not an identifier to hand around.
+
 ## Notes for next phase
+
+### S3 — what it hands the app side (2026-09-09)
+
+**The backend half of push is done and the app half is not, by design.** Read
+`docs/09_PUSH_NOTIFICATIONS.md` first — it is the whole design, including the parts deliberately
+left out. Three things to know before you start:
+
+1. **Nothing changed for an app that does not call the new routes.** The WebSocket is byte-for-byte
+   what it was, `/home` is unchanged, and with no `FCM_*` env vars the transport is `noop`: it
+   logs `push (noop): warning_issued → N device(s), affects_you=true for N` and sends nothing. You
+   can therefore build and test the *registration* half with no Firebase account at all —
+   `POST /me/devices` with any string as the token, then watch the server log while you push a
+   warning from `/admin/console` (the console's *Connected clients* panel now also shows
+   `push devices: N · transport noop`).
+2. **What the app must do** (in this order): add `firebase_core` + `firebase_messaging` +
+   `flutter_local_notifications`, drop `google-services.json` into `app/android/app/` (**never
+   commit it** — add it to `.gitignore` first), ask for `POST_NOTIFICATIONS` on Android 13+, then
+   `POST /me/devices {token, platform:"android", lat, lon, lang}` on first launch, on every
+   `onTokenRefresh`, and whenever the language or location changes; `DELETE /me/devices/{token}`
+   on sign-out or when the user turns notifications off. Handle the **data-only** message: refetch
+   `/home` on every `type`, and raise a *local* notification only when
+   `data.affects_you == "true"`, built from `data.title`/`data.severity` in the user's language.
+   Key on `warning.id` and ignore duplicates — the socket and the push both deliver the same
+   warning when the app is open.
+3. **What is missing before this is a real alerting system** (docs/09 §9): a Firebase project;
+   per-district FCM *topics* instead of per-token sends once the registry is bigger than a demo;
+   an IMD-driven trigger (`providers/imd.py` polls, push on new warning ids, de-duplicated) —
+   today a push only happens when someone presses the admin button; `android.ttl` /
+   `apns-expiration` derived from the warning's `valid_to` so an expired warning cannot arrive
+   late; and quiet hours / a severity threshold (push orange+ only) before this ships to users.
+
+Gates re-run on this Mac at the S3 commits: `cd backend && .venv/bin/python -m pytest -q` →
+**371 passed** (348 + 23 new). `app/` was not touched, so the B3/C1 Flutter gates still stand.
 
 ### Stretch (S1–S4) — what C2 hands you (2026-09-09)
 
