@@ -402,6 +402,12 @@ unticked items but files present:
   not four hardcoded ISO literals. The literals carried 2026-09-08, so from 2026-09-09 onwards
   every preset fell outside the forecast window and the deviation above silently took over. The
   demo sheet's chip labels are unchanged (`07:30 · 13:00 · 18:30 · 22:00`).
+- **C1** `DemoSheet.scenarios` lost **`cold_wave`**: docs/05 §Scenarios names ten and there is no
+  `backend/app/data/scenarios/cold_wave.json`. An unknown scenario is answered with live data, so
+  the chip highlighted and nothing on screen changed — a dead control in the middle of the demo.
+  The doc comment claiming the list is fetched from `/weather/scenarios` was also wrong (there is
+  no such call, and docs/04 does not publish that route); `test/demo_sheet_test.dart` now pins the
+  list to the scenario files the backend ships.
 - **C1** `FreshnessChip` ages the payload against the **effective demo clock** (the demo sheet's
   override, an admin `now_override` frame off `/ws/alerts`, else the live payload's own
   `context.now`) rather than the device clock. The backend stamps `freshness` with `now_override`,

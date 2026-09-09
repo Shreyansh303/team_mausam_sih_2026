@@ -20,8 +20,14 @@ import '../onboarding/persona_labels.dart';
 class DemoSheet extends ConsumerWidget {
   const DemoSheet({super.key});
 
-  /// docs/05 §Scenarios. Fetched from `/weather/scenarios` when the backend is up; this list is
-  /// the offline fallback and the display order.
+  /// The ten scenarios docs/05 §Scenarios ships as `backend/app/data/scenarios/*.json`, in the
+  /// order the sheet shows them. It is a hardcoded list, not a call to `/weather/scenarios`
+  /// (which docs/04 does not publish), so a scenario A* adds must be added here too.
+  ///
+  /// C1: `cold_wave` used to sit in this list with no file behind it. The backend answers an
+  /// unknown scenario with live data, so the chip highlighted and nothing on screen changed —
+  /// a dead control in the middle of the judge demo. `test/demo_sheet_test.dart` now pins the
+  /// list to what the backend actually ships.
   static const List<String> scenarios = <String>[
     'live',
     'clear_pleasant',
@@ -29,7 +35,6 @@ class DemoSheet extends ConsumerWidget {
     'heavy_rain',
     'monsoon_flood',
     'heatwave',
-    'cold_wave',
     'dense_fog',
     'severe_aqi',
     'cyclone',

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mausam_app/features/demo/demo_sheet.dart';
 
@@ -32,5 +34,25 @@ void main() {
       DemoSheet.presetFor('07:30', today: DateTime(2026, 1, 2)),
       '2026-01-02T07:30:00+05:30',
     );
+  });
+
+  test('every scenario chip has a scenario file behind it', () {
+    // C1: `cold_wave` was offered with no `backend/app/data/scenarios/cold_wave.json`. The
+    // backend answers an unknown scenario with live data, so the chip did nothing.
+    final dir = Directory('../backend/app/data/scenarios');
+    expect(dir.existsSync(), isTrue, reason: 'run this from app/ with the repo checked out');
+
+    final shipped = dir
+        .listSync()
+        .whereType<File>()
+        .map((f) => f.uri.pathSegments.last)
+        .where((n) => n.endsWith('.json'))
+        .map((n) => n.substring(0, n.length - 5))
+        .toSet();
+
+    expect(DemoSheet.scenarios.toSet(), shipped,
+        reason: 'the sheet and docs/05 §Scenarios must name the same ten');
+    expect(DemoSheet.scenarios.first, 'live');
+    expect(DemoSheet.scenarios, hasLength(10));
   });
 }
