@@ -9,9 +9,11 @@ import 'package:share_plus/share_plus.dart';
 import '../../data/models/card.dart';
 import '../../data/models/warning.dart';
 import '../../data/repositories/home_repo.dart';
+import '../../data/widget/home_widget_bridge.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../demo/demo_sheet.dart';
 import 'card_actions.dart';
+import 'detail/card_detail_page.dart';
 import 'live_alerts.dart';
 import 'providers.dart';
 import 'widgets/card_shell.dart';
@@ -44,10 +46,49 @@ class _HomePageState extends ConsumerState<HomePage> {
   Set<String> _promoted = <String>{};
   Timer? _highlightTimer;
 
+  /// docs/06 §Home-screen widget — a tap on the widget's pinned row carries
+  /// `mausam://card/<type>`. The feed may still be loading when it arrives, so the type waits
+  /// here until a payload that contains it turns up.
+  StreamSubscription<Uri?>? _widgetLaunches;
+  String? _pendingWidgetCard;
+
+  @override
+  void initState() {
+    super.initState();
+    final bridge = ref.read(homeWidgetBridgeProvider);
+    _widgetLaunches = bridge.launches().listen(_onWidgetLaunch);
+    unawaited(bridge.initialLaunch().then(_onWidgetLaunch).catchError((Object _) {}));
+  }
+
   @override
   void dispose() {
     _highlightTimer?.cancel();
+    unawaited(_widgetLaunches?.cancel());
     super.dispose();
+  }
+
+  /// `mausam://home` needs nothing — the app already opens here. `mausam://card/<type>` opens
+  /// that card's detail page as soon as the feed has it.
+  void _onWidgetLaunch(Uri? uri) {
+    final type = widgetLaunchCardType(uri);
+    if (type == null || !mounted) return;
+    _pendingWidgetCard = type;
+    final result = ref.read(homeProvider(ref.read(homeQueryProvider))).value;
+    if (result != null) _openPendingWidgetCard(result);
+  }
+
+  void _openPendingWidgetCard(HomeResult result) {
+    final type = _pendingWidgetCard;
+    if (type == null) return;
+    final matches = result.home.allCards.where((c) => c.type == type);
+    if (matches.isEmpty) return;
+    _pendingWidgetCard = null;
+    final card = matches.first;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(cardActionsProvider).tap(card);
+      CardDetailPage.show(context, card);
+    });
   }
 
   Future<void> _refresh() async {
@@ -106,6 +147,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       }
     }
     _lastOrder = order;
+    _openPendingWidgetCard(result);
   }
 
   @override

@@ -54,6 +54,7 @@ dependencies:
   flutter_animate: ^4.5.2
   package_info_plus: ^10.2.1
   cached_network_image: ^4.0.0
+  home_widget: ^0.9.4
 
 dev_dependencies:
   flutter_test:

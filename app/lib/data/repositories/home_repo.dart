@@ -6,6 +6,8 @@ import '../../core/config.dart';
 import '../api_client.dart';
 import '../cache/json_file_cache.dart';
 import '../models/home_response.dart';
+import '../widget/home_widget_bridge.dart';
+import '../widget/widget_snapshot.dart';
 
 /// Where the `HomeResponse` on screen came from — drives the freshness chip and the banners.
 enum HomeSource { network, cache, fixture }
@@ -101,13 +103,22 @@ class HomeRepo {
     required ApiClient api,
     JsonFileCache? cache,
     Future<String> Function(String)? loadAsset,
+    HomeWidgetBridge? widgetBridge,
+    this.units = 'metric',
   })  : _api = api, // ignore: prefer_initializing_formals
         _cache = cache ?? JsonFileCache(),
-        _loadAsset = loadAsset ?? rootBundle.loadString;
+        _loadAsset = loadAsset ?? rootBundle.loadString,
+        _widget = widgetBridge ?? defaultHomeWidgetBridge();
 
   final ApiClient _api;
   final JsonFileCache _cache;
   final Future<String> Function(String) _loadAsset;
+
+  /// docs/06 §Home-screen widget — every real payload is mirrored to the Android widget.
+  final HomeWidgetBridge _widget;
+
+  /// `metric` | `imperial`; the widget formats its own temperature, so it needs to be told.
+  String units;
 
   Map<String, dynamic>? _fixtureCache;
 
@@ -117,8 +128,10 @@ class HomeRepo {
     final entry = await _cache.get(query.cacheKey);
     if (entry == null) return null;
     try {
+      final home = HomeResponse.fromJson(entry.data);
+      await _publishToWidget(home, query);
       return HomeResult(
-        home: HomeResponse.fromJson(entry.data),
+        home: home,
         source: HomeSource.cache,
         storedAt: entry.storedAt,
       );
@@ -162,7 +175,33 @@ class HomeRepo {
     final json = await _api.getJson('/home', query: query.toQueryParameters());
     final home = HomeResponse.fromJson(json);
     await _cache.put(query.cacheKey, json);
+    await _publishToWidget(home, query);
     return HomeResult(home: home, source: HomeSource.network);
+  }
+
+  /// docs/06 §Home-screen widget — "whenever the app receives a `/home` response (network or
+  /// cache), write a compact snapshot and ask the widget to redraw".
+  ///
+  /// The bundled fixture is deliberately **not** published: it is sample data (CLAUDE.md §6),
+  /// and a launcher widget has no room to say so. A widget with nothing to show says "Open
+  /// Mausam to refresh" instead, which is the truth.
+  Future<void> _publishToWidget(HomeResponse home, HomeQuery query) async {
+    try {
+      await _widget.publish(
+        WidgetSnapshot.fromHome(home, lang: query.lang, units: units),
+        config: WidgetRefreshConfig(
+          backendUrl: _api.baseUrl,
+          lat: query.lat,
+          lon: query.lon,
+          token: _api.token,
+          personas: query.personas,
+          lang: query.lang,
+          units: units,
+        ),
+      );
+    } catch (_) {
+      // Never fatal — the widget is an extra surface, not part of the home screen's contract.
+    }
   }
 
   /// The bundled sample payload (docs/07 §B1 — "author app/assets/fixtures/home_sample.json").

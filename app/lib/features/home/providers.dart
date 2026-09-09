@@ -17,6 +17,7 @@ import '../../data/repositories/places_repo.dart';
 import '../../data/repositories/profile_repo.dart';
 import '../../data/repositories/radar_repo.dart';
 import '../../data/repositories/settings_repo.dart';
+import '../../data/widget/home_widget_bridge.dart';
 import 'renderers/radar.dart' show RadarRenderer;
 
 // ---------------------------------------------------------------- infrastructure
@@ -47,9 +48,18 @@ final authTokenProvider = FutureProvider<String?>((ref) async {
   return ref.watch(authRepoProvider).ensureGuestToken();
 });
 
+/// docs/06 §Home-screen widget — the Android widget's side of the app. A no-op on web and iOS,
+/// and overridden with a fake in tests.
+final homeWidgetBridgeProvider =
+    Provider<HomeWidgetBridge>((ref) => defaultHomeWidgetBridge());
+
 final homeRepoProvider = Provider<HomeRepo>((ref) => HomeRepo(
       api: ref.watch(apiClientProvider),
       cache: ref.watch(jsonCacheProvider),
+      widgetBridge: ref.watch(homeWidgetBridgeProvider),
+      // The Android home-screen widget formats its own temperature (docs/06 §Home-screen
+      // widget), so the unit setting travels with the snapshot.
+      units: ref.watch(settingsProvider.select((AppSettings s) => s.units)),
     ));
 
 final locationsRepoProvider =
