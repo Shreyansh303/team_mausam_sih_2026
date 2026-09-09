@@ -23,6 +23,8 @@ for card in catalog:
     eng  = engagement_adj(profile.engagement.get(card.type))        # -0.25..+0.25
     score = 0.5 * rel * ctx + 0.5 * urg + eng
     pinned = card.type in profile.pins or urg >= 0.8
+    if ENGINE_ML and not pinned:                                    # v2, see §Learning (v2)
+        score += clamp(0.2 * (p_tap - 0.5), -0.1, +0.1)             # bounded; urg is untouched
     reasons = explain(card, rel, ctx, urg, eng, context, profile)
     build card payload via card.builder(snapshot, context, profile, language)
 
@@ -49,6 +51,8 @@ Each card carries up to 4 `reasons` `{code, text}` chosen in this order, localiz
 - `time:<daypart>` when time_mult ≥ 1.2 ("Morning commute window"); `season:<s>` when season_mult ≥ 1.2.
 - `location:coastal` for gated marine cards; `places:saved` for traveler cards.
 - `engagement:up` / `engagement:down` when |eng| ≥ 0.08 ("You often open this" / "You dismissed this before").
+- `learning:up` / `learning:down` when |ml| ≥ 0.01 — v2 only, and it carries the signed value the
+  ranker actually applied: "Learned from your taps (+0.04)". Never emitted with `ENGINE_ML=0`.
 - `pinned:user` / `pinned:urgent`.
 
 ## Learning (v1, shipped)
@@ -57,10 +61,65 @@ Stored per user per card type (guests included via their guest token). `dismiss`
 Effect is immediate on next `/home`. `hide` removes the card until `unhide`. Visible in demo after
 2 dismisses (−0.12) or 1 pin (pinned).
 
-## Learning (v2, optional stretch — only if time remains after all phases)
-Logistic regression (scikit-learn) predicting P(tap) from features `[persona one-hots, daypart
-one-hot, season one-hot, urgency, is_coastal, card type one-hot]`, trained on synthetic + logged
-events; blended as `score += 0.2 * (p_tap - 0.5)`. Ship behind `ENGINE_ML=1`.
+## Learning (v2, shipped as S1 — behind `ENGINE_ML=1`)
+Per-user logistic regression predicting `p_tap` from the events already logged by `POST /events`,
+blended into the score as `score += 0.2 * (p_tap - 0.5)`. **v1 is the default and the fallback**:
+with `ENGINE_ML=0` (the default) `/home` is byte-identical to v1 and `engine/ml.py` is never
+called. Code: `backend/app/engine/ml.py`; weights in `ranker_weights` (`models/ranker_weights.py`).
+
+**No new dependency.** numpy is not pinned, so the model is plain-Python sparse SGD over a
+`{feature_name: value}` dict. scikit-learn was not added — the feature vector is ~15 non-zero
+entries and training is capped, so a library would buy nothing and cost a wheel on every deploy.
+
+**Features** (identical at training and prediction time; `feature_vector()`):
+
+| block | features | notes |
+|---|---|---|
+| card | `type:<card_type>` | one-hot, 33 types |
+| time | `daypart:<d>`, `season:<s>`, `weekend` | from the *event's own* `ts` when training, from `Context.now` when predicting |
+| persona | `persona:<id>` (value = persona weight), `persona_match` | `persona_match` is the v1 `relevance` for this card |
+| urgency | `urg:low\|medium\|high\|unknown` | reconstructable from a logged event only when the client sends `meta.urgency`; every event today lands in `urg:unknown`, so the real bands train to 0 and contribute nothing until the app sends it |
+| history | `hist_tap_rate`, `hist_expand_rate`, `hist_dismiss_rate` (÷ `impressions+1`), `hist_pinned`, `hist_volume` = `tanh(impressions/10)` | the per-user, per-card-type counters, as rates so heavy and light users share a scale |
+| recency | `recency` = `exp(-age_days / 7)` | since this card type was last interacted with |
+| bias | `bias` | |
+
+`is_coastal` from the original sketch is **not** a feature: it is a hard gate in the catalog, not
+a preference, and it is not recoverable from a logged event.
+
+**Labels and the training set.** Each logged event is one example, with the features computed as
+of that event (running prefix counters, not today's totals): `tap`/`expand`/`pin` → 1 (weights
+1/1/2), `impression`/`dismiss`/`hide` → 0 (weights 1/2/3); `unpin`/`unhide` are corrections and
+are skipped. Implicit feedback needs negatives, so **each positive is paired with one sampled
+negative** on a card type the user has never engaged with, drawn by rotating deterministically
+through the sorted candidate list — no RNG anywhere. The two classes are then rescaled to equal
+total weight, which is what keeps an untouched card on the 0.5 prior instead of inheriting the
+"cards are usually not tapped" base rate.
+
+**Update rule.** SGD on the logistic loss, `w -= 0.15 * ((sigmoid(w·x) - y) * weight * x + 0.002 * w)`,
+5 epochs over the most recent 300 events, weights clipped to ±5 and rounded to 6 dp on save.
+Deterministic: fixed learning rate, fixed epochs, examples consumed in `Event.id` order — the same
+log always trains to the same weight vector. Training runs **inline on `POST /events`** (15 ms at
+the 300-event cap; a 100-event batch round-trips in under 20 ms), so there is no worker.
+
+**Cold start, twice over.** `p_tap = 0.5` — exactly zero contribution — until the user has at
+least **8** labelled events (`MIN_EVENTS`), *and* per card type: a type this user has never
+interacted with also stays at 0.5. The second guard is about honesty rather than accuracy. A
+model fitted on one sparse log spends its always-on features as a "cards are usually not tapped"
+prior, so an unseen card comes back around `p = 0.2` and would be demoted — and labelled "Learned
+from what you skip" — for a card that has never been on screen.
+
+**The bounds** (`tests/test_ml.py` proves each one):
+1. The term is clamped to **±0.1** (`0.2 * (p_tap - 0.5)` with `p_tap ∈ (0,1)`, plus an explicit
+   `clamp_adjustment`), so no learned preference moves a card by a tenth of a score point.
+2. It is added to `score` only, **never to `urgency`** — so it cannot push a card past the
+   `urgency >= 0.8` pin threshold.
+3. It is applied **only to cards that are not pinned** (and not to the hero, which is lifted out
+   of the ranking anyway). §Ordering renders the whole pinned block above `cards`, so a card the
+   model loves cannot outrank a pinned orange or red warning — structurally, not by arithmetic.
+
+`POST /me/reset-learning` and `POST /admin/reset-user` delete the weights row along with the
+counters, prefs and event log. `GET /health` reports `engine.ml`; `GET /admin/state` reports
+`engine_ml`.
 
 ## Context derivation
 - `now` = query `now_override` (ISO) if given (demo), else server time converted to the location tz.
@@ -82,3 +141,8 @@ events; blended as `score += 0.2 * (p_tap - 0.5)`. Ship behind `ENGINE_ML=1`.
 8. Hidden card never appears; `hidden_types` lists it.
 9. Payload of `/home` for each persona validates against the Pydantic models (no None in
    required fields).
+
+Learning v2 has its own file, `backend/tests/test_ml.py`: flag off → `/home` byte-identical and
+`engine/ml.py` never reached · flag on with no events → byte-identical (cold start) · taps raise
+`p_tap` and dismisses lower it · a maximally favourable model cannot outrank an orange/red warning
+· reset clears the weights · the same events train to the same weights.

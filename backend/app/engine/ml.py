@@ -455,9 +455,10 @@ def build_examples(
 def train_user(db: "Session", user_id: str) -> RankerModel:
     """Retrain one user's weights from their most recent `MAX_EVENTS` events.
 
-    Called inline from `POST /events` when `ENGINE_ML=1`. Bounded by construction:
-    at most `MAX_EVENTS * 2 * EPOCHS` sparse updates (~3 ms measured on the demo machine),
-    so it does not need a background task.
+    Called inline from `POST /events` when `ENGINE_ML=1`. Bounded by construction: at most
+    `MAX_EVENTS * 2 * EPOCHS` sparse updates. Measured at the 300-event cap on the demo Mac:
+    **15 ms**, and a full 100-event `POST /events` round trip stays under 20 ms end to end —
+    which is why this runs inline instead of needing a worker.
     """
     from sqlalchemy import select
 

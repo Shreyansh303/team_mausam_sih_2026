@@ -9,7 +9,7 @@ with the proper HTTP status (400 validation, 401 auth, 404, 429, 502 upstream, 5
 ## Endpoints
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| GET | `/health` | – | `{status, version, time, providers:{imd, open_meteo, marine, air}, push:{transport, devices}, scenario, now_override}` |
+| GET | `/health` | – | `{status, version, time, providers:{imd, open_meteo, marine, air}, push:{transport, devices}, engine:{ml}, scenario, now_override}` |
 | POST | `/auth/guest` | – | `{token, user}` — creates a guest user |
 | POST | `/auth/request-otp` `{phone}` | – | `{ok:true, demo_otp:"123456"}` (`demo_otp` only when `DEMO_MODE=1`) |
 | POST | `/auth/verify-otp` `{phone, otp}` | – | `{token, user}`; merges a guest if `X-Guest-Token` header present |
@@ -30,7 +30,7 @@ with the proper HTTP status (400 validation, 401 auth, 404, 429, 502 upstream, 5
 | GET | `/weather/snapshot?lat=&lon=&scenario=` | – | `Snapshot` (for detail screens / debugging) |
 | GET | `/weather/radar` | – | `{host, past:[{time,path}], nowcast:[{time,path}], tile_template}` |
 | POST | `/events` | ✓ | `{events:[{type, action, ts, meta?}]}` → `{ok:true, engagement:{type:{taps,expands,dismisses,pins,impressions}}}` |
-| GET | `/admin/state` | admin | `{scenario, now_override, warnings:Warning[], connected_clients, devices, push_transport}` |
+| GET | `/admin/state` | admin | `{scenario, now_override, warnings:Warning[], connected_clients, devices, push_transport, engine_ml}` |
 | POST | `/admin/scenario` `{name}` | admin | sets global default scenario → state |
 | POST | `/admin/now-override` `{now: ISO or null}` | admin | global demo clock → state |
 | POST | `/admin/warnings` | admin | `{severity, hazard, title, description, district?, state?, lat?, lon?, radius_km=75, ttl_minutes=120}` → `Warning`; broadcasts on WS |
@@ -75,7 +75,7 @@ Place { "id": "plc_…", "name", "lat", "lon", "country", "country_code", "admin
 Warning { "id", "severity": "yellow|orange|red", "hazard": "heavy_rain|very_heavy_rain|thunderstorm|lightning|squall|hail|heatwave|cold_wave|fog|dust_storm|cyclone|strong_wind|snow|flood|other",
           "title", "description", "issued_at", "valid_from", "valid_to", "district": str|null, "state": str|null,
           "lat": num|null, "lon": num|null, "radius_km": num|null, "source": "imd|admin|scenario", "color_hex": "#F28C28" }
-Reason { "code": "persona:health", "text": "Because you follow Health" }
+Reason { "code": "persona:health", "text": "Because you follow Health" }   // codes: see 03 §Explainability
 Insight { "headline": "Avoid outdoor exercise today", "detail": "PM2.5 is 190 µg/m³ …", "icon": "mask" }
 Action { "id": "details|share|pin|unpin|dismiss|hide|open_map|open_places|open_settings", "label": "Details" }
 Card {
@@ -184,3 +184,23 @@ ignore a message it already handled — push and socket can both deliver the sam
 `type` = card type, `action` ∈ `impression|tap|expand|dismiss|pin|unpin|hide|unhide`, `ts` ISO,
 `meta` optional `{location_id, position}`. Batch ≤ 100. `pin/unpin/hide/unhide` also update
 card-prefs server-side so the app does not need a second call.
+
+### Ranker v2 (S1, additive — nothing here changes an existing field)
+With `ENGINE_ML=1` the backend also blends a learned term into `Card.score` and can add **one new
+reason code** to `Card.reasons`:
+
+```jsonc
+{"code": "learning:up",   "text": "Learned from your taps (+0.04)"}
+{"code": "learning:down", "text": "Learned from what you skip (-0.03)"}
+```
+
+Clients must already treat `reasons[].code` as an opaque, growing enum (03 §Explainability lists
+the families) — an app that renders `text` needs no change. The code appears **only** when the
+flag is on and the learned term is at least 0.01; it never appears on a pinned card. `Card.score`
+stays what it has always been: an opaque ranking number, not a 0–1 value. `engine.version` in
+`HomeResponse` stays `"1.0"` — the flag is reported by `GET /health` (`engine.ml`) and
+`GET /admin/state` (`engine_ml`), not by the home payload.
+
+`meta` may additionally carry `urgency` (the float the card was shown with). It is optional and
+ignored by v1; the v2 ranker uses it as a feature when present. Batch limit and every other rule
+above are unchanged.

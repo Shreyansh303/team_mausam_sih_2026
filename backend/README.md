@@ -64,6 +64,7 @@ BigDataCloud and RainViewer are all keyless. `DATA_GOV_IN_KEY` (CPCB station AQI
 | `JWT_EXPIRE_DAYS` | `30` | token lifetime |
 | `DATABASE_URL` | `sqlite:///./data/mausam.db` | relative SQLite paths resolve against `backend/`; a Postgres URL also works |
 | `REDIS_URL` | empty | reserved; the cache is in-process today |
+| `ENGINE_ML` | `0` | `1` blends the v2 ML ranker into `/home` (below). `0` is the deterministic v1 ranker, which is also the fallback |
 | `DEFAULT_SCENARIO` | `live` | scenario used before the console changes it |
 | `CORS_ORIGINS` | `*` | comma list, or `*` |
 | `HTTP_TIMEOUT_S` | `8` | per-provider timeout |
@@ -204,6 +205,95 @@ Not wired yet, on purpose: adding `firebase_messaging` without a `google-service
   in the user's language (the server deliberately sends no `notification` block, so the OS cannot
   show a message in the wrong language);
 * key on `warning.id` — the WebSocket and the push can both deliver the same warning.
+
+## Ranker v2 (ML)
+
+`ENGINE_ML=1` turns on the learned term specified in `docs/03` §"Learning (v2)". **It is off by
+default and v1 is the fallback**: with the flag off, `/home` is byte-identical to what it has
+always returned and `app/engine/ml.py` is never called at all (there is a test that asserts
+exactly that). Nothing about the API contract changes; the only visible difference is one extra
+reason code on a card.
+
+### Enable it
+
+```bash
+# one process
+ENGINE_ML=1 .venv/bin/python -m uvicorn app.main:app --reload --port 8000
+# or persist it
+echo ENGINE_ML=1 >> .env
+```
+
+Confirm it is live:
+
+```bash
+curl -s localhost:8000/health | python -c "import sys,json;print(json.load(sys.stdin)['engine'])"
+# {'ml': True}
+curl -s localhost:8000/admin/state -H 'X-Admin-Key: mausam-admin' | grep -o '"engine_ml":[a-z]*'
+```
+
+### What it learns
+
+A per-user logistic regression over the events `POST /events` already logs, predicting `p_tap` —
+"will this user open this card type in this context" — blended as `score += 0.2 * (p_tap - 0.5)`.
+Features: the card type, the daypart/season/weekend of the event, the user's personas and the v1
+`relevance` for that card, the urgency band, the per-card-type engagement rates (taps, expands,
+dismisses, pins over impressions), and recency. Training is plain-Python SGD (no numpy, no
+scikit-learn), 5 epochs over the most recent 300 events, and runs **inline on `POST /events`** —
+15 ms at the cap, so a 100-event batch still round-trips in under 20 ms.
+
+`p_tap` is exactly `0.5` — a zero contribution — until the user has 8 labelled events, and also
+for any card type the user has never interacted with. A brand-new user therefore sees the v1
+screen, unchanged, which is why the cold-start test can assert byte equality.
+
+**The bound.** The learned term is clamped to ±0.1, is added to `score` and never to `urgency`,
+and is only applied to cards that are **not** pinned. Since `docs/03` §Ordering renders the whole
+pinned block above `cards`, no amount of learning can lift a card over a pinned orange or red
+warning, and nothing can be pushed past the `urgency >= 0.8` pin threshold. `tests/test_ml.py`
+proves this with a model that is maximally confident about every card in the catalog.
+
+When the term is at least 0.01 the card carries an extra reason the why sheet can show:
+
+```json
+{"code": "learning:up", "text": "Learned from your taps (+0.09)"}
+```
+
+localized in `en` and `hi` (`reason.learning.up` / `reason.learning.down`).
+
+### Try it end to end
+
+```bash
+BASE=http://localhost:8000/api/v1
+TOKEN=$(curl -s -X POST $BASE/auth/guest | python -c "import sys,json;print(json.load(sys.stdin)['token'])")
+curl -s -X POST $BASE/events -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+     -d "$(python -c "import json;print(json.dumps({'events':[{'type':'aqi','action':'tap'}]*10}))")"
+curl -s "$BASE/home?lat=28.61&lon=77.21" -H "Authorization: Bearer $TOKEN" \
+ | python -c "import sys,json;b=json.load(sys.stdin);c=[x for x in b['cards']+b['more_cards'] if x['type']=='aqi'][0];print(c['score'],[r['code'] for r in c['reasons']])"
+```
+
+`POST /me/reset-learning` (or `POST /admin/reset-user`) deletes the weights along with the
+counters, the card prefs and the raw event log, and the score returns to its v1 value exactly.
+
+### Inspect the weights
+
+They are a plain JSON object per user in the `ranker_weights` table
+(`app/models/ranker_weights.py`), so no tooling is needed:
+
+```bash
+python - <<'EOF'
+import json, sqlite3
+for uid, n, ver, w in sqlite3.connect("data/mausam.db").execute(
+        "select user_id, n_events, version, weights from ranker_weights"):
+    d = json.loads(w)
+    print(uid, "n_events=%d" % n, "v=%s" % ver, "features=%d" % len(d))
+    for k, v in sorted(d.items(), key=lambda kv: -abs(kv[1]))[:8]:
+        print("   %-24s %+.3f" % (k, v))
+EOF
+```
+
+A positive `type:aqi` means this user opens the AQI card; a negative `type:humidity` means they
+dismiss it. `stats` on the same row holds the per-card-type last-interaction timestamps that feed
+the recency feature, and `version` is bumped whenever the feature set changes so an old row is
+retrained rather than mixed with new features.
 
 ## Honest data
 
