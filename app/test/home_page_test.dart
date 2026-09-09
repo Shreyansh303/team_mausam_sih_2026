@@ -9,6 +9,7 @@ import 'package:mausam_app/data/api_client.dart';
 import 'package:mausam_app/data/cache/json_file_cache.dart';
 import 'package:mausam_app/data/repositories/events_repo.dart';
 import 'package:mausam_app/data/repositories/home_repo.dart';
+import 'package:mausam_app/data/repositories/profile_repo.dart';
 import 'package:mausam_app/data/repositories/settings_repo.dart';
 import 'package:mausam_app/features/home/home_page.dart';
 import 'package:mausam_app/features/home/providers.dart';
@@ -98,7 +99,7 @@ void main() {
     addTearDown(tester.view.reset);
   }
 
-  ProviderContainer buildContainer() {
+  ProviderContainer buildContainer({ProfileRepo? profileRepo}) {
     // No backend: the repo's network call fails and it falls through to the bundled fixture,
     // which is exactly the "demo with the backend switched off" path docs/07 §B1 asks for.
     final repo = HomeRepo(
@@ -113,6 +114,8 @@ void main() {
         settingsProvider.overrideWith(_FixedSettings.new),
         // No real WebSocket in a widget test (docs/06 §Home behaviour connects one on mount).
         alertsSocketProvider.overrideWithValue(silentAlertsSocket()),
+        // Only the two card-prefs tests below need this one (docs/04 `GET /me/card-prefs`).
+        if (profileRepo != null) profileRepoProvider.overrideWithValue(profileRepo),
       ],
     );
   }
@@ -199,6 +202,55 @@ void main() {
     );
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('hides seeded from /me/card-prefs are applied to the first feed', (tester) async {
+    useTallViewport(tester);
+    final container = buildContainer(
+      profileRepo: _SeededPrefs(const CardPrefs(hidden: <String>['school_commute', 'aqi'])),
+    );
+    addTearDown(container.dispose);
+
+    // What `main` does once the guest token lands (docs/04 `GET /me/card-prefs`), so a reinstall
+    // shows the feed the server already knows about instead of every card the user had hidden.
+    await seedCardPrefs(container);
+
+    await tester.pumpWidget(_app(container));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    // `school_commute` is pinned in the fixture and `aqi` is a ranked card: both filtered out.
+    expect(find.text('School run'), findsNothing);
+    expect(find.text('Air quality'), findsNothing);
+    // The rest of the feed is untouched.
+    expect(find.text('Rain radar'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('an unreachable backend leaves the feed at its defaults', (tester) async {
+    useTallViewport(tester);
+    // `ProfileRepo.cardPrefs()` returns null on any ApiException — the offline path.
+    final container = buildContainer(profileRepo: _SeededPrefs(null));
+    addTearDown(container.dispose);
+
+    await seedCardPrefs(container);
+
+    await tester.pumpWidget(_app(container));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    expect(container.read(hiddenCardsProvider), isEmpty);
+    expect(find.text('School run'), findsOneWidget);
+    expect(find.text('Air quality'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+}
+
+/// `/me/card-prefs` without a backend. `null` is what the real repo returns when the call fails.
+class _SeededPrefs extends ProfileRepo {
+  _SeededPrefs(this.prefs) : super(api: ApiClient(baseUrl: 'http://127.0.0.1:1'));
+
+  final CardPrefs? prefs;
+
+  @override
+  Future<CardPrefs?> cardPrefs() async => prefs;
 }
 
 /// Settings are normally hydrated from SharedPreferences in `main`; in the test we start from

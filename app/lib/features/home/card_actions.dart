@@ -3,7 +3,6 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../data/models/card.dart';
 import '../../data/repositories/events_repo.dart';
-import '../../data/repositories/profile_repo.dart';
 import 'providers.dart';
 
 /// Every card gesture in one place: it queues the `/events` action (docs/04 §Engagement events),
@@ -95,7 +94,7 @@ class CardActions {
   }
 }
 
-final profileRepoProvider =
-    Provider<ProfileRepo>((ref) => ProfileRepo(api: ref.watch(apiClientProvider)));
+// `profileRepoProvider` moved to providers.dart in S-app, next to the start-up seeding that
+// reads `/me/card-prefs`; it is re-exported through the `providers.dart` import above.
 
 final cardActionsProvider = Provider<CardActions>(CardActions.new);

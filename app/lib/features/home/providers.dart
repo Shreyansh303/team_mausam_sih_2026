@@ -14,6 +14,7 @@ import '../../data/repositories/events_repo.dart';
 import '../../data/repositories/home_repo.dart';
 import '../../data/repositories/locations_repo.dart';
 import '../../data/repositories/places_repo.dart';
+import '../../data/repositories/profile_repo.dart';
 import '../../data/repositories/radar_repo.dart';
 import '../../data/repositories/settings_repo.dart';
 import 'renderers/radar.dart' show RadarRenderer;
@@ -247,8 +248,9 @@ final homeProvider = StreamProvider.family<HomeResult, HomeQuery>((ref, query) a
   yield await repo.load(query);
 });
 
-/// Card types the user chose to hide locally in this session (docs/06 §Why sheet).
-/// The server-side prefs round-trip lands in B2 with `/events` and `/me/card-prefs`.
+/// Card types the user chose to hide (docs/06 §Why sheet). Every hide also travels to the server
+/// as a `hide` event, which writes card-prefs (docs/04 §Engagement events), so [seed] can put the
+/// overlay back after a fresh install.
 class HiddenCardsNotifier extends Notifier<Set<String>> {
   @override
   Set<String> build() => <String>{};
@@ -256,10 +258,46 @@ class HiddenCardsNotifier extends Notifier<Set<String>> {
   void hide(String type) => state = <String>{...state, type};
   void unhide(String type) => state = <String>{...state}..remove(type);
   void restoreAll() => state = <String>{};
+
+  /// Adds the server's hidden set to the local one. A union, not a replace: the seed arrives
+  /// after a round trip, and a card the user hid while it was in flight must not pop back.
+  void seed(Iterable<String> types) {
+    final incoming = types.where((t) => t.isNotEmpty);
+    if (incoming.isEmpty) return;
+    state = <String>{...state, ...incoming};
+  }
 }
 
 final hiddenCardsProvider =
     NotifierProvider<HiddenCardsNotifier, Set<String>>(HiddenCardsNotifier.new);
+
+/// docs/06_MOBILE_SPEC.md §Layout `profile_repo` — `/me/card-prefs` and the learning reset.
+final profileRepoProvider =
+    Provider<ProfileRepo>((ref) => ProfileRepo(api: ref.watch(apiClientProvider)));
+
+/// Restores the hides the server already knows about (docs/04 `GET /me/card-prefs`), so a
+/// reinstall shows the same feed as the old install — not every card the user had hidden.
+/// Called from `main` once the guest token exists, because `/me/*` needs one.
+///
+/// **Pins are deliberately not seeded here.** They are server state: the ranker applies them and
+/// `/home` returns them in `pinned` with `card.pinned = true`, so there is no client-side pin set
+/// to restore.
+///
+/// Never fatal, and never blocking: `ProfileRepo.cardPrefs()` maps every [ApiException] to
+/// `null`, anything else is swallowed below, and a dead backend simply leaves the local defaults
+/// in place while `/home` falls back to cache and then to the bundled fixture.
+Future<void> seedCardPrefs(ProviderContainer container) async {
+  CardPrefs? prefs;
+  try {
+    prefs = await container.read(profileRepoProvider).cardPrefs();
+  } on ApiException {
+    return; // offline / unauthenticated — keep whatever the cache gives us
+  } catch (_) {
+    return;
+  }
+  if (prefs == null || prefs.hidden.isEmpty) return;
+  container.read(hiddenCardsProvider.notifier).seed(prefs.hidden);
+}
 
 /// Cards the user pushed down to "More for you" with a swipe / Show less.
 class DemotedCardsNotifier extends Notifier<Set<String>> {
