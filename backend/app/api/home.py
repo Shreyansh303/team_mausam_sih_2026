@@ -23,6 +23,7 @@ from app.core.i18n import normalize_lang
 from app.core.timeutil import iso, now_in, parse_any, tz_for
 from app.engine import home as engine_home
 from app.engine import icons
+from app.engine import ml as ml_ranker
 from app.engine.context import Bundle, UserProfile, build_context
 from app.core.security import current_user
 from app.models.user import User as UserModel
@@ -234,6 +235,10 @@ async def get_home(
     else:
         persona_rows = list(user.personas or [])
 
+    # S1 · Learning v2. The engine stays pure — the model is loaded here, like every other
+    # input, and only when ENGINE_ML=1. `None` (the default) is the v1 path, unchanged.
+    ml_model = ml_ranker.model_for(db, user.id) if settings.ml_on else None
+
     profile = UserProfile(
         personas=[(p["id"], float(p.get("weight", 1.0))) for p in persona_rows],
         pins=pins,
@@ -242,6 +247,7 @@ async def get_home(
         saved_places=[users_svc.place_to_schema(p).model_dump() for p in saved_places],
         language=language,
         units=user.units or "metric",
+        ml=ml_model,
     )
 
     ctx = build_context(

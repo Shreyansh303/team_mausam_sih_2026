@@ -430,6 +430,8 @@
   "reason.engagement.up": "आप इसे अक्सर खोलते हैं",
   "reason.feels_like": "अनुभव {temp}°C",
   "reason.learned": "आप यह कार्ड अक्सर खोलते हैं",
+  "reason.learning.down": "आप जो छोड़ते हैं उससे सीखा ({delta})",
+  "reason.learning.up": "आपके टैप से सीखा ({delta})",
   "reason.level.advisory": "सलाह",
   "reason.level.info": "जानने योग्य",
   "reason.level.severe": "गंभीर",

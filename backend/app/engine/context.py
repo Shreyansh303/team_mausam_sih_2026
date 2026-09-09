@@ -8,11 +8,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from app.core.timeutil import daypart as daypart_of
 from app.core.timeutil import is_weekend as is_weekend_of
 from app.core.timeutil import season as season_of
+
+if TYPE_CHECKING:  # pragma: no cover - typing only; keeps engine.ml free of an import cycle
+    from app.engine.ml import RankerModel
 
 BASE_PERSONA = "base"
 
@@ -28,6 +31,10 @@ class UserProfile:
     saved_places: list[dict[str, Any]] = field(default_factory=list)
     language: str = "en"
     units: str = "metric"
+    #: Learning v2 (03). `None` — the default and what every v1 caller passes — means the
+    #: engine runs the v1 formula unchanged. `api/home.py` attaches a model only when
+    #: `ENGINE_ML=1`, so the flag being off is indistinguishable from before it existed.
+    ml: "RankerModel | None" = None
 
     @property
     def persona_ids(self) -> list[str]:

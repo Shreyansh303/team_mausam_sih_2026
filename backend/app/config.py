@@ -49,6 +49,11 @@ class Settings(BaseSettings):
     imd_base_url: str = "https://mausam.imd.gov.in/api"
     imd_enabled: int = 1
 
+    # --- engine ------------------------------------------------------------
+    #: S1 · Learning v2 (docs/03). 0 = the deterministic v1 formula only, which is the
+    #: default and the fallback. 1 = also blend the bounded learned term (±0.1).
+    engine_ml: int = 0
+
     # --- demo --------------------------------------------------------------
     default_scenario: str = "live"
 
@@ -89,6 +94,11 @@ class Settings(BaseSettings):
     @property
     def imd_on(self) -> bool:
         return bool(self.imd_enabled)
+
+    @property
+    def ml_on(self) -> bool:
+        """S1 — whether the v2 ML ranker is blended in (`ENGINE_ML=1`)."""
+        return bool(self.engine_ml)
 
 
 @lru_cache(maxsize=1)

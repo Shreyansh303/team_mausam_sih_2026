@@ -68,6 +68,7 @@ def _state(db: Session) -> AdminState:
         connected_clients=ws.connected_clients(),
         devices=push_svc.device_count(db),
         push_transport=push_svc.transport().name,
+        engine_ml=settings.ml_on,
     )
 
 

@@ -35,6 +35,9 @@ async def health(db: Session = Depends(get_db)) -> dict[str, Any]:
         # S3 — which push transport is live and how many devices are registered
         # (`noop` until FCM_SERVICE_ACCOUNT_FILE + FCM_PROJECT_ID are set).
         "push": {"transport": push_svc.transport().name, "devices": push_svc.device_count(db)},
+        # S1 — whether the v2 ML ranker is blended into /home (ENGINE_ML=1). False is the
+        # default and means the deterministic v1 formula is the only thing ranking cards.
+        "engine": {"ml": settings.ml_on},
         "scenario": demo_state.scenario,
         "now_override": demo_state.now_override,
     }

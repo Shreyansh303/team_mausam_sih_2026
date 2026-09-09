@@ -430,6 +430,8 @@
   "reason.engagement.up": "You often open this",
   "reason.feels_like": "Feels like {temp}°C",
   "reason.learned": "You open this card often",
+  "reason.learning.down": "Learned from what you skip ({delta})",
+  "reason.learning.up": "Learned from your taps ({delta})",
   "reason.level.advisory": "an advisory",
   "reason.level.info": "worth knowing",
   "reason.level.severe": "severe",

@@ -13,6 +13,7 @@ from app.models.card_pref import CardPref
 from app.models.engagement import Engagement
 from app.models.event import Event
 from app.models.place import Place
+from app.models.ranker_weights import RankerWeights
 from app.models.user import (
     DEFAULT_COMMUTE_WINDOWS,
     DEFAULT_SCHOOL_WINDOWS,
@@ -158,10 +159,15 @@ def engagement_for(db: Session, user_id: str) -> dict[str, dict[str, int]]:
 
 
 def reset_learning(db: Session, user_id: str) -> None:
-    """04 §POST /me/reset-learning — clears engagement, prefs and the raw event log."""
+    """04 §POST /me/reset-learning — clears engagement, prefs, events and the v2 weights.
+
+    The ML row has to go with the rest: leaving it behind would let a "forget what you know
+    about me" tap keep silently re-ranking the feed from weights trained on the deleted log.
+    """
     db.execute(delete(Engagement).where(Engagement.user_id == user_id))
     db.execute(delete(CardPref).where(CardPref.user_id == user_id))
     db.execute(delete(Event).where(Event.user_id == user_id))
+    db.execute(delete(RankerWeights).where(RankerWeights.user_id == user_id))
     db.flush()
 
 
@@ -209,6 +215,11 @@ def merge_guest(db: Session, *, guest_id: str, target_id: str) -> None:
 
     for ev in db.execute(select(Event).where(Event.user_id == guest_id)).scalars():
         ev.user_id = target_id
+
+    # The guest's v2 weights are dropped rather than merged: they were fitted on the guest's
+    # events alone, and those events have just moved onto the target account, so the next
+    # `POST /events` retrains from the union anyway.
+    db.execute(delete(RankerWeights).where(RankerWeights.user_id == guest_id))
 
     db.flush()
     db.delete(guest)

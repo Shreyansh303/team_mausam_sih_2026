@@ -1,8 +1,13 @@
 """Reason codes and localized texts — 03 §Explainability, in the order listed there.
 
 `persona:<id>` → `urgency:<type>:<level>` → `time:<daypart>` / `season:<s>` →
-`location:coastal` / `places:saved` → `engagement:up|down` → `pinned:user|urgent`.
-At most four reasons per card.
+`location:coastal` / `places:saved` → `engagement:up|down` → `learning:up|down` →
+`pinned:user|urgent`. At most four reasons per card.
+
+`learning:*` is the Learning v2 family (03, `ENGINE_ML=1`). It carries the signed value of the
+bounded ML term the ranker actually applied — "Learned from your taps (+0.04)" — so the why
+sheet can show the ML contribution instead of the user having to take it on trust. With the
+flag off `Scored.ml` is 0.0 and the reason is never emitted.
 """
 
 from __future__ import annotations
@@ -17,6 +22,8 @@ PERSONA_MIN_RELEVANCE = 0.45
 URGENCY_MIN = 0.3
 MULT_MIN = 1.2
 ENGAGEMENT_MIN = 0.08
+#: Learning v2 — below this the learned term is not worth a line in the why sheet.
+LEARNING_MIN = 0.01
 
 #: 02 §Affinity gates — the cards that only exist near the coast.
 COASTAL_CARDS = {"sea_conditions", "tides", "water_temp"}
@@ -61,6 +68,11 @@ def reasons_for(scored: Scored, ctx: Context, profile: UserProfile) -> list[Reas
         add("engagement:up", t(lang, "reason.engagement.up"))
     elif scored.engagement <= -ENGAGEMENT_MIN:
         add("engagement:down", t(lang, "reason.engagement.down"))
+
+    if abs(scored.ml) >= LEARNING_MIN:
+        delta = f"{scored.ml:+.2f}"
+        direction = "up" if scored.ml > 0 else "down"
+        add(f"learning:{direction}", t(lang, f"reason.learning.{direction}", delta=delta))
 
     if scored.pinned_by_user:
         add("pinned:user", t(lang, "reason.pinned.user"))

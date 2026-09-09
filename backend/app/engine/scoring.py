@@ -8,12 +8,25 @@ eng  = engagement_adj(profile.engagement[type])
 score = 0.5 * rel * ctx + 0.5 * urg + eng
 pinned = type in profile.pins or urg >= 0.8
 ```
+
+Learning v2 (03 §"Learning (v2)", `ENGINE_ML=1`) adds one bounded term on top:
+
+```
+ml    = clamp(0.2 * (p_tap - 0.5), -0.1, +0.1)   # only when profile.ml is attached
+score += ml                                       # only for cards that are NOT pinned
+```
+
+`pinned` is decided from `urg` before `ml` is added, so the learned term can neither push a
+card past the urgency pin threshold nor lift an unpinned card above the pinned block that
+03 §Ordering renders first. With `profile.ml is None` — the default, and what every caller
+does with the flag off — this file behaves exactly as it did in v1.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from app.engine import ml as ml_ranker
 from app.engine.catalog import CARDS, HERO_TYPE, CardDef
 from app.engine.context import Bundle, Context, UserProfile
 from app.engine.learning import engagement_adj
@@ -62,6 +75,10 @@ class Scored:
     time_mult: float = 1.0
     season_mult: float = 1.0
     top_persona: str | None = None
+    #: Learning v2 — the bounded learned term already included in `score` (0.0 with the flag
+    #: off), and the raw `p_tap` behind it. `explain.py` turns these into the why-sheet reason.
+    ml: float = 0.0
+    p_tap: float | None = None
 
     @property
     def type(self) -> str:
@@ -102,6 +119,33 @@ def top_persona_for(card: CardDef, profile: UserProfile) -> str | None:
     return best[1] if best else None
 
 
+def learned_term(
+    card: CardDef, ctx: Context, profile: UserProfile, *, relevance_value: float, urgency: float
+) -> tuple[float, float | None]:
+    """`(adjustment, p_tap)` for Learning v2 — `(0.0, None)` whenever v2 is not in play.
+
+    The model is attached to the profile by `api/home.py` only when `ENGINE_ML=1`, so the v1
+    default path never reaches `engine.ml` at all.
+    """
+    model = profile.ml
+    if model is None:
+        return 0.0, None
+    features = ml_ranker.feature_vector(
+        card_type=card.type,
+        daypart=ctx.daypart,
+        season=ctx.season,
+        is_weekend=ctx.is_weekend,
+        personas=profile.personas,
+        persona_match=relevance_value,
+        urgency=urgency,
+        counters=profile.stats(card.type),
+        last_ts=model.last_ts(card.type),
+        now_ts=ctx.now.timestamp(),
+    )
+    p = model.predict(card.type, features)
+    return model.adjustment(card.type, features), p
+
+
 def evaluate(card: CardDef, bundle: Bundle, ctx: Context, profile: UserProfile) -> Scored:
     rel = relevance(card, profile)
     tm = card.time_mult(ctx)
@@ -111,6 +155,20 @@ def evaluate(card: CardDef, bundle: Bundle, ctx: Context, profile: UserProfile) 
     eng = engagement_adj(profile.stats(card.type))
     score = W_RELEVANCE * rel * ctx_mult + W_URGENCY * urg + eng
     pinned_by_user = card.type in profile.pins
+    pinned = pinned_by_user or urg >= PIN_URGENCY
+
+    # Learning v2: `pinned` is already decided from `urg` above, and the learned term is only
+    # ever applied to a card that is not pinned. That is the bound — 03 §Ordering puts the
+    # whole pinned block first, so no amount of learning can lift a card over a warning.
+    # The hero is lifted out of the ranking entirely, so a learned term there would move
+    # nothing while still claiming a reason in the why sheet. Leave it on the v1 score.
+    adjustment, p_tap = (0.0, None)
+    if not pinned and card.type != HERO_TYPE:
+        adjustment, p_tap = learned_term(
+            card, ctx, profile, relevance_value=rel, urgency=urg
+        )
+        score += adjustment
+
     return Scored(
         card=card,
         relevance=round(rel, 4),
@@ -118,11 +176,13 @@ def evaluate(card: CardDef, bundle: Bundle, ctx: Context, profile: UserProfile) 
         urgency=round(urg, 4),
         engagement=round(eng, 4),
         score=round(score, 4),
-        pinned=pinned_by_user or urg >= PIN_URGENCY,
+        pinned=pinned,
         pinned_by_user=pinned_by_user,
         time_mult=tm,
         season_mult=sm,
         top_persona=top_persona_for(card, profile),
+        ml=round(adjustment, 4),
+        p_tap=(round(p_tap, 4) if p_tap is not None else None),
     )
 
 
