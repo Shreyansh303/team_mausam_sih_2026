@@ -322,9 +322,11 @@ Documented behaviour and scope boundaries. None of these is a failing demo step.
 2. **`mr`, `ta`, `bn` are best-effort**, 69 app keys and 54 backend keys each, with per-key fallback
    to English. `flutter build` prints "277 untranslated message(s)" for each; that is the state
    07 §B2 asks for, not an error. Only **en** and **hi** are complete.
-3. **The app never calls `GET /me/card-prefs` on start-up.** Pins and hides are applied server-side
-   by `POST /events` and come back inside `/home`, so they survive a session but not a reinstall.
-   To change that, seed `hiddenCardsProvider` from `ProfileRepo.cardPrefs()` in `main`.
+3. ~~**The app never calls `GET /me/card-prefs` on start-up.** Pins and hides are applied
+   server-side by `POST /events` and come back inside `/home`, so they survive a session but not a
+   reinstall.~~ **Fixed after this run** in `217030e`: `main` seeds `hiddenCardsProvider` from
+   `ProfileRepo.cardPrefs()` once the guest token lands, so hides survive a reinstall; a dead
+   backend still starts the app from cache.
 4. **IMD endpoints return `401`** until the host IP or domain is whitelisted. `providers/imd.py`
    detects it, backs off for 10 minutes and falls through to Open-Meteo. Nothing in the repo depends
    on IMD being reachable, and `/health` reports the status honestly. This was live during the whole

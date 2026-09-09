@@ -561,8 +561,13 @@ Disk at the end of C2: **~13 GB free**. The B3 release APK is still at
   background event flushing — the only paths the web build cannot exercise. Until then the honest
   phrasing everywhere (README, pitch, deck) is "verified in the web build plus a static APK check".
 - **Release keystore.** `app/android/app/build.gradle.kts` still signs release with the debug key.
-- Seed `hiddenCardsProvider` from `ProfileRepo.cardPrefs()` in `main` so pins/hides survive a
-  reinstall (one call; QA_REPORT §Known limitations 3).
+- [x] **Pins/hides survive a reinstall** — `217030e`. `main` awaits the guest token, then
+  `seedCardPrefs()` (providers.dart) unions `ProfileRepo.cardPrefs().hidden` into
+  `hiddenCardsProvider`. Pins are *not* seeded: they are server state (the ranker applies them and
+  `/home` returns `pinned` / `card.pinned`), so there is no client-side pin set to restore. The
+  seed swallows its own failures — a dead backend cannot block start-up. Tests:
+  `app/test/card_prefs_seed_test.dart` (6) + 2 widget tests in `home_page_test.dart`.
+  QA_REPORT §Known limitations 3 updated.
 - File the **IMD whitelisting request** (README §IMD integration path has the exact contents) and
   fill the `district_id` values in `backend/app/data/imd_ids.json` when the list comes back.
 
