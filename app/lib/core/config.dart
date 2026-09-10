@@ -16,7 +16,16 @@ class AppConfig {
   ///  * Android emulator → 10.0.2.2 is the emulator's alias for the host loopback
   ///  * real device → the user must set the LAN IP in Settings; 10.0.2.2 is a harmless default
   ///    because it simply fails fast and the app falls back to cache/fixture.
+  ///
+  /// A build may hard-code the origin with
+  /// `flutter build apk --dart-define=BACKEND_URL=https://host`, which is how the
+  /// sideloadable demo APK is produced: a judge installs it and it talks to the
+  /// deployed backend with no trip through Settings. Settings still overrides it.
+  static const String _buildTimeBackendUrl =
+      String.fromEnvironment('BACKEND_URL', defaultValue: '');
+
   static String get defaultBackendUrl {
+    if (_buildTimeBackendUrl.isNotEmpty) return _buildTimeBackendUrl;
     if (kIsWeb) return 'http://localhost:8000';
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
