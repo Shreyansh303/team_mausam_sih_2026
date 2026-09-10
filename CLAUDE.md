@@ -24,6 +24,8 @@ docs/                     THE PLAN. Specs are normative; code follows docs.
   06_MOBILE_SPEC.md       Flutter structure, screens, renderers, offline, i18n, animation
   07_PHASES.md            phase-by-phase work packages for implementation agents
   PROGRESS.md             living checklist — update it as you finish items
+  10_SIH_DECK_CONTENT.md  slide-by-slide content for the 6-slide SIH finale deck
+  11_IMPACT_NUMBERS.md    sourced external statistics for the impact slide
   HANDOFF.md              how to continue this repo with a new owner / new Claude session
   fixtures/               example JSON payloads shared by backend and app
 backend/                  FastAPI service (Python 3.13, venv at backend/.venv)

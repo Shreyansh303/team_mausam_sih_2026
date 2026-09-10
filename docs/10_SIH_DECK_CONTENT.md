@@ -298,29 +298,38 @@ The parent did not have to be looking for it. That is the whole point.
 | **Reach** | Hindi complete to the sentence · low-bandwidth mode (13.5 KB) · offline cache · **Android 7.0+** · TalkBack · AA contrast · large text. *The people who most need a frost alert or a fog warning are not on flagship phones.* ✅ |
 | **Operability for IMD** | Server-driven cards = the homepage is a **backend deployment**, not a release cycle. The IMD provider is written; whitelisting flips it on. ✅ |
 
-### ⚠️ NATIONAL-SCALE IMPACT — source these before printing
+### NATIONAL-SCALE IMPACT — → [`11_IMPACT_NUMBERS.md`](11_IMPACT_NUMBERS.md)
 
-The reference deck earns its impact slide with a national number ("cuts the government's 2030 target
-by 22.67 %"). Ours should too. **Do not invent these — pull each from the named authority, screenshot
-the source, and put the citation in slide 6.**
+**The external statistics for this slide are sourced and cited in
+[`11_IMPACT_NUMBERS.md`](11_IMPACT_NUMBERS.md).** Use it directly; it is organised as five slide
+blocks. Headlines:
 
-| Claim to make | Where to source it |
-|---|---|
-| Mausam app download / user base, and IMD's public-reach mandate | IMD / MoES **Annual Report**, PIB releases on the Mausam app (launched 27 Jul 2020) |
-| Deaths per year from lightning / thunderstorms in India | **NCRB** *Accidental Deaths & Suicides in India* — "forces of nature" table |
-| Heat-wave mortality and heat-action-plan coverage | **NDMA** heat-wave guidelines; MoES/IMD heat-wave statements |
-| Share of workforce in agriculture, and rain-fed cropped area | **PLFS** (MoSPI); Agriculture Ministry *Agricultural Statistics at a Glance* |
-| Delhi/NCR air-quality exceedance days per year | **CPCB** AQI bulletins |
-| Road accidents in fog / poor visibility | **MoRTH** *Road Accidents in India*, weather-condition table |
-| Smartphone / internet users in India, and rural share | **TRAI** subscription reports |
+- **Block A — the incumbent's own store page.** Mausam: **3.13 / 5** from 4.4k ratings, **~990k
+  downloads** against **958M** Indian internet users = **~0.1% reach**. Its top reviews complain
+  about exactly what this prototype fixes (no saved favourites, district-level only, charts not
+  understandable, slow). *This is the strongest opening in the deck — it is not opinion.*
+- **Block B — the harm.** Lightning **2,558 deaths (2023)** · fog road deaths **~15,115 (2024)** ·
+  heat **733 (2024, independent count)** · **46%** of the workforce in agriculture, **51%** of net
+  sown area rainfed.
+- **Block C — the multiplier.** **24 h notice cuts damage 30%** (UN SG / GCA) · **1:9**
+  benefit–cost · **23,000 lives + $162B/yr** globally available from better warnings.
+- **Block D — "OUR PROMISE"** with the arithmetic visible: `0.30 × 18,406 ≈ 5,500 lives/yr` as an
+  upper bound, the honest discount stated on the slide, and *"every 1% converted is 55 lives a
+  year"* as the number a judge can hold.
+- **Block E — growth.** 958M online, 1.14B smartphones, ~95% village 4G, rural growing **4×** urban
+  — so distribution is not the constraint; **product experience is, and that is this PS.**
 
-**How to phrase it once sourced (template):**
-> *"X people die from lightning in India each year [NCRB 20XX]. IMD already issues the nowcast that
-> would warn them. Our contribution is making sure it is the first thing on the screen — for every
-> persona, within 17.7 ms of being issued."*
+**The bridge sentence to say out loud:**
+> *"India already has the warning. IMD issues it. The UN's own number for closing the last mile is
+> 30% less damage and a 9:1 return. Our contribution is measured: from the moment a warning is
+> issued it is pinned above every user's own preferences and served in **17.7 ms** — to a farmer, a
+> beachgoer and a parent alike."*
 
-That sentence is the strongest thing you can say, because the second half is **measured** ✅ and only
-the first half needs a citation.
+The second half is measured ✅; only the first half needs a citation, which is why it lands.
+
+**Two numbers to verify by hand before printing** (see 11 §Verify before printing): the MoRTH fog
+fatality figure (press summaries conflate accidents with fatalities — screenshot the weather table)
+and the Mausam store rating (dated screenshot; it drifts).
 
 ### Alignment (one line each, with logos)
 
