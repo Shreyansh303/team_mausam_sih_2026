@@ -75,6 +75,12 @@ scripts/                  setup + run scripts (Windows-first)
    `New-Item -ItemType Junction -Path D:\sdk\android\platforms\android-37 -Target D:\sdk\android\platforms\android-37.0`.
    Local toolchain only — do not change `compileSdk`, the macOS box builds it as-is.
 
+8c. **Kotlin incremental compilation is off** (`app/android/gradle.properties`,
+   `kotlin.incremental=false`). Without it the release APK build fails on this Windows host with
+   `Could not close incremental caches in ...\caches-jvm\jvm\kotlin` — the Kotlin compiler
+   cannot close its memory-mapped cache files. A clean build does **not** fix it. Only a few Kotlin
+   files exist (MainActivity + the S2 widget), so a full recompile costs seconds.
+
 9. **Don't impersonate IMD.** App id `com.teammausam.mausam_app`, display name
    "Mausam Personalized (Team Mausam prototype)". Use IMD colour conventions, not IMD logos.
 10. **Final report format (keep it short):** Done / Verified (commands + output tail) /
