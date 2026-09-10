@@ -266,6 +266,37 @@ adb install -r build/app/outputs/flutter-apk/app-release.apk
 cd app && flutter build apk --debug        # → app-debug.apk (~168 MB)
 ```
 
+*To bake the backend URL into the build* — **do this for any APK you hand to someone else.**
+On Android the app otherwise defaults to `http://10.0.2.2:8000`, which is the *emulator's* alias for
+the host loopback and resolves to nothing on a real phone: the app falls back to its bundled sample
+payload and shows a "Sample data" banner. `--dart-define=BACKEND_URL=<origin>` sets the default
+origin at compile time (`app/lib/core/config.dart`), so the app talks to a real backend on first
+launch with no trip through Settings:
+
+```bash
+# phone and laptop on the same Wi-Fi — use the LAN IP, never localhost.
+# find it with: ipconfig (Windows) · ipconfig getifaddr en0 (macOS) · hostname -I (Linux)
+cd app && flutter build apk --release --dart-define=BACKEND_URL=http://192.168.1.20:8000
+
+# or a deployed backend
+cd app && flutter build apk --release --dart-define=BACKEND_URL=https://<service>.onrender.com
+```
+
+Pass the **origin only** — the app appends `/api/v1` and derives `ws://`/`wss://` itself. Confirm it
+landed by searching the compiled Dart snapshot — the APK is a zip, so grepping the `.apk` itself
+finds nothing:
+
+```bash
+cd app/build/app/outputs/flutter-apk
+unzip -o -q app-release.apk 'lib/arm64-v8a/libapp.so' -d /tmp/apkcheck
+grep -ac 'http://192.168.1.20:8000' /tmp/apkcheck/lib/arm64-v8a/libapp.so   # 1 = baked in
+```
+
+**Settings → Backend URL still overrides it**, which
+is what you want when the laptop's DHCP lease changes the IP. Serving over plain `http://` works
+because `android:usesCleartextTraffic="true"` is set for the prototype; a real deployment should be
+HTTPS and drop that flag.
+
 To install without `adb`, copy the `.apk` to the phone and open it — Android asks you to allow
 "install unknown apps" for the file manager first. The app is signed with the **debug** key
 (`flutter build apk --release` falls back to it when no keystore is configured), so it installs
