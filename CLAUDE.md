@@ -68,6 +68,13 @@ scripts/                  setup + run scripts (Windows-first)
    cannot start. Do **not** try IPv4 flags, daemon toggles or `app/android/gradle.properties` edits —
    they do not touch the cause. `flutter build web`, `flutter analyze`, `flutter test`, Python and
    curl are fine inside the sandbox. A normal user terminal is unaffected by any of this.
+8b. **Android SDK 37 on this Windows box.** `compileSdk` is 37 (B2b, for
+   `permission_handler_android`). `sdkmanager` installs it as
+   `D:\sdkndroid\platformsndroid-37.0`, but AGP looks for `android-37` and fails with
+   `Failed to find target with hash string 'android-37'`. Fix once, no admin needed:
+   `New-Item -ItemType Junction -Path D:\sdkndroid\platformsndroid-37 -Target D:\sdkndroid\platformsndroid-37.0`.
+   Local toolchain only — do not change `compileSdk`, the macOS box builds it as-is.
+
 9. **Don't impersonate IMD.** App id `com.teammausam.mausam_app`, display name
    "Mausam Personalized (Team Mausam prototype)". Use IMD colour conventions, not IMD logos.
 10. **Final report format (keep it short):** Done / Verified (commands + output tail) /
