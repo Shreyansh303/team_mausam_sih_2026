@@ -10,8 +10,8 @@ import '../../../l10n/labels.dart';
 /// to pinned warnings; Share button."
 ///
 /// The arrival animation is mandatory per docs/06 §Packages (the pinned-warning arrival), so the
-/// banner slides and fades in even on a cold load; B2 replays it on `warning_issued` over the
-/// WebSocket.
+/// banner slides and fades in even on a cold load, and it replays on `warning_issued` over
+/// the WebSocket.
 class WarningBanner extends StatelessWidget {
   const WarningBanner({
     super.key,

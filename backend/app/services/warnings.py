@@ -1,6 +1,6 @@
 """Warning merge + location filter (05 §Warnings merge).
 
-Sources: IMD (when whitelisted), admin-injected rows from the DB (A3) and the active scenario.
+Sources: IMD (when whitelisted), admin-injected rows from the DB and the active scenario.
 Filter: same district · same state for cyclone/heatwave/cold_wave · or within `radius_km`.
 """
 

@@ -169,7 +169,7 @@ def normalize_forecast(
     # usually midnight of the first day — as "07:30" would be a lie (honest data, docs/00
     # principle 6). Only the *exact* hour may move the reading; otherwise the live observation
     # stands, `current.time` says so, and the hourly row behind `uv_index`/`visibility_km` is
-    # the live one too. C1.
+    # the live one too.
     exact, idx, match = _row(cur_dt)
     if ref_now is not None and exact is None:
         cur_dt = live_dt
@@ -512,7 +512,7 @@ def compute_derived(
         rain_next_72h_mm=rain72,
     )
 
-    # --- extras used directly by A2 builders -------------------------------
+    # --- extras used directly by the card builders -------------------------
     derived["sun"] = _sun_block(daily)
     derived["uv"] = _uv_block(current, next24, daily)
     derived["wind"] = _wind_block(current, next24, hazards)

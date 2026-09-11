@@ -54,8 +54,8 @@ class AdminState(BaseModel):
     now_override: str | None = None
     warnings: list[Warning] = Field(default_factory=list)
     connected_clients: int = 0
-    #: S3 — registered push devices and the active transport (`noop` until FCM is configured).
+    #: Registered push devices and the active transport (`noop` until FCM is configured).
     devices: int = 0
     push_transport: str = "noop"
-    #: S1 — is the v2 ML ranker blended into `/home`? (`ENGINE_ML=1`; false is the default.)
+    #: Is the v2 ML ranker blended into `/home`? (`ENGINE_ML=1`; false is the default.)
     engine_ml: bool = False

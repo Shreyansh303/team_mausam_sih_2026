@@ -7,8 +7,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:mausam_app/data/ws/alerts_socket.dart';
 
 /// Keeps `flutter_map` off the network (and off `path_provider`'s tile cache) by answering
-/// every tile with a 1×1 transparent PNG. Introduced by B2a for `fixtures_test`; B2b shares it
-/// with every widget test that builds the home feed, because the feed contains a radar card.
+/// every tile with a 1×1 transparent PNG. Shared by every widget test that builds the home
+/// feed, because the feed contains a radar card.
 class BlankTileProvider extends TileProvider {
   static final Uint8List _pixel = base64Decode(
     'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',

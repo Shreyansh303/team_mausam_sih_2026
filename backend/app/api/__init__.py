@@ -1,1 +1,1 @@
-"""FastAPI routers. A1 ships health, locations and weather; A2/A3 add the rest."""
+"""FastAPI routers: health, locations, weather, home, auth, me, events, devices, admin, ws."""

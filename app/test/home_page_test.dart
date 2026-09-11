@@ -42,7 +42,8 @@ class _MemoryCache extends JsonFileCache {
 }
 
 /// Engagement events are fire-and-forget telemetry with a 10 s flush timer; in a widget test
-/// that timer outlives the tree and trips `!timersPending`. B2 tests the queue directly.
+/// that timer outlives the tree and trips `!timersPending`. The queue is tested directly in
+/// `events_repo_test.dart`.
 class _SilentEvents extends EventsRepo {
   _SilentEvents() : super(api: ApiClient(baseUrl: 'http://127.0.0.1:1'));
 
@@ -194,7 +195,7 @@ void main() {
     // The reason text is localized by the backend (docs/03 §Explainability); the app renders
     // whatever string it is handed.
     expect(find.text('Because you follow Parenting'), findsWidgets);
-    // Scoped to the sheet: since B2b every card also renders its own `actions` row from the
+    // Scoped to the sheet: every card also renders its own `actions` row from the
     // payload, and the fixture's `hide` action carries the same localized label.
     expect(
       find.descendant(of: find.byType(WhySheet), matching: find.text('Hide this card')),

@@ -6,8 +6,9 @@ import '../models/user.dart';
 
 /// docs/04 `POST /auth/guest`, `GET /me`, `PUT /me/profile`.
 ///
-/// B1 only needs the guest flow: onboarding finishes with a guest token plus a profile PUT.
-/// OTP login lands in B2/B3. Every call degrades gracefully — a demo must still run with the
+/// The app only uses the guest flow: onboarding finishes with a guest token plus a profile
+/// PUT; the backend's OTP login is not wired up here. Every call degrades gracefully — a
+/// demo must still run with the
 /// backend switched off, so a failed token fetch simply leaves the app unauthenticated and the
 /// home repository falls back to cache/fixture.
 class AuthRepo {

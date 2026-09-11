@@ -34,7 +34,7 @@ async def post_events(
         db, user_id=user.id, events=[e.model_dump() for e in body.events]
     )
 
-    # S1 · Learning v2. Retraining is bounded (the last 300 events x 5 epochs of sparse SGD,
+    # Learning v2. Retraining is bounded (the last 300 events x 5 epochs of sparse SGD,
     # single-digit milliseconds), so it runs inline here rather than in a background task.
     # Never on the default path: with ENGINE_ML=0 the ranker_weights table stays empty.
     if settings.ml_on:

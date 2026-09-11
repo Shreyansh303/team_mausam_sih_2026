@@ -1,4 +1,4 @@
-"""S3 — push transport, device registry and the FCM HTTP v1 request shape.
+"""Push transport, device registry and the FCM HTTP v1 request shape.
 
 Offline like the rest of the suite: `conftest.py` replays `oauth2.googleapis.com` and
 `fcm.googleapis.com` through respx (named routes `google_token` / `fcm_send`) and fails on any

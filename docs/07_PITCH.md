@@ -285,7 +285,7 @@ Priority order; the same four are listed in the top-level `README.md` §13 Futur
    `score += 0.2 · (p_tap − 0.5)` behind an `ENGINE_ML=1` flag, with the deterministic v1 formula
    staying as the fallback and the floor. Specified in docs/03 §Learning v2. The bound matters: an
    ML term that cannot exceed ±0.2 cannot bury a warning either.
-3. **S4 · More languages.** Marathi, Tamil and Bengali are started (69 app / 54 backend keys with
+3. **More languages.** Marathi, Tamil and Bengali are started (69 app / 54 backend keys with
    per-key fallback); completing them and adding the remaining scheduled languages is translation
    work, not engineering — the pipeline, the parity test and the fallback are already in place, and
    `test/l10n_test.dart` fails the build if a locale drifts.

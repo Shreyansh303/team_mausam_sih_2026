@@ -32,7 +32,7 @@ def build(bundle: Bundle, ctx: Context, profile: UserProfile) -> CardContent:
     if warned:
         detail = t(
             lang,
-            # C1: "1 place(s) have an active warning" read like an unfinished string.
+            # "1 place(s) have an active warning" read like an unfinished string.
             "insight.saved_places.detail_warning." + ("one" if len(warned) == 1 else "other"),
             count=len(warned),
             place=warned[0].get("name", ""),

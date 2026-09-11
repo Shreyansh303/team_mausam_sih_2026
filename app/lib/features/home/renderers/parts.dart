@@ -1,4 +1,4 @@
-// Small building blocks shared by the B2a renderers (gauge, timeline, alert, sea, tides…).
+// Small building blocks shared by the card renderers (gauge, timeline, alert, sea, tides…).
 //
 // They exist so every renderer draws a "stat" or a "pill" the same way — docs/06 §Renderers
 // describes the same vocabulary (badges, pills, bullets) across several kinds.

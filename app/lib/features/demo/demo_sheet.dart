@@ -22,9 +22,9 @@ class DemoSheet extends ConsumerWidget {
 
   /// The ten scenarios docs/05 §Scenarios ships as `backend/app/data/scenarios/*.json`, in the
   /// order the sheet shows them. It is a hardcoded list, not a call to `/weather/scenarios`
-  /// (which docs/04 does not publish), so a scenario A* adds must be added here too.
+  /// (which docs/04 does not publish), so a new scenario has to be added here too.
   ///
-  /// C1: `cold_wave` used to sit in this list with no file behind it. The backend answers an
+  /// `cold_wave` used to sit in this list with no file behind it. The backend answers an
   /// unknown scenario with live data, so the chip highlighted and nothing on screen changed —
   /// a dead control in the middle of the judge demo. `test/demo_sheet_test.dart` now pins the
   /// list to what the backend actually ships.
@@ -47,7 +47,7 @@ class DemoSheet extends ConsumerWidget {
   /// Built on **today's** date, never a hardcoded one: the backend only moves the reading to a
   /// demo hour it actually has a forecast row for, so a preset carrying the day it was written
   /// stops working the next morning — the feed falls back to the live observation and "07:30"
-  /// shows whatever the real clock says. C1.
+  /// shows whatever the real clock says.
   static const List<String> clockHours = <String>['07:30', '13:00', '18:30', '22:00'];
 
   /// Today at [hhmm] in IST — the offset docs/04 reads a bare demo clock as.

@@ -128,7 +128,7 @@ def test_hindi_home_returns_hindi_titles(client, guest):
         assert devanagari.search(card["title"]), card["type"]
 
 
-# ------------------------------------------------------- B3: the three gaps B2b logged
+# ------------------------------------------- gaps found while localizing the catalogs
 
 
 @pytest.mark.parametrize("scenario", sorted(scenarios.available()))
@@ -178,8 +178,8 @@ def test_every_scenario_nowcast_names_a_key_that_exists():
 
 
 def test_aqi_insight_names_the_pollutant_and_its_value(client, guest):
-    """B2b saw `pollutant.O3 is the dominant pollutant at — µg/m³`: the builder was handed the
-    CPCB *display label* ("O3"), which is neither an i18n key nor a snapshot field."""
+    """The card once read `pollutant.O3 is the dominant pollutant at — µg/m³`: the builder was
+    handed the CPCB *display label* ("O3"), which is neither an i18n key nor a snapshot field."""
     res = client.get(
         "/api/v1/home",
         params={
@@ -365,7 +365,7 @@ def _travel_alerts_card(lang: str, place_count: int):
 
 @pytest.mark.parametrize("lang", ["en", "hi"])
 def test_travel_alerts_headline_is_never_plural_with_parentheses(lang):
-    """C1: the headline used to read "1 travel alert(s)". Singular and plural are now two
+    """The headline used to read "1 travel alert(s)". Singular and plural are now two
     keys, so neither language shows a placeholder plural on the demo screen."""
     one = _travel_alerts_card(lang, 1).headline
     many = _travel_alerts_card(lang, 2).headline
@@ -380,7 +380,7 @@ def test_travel_alerts_headline_is_never_plural_with_parentheses(lang):
 
 
 def test_no_catalog_string_fakes_a_plural_with_parentheses():
-    """C1: `"{count} saved place(s)"` reads like an unfinished string on a demo screen.
+    """`"{count} saved place(s)"` reads like an unfinished string on a demo screen.
 
     Every count-bearing line has an explicit `.one` / `.other` pair instead. This scans the
     catalogs rather than one rendered payload, so a new key cannot reintroduce the pattern in a

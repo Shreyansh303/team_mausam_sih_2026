@@ -4,7 +4,7 @@ pydantic>=2.9,<3
 pydantic-settings>=2.6,<3
 httpx>=0.28,<1
 SQLAlchemy>=2.0,<3
-PyJWT[crypto]>=2.9,<3   # `crypto` extra = cryptography, used to RS256-sign the FCM OAuth2 assertion (S3)
+PyJWT[crypto]>=2.9,<3   # `crypto` extra = cryptography, used to RS256-sign the FCM OAuth2 assertion
 cachetools>=5.5,<7
 python-dotenv>=1.0,<2
 tzdata>=2024.2

@@ -6,7 +6,7 @@ Every mutating route does the same three things in the same order:
        served for up to `CACHE_TTL_SNAPSHOT` seconds without the new warning
     3. broadcast on the WebSocket (`api/ws.py`) — never from `app/engine/`, which stays pure
     4. hand the same message to the push transport (`services/push.py`), which reaches devices
-       whose app is closed. Noop (log only) until a Firebase project is configured — S3,
+       whose app is closed. Noop (log only) until a Firebase project is configured — see
        `docs/08_PUSH_NOTIFICATIONS.md`.
 """
 
@@ -171,7 +171,7 @@ async def clear_warning(warning_id: str, db: Session = Depends(get_db)) -> OkRes
 
 @router.get("/devices", response_model=AdminDevices, dependencies=[Depends(require_admin)])
 async def list_devices(db: Session = Depends(get_db)) -> AdminDevices:
-    """Registered push devices (S3). Tokens are send-capabilities — only the tail is returned."""
+    """Registered push devices. Tokens are send-capabilities — only the tail is returned."""
     rows = push_svc.all_devices(db)
     return AdminDevices(
         transport=push_svc.transport().name,

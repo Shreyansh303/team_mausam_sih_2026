@@ -4,12 +4,12 @@ import 'dart:io';
 /// The bundled sample payload, read straight from disk so the tests do not need an asset
 /// bundle. Declared in `pubspec.yaml` under `flutter/assets`.
 ///
-/// Since B1's verification pass this file is a byte-for-byte copy of
-/// `docs/fixtures/home_severe.json` — real `/home` output from the A2 engine (parent, New Delhi,
-/// `scenario=thunderstorm`, orange banner, four pinned cards), not a hand-written payload.
+/// This file is a byte-for-byte copy of `docs/fixtures/home_severe.json` — real `/home`
+/// output from the engine (parent, New Delhi, `scenario=thunderstorm`, orange banner, four
+/// pinned cards), not a hand-written payload.
 const String sampleHomePath = 'assets/fixtures/home_sample.json';
 
-/// The ten reference payloads A2 generated from the real engine. `flutter test` runs with the
+/// The ten reference payloads generated from the real engine. `flutter test` runs with the
 /// package root (`app/`) as its working directory, so they sit one level up.
 const String docsFixtureDir = '../docs/fixtures';
 

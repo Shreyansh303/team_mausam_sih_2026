@@ -178,7 +178,7 @@ async def test_unknown_scenario_is_a_no_op_overlay():
 
 
 async def test_demo_clock_reads_current_off_that_hour():
-    """C1 regression — docs/00 §Judge demo script step 2: "Home at 7:30 AM … hero shows now".
+    """Regression — docs/00 §Judge demo script step 2: "Home at 7:30 AM … hero shows now".
 
     The recorded payload's live observation is 2026-09-07T01:30 (night, 24.9 °C); the forecast
     hour behind a 07:30 demo clock is daylight and 26.7 °C. Before the fix `current` kept the
@@ -214,7 +214,7 @@ async def test_demo_clock_at_night_keeps_is_day_false():
 
 
 async def test_demo_clock_outside_the_forecast_window_keeps_the_live_reading():
-    """C1 regression — a demo clock we have no forecast hour for must not invent one.
+    """Regression — a demo clock we have no forecast hour for must not invent one.
 
     The app's clock presets carry a fixed calendar date, so the day after they were written a
     judge's "07:30" lands outside Open-Meteo's window. The nearest hour is then midnight of the

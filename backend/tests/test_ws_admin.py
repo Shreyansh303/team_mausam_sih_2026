@@ -1,4 +1,4 @@
-"""A3 — admin routes, admin warnings in `/home`, the WebSocket protocol and `lite` trimming.
+"""Admin routes, admin warnings in `/home`, the WebSocket protocol and `lite` trimming.
 
 Everything runs offline: `conftest.py` replays the recorded upstream payloads through respx and
 `TestClient` drives both HTTP and WebSocket traffic on the same event loop.
@@ -357,8 +357,8 @@ def test_lite_trims_hourly_to_12_and_omits_more_cards(client, guest):
                 return card["data"]["hours"]
         raise AssertionError("hourly_forecast card missing")
 
-    # 04: `lite=1` trims hourly arrays to 12. The 24-h strip starts at the demo clock (C1 fix —
-    # it used to start at the recorded payload's live `current.time`, which left only 17 rows),
+    # 04: `lite=1` trims hourly arrays to 12. The 24-h strip starts at the demo clock (it used
+    # to start at the recorded payload's live `current.time`, which left only 17 rows),
     # so the full card carries 24 rows and the lite one exactly 12.
     assert len(hourly_of(full)) == 24
     assert len(hourly_of(lite)) == 12

@@ -5,7 +5,7 @@ import 'package:mausam_app/features/demo/demo_sheet.dart';
 
 /// docs/00 §Judge demo script step 2 — "Home at '7:30 AM' (time override in demo menu)".
 ///
-/// C1 regression: the four presets used to be full ISO literals carrying the calendar date
+/// Regression: the four presets used to be full ISO literals carrying the calendar date
 /// they were written on. The backend only moves the reading to a demo hour it has a forecast
 /// row for, so the morning after, "07:30" silently fell back to the live observation and the
 /// hero drew whatever the real clock said.
@@ -37,7 +37,7 @@ void main() {
   });
 
   test('every scenario chip has a scenario file behind it', () {
-    // C1: `cold_wave` was offered with no `backend/app/data/scenarios/cold_wave.json`. The
+    // `cold_wave` was offered with no `backend/app/data/scenarios/cold_wave.json`. The
     // backend answers an unknown scenario with live data, so the chip did nothing.
     final dir = Directory('../backend/app/data/scenarios');
     expect(dir.existsSync(), isTrue, reason: 'run this from app/ with the repo checked out');
@@ -57,7 +57,7 @@ void main() {
   });
 
   test('no scenario chip mangles an acronym the rest of the app capitalises', () {
-    // C1: the chip read "Severe Aqi" while the card it promotes is titled "AQI".
+    // The chip read "Severe Aqi" while the card it promotes is titled "AQI".
     expect(DemoSheet.scenarioLabel('severe_aqi'), 'Severe AQI');
     expect(DemoSheet.scenarioLabel('clear_pleasant'), 'Clear Pleasant');
     expect(DemoSheet.scenarioLabel('live'), 'Live');
@@ -71,7 +71,7 @@ void main() {
   });
 
   test('the custom time picker stamps today, like the presets do', () {
-    // C1: "Pick a time" hardcoded 2026-09-08 long after the presets stopped doing so. The
+    // "Pick a time" hardcoded 2026-09-08 long after the presets stopped doing so. The
     // backend only moves the reading to a demo hour it has a forecast row for, so a judge
     // picking 07:30 by hand got the live observation and a clock that appeared to do nothing.
     final today = DateTime.now();

@@ -41,7 +41,7 @@ class FakeChannel implements AlertsChannel {
   }
 }
 
-/// docs/04 §WebSocket: the real frames captured from the running backend (milestone A3).
+/// docs/04 §WebSocket: the real frames captured from the running backend.
 const Map<String, dynamic> _warningFrame = <String, dynamic>{
   'type': 'warning_issued',
   'warning': <String, dynamic>{

@@ -42,7 +42,7 @@ android {
     namespace = "com.teammausam.mausam_app"
     // permission_handler_android 14.1.0 requires compileSdk 37; flutter.compileSdkVersion is
     // 36 on Flutter 3.47, so assembleDebug fails the AAR-metadata check without this pin.
-    // Verified on macOS (H0); see docs/RUNNING.md §Troubleshooting.
+    // Verified on macOS; see docs/RUNNING.md §Troubleshooting.
     compileSdk = 37
     ndkVersion = flutter.ndkVersion
 

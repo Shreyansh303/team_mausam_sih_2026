@@ -95,7 +95,7 @@ class HomeQuery {
 ///   1. `GET /home` from the backend (and write it to the cache);
 ///   2. the cached copy of the same query;
 ///   3. `assets/fixtures/home_sample.json` — the bundled sample so the app is never a blank
-///      screen during a demo with no backend. It is a byte-for-byte copy of A2's real
+///      screen during a demo with no backend. It is a byte-for-byte copy of the real
 ///      `docs/fixtures/home_severe.json` (parent, New Delhi, `scenario=thunderstorm`), not a
 ///      hand-written payload; refresh it from that file whenever the contract moves.
 class HomeRepo {

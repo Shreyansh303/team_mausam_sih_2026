@@ -280,7 +280,7 @@ targetSdkVersion:'36'
 **Not verified:** runtime behaviour on a physical device — first launch, the location permission
 prompt, GPS onboarding, and background/foreground event flushing. Everything in this report was
 observed in the web build, which shares 100 % of the Dart code but not the Android platform
-channels. A device smoke test is the one thing C2 should still do if a phone is available.
+channels. A device smoke test is the one thing still outstanding if a phone is available.
 
 ---
 
@@ -345,7 +345,7 @@ Documented behaviour and scope boundaries. None of these is a failing demo step.
 9. **Unit symbols and compass points stay Latin under `hi`** — "38 km/h WNW", "384.0 mm / 72h".
    Deliberate; they are not untranslated prose.
 10. **README's string counts had drifted** — it said "597 backend strings each, plus 282 app-chrome
-    strings"; the current totals are **604** and **353**. Cosmetic. **Fixed in C2**, along with
+    strings"; the current totals are **604** and **353**. Cosmetic. **Fixed**, along with
     three other stale README numbers (see `docs/DEVIATIONS.md`).
 
 ---

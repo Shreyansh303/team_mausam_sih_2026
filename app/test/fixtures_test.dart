@@ -26,7 +26,7 @@ import 'package:mausam_app/l10n/gen/app_localizations.dart';
 import 'fixture.dart';
 
 /// The contract test for the whole corpus: **every** payload in `docs/fixtures/` (10 files,
-/// real `/home` output from the A2 engine, 30 of the 33 card types) must parse with the app's
+/// real `/home` output from the engine, 30 of the 33 card types) must parse with the app's
 /// models and render with the registry — no exception, in English and in Hindi.
 ///
 /// The corpus is the fixture contract (docs/fixtures/, docs/04_API_CONTRACT.md). Card types with
@@ -187,7 +187,7 @@ void main() {
     }
   });
 
-  // C1 regression. The judge demo runs on a demo clock (docs/00 step 2, "Home at 7:30 AM"),
+  // Regression. The judge demo runs on a demo clock (docs/00 step 2, "Home at 7:30 AM"),
   // and the hero used to keep the *live* observation while `context.now` said 07:30 — a moon
   // over a dawn feed. The reading and the clock have to agree in every reference payload.
   test('the hero reading agrees with context.now', () {
@@ -264,10 +264,10 @@ void main() {
     }
   });
 
-  /// The acceptance gate for a renderer (B2a) is not "it did not throw" but
+  /// The acceptance gate for a renderer is not "it did not throw" but
   /// "its distinctive widget is on screen". One assertion per implemented renderer, driven by
   /// the real payload the backend produced.
-  group('each B2a renderer draws its distinctive widget', () {
+  group('each renderer draws its distinctive widget', () {
     Future<void> pumpType(WidgetTester tester, String type) async {
       final card = oneCardPerType[type];
       expect(card, isNotNull, reason: 'no $type card in the corpus');
@@ -520,8 +520,8 @@ void main() {
       expect(curve.markers.length, events.length);
       expect(curve.points.length, greaterThan(events.length));
       expect(find.byType(SeriesLineChart), findsOneWidget);
-      // Honest data (docs/00 principle 6) — a modelled tide says so. Since C1 the chip lives in
-      // the one place that owns it (docs/06 §Card shell); the renderer only draws its own when
+      // Honest data (docs/00 principle 6) — a modelled tide says so. The chip lives in the
+      // one place that owns it (docs/06 §Card shell); the renderer only draws its own when
       // the host does not, which is what `renderers_test.dart` pins. Here the card is
       // `estimated`, so the body must stay clean and let the shell speak.
       expect(card.isEstimated, isTrue);

@@ -85,7 +85,6 @@ def num(value: Any, digits: int = 0) -> str:
     `Decimal(str(v))` — half-up. 30.5 is exactly representable, so it rounds to 31 like
     `.round()`; 6.05 is really 6.04999…, so it rounds to 6.0 like `toStringAsFixed(1)`.
     Reconstructing the shortest repr first would round it to 6.1 and reintroduce the mismatch.
-    C1.
     """
     if value is None:
         return "—"

@@ -155,7 +155,7 @@ void main() {
     }
   });
 
-  // ------------------------------------------------------------------ C1 regressions
+  // --------------------------------------------------------------------- Regressions
   //
   // Both of these are "the card says the same thing twice", which reads on screen as a
   // rendering bug. The card shell owns the `Estimated` chip and `insight.detail`; a renderer
@@ -216,7 +216,7 @@ void main() {
       (tester) async {
     // docs/02 card 22 publishes each window's *next occurrence*, so after 09:00 the morning
     // drop is tomorrow while the afternoon pickup is still today. The bar draws windows at
-    // their real positions, so the rows must follow the same order — C1.
+    // their real positions, so the rows must follow the same order.
     final raw = rawCard('home_parent.json', 'school_commute')
       ..['data'] = <String, dynamic>{
         'overall_verdict': 'caution',

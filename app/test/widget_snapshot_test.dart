@@ -11,8 +11,8 @@ import 'package:mausam_app/data/widget/widget_snapshot.dart';
 
 import 'fixture.dart';
 
-/// Records what the app would have sent to the Android widget (S2) instead of touching the
-/// `home_widget` platform channel.
+/// Records what the app would have sent to the Android home-screen widget instead of
+/// touching the `home_widget` platform channel.
 class FakeWidgetBridge implements HomeWidgetBridge {
   final List<WidgetSnapshot> published = <WidgetSnapshot>[];
   final List<WidgetRefreshConfig?> configs = <WidgetRefreshConfig?>[];

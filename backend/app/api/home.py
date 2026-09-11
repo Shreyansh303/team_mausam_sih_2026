@@ -205,7 +205,7 @@ async def get_home(
     language = normalize_lang(lang or user.language or accept_language)
     is_lite = bool(lite)
 
-    # A3: live admin-pushed warnings are merged into the snapshot (and location-filtered
+    # Live admin-pushed warnings are merged into the snapshot (and location-filtered
     # there). Passing a non-empty list also bypasses the 5-minute snapshot cache, which is what
     # we want — a warning pushed 10 s ago must show up on the next /home.
     admin_warnings = admin_warnings_svc.active_warnings(db, now=now) or None
@@ -235,7 +235,7 @@ async def get_home(
     else:
         persona_rows = list(user.personas or [])
 
-    # S1 · Learning v2. The engine stays pure — the model is loaded here, like every other
+    # Learning v2. The engine stays pure — the model is loaded here, like every other
     # input, and only when ENGINE_ML=1. `None` (the default) is the v1 path, unchanged.
     ml_model = ml_ranker.model_for(db, user.id) if settings.ml_on else None
 

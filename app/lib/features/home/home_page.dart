@@ -287,8 +287,8 @@ class _HomeBody extends ConsumerWidget {
           sliver: SliverList.list(
             children: [
               if (role != null) RoleViewStrip(personaId: role!),
-              // With the backend down, an earlier build (B1) stacked two banners saying the
-              // same thing. One strip, chosen by priority.
+              // With the backend down, an earlier build stacked two banners saying the same
+              // thing. One strip, chosen by priority.
               _FeedStatus(result: result, offline: offline, onRetry: onRetry),
               if (banner != null) ...[
                 WarningBanner(
@@ -399,8 +399,8 @@ class _HomeBody extends ConsumerWidget {
 }
 
 /// One status strip at a time, in priority order: offline → bundled sample → stale cache.
-/// Showing two of them (B1's behaviour) said the same thing twice and got the wording wrong for
-/// the fixture case.
+/// An earlier build showed two of them, which said the same thing twice and got the wording
+/// wrong for the fixture case.
 class _FeedStatus extends ConsumerWidget {
   const _FeedStatus({required this.result, required this.offline, required this.onRetry});
 

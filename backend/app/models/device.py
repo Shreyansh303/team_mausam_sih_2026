@@ -1,4 +1,4 @@
-"""Registered push device (S3 — `docs/08_PUSH_NOTIFICATIONS.md`, 04 §Devices).
+"""Registered push device (`docs/08_PUSH_NOTIFICATIONS.md`, 04 §Devices).
 
 One row per FCM registration token. The token is the primary key because that is what the
 platform hands the app and what identifies the handset to FCM; a token that moves to another

@@ -1,4 +1,4 @@
-// Thin `fl_chart` wrappers shared by the B2a renderers and their detail pages.
+// Thin `fl_chart` wrappers shared by the card renderers and their detail pages.
 //
 // docs/06 §Layout puts charts in the detail pages ("charts via fl_chart"); the card bodies use
 // the same widgets at a smaller height. Everything here is display-only — no touch handling,

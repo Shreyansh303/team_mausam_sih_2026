@@ -20,10 +20,9 @@ import 'warnings.dart';
 
 /// docs/06_MOBILE_SPEC.md §Layout `home/renderers/registry.dart`.
 ///
-/// B1 implemented hero, warnings, hourly, daily and metric plus the generic fallback; B2a is
-/// filling in the ten kinds that were left pending, one commit at a time. Anything still in
-/// [pending] resolves to `generic`, which is why docs/06 insists the generic renderer never
-/// crashes: it is what every not-yet-written card falls back to.
+/// Every renderer kind docs/02 names now has a dedicated widget. Anything still in [pending]
+/// resolves to `generic`, which is why docs/06 insists the generic renderer never crashes:
+/// it is what every not-yet-written card falls back to.
 class RendererRegistry {
   RendererRegistry._();
 
@@ -46,8 +45,8 @@ class RendererRegistry {
     'radar',
   };
 
-  /// Renderer kinds named in docs/02 that currently fall back to `generic`. B2a emptied this
-  /// set; it stays so a card type A3 (or a later phase) adds still has a documented home.
+  /// Renderer kinds named in docs/02 that currently fall back to `generic`. The set is now
+  /// empty; it stays so a card type added later still has a documented home.
   static const Set<String> pending = <String>{};
 
   static Widget _dispatch(HomeCard card) {

@@ -1,4 +1,4 @@
-"""POST /me/devices · DELETE /me/devices/{token} (04 §Devices — optional, S3).
+"""POST /me/devices · DELETE /me/devices/{token} (04 §Devices — optional).
 
 Registering a token is what lets a **closed** app be woken by a warning; see
 `docs/08_PUSH_NOTIFICATIONS.md`. With no transport configured the rows are still kept and the

@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     app_version: str = "0.1.0"
 
-    # --- auth / admin (used from A2/A3) -----------------------------------
+    # --- auth / admin -----------------------------------------------------
     admin_key: str = "mausam-admin"
     jwt_secret: str = "mausam-dev-secret-change-me-in-production"
     jwt_expire_days: int = 30
@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     data_gov_in_key: str = ""
     tomtom_key: str = ""
 
-    # --- push (S3; empty = the noop transport, which is the zero-key default) ----------
+    # --- push (empty = the noop transport, which is the zero-key default) ----------
     #: Path to a Firebase service-account JSON. Never commit one — see .env.example.
     fcm_service_account_file: str = ""
     #: Firebase project id. FCM is used only when BOTH of these are set.
@@ -50,7 +50,7 @@ class Settings(BaseSettings):
     imd_enabled: int = 1
 
     # --- engine ------------------------------------------------------------
-    #: S1 · Learning v2 (docs/03). 0 = the deterministic v1 formula only, which is the
+    #: Learning v2 (docs/03). 0 = the deterministic v1 formula only, which is the
     #: default and the fallback. 1 = also blend the bounded learned term (±0.1).
     engine_ml: int = 0
 
@@ -97,7 +97,7 @@ class Settings(BaseSettings):
 
     @property
     def ml_on(self) -> bool:
-        """S1 — whether the v2 ML ranker is blended in (`ENGINE_ML=1`)."""
+        """Whether the v2 ML ranker is blended in (`ENGINE_ML=1`)."""
         return bool(self.engine_ml)
 
 

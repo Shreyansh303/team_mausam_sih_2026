@@ -229,7 +229,7 @@ def test_home_ordering_is_pinned_then_hero_then_ranked(client, guest):
 
 
 def test_now_override_moves_the_hero_and_reorders_the_feed(client, guest):
-    """C1 regression — docs/00 §Judge demo script steps 2/3.
+    """Regression — docs/00 §Judge demo script steps 2/3.
 
     A morning demo clock has to change *both* halves of the screen: the hero reads the 07:30
     forecast hour (daylight), and the school-run / workout cards outrank the night ordering.
@@ -260,7 +260,7 @@ def test_now_override_moves_the_hero_and_reorders_the_feed(client, guest):
 
 
 def test_card_copy_rounds_the_way_the_app_does(client, guest):
-    """C1 regression — one card, two numbers.
+    """Regression — one card, two numbers.
 
     The hero's micro-stat is formatted by the app with Dart's `.round()` (ties away from zero)
     while the insight sentence came from Python's `f"{30.5:.0f}"` (ties to even), so a
@@ -278,7 +278,7 @@ def test_card_copy_rounds_the_way_the_app_does(client, guest):
     # One decimal must match Dart's `toStringAsFixed(1)`, which rounds the **binary** double.
     # Verified against `dart run`: 2.35 → "2.4", 1.25 → "1.3", 0.05 → "0.1", but 6.05 → "6.0"
     # because 6.05 is really 6.04999…. Quantizing `Decimal(str(v))` would print "6.1" and put
-    # a "6.1" headline over a "6.0" value on the UV card (C1).
+    # a "6.1" headline over a "6.0" value on the UV card.
     assert num(2.35, 1) == "2.4"
     assert num(1.25, 1) == "1.3"
     assert num(0.05, 1) == "0.1"

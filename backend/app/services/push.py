@@ -1,4 +1,4 @@
-"""Push transport + device registry (S3 — design in `docs/08_PUSH_NOTIFICATIONS.md`).
+"""Push transport + device registry (design in `docs/08_PUSH_NOTIFICATIONS.md`).
 
 `api/ws.py` only reaches an app that is **open**. This module is the second delivery path: the
 same four broadcasts `api/admin.py` fires on the socket are also handed to a `PushTransport`,

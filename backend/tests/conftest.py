@@ -114,7 +114,7 @@ def mock_upstream():
         mock.get(settings.open_meteo_geocode_url).mock(side_effect=_geocode)
         mock.get(settings.rainviewer_url).mock(side_effect=lambda req: _reply(load("radar")))
         mock.route(host="mausam.imd.gov.in").mock(side_effect=_imd)
-        # S3 push (services/push.py). Named so a test can assert on the captured requests
+        # Push (services/push.py). Named so a test can assert on the captured requests
         # (`mock_upstream["fcm_send"].calls`) or re-`mock()` them to return a failure.
         mock.post(host="oauth2.googleapis.com", name="google_token").mock(
             return_value=httpx.Response(

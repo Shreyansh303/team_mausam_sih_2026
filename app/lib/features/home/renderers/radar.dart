@@ -70,8 +70,8 @@ class RadarRenderer extends StatelessWidget {
               ),
             const Spacer(),
             TextButton.icon(
-              // B2a opened the card's detail page; B2b has a real map route (docs/06 §Layout
-              // `map/ map_page`), which is where "Open map" belongs.
+              // This used to open the card's detail page; there is now a real map route
+              // (docs/06 §Layout `map/ map_page`), which is where "Open map" belongs.
               onPressed: () => context.push('/map'),
               icon: const Icon(Icons.open_in_full, size: 16),
               label: Text(l.openMap),

@@ -1,4 +1,4 @@
-"""Device-registration bodies (04 §Devices — optional, S3)."""
+"""Device-registration bodies (04 §Devices — optional)."""
 
 from __future__ import annotations
 

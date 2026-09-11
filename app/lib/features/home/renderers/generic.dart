@@ -7,9 +7,8 @@ import '../../../l10n/gen/app_localizations.dart';
 /// docs/06_MOBILE_SPEC.md §Renderers — `generic`: "title/subtitle/insight + key-value grid of
 /// `data` scalars (**never crash on unknown cards**)".
 ///
-/// This is the safety net for every card type the app does not yet draw specially, which in B1
-/// is most of the 33. It only shows scalars; nested lists/maps are summarised, never rendered
-/// blindly.
+/// This is the safety net for every card type the app does not draw specially. It only shows
+/// scalars; nested lists/maps are summarised, never rendered blindly.
 class GenericRenderer extends StatelessWidget {
   const GenericRenderer({super.key, required this.card});
 

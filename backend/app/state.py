@@ -1,4 +1,4 @@
-"""Global demo state (scenario + demo clock). A3 drives it from the admin console."""
+"""Global demo state (scenario + demo clock). The admin console drives it."""
 
 from __future__ import annotations
 

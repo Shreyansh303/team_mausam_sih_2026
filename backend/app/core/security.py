@@ -108,7 +108,7 @@ def guest_user_id(x_guest_token: str | None) -> str | None:
 
 
 def require_admin(x_admin_key: str | None = Header(default=None)) -> str:
-    """`X-Admin-Key` gate for the A3 admin routes (04 §Admin auth)."""
+    """`X-Admin-Key` gate for the admin routes (04 §Admin auth)."""
     if not x_admin_key or x_admin_key != settings.admin_key:
         raise UnauthorizedError("Invalid admin key")
     return x_admin_key

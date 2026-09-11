@@ -8,7 +8,7 @@ import 'package:mausam_app/l10n/gen/app_localizations.dart';
 
 import 'fixture.dart';
 
-/// C1 regression for the freshness chip's reference clock.
+/// Regression for the freshness chip's reference clock.
 ///
 /// `docs/06 §Home behaviour` promises "Updated 12 min ago". The payload's `freshness` block is
 /// stamped with the **demo clock** when one is set (docs/04 `now_override`), so measuring it

@@ -1,9 +1,10 @@
-"""S1 · Learning v2 (docs/03 §"Learning (v2)"), the ML ranker behind `ENGINE_ML=1`.
+"""Learning v2 (docs/03 §"Learning (v2)"), the ML ranker behind `ENGINE_ML=1`.
 
 The two invariants this file exists to defend:
 
 * **v1 is the default and the fallback.** With the flag off `/home` is byte-identical to what
-  it was before this phase, and the ML code path is never entered at all. With the flag on but
+  it was before the ML ranker existed, and that code path is never entered at all. With the
+  flag on but
   nothing learned yet, the payload is byte-identical too (cold start).
 * **The learned term is bounded.** It is clamped to ±0.1, it is never added to `urgency`, and
   it is only ever applied to a card that is not pinned — so a maximally favourable model

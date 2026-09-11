@@ -63,7 +63,7 @@ class TimelineRenderer extends StatelessWidget {
           ),
         // The card shell already prints `insight.detail` under the headline, and the engine
         // usually reuses the same sentence for both (school_commute, commute_conditions).
-        // Printing it twice in one card reads like a rendering bug — C1.
+        // Printing it twice in one card reads like a rendering bug.
         if (advice != null && advice.isNotEmpty && advice != card.insight?.detail) ...[
           const SizedBox(height: 2),
           Text(advice,
@@ -231,7 +231,7 @@ class TimelineWindow {
     // docs/02 card 22 publishes each window's *next occurrence*, so after 09:00 the morning
     // drop is tomorrow and the afternoon pickup is today. `TimelineBar` draws them at their
     // real positions, so the rows have to follow the same clock or the card contradicts
-    // itself — bar "afternoon then morning", list "morning then afternoon". C1.
+    // itself — bar "afternoon then morning", list "morning then afternoon".
     out.sort((a, b) {
       if (a.start == null || b.start == null) return 0;
       return a.start!.compareTo(b.start!);
