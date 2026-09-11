@@ -34,7 +34,7 @@ Team Name               – Team Mausam
 > MoES. Uses IMD's public warning colour conventions, no IMD logos.
 
 **Visual:** one phone mock at right showing the Parent home screen
-(`assets/screenshots/c1_step03_persona_parent.png`), nothing else. Let slide 2 do the talking.
+(`assets/screenshots/05-home-parent.png`), nothing else. Let slide 2 do the talking.
 
 ---
 

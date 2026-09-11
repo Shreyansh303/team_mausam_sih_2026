@@ -198,7 +198,7 @@ looking at the demo*, and all nine are fixed, each with a regression test that f
 | Learning: "Show less" taps to demote a card out of the feed | **3** (rank 3 → 8, score 0.470 → 0.268) | QA_REPORT step 6c |
 | Release APK | **62 496 756 B**, 3 ABIs, minSdk 24 / targetSdk 36 | QA_REPORT §Release APK |
 | CI | `backend` and `flutter` workflows both green on GitHub; the flutter job uploads a release APK and a web bundle | `.github/workflows/` |
-| QA screenshots | **40** (`assets/screenshots/c1_*.png`) | QA_REPORT |
+| QA screenshots | **40** (`assets/screenshots/01`–`40`) | QA_REPORT |
 
 **Operational viability.** Zero-setup by design: no API key, no Docker daemon, no database server
 for the demo, SQLite on first boot, and a Docker/Render path for deployment. The engine has no I/O,
@@ -316,7 +316,7 @@ Priority order; the same four are listed in the top-level `README.md` §13 Futur
 | REST + WebSocket contract (normative for both sides) | [`04_API_CONTRACT.md`](04_API_CONTRACT.md) |
 | **End-to-end QA walk — every number in §5** | [`QA_REPORT.md`](QA_REPORT.md) |
 | Where the build deviates from the specs, and why | [`DEVIATIONS.md`](DEVIATIONS.md) |
-| Screenshots (40 from the QA walk) | `assets/screenshots/c1_*.png` |
+| Screenshots (40 from the QA walk) | `assets/screenshots/01`–`40` |
 | Repository | <https://github.com/Shreyansh303/team_mausam_sih_2026> |
 
 **Team Mausam** — Smart India Hackathon 2026, PS 26076 (MoES / IMD), category Software, theme Smart

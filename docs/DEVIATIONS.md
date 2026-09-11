@@ -210,12 +210,12 @@ Verified: `backend/tests/test_home_api.py::test_lite_trims_arrays_and_drops_more
 hand-written fallback payload. Built: real engine output beats a transcription, so
 `app/assets/fixtures/home_sample.json` is copied from the corpus. Consequence: the offline demo is parent / New
 Delhi / `scenario=thunderstorm` (orange banner, four pinned cards). Verified: `QA_REPORT.md` Step 7,
-[`c1_step07_offline_sample_data.png`](../assets/screenshots/c1_step07_offline_sample_data.png).
+[`29-offline-sample-data.png`](../assets/screenshots/29-offline-sample-data.png).
 
 **The re-rank animation is a keyed list plus `flutter_animate` only.** `06` §Packages offers
 `animated_reorderable_list` / `great_list_view` "if it builds on the installed Flutter", with the keyed list as the
 documented fallback; the fallback shipped, with no package beyond `flutter_animate` 4.5.2. Verified:
-[`c1_step05_ws_rerank.png`](../assets/screenshots/c1_step05_ws_rerank.png).
+[`22-live-warning-rerank.png`](../assets/screenshots/22-live-warning-rerank.png).
 
 - **Card detail is a pushed page**, `features/home/detail/card_detail_page.dart`, as `06` §Layout specifies; an
   earlier modal stand-in was deleted.
@@ -232,7 +232,7 @@ documented fallback; the fallback shipped, with no package beyond `flutter_anima
   `textContrastGuideline` over the whole home screen.
 - **One `_FeedStatus` strip replaces two stacked banners**, with a fixed priority — bundled sample → offline →
   stale cache — so the wording always matches what is on screen. Verified:
-  [`c1_step07_offline_cached.png`](../assets/screenshots/c1_step07_offline_cached.png).
+  [`28-offline-cached.png`](../assets/screenshots/28-offline-cached.png).
 - **No `firebase_messaging` in the app.** Adding it without a `google-services.json` breaks `flutter build apk`,
   and that file cannot be committed. The app side is documented in `backend/README.md` §Push notifications and
   [`09_PUSH_NOTIFICATIONS.md`](09_PUSH_NOTIFICATIONS.md) §9; the WebSocket remains the demo transport.
@@ -242,7 +242,7 @@ documented fallback; the fallback shipped, with no package beyond `flutter_anima
 half-cosine between consecutive extremes every 20 minutes — the same family of model the backend uses. Markers sit
 on the published points; the card shows the "Estimated" pill and the backend `disclaimer`
 ([`00_VISION.md`](00_VISION.md), principle 6). Verified:
-[`c1_step04_coastal_tides_estimated.png`](../assets/screenshots/c1_step04_coastal_tides_estimated.png).
+[`20-coastal-tides-estimated.png`](../assets/screenshots/20-coastal-tides-estimated.png).
 
 **Radar tile layers set `maxNativeZoom` (RainViewer 7, OSM 19).** RainViewer answers HTTP 200 above z7 with a PNG
 reading "Zoom Level Not Supported", so `errorTileCallback` never fired and the placeholder was painted over the
@@ -270,7 +270,7 @@ of cards 22 and 28. Verified: `app/test/l10n_test.dart` ("the data-value label h
 Both fell through to `Fmt.humanize`, so under `?lang=hi` the heat card read "Extreme Caution" under
 "अत्यधिक सावधानी" and the fog card read "कोहरा warning". Six ARB keys in `en` and `hi`, six arms in `levelLabel`.
 Verified: `app/test/l10n_test.dart` ("every alert-card band docs/02 publishes is translated, not humanized"),
-[`c1_step08_hindi_cards.png`](../assets/screenshots/c1_step08_hindi_cards.png).
+[`31-hindi-cards.png`](../assets/screenshots/31-hindi-cards.png).
 
 **`mr`, `ta` and `bn` are partial: 69 app keys each, per-key fallback to English.** `05` §i18n allows partial
 languages; the three carry the chrome a reviewer sees, and `flutter gen-l10n` prints "untranslated message(s)" for
@@ -373,7 +373,7 @@ so the *ranking* is unaffected. Verified: `QA_REPORT.md` → Known limitations 7
 `cold_wave`, for which no `backend/app/data/scenarios/cold_wave.json` exists — an unknown scenario is answered with
 live data, so the chip highlighted and nothing changed. Removed; a scenario added to the backend must be added to
 the sheet too. Verified: `app/test/demo_sheet_test.dart` ("every scenario chip has a scenario file behind it");
-[`c1_extra_demo_sheet.png`](../assets/screenshots/c1_extra_demo_sheet.png).
+[`40-demo-controls.png`](../assets/screenshots/40-demo-controls.png).
 
 **Clock presets and the time picker are built on today, not a hardcoded date (D5).** `DemoSheet.clockPresets` is
 computed from today's date (`clockHours` × `presetFor`); the earlier literals carried a fixed day, so from the next
@@ -393,13 +393,13 @@ backend stamps `freshness` with `now_override`, so a reviewer moving the clock t
 ago" on fresh data. A cached or bundled payload has no usable clock of its own and still ages against the device,
 the "Updated 12 min ago" `06` asks for. Verified: `app/test/freshness_chip_test.dart`.
 
-**Documentation: demo-clock examples use `$(date +%F)`, and screenshot grids use the `c1_*` shots.** Three
+**Documentation: demo-clock examples use `$(date +%F)`, and screenshot grids use the current shots.** Three
 copy-paste `now_override` examples once carried a fixed date, which on any later day is a clock that appears to do
 nothing; they now build the date at run time. App-side literals are guarded by `demo_sheet_test.dart`; no test
-guards Markdown, so a future date literal in a doc is on the reviewer to catch. Separately, the `b2b_*` persona
+guards Markdown, so a future date literal in a doc is on the reviewer to catch. Separately, the `early-` persona
 shots in [`../assets/screenshots/`](../assets/screenshots/) pre-date D2, D8 and D9 and can show the bugs those
-fixed; a grid should use `c1_step03_persona_*.png`, `c1_step05_ws_*.png`, `c1_step08_hindi_home.png` and
-`c1_step07_offline_cached.png` (`b2b_map.png` remains valid — the map page was untouched by those fixes).
+fixed; a grid should use `05`–`12` (`NN-home-<persona>.png`), `21`/`22` (`NN-live-warning-*.png`), `30-hindi-home.png` and
+`28-offline-cached.png` (`58-early-map-radar.png` remains valid — the map page was untouched by those fixes).
 
 ---
 

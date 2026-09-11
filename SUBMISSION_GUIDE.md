@@ -44,7 +44,7 @@ team_mausam_sih_2026/
 │   ├── DEMO.md                        demo video link and the ten-step script it records
 │   └── TeamMausam_SIH2026_PS26076.pptx
 ├── assets/
-│   └── screenshots/                   63 PNGs from the QA walk and earlier milestones + README.md index
+│   └── screenshots/                   63 app screenshots + README.md index
 ├── docs/
 │   ├── architecture.md                reviewer-facing architecture overview
 │   ├── RUNNING.md                     run guide for Windows, macOS and Linux; troubleshooting
@@ -94,8 +94,8 @@ authoritative copy.
 
 ## Screenshots
 
-`assets/screenshots/` — 63 PNG files. The 40 `c1_*.png` shots are the end-to-end QA walk, one per
-demo step and variant; the `b1_*`, `b2a_*`, `b2b_*` and `b3_*` shots are from earlier milestones.
+`assets/screenshots/` — 63 PNG files. Shots `01`–`40` are the end-to-end QA walk, one per demo
+step and variant; `41`–`63` are older shots kept from the app's build-out.
 `assets/screenshots/README.md` indexes them. All were taken from the Flutter web build driven
 against a locally running backend, except the offline shots (backend stopped, rendering from the
 on-device cache).

@@ -43,7 +43,7 @@ There is no hardware component.
 
 - [`../docs/QA_REPORT.md`](../docs/QA_REPORT.md) — an end-to-end walk of all ten steps above,
   driven through the real Flutter web build against a live local backend on live weather data.
-  **Verdict: PASS**, ten steps of ten, with 40 screenshots (`assets/screenshots/c1_*.png`), one
+  **Verdict: PASS**, ten steps of ten, with 40 screenshots (`assets/screenshots/01`–`40`), one
   per step and variant.
 - [`../assets/screenshots/README.md`](../assets/screenshots/README.md) — the index of every
   screenshot in [`../assets/screenshots/`](../assets/screenshots/) (63 files), including the

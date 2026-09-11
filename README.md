@@ -255,24 +255,24 @@ the selected personas change:
 
 | Parent & families | Health-conscious | Agriculture |
 |---|---|---|
-| ![Parent home screen](assets/screenshots/c1_step03_persona_parent.png) | ![Health home screen](assets/screenshots/c1_step03_persona_health.png) | ![Agriculture home screen](assets/screenshots/c1_step03_persona_agriculture.png) |
+| ![Parent home screen](assets/screenshots/05-home-parent.png) | ![Health home screen](assets/screenshots/07-home-health.png) | ![Agriculture home screen](assets/screenshots/11-home-agriculture.png) |
 | *School run* and commute first | AQI, pollen, UV, humidity first | soil moisture, rain outlook, planting |
 
 **A warning arrives, and the feed re-ranks itself — plus Hindi:**
 
 | Before the warning is pushed | …seconds later, re-ranked | Hindi (`lang=hi`) |
 |---|---|---|
-| ![Feed before the warning](assets/screenshots/c1_step05_ws_before.png) | ![Feed after the warning, re-ranked](assets/screenshots/c1_step05_ws_rerank.png) | ![Home screen in Hindi](assets/screenshots/c1_step08_hindi_home.png) |
+| ![Feed before the warning](assets/screenshots/21-live-warning-before.png) | ![Feed after the warning, re-ranked](assets/screenshots/22-live-warning-rerank.png) | ![Home screen in Hindi](assets/screenshots/30-hindi-home.png) |
 
 **Offline, and honest about modelled data:**
 
 | Offline, rendered from cache | Tides, labelled **Estimated** |
 |---|---|
-| ![Offline home screen from cache](assets/screenshots/c1_step07_offline_cached.png) | ![Tide card with the Estimated chip](assets/screenshots/c1_step04_coastal_tides_estimated.png) |
+| ![Offline home screen from cache](assets/screenshots/28-offline-cached.png) | ![Tide card with the Estimated chip](assets/screenshots/20-coastal-tides-estimated.png) |
 
 All shots are the Flutter web build driven against a locally running backend, except the offline
-one (backend stopped, rendering from the on-device cache). The `c1_*` set is the end-to-end QA walk
-in [`docs/QA_REPORT.md`](docs/QA_REPORT.md) — 40 shots, one per demo step and variant. The other
+one (backend stopped, rendering from the on-device cache). Shots `01`–`40` are the end-to-end QA
+walk in [`docs/QA_REPORT.md`](docs/QA_REPORT.md) — one per demo step and variant. The other
 five personas, the radar map, saved places, the demo sheet and low-bandwidth mode are all in the
 full index of 63 images: [`assets/screenshots/README.md`](assets/screenshots/README.md).
 
