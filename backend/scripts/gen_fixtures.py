@@ -1,4 +1,4 @@
-"""Write `docs/fixtures/home_*.json` — the contract samples the Flutter agents build against.
+"""Write `docs/fixtures/home_*.json` — the contract samples the Flutter app is built against.
 
 Fully offline: it drives the real FastAPI app through `TestClient` while every upstream host is
 replayed from `backend/tests/fixtures/*.json` by the same respx harness the test-suite uses, so

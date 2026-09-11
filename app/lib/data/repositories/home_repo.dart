@@ -182,9 +182,9 @@ class HomeRepo {
   /// docs/06 §Home-screen widget — "whenever the app receives a `/home` response (network or
   /// cache), write a compact snapshot and ask the widget to redraw".
   ///
-  /// The bundled fixture is deliberately **not** published: it is sample data (CLAUDE.md §6),
-  /// and a launcher widget has no room to say so. A widget with nothing to show says "Open
-  /// Mausam to refresh" instead, which is the truth.
+  /// The bundled fixture is deliberately **not** published: it is sample data (honest data,
+  /// docs/00 principle 6), and a launcher widget has no room to say so. A widget with nothing
+  /// to show says "Open Mausam to refresh" instead, which is the truth.
   Future<void> _publishToWidget(HomeResponse home, HomeQuery query) async {
     try {
       await _widget.publish(
@@ -204,7 +204,7 @@ class HomeRepo {
     }
   }
 
-  /// The bundled sample payload (docs/07 §B1 — "author app/assets/fixtures/home_sample.json").
+  /// The bundled sample payload, `assets/fixtures/home_sample.json` — the last-resort fallback.
   Future<HomeResponse> loadFixture() async {
     final json = _fixtureCache ??= Map<String, dynamic>.from(
       jsonDecode(await _loadAsset(AppConfig.sampleHomeAsset)) as Map,

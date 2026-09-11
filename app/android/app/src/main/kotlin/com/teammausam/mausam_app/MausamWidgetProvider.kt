@@ -151,7 +151,7 @@ class MausamWidgetProvider : HomeWidgetProvider() {
                 }
                 views.setTextViewText(R.id.widget_pinned_insight, pinned.insight)
                 views.setInt(R.id.widget_accent, "setColorFilter", parseColor(pinned.colorHex))
-                // CLAUDE.md §6 — modelled data is labelled here too.
+                // Honest data (docs/00 principle 6) — modelled data is labelled here too.
                 views.setViewVisibility(
                     R.id.widget_estimated,
                     if (pinned.estimated) View.VISIBLE else View.GONE,

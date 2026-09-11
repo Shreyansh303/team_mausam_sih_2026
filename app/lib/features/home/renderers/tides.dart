@@ -15,7 +15,7 @@ import '../../../l10n/gen/app_localizations.dart';
 /// docs/02 card 17 publishes the four turning points (`events[]: {time, type, height_m}`), not a
 /// curve, so [TideCurve.of] fills the gaps the way the backend's own model does: a half-cosine
 /// between consecutive extremes. That is an interpolation of an estimate, which is why the chip
-/// and the backend's `disclaimer` are not optional here — CLAUDE.md §6.
+/// and the backend's `disclaimer` are not optional here — docs/00 principle 6, honest data.
 class TidesRenderer extends StatelessWidget {
   const TidesRenderer({super.key, required this.card, this.expanded = false});
 

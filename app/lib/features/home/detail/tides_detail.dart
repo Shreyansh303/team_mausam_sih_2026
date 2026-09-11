@@ -8,7 +8,8 @@ import '../../../l10n/gen/app_localizations.dart';
 
 /// Full-screen body for the `tides` renderer (docs/02 card 17 `tides`): the curve at full
 /// height, the published turning points as a table, and the model disclaimer spelled out rather
-/// than clipped to two lines — CLAUDE.md §6, an estimate must say so where the user can read it.
+/// than clipped to two lines — honest data (docs/00 principle 6): an estimate must say so where
+/// the user can read it.
 class TidesDetail extends StatelessWidget {
   const TidesDetail({super.key, required this.card});
 

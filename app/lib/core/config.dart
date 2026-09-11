@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 class AppConfig {
   AppConfig._();
 
-  /// Display name. docs/CLAUDE.md §9 — we are explicitly NOT impersonating IMD.
+  /// Display name. docs/00_VISION.md principle 8 — a Team Mausam prototype, not an IMD app.
   static const String appName = 'Mausam Personalized';
   static const String appNameLong = 'Mausam Personalized (Team Mausam prototype)';
 

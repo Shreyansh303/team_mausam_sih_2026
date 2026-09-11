@@ -8,9 +8,9 @@ import 'package:mausam_app/core/config.dart';
 import 'package:mausam_app/l10n/gen/app_localizations.dart';
 import 'package:mausam_app/l10n/labels.dart';
 
-/// docs/06_MOBILE_SPEC.md §i18n and docs/07 §B2 — "l10n en/hi complete (+ mr/ta/bn
-/// best-effort)". These tests are the gate on that promise: every key the template declares
-/// has to exist in Hindi, and the partial locales have to stay valid ARB.
+/// docs/06_MOBILE_SPEC.md §i18n — en/hi complete, mr/ta/bn best-effort. These tests are the
+/// gate on that promise: every key the template declares has to exist in Hindi, and the partial
+/// locales have to stay valid ARB.
 Map<String, dynamic> _arb(String code) =>
     jsonDecode(File('lib/l10n/app_$code.arb').readAsStringSync()) as Map<String, dynamic>;
 

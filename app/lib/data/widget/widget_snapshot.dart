@@ -173,7 +173,7 @@ class WidgetPinned {
   /// payload, so the widget shows the same yellow/orange/red as the app.
   final String colorHex;
 
-  /// CLAUDE.md §6 — modelled data is labelled as such, in the widget too.
+  /// docs/00 principle 6 (honest data) — modelled data is labelled as such, in the widget too.
   final bool estimated;
 
   /// docs/06 §Layout `core/theme.dart` severity colours, as hex so Kotlin can parse them.

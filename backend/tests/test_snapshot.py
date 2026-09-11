@@ -188,7 +188,7 @@ async def test_demo_clock_reads_current_off_that_hour():
     live = await snapshot_svc.build_snapshot(*DELHI)
     demo = await snapshot_svc.build_snapshot(*DELHI, now=clock)
 
-    # No demo clock → the real observation, untouched (CLAUDE.md §6 honest data).
+    # No demo clock → the real observation, untouched (docs/00 principle 6, honest data).
     assert live.current.time.startswith("2026-09-07T01:30")
     assert live.current.is_day is False
     assert live.current.temp_c == 24.9
@@ -219,7 +219,7 @@ async def test_demo_clock_outside_the_forecast_window_keeps_the_live_reading():
     The app's clock presets carry a fixed calendar date, so the day after they were written a
     judge's "07:30" lands outside Open-Meteo's window. The nearest hour is then midnight of the
     first day, and publishing that as 07:30 drew a moon over a sunrise-lit feed with UV 0.
-    Out of range, the live observation stands and `current.time` says so (CLAUDE.md §6).
+    Out of range, the live observation stands and `current.time` says so (docs/00 principle 6).
     """
     live = await snapshot_svc.build_snapshot(*DELHI)
     stale = await snapshot_svc.build_snapshot(*DELHI, now=datetime(2026, 9, 1, 7, 30, tzinfo=IST))

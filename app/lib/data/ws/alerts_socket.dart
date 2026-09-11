@@ -87,7 +87,7 @@ class WebSocketAlertsChannel implements AlertsChannel {
 /// docs/06_MOBILE_SPEC.md §Layout `data/ws/alerts_socket.dart` —
 /// "reconnect w/ backoff, pong, exposes stream".
 ///
-/// Contract (docs/04 §WebSocket + docs/PROGRESS "B2/B3 — what A3 hands you"):
+/// Contract (docs/04 §WebSocket, plus the frames captured from the running backend):
 ///  * connect to `ws(s)://<backend>/ws/alerts?token=&lat=&lon=`;
 ///  * answer **every** `ping` with `{"type":"pong"}` — the server drops a socket whose send
 ///    fails, and it pings every 30 s;

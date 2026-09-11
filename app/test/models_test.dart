@@ -83,7 +83,7 @@ void main() {
       expect(w.hazard, 'thunderstorm');
       expect(w.isOrangeOrAbove, isTrue);
       expect(w.colorHex, '#F28C28'); // docs/02 §Shared objects
-      expect(w.source, 'scenario'); // the fixture was generated with ?scenario=thunderstorm
+      expect(w.source, 'scenario'); // the fixture comes from ?scenario=thunderstorm
 
       // docs/04: banner is the highest active warning at orange or above.
       expect(home.banner, isNotNull);
@@ -153,14 +153,14 @@ void main() {
       }
     });
 
-    test('anything modelled is labelled estimated (CLAUDE.md §6)', () {
+    test('anything modelled is labelled estimated (honest-data principle)', () {
       for (final card in home.allCards) {
         if (card.source == 'estimated') {
           expect(card.isEstimated, isTrue, reason: '${card.type} must show the Estimated chip');
         }
       }
-      // docs/PROGRESS.md §A1 — pollen is always modelled for Indian coordinates, and the
-      // commute/traffic block has no free data source either.
+      // backend/README.md §Honest data — pollen is always modelled for Indian coordinates, and
+      // the commute/traffic block has no free data source either.
       for (final type in <String>['pollen', 'commute_conditions']) {
         final card = home.allCards.firstWhere((c) => c.type == type);
         expect(card.source, 'estimated', reason: type);

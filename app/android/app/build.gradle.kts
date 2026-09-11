@@ -42,7 +42,7 @@ android {
     namespace = "com.teammausam.mausam_app"
     // permission_handler_android 14.1.0 requires compileSdk 37; flutter.compileSdkVersion is
     // 36 on Flutter 3.47, so assembleDebug fails the AAR-metadata check without this pin.
-    // Verified on macOS in H0 (docs/PROGRESS.md > Notes for next phase > H0, gotcha 3).
+    // Verified on macOS (H0); see docs/RUNNING.md §Troubleshooting.
     compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
@@ -58,7 +58,7 @@ android {
         // ships MinSdkVersionMigration, which rewrites ANY hardcoded minSdk of 16..23 back to
         // `flutter.minSdkVersion` on every `flutter build apk` - a hardcoded 23 does not
         // survive a single build. flutter.minSdkVersion == 24 (Android 7.0) on this SDK, which
-        // is also the floor Flutter warns below. See docs/PROGRESS.md > Deviations.
+        // is also the floor Flutter warns below. See docs/DEVIATIONS.md.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         // Uses the version code from pubspec.yaml. When using split APKs, 1000 * ABI_VERSION

@@ -173,7 +173,7 @@ class CardShell extends ConsumerWidget {
 
 /// docs/06 §Card shell footer — "actions from `card.actions`". The backend already localizes
 /// `label` and swaps `pin`→`unpin`, so the ids are rendered exactly as they arrive
-/// (docs/PROGRESS "B1/B2 — the fixture contract").
+/// (the fixture corpus in docs/fixtures/, docs/04_API_CONTRACT.md).
 class CardActionsRow extends StatelessWidget {
   const CardActionsRow({super.key, required this.card, required this.onAction});
 
@@ -272,7 +272,7 @@ class _Header extends StatelessWidget {
           ),
         ),
         if (card.pinned) _Badge(label: l.pinned, icon: Icons.push_pin, color: accent),
-        // docs/CLAUDE.md §6: anything modelled must be labelled, never shown as an observation.
+        // docs/00 principle 6: anything modelled is labelled, never shown as an observation.
         if (card.isEstimated)
           _Badge(
             label: l.estimated,

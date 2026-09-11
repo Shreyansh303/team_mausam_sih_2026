@@ -153,7 +153,7 @@ def test_cities_dataset_meets_the_spec():
         }
         assert 6.0 <= c["lat"] <= 37.6 and 68.0 <= c["lon"] <= 97.5
     names = {c["name"] for c in rows}
-    # state capitals, coastal towns and hill stations named in 07 §A1
+    # state capitals, coastal towns and hill stations (docs/04 `/locations/popular`)
     assert {"New Delhi", "Mumbai", "Chennai", "Kolkata", "Bengaluru", "Hyderabad",
             "Panaji", "Puri", "Kovalam", "Gokarna", "Diu", "Digha", "Port Blair",
             "Shimla", "Manali", "Ooty", "Darjeeling", "Leh"} <= names

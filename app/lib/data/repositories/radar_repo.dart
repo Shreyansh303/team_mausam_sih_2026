@@ -9,7 +9,7 @@ class RadarTileFrame {
   final String path;
 
   /// `true` for the `nowcast` half of the response — drawn with a "forecast" label so a
-  /// predicted echo is never presented as an observation (CLAUDE.md §6).
+  /// predicted echo is never presented as an observation (docs/00 principle 6, honest data).
   final bool isForecast;
 }
 

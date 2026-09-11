@@ -5,7 +5,8 @@
      in lib/l10n. Only its own chrome lives here; the weather content itself arrives already
      localized from the backend (docs/04 `lang`). `values-hi/` is the Hindi copy.
 
-     CLAUDE.md §9: the name is the Team Mausam prototype name, never IMD's. -->
+     docs/00_VISION.md principle 8: the name is the Team Mausam prototype name, never
+     IMD's. -->
 <resources>
     <string name="widget_label">Mausam Personalized</string>
     <string name="widget_description">Now, plus the one thing that matters most today.</string>
@@ -13,7 +14,8 @@
     <!-- Shown when there is no snapshot yet, or when the one we have is over six hours old. -->
     <string name="widget_open_to_refresh">Open Mausam to refresh</string>
 
-    <!-- CLAUDE.md §6 — modelled data is labelled, here as well as in the app. -->
+    <!-- docs/00_VISION.md principle 6 (honest data) — modelled data is labelled, here as well
+         as in the app. -->
     <string name="widget_estimated">Estimated</string>
 
     <string name="widget_age_now">just now</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Splash shown while the Flutter engine boots (docs/07 §B2 "app icon/splash"): the same
-     sun-behind-cloud glyph on IMD blue, so the launch does not flash white first. -->
+<!-- Splash shown while the Flutter engine boots (docs/06_MOBILE_SPEC.md §Android config): the
+     same sun-behind-cloud glyph on IMD blue, so the launch does not flash white first. -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/launch_background" />
     <item>

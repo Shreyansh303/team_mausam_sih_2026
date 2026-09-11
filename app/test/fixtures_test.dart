@@ -29,8 +29,9 @@ import 'fixture.dart';
 /// real `/home` output from the A2 engine, 30 of the 33 card types) must parse with the app's
 /// models and render with the registry — no exception, in English and in Hindi.
 ///
-/// docs/PROGRESS.md §"B1/B2 — the fixture contract". Renderers B1 has not written yet fall
-/// back to `generic`, which is the point: an unknown card must degrade, never crash.
+/// The corpus is the fixture contract (docs/fixtures/, docs/04_API_CONTRACT.md). Card types with
+/// no renderer fall back to `generic`, which is the point: an unknown card must degrade, never
+/// crash.
 Widget _host(Widget child, {Locale locale = const Locale('en')}) => MaterialApp(
       locale: locale,
       theme: AppTheme.light(),
@@ -167,7 +168,7 @@ void main() {
         for (final p in card.personas) {
           expect(personaIds, contains(p), reason: '$at persona $p');
         }
-        // CLAUDE.md §6 — modelled data must be labelled.
+        // Honest data (docs/00 principle 6) — modelled data must be labelled.
         if (card.source == 'estimated') {
           expect(card.isEstimated, isTrue, reason: '$at must show the Estimated chip');
         }
@@ -217,7 +218,7 @@ void main() {
     }
   });
 
-  test('the corpus covers the 30 card types docs/PROGRESS.md promises', () {
+  test('the corpus covers 30 of the 33 card types', () {
     expect(seenTypes.length, 30, reason: 'types seen: ${seenTypes.toList()..sort()}');
     // The three that no fixture scenario triggers (frost/heatwave/dense_fog gates).
     for (final missing in <String>['frost_alert', 'heat_alert', 'travel_alerts']) {
@@ -263,7 +264,7 @@ void main() {
     }
   });
 
-  /// docs/07 §B2a — the acceptance gate for a renderer is not "it did not throw" but
+  /// The acceptance gate for a renderer (B2a) is not "it did not throw" but
   /// "its distinctive widget is on screen". One assertion per implemented renderer, driven by
   /// the real payload the backend produced.
   group('each B2a renderer draws its distinctive widget', () {
@@ -364,7 +365,7 @@ void main() {
     });
 
     // heat_alert and frost_alert are the two `alert` types no fixture scenario triggers
-    // (docs/PROGRESS.md §"B1/B2 — the fixture contract"), so they are exercised against the
+    // (see the corpus in docs/fixtures/), so they are exercised against the
     // docs/02 key list directly. Delete this once a fixture carries them.
     testWidgets('alert — heat_alert and frost_alert render from the docs/02 keys',
         (tester) async {
@@ -519,10 +520,10 @@ void main() {
       expect(curve.markers.length, events.length);
       expect(curve.points.length, greaterThan(events.length));
       expect(find.byType(SeriesLineChart), findsOneWidget);
-      // CLAUDE.md §6 — a modelled tide says so. C1 moved the chip to the one place that owns
-      // it (docs/06 §Card shell); the renderer only draws its own when the host does not,
-      // which is what `renderers_test.dart` pins. Here the card is `estimated`, so the body
-      // must stay clean and let the shell speak.
+      // Honest data (docs/00 principle 6) — a modelled tide says so. Since C1 the chip lives in
+      // the one place that owns it (docs/06 §Card shell); the renderer only draws its own when
+      // the host does not, which is what `renderers_test.dart` pins. Here the card is
+      // `estimated`, so the body must stay clean and let the shell speak.
       expect(card.isEstimated, isTrue);
       expect(find.text('Estimated'), findsNothing);
       expect(find.textContaining('Next: '), findsOneWidget);

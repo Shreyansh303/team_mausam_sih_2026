@@ -287,8 +287,8 @@ class _HomeBody extends ConsumerWidget {
           sliver: SliverList.list(
             children: [
               if (role != null) RoleViewStrip(personaId: role!),
-              // docs/PROGRESS "B2 — what B1 hands you": with the backend down B1 stacked two
-              // banners saying the same thing. One strip, chosen by priority.
+              // With the backend down, an earlier build (B1) stacked two banners saying the
+              // same thing. One strip, chosen by priority.
               _FeedStatus(result: result, offline: offline, onRetry: onRetry),
               if (banner != null) ...[
                 WarningBanner(

@@ -60,7 +60,7 @@ class TimelineDetail extends StatelessWidget {
                 icon: Icons.traffic_outlined,
               ),
               const SizedBox(width: 20),
-              // CLAUDE.md §6 — the traffic index is modelled, and it says so.
+              // Honest data (docs/00 principle 6) — the traffic index is modelled and says so.
               if (asStringOrNull(traffic['source']) == 'estimated')
                 Pill(
                   label: l.estimated,

@@ -22,8 +22,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'fixture.dart';
 import 'support.dart';
 
-/// docs/06_MOBILE_SPEC.md §Definition of done + docs/07 §B2 "accessibility (semantics labels,
-/// contrast, tap targets, text scaling)".
+/// docs/06_MOBILE_SPEC.md §Definition of done — accessibility: semantics labels, contrast, tap
+/// targets, text scaling.
 class _MemoryCache extends JsonFileCache {
   final Map<String, CacheEntry> _store = <String, CacheEntry>{};
 

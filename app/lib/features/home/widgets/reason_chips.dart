@@ -40,7 +40,7 @@ class ReasonChips extends StatelessWidget {
         for (final reason in shown)
           ActionChip(
             onPressed: onTap,
-            // Default (padded) tap target: docs/07 §B2 asks for accessible targets, and a
+            // Default (padded) tap target: it has to stay an accessible target, and a
             // reason chip is the only way into the why sheet without a long-press.
             avatar: Icon(iconFor(reason.code), size: 15),
             label: Text(reason.text, style: theme.textTheme.labelSmall),

@@ -95,7 +95,7 @@ class CardDetailPage extends StatelessWidget {
                   ],
                 ),
               ),
-              // CLAUDE.md §6 — a modelled number is never presented as an observation.
+              // Honest data (docs/00 principle 6): a modelled number is never an observation.
               if (card.isEstimated)
                 Chip(
                   visualDensity: VisualDensity.compact,

@@ -51,7 +51,7 @@ class StatusStrip extends StatelessWidget {
               onPressed: onRetry,
               style: TextButton.styleFrom(
                 foregroundColor: fg,
-                // 48 dp target (docs/07 §B2 accessibility).
+                // 48 dp accessible tap target.
                 minimumSize: const Size(48, 48),
                 padding: const EdgeInsets.symmetric(horizontal: 12),
               ),

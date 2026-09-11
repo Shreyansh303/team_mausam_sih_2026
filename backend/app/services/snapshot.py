@@ -114,7 +114,7 @@ def normalize_forecast(
     read off the forecast hour that matches it instead of Open-Meteo's live `current` block,
     so the hero card, the 24-h strip and every derived metric agree with `context.now`
     (docs/00 §Judge demo script step 2: "Home at 7:30 AM … hero shows now"). Without it
-    nothing changes: live data stays the real observation (CLAUDE.md §6 honest data).
+    nothing changes: live data stays the real observation (docs/00 principle 6, honest data).
     """
     cur = payload.get("current") or {}
     hourly_block = payload.get("hourly") or {}
@@ -166,9 +166,10 @@ def normalize_forecast(
 
     # A demo clock may sit outside the forecast window (a preset left on yesterday's date, a
     # judge picking a time three days out). Publishing the nearest hour we happen to have —
-    # usually midnight of the first day — as "07:30" would be a lie (CLAUDE.md §6). Only the
-    # *exact* hour may move the reading; otherwise the live observation stands, `current.time`
-    # says so, and the hourly row behind `uv_index`/`visibility_km` is the live one too. C1.
+    # usually midnight of the first day — as "07:30" would be a lie (honest data, docs/00
+    # principle 6). Only the *exact* hour may move the reading; otherwise the live observation
+    # stands, `current.time` says so, and the hourly row behind `uv_index`/`visibility_km` is
+    # the live one too. C1.
     exact, idx, match = _row(cur_dt)
     if ref_now is not None and exact is None:
         cur_dt = live_dt

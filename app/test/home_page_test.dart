@@ -101,7 +101,7 @@ void main() {
 
   ProviderContainer buildContainer({ProfileRepo? profileRepo}) {
     // No backend: the repo's network call fails and it falls through to the bundled fixture,
-    // which is exactly the "demo with the backend switched off" path docs/07 §B1 asks for.
+    // which is exactly the "backend switched off" step of the docs/00 demo script.
     final repo = HomeRepo(
       api: ApiClient(baseUrl: 'http://127.0.0.1:1'),
       cache: _MemoryCache(),

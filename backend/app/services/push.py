@@ -8,7 +8,7 @@ Two transports:
 
 * `NoopTransport` — the default. Logs what *would* have been sent at INFO and nothing leaves the
   process. This is what runs with zero configuration, so the demo setup needs no Firebase project,
-  no credentials and no keys (CLAUDE.md §7).
+  no credentials and no keys (docs/00_VISION.md, principle 9: no secrets in the repository).
 * `FcmTransport` — FCM HTTP v1 (`POST /v1/projects/{project}/messages:send`), data-only messages,
   OAuth2 access token minted from a service-account JSON. Selected **only** when both
   `FCM_SERVICE_ACCOUNT_FILE` and `FCM_PROJECT_ID` are set and the file exists.

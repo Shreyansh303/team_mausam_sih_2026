@@ -152,7 +152,7 @@ void main() {
       expect(WidgetSnapshot.fromHome(pinnedWith('info')).pinned!.colorHex, '#1565C0');
     });
 
-    test('an estimated card is labelled as such (CLAUDE.md §6)', () {
+    test('an estimated card is labelled as such (honest-data principle)', () {
       final home = HomeResponse.fromJson(sample);
       // The severe fixture pins commute_conditions, which is modelled, not observed.
       expect(home.pinned.first.isEstimated, isTrue);

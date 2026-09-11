@@ -80,5 +80,5 @@ flutter:
   assets:
     - assets/fixtures/
     # Source artwork for the launcher icon / splash (docs/06 §Android config). Generated, not
-    # an IMD asset - see CLAUDE.md §9.
+    # an IMD asset - see docs/00_VISION.md principle 8.
     - assets/icon/

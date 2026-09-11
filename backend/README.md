@@ -27,27 +27,27 @@ root, so `GET /weather/snapshot?...` works with a bare curl too. Interactive doc
 
 ### Endpoints
 
-| Method | Path | Phase | Purpose |
-|---|---|---|---|
-| GET | `/health` | A1 | status, version, provider availability, push transport + device count, active scenario + demo clock |
-| GET | `/locations/search?q=&limit=` | A1 | curated cities first, then Open-Meteo (India ranked first) |
-| GET | `/locations/reverse?lat=&lon=` | A1 | curated hit within 3 km, else BigDataCloud |
-| GET | `/locations/popular` | A1 | curated Indian cities (coastal + hill included) |
-| GET | `/weather/snapshot?lat=&lon=&scenario=&now_override=` | A1 | the full `Snapshot` |
-| GET | `/weather/radar` | A1 | RainViewer frames + tile template |
-| GET | `/weather/scenarios` | A1 | scenario names for the demo sheet |
-| POST | `/auth/guest` · `/auth/request-otp` · `/auth/verify-otp` | A2 | JWT guest + demo OTP (`123456`) |
-| GET/PUT | `/me`, `/me/profile`, `/me/card-prefs`, `/me/places` | A2 | profile, pins/hides, saved places (max 8) |
-| GET | `/home` | A2 | **the personalized home** — `lat/lon` or `place_id`, `lang`, `personas`, `now_override`, `scenario`, `event_date`, `lite=1` |
-| POST | `/events` | A2 | engagement batch (≤ 100); `pin/hide` also write card-prefs |
-| POST/DELETE | `/me/devices`, `/me/devices/{token}` | S3 | register / unregister this handset's push token (optional) |
-| GET | `/admin/state` | A3 | `{scenario, now_override, warnings, connected_clients, devices, push_transport}` |
-| POST | `/admin/scenario` `/admin/now-override` | A3 | global demo scenario + demo clock |
-| POST/DELETE | `/admin/warnings`, `/admin/warnings/{id}` | A3 | push / clear a warning (broadcasts on the WebSocket) |
-| POST | `/admin/reset-user` | A3 | clear one user's learning |
-| GET | `/admin/devices` | S3 | registered push devices (tokens redacted) |
-| GET | `/admin/console` | A3 | the single-file demo console |
-| WS | `/ws/alerts?token=&lat=&lon=` | A3 | live alerts |
+| Method | Path | Purpose |
+|---|---|---|
+| GET | `/health` | status, version, provider availability, push transport + device count, active scenario + demo clock |
+| GET | `/locations/search?q=&limit=` | curated cities first, then Open-Meteo (India ranked first) |
+| GET | `/locations/reverse?lat=&lon=` | curated hit within 3 km, else BigDataCloud |
+| GET | `/locations/popular` | curated Indian cities (coastal + hill included) |
+| GET | `/weather/snapshot?lat=&lon=&scenario=&now_override=` | the full `Snapshot` |
+| GET | `/weather/radar` | RainViewer frames + tile template |
+| GET | `/weather/scenarios` | scenario names for the demo sheet |
+| POST | `/auth/guest` · `/auth/request-otp` · `/auth/verify-otp` | JWT guest + demo OTP (`123456`) |
+| GET/PUT | `/me`, `/me/profile`, `/me/card-prefs`, `/me/places` | profile, pins/hides, saved places (max 8) |
+| GET | `/home` | **the personalized home** — `lat/lon` or `place_id`, `lang`, `personas`, `now_override`, `scenario`, `event_date`, `lite=1` |
+| POST | `/events` | engagement batch (≤ 100); `pin/hide` also write card-prefs |
+| POST/DELETE | `/me/devices`, `/me/devices/{token}` | register / unregister this handset's push token (optional) |
+| GET | `/admin/state` | `{scenario, now_override, warnings, connected_clients, devices, push_transport}` |
+| POST | `/admin/scenario` `/admin/now-override` | global demo scenario + demo clock |
+| POST/DELETE | `/admin/warnings`, `/admin/warnings/{id}` | push / clear a warning (broadcasts on the WebSocket) |
+| POST | `/admin/reset-user` | clear one user's learning |
+| GET | `/admin/devices` | registered push devices (tokens redacted) |
+| GET | `/admin/console` | the single-file demo console |
+| WS | `/ws/alerts?token=&lat=&lon=` | live alerts |
 
 ## Configuration
 
