@@ -14,7 +14,7 @@ Repository: <https://github.com/Shreyansh303/team_mausam_sih_2026>
 | Source code is present | done | `backend/` (FastAPI service), `app/` (Flutter app), `infra/` (Docker, Render), `scripts/` (toolchain setup) |
 | README explains the project | done | `README.md` §1–13 |
 | Problem statement ID and title | done | `README.md` §1 (PS ID 26076, title, organisation, theme, category); verbatim statement in `README.md` §2 and `docs/00_VISION.md` |
-| Problem description and proposed solution | done | `README.md` §2–3; long form in `docs/08_PITCH.md` §1–2 |
+| Problem description and proposed solution | done | `README.md` §2–3; long form in `docs/07_PITCH.md` §1–2 |
 | Key features | done | `README.md` §4; per-card detail in `docs/02_CARD_CATALOG.md` |
 | Technology stack | done | `README.md` §5; decisions in `docs/01_ARCHITECTURE.md` |
 | System architecture | done | `README.md` §6; reviewer-facing overview in `docs/architecture.md` |
@@ -58,10 +58,10 @@ team_mausam_sih_2026/
 │   ├── 04_API_CONTRACT.md             REST + WebSocket contract (normative for both sides)
 │   ├── 05_BACKEND_SPEC.md             FastAPI structure, providers, derived metrics, scenarios
 │   ├── 06_MOBILE_SPEC.md              Flutter structure, screens, renderers, offline, i18n
-│   ├── 08_PITCH.md                    pitch text — the source of the deck
-│   ├── 09_PUSH_NOTIFICATIONS.md       FCM design for the production alert transport
-│   ├── 10_SIH_DECK_CONTENT.md         finale-deck slide-by-slide content
-│   ├── 11_IMPACT_NUMBERS.md           sourced external impact statistics
+│   ├── 07_PITCH.md                    pitch text — the source of the deck
+│   ├── 08_PUSH_NOTIFICATIONS.md       FCM design for the production alert transport
+│   ├── 09_SIH_DECK_CONTENT.md         finale-deck slide-by-slide content
+│   ├── 10_IMPACT_NUMBERS.md           sourced external impact statistics
 │   └── fixtures/                      10 example /home payloads shared by backend and app
 ├── backend/                           FastAPI service, Python 3.13
 │   ├── app/                           api · engine · providers · services · schemas · models · data · static
@@ -81,8 +81,8 @@ team_mausam_sih_2026/
 ## Presentation
 
 The final deck is `submission/TeamMausam_SIH2026_PS26076.pptx`; `submission/PRESENTATION.md`
-lists its six slides and the documents each slide draws on (`docs/08_PITCH.md`,
-`docs/10_SIH_DECK_CONTENT.md`, `docs/11_IMPACT_NUMBERS.md`). It also carries a Google Drive viewer
+lists its six slides and the documents each slide draws on (`docs/07_PITCH.md`,
+`docs/09_SIH_DECK_CONTENT.md`, `docs/10_IMPACT_NUMBERS.md`). It also carries a Google Drive viewer
 link for reviewers who would rather open the deck in a browser; the tracked file is the
 authoritative copy.
 

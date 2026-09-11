@@ -1,6 +1,6 @@
 # 11 · Impact numbers — sourced external statistics for Slide 5
 
-Supplies the ⚠️ external statistics that [`10_SIH_DECK_CONTENT.md`](10_SIH_DECK_CONTENT.md) §Slide 5
+Supplies the ⚠️ external statistics that [`09_SIH_DECK_CONTENT.md`](09_SIH_DECK_CONTENT.md) §Slide 5
 leaves as placeholders. Everything here was **looked up and cited**, not recalled.
 
 Two conventions carried over from the rest of this repo:

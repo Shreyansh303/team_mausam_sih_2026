@@ -7,7 +7,7 @@ Every mutating route does the same three things in the same order:
     3. broadcast on the WebSocket (`api/ws.py`) — never from `app/engine/`, which stays pure
     4. hand the same message to the push transport (`services/push.py`), which reaches devices
        whose app is closed. Noop (log only) until a Firebase project is configured — S3,
-       `docs/09_PUSH_NOTIFICATIONS.md`.
+       `docs/08_PUSH_NOTIFICATIONS.md`.
 """
 
 from __future__ import annotations

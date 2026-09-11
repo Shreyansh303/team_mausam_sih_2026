@@ -1,6 +1,6 @@
 # Deviations from the specifications
 
-The numbered specs (`00_VISION.md` … `06_MOBILE_SPEC.md`, plus `09_PUSH_NOTIFICATIONS.md`) are normative, and
+The numbered specs (`00_VISION.md` … `06_MOBILE_SPEC.md`, plus `08_PUSH_NOTIFICATIONS.md`) are normative, and
 [`04_API_CONTRACT.md`](04_API_CONTRACT.md) is the interface both halves conform to. This file lists every place
 where the shipped code differs from what a spec says, and why. Entries are grouped by area, not by date; each
 names the spec section, what was built instead, the reason, and where the behaviour is tested or observable (a
@@ -134,7 +134,7 @@ message types were added beyond the six in `04`; a client `location` frame gets 
 `GET /admin/devices` are new and optional. Nothing existing changed shape. Messages carry no `notification` block
 on purpose: an OS-rendered notification would be in whatever language the server picked, while the app has five
 locales and the strings already, so it builds the notification from `data` (`Device.lang`); the iOS trade-off is
-in [`09_PUSH_NOTIFICATIONS.md`](09_PUSH_NOTIFICATIONS.md) §3 and §6. Verified:
+in [`08_PUSH_NOTIFICATIONS.md`](08_PUSH_NOTIFICATIONS.md) §3 and §6. Verified:
 `backend/tests/test_push.py::test_health_reports_the_push_block`.
 
 **A registration token identifies an install, not a user.** `POST /me/devices` is an upsert on the token; a
@@ -235,7 +235,7 @@ documented fallback; the fallback shipped, with no package beyond `flutter_anima
   [`28-offline-cached.png`](../assets/screenshots/28-offline-cached.png).
 - **No `firebase_messaging` in the app.** Adding it without a `google-services.json` breaks `flutter build apk`,
   and that file cannot be committed. The app side is documented in `backend/README.md` §Push notifications and
-  [`09_PUSH_NOTIFICATIONS.md`](09_PUSH_NOTIFICATIONS.md) §9; the WebSocket remains the demo transport.
+  [`08_PUSH_NOTIFICATIONS.md`](08_PUSH_NOTIFICATIONS.md) §9; the WebSocket remains the demo transport.
 
 **The tides card draws an interpolated curve between the published turning points.** Spec: card 17 publishes
 `events[≤4]`; `06` asks for a 24-hour tide curve. Built: `TideCurve.of` (`renderers/tides.dart`) samples a

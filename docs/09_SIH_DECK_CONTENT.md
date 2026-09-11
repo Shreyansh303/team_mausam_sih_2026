@@ -298,10 +298,10 @@ The parent did not have to be looking for it. That is the whole point.
 | **Reach** | Hindi complete to the sentence · low-bandwidth mode (13.5 KB) · offline cache · **Android 7.0+** · TalkBack · AA contrast · large text. *The people who most need a frost alert or a fog warning are not on flagship phones.* ✅ |
 | **Operability for IMD** | Server-driven cards = the homepage is a **backend deployment**, not a release cycle. The IMD provider is written; whitelisting flips it on. ✅ |
 
-### NATIONAL-SCALE IMPACT — → [`11_IMPACT_NUMBERS.md`](11_IMPACT_NUMBERS.md)
+### NATIONAL-SCALE IMPACT — → [`10_IMPACT_NUMBERS.md`](10_IMPACT_NUMBERS.md)
 
 **The external statistics for this slide are sourced and cited in
-[`11_IMPACT_NUMBERS.md`](11_IMPACT_NUMBERS.md).** Use it directly; it is organised as five slide
+[`10_IMPACT_NUMBERS.md`](10_IMPACT_NUMBERS.md).** Use it directly; it is organised as five slide
 blocks. Headlines:
 
 - **Block A — the incumbent's own store page.** Mausam: **3.13 / 5** from 4.4k ratings, **~990k
@@ -353,7 +353,7 @@ Mirror the reference deck: clickable tiles, competitor analysis, proof documents
 | **Personalization engine spec** — formulas, tests, explainability | `docs/03_PERSONALIZATION_ENGINE.md` |
 | **API contract** — REST + WebSocket, normative for both sides | `docs/04_API_CONTRACT.md` |
 | **Card catalog** — all 33 cards, affinities, gates, urgency rules | `docs/02_CARD_CATALOG.md` |
-| **Push design** — FCM as production alert transport | `docs/09_PUSH_NOTIFICATIONS.md` |
+| **Push design** — FCM as production alert transport | `docs/08_PUSH_NOTIFICATIONS.md` |
 | **63 screenshots** — every persona, scenario, offline, Hindi | `assets/screenshots/` |
 
 ### STANDARDS & SCIENCE WE IMPLEMENT (not invented — cite them)

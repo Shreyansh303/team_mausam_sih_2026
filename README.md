@@ -137,7 +137,7 @@ changed. Concretely:
   in-process TTL cache (forecast 10 min, air 15 min, marine 30 min, geocode 24 h), Redis via
   `REDIS_URL`.
 - **Live alerts:** WebSocket `/ws/alerts` (demoable, no Firebase project needed); Firebase Cloud
-  Messaging implemented server-side as the production transport (`docs/09_PUSH_NOTIFICATIONS.md`).
+  Messaging implemented server-side as the production transport (`docs/08_PUSH_NOTIFICATIONS.md`).
 - **Data sources:** IMD `current_wx_api` / `nowcastapi` / `warnings_district_api` / `aws_data_api`
   (need IP/domain whitelisting; return `401` otherwise) · Open-Meteo forecast, air quality, marine
   and geocoding (keyless) · BigDataCloud reverse geocoding (keyless) · RainViewer radar (keyless) ·
@@ -205,10 +205,10 @@ docs/
   04_API_CONTRACT.md          REST + WebSocket contract (normative)
   05_BACKEND_SPEC.md          FastAPI structure, providers, derived-metric formulas
   06_MOBILE_SPEC.md           Flutter structure, screens, renderers, offline, i18n, widget
-  08_PITCH.md                 SIH idea-presentation content (problem → future scope)
-  09_PUSH_NOTIFICATIONS.md    FCM push design: transport swap, message schema, device registry
-  10_SIH_DECK_CONTENT.md      slide-by-slide content for the finale deck
-  11_IMPACT_NUMBERS.md        sourced external statistics for the impact slide
+  07_PITCH.md                 SIH idea-presentation content (problem → future scope)
+  08_PUSH_NOTIFICATIONS.md    FCM push design: transport swap, message schema, device registry
+  09_SIH_DECK_CONTENT.md      slide-by-slide content for the finale deck
+  10_IMPACT_NUMBERS.md        sourced external statistics for the impact slide
   QA_REPORT.md                end-to-end walk of the demo script — verdict PASS
   SETUP_WINDOWS.md            Windows toolchain setup (no admin rights)
   fixtures/                   ten real /home payloads (8 personas + severe + coastal)
@@ -235,8 +235,8 @@ scripts/                      toolchain setup + optional Android emulator (.ps1 
 ## 8. Final Presentation
 
 The deck is in the repository: [`submission/TeamMausam_SIH2026_PS26076.pptx`](submission/TeamMausam_SIH2026_PS26076.pptx)
-(6 slides, generated from [`docs/08_PITCH.md`](docs/08_PITCH.md); finale content in
-[`docs/10_SIH_DECK_CONTENT.md`](docs/10_SIH_DECK_CONTENT.md)).
+(6 slides, generated from [`docs/07_PITCH.md`](docs/07_PITCH.md); finale content in
+[`docs/09_SIH_DECK_CONTENT.md`](docs/09_SIH_DECK_CONTENT.md)).
 
 External viewer link (Google Drive): <https://drive.google.com/drive/u/0/folders/1w29cHLEjk3sNfNN1hwYWn3AOmVcMml2t> — see
 [`submission/PRESENTATION.md`](submission/PRESENTATION.md) for a slide-by-slide summary.
@@ -384,7 +384,7 @@ scenario details: [`docs/00_VISION.md`](docs/00_VISION.md) and [`docs/RUNNING.md
 - **Push notifications as the production alert transport.** The WebSocket proves the re-rank path
   end to end but only reaches an app that is open. The Firebase Cloud Messaging transport, device
   registry and message schema are implemented on the backend
-  ([`docs/09_PUSH_NOTIFICATIONS.md`](docs/09_PUSH_NOTIFICATIONS.md)); the app-side wiring waits on a
+  ([`docs/08_PUSH_NOTIFICATIONS.md`](docs/08_PUSH_NOTIFICATIONS.md)); the app-side wiring waits on a
   Firebase project.
 - **ML ranker v2.** A logistic-regression model over the engagement events already being logged
   predicts P(tap) and is blended as `score += 0.2 · (p_tap − 0.5)` behind `ENGINE_ML=1`, with the
@@ -408,7 +408,7 @@ merge ahead of scenario and admin ones. The request details and the switch-over 
 **Near-term items:** a physical-device smoke test of the release APK (first launch, the
 location-permission prompt, GPS onboarding and background event flushing are what the web build cannot
 exercise); deploying the backend from `infra/render.yaml`; a release keystore and `key.properties`
-for a store build; and the IMD whitelisting request itself ([`docs/08_PITCH.md`](docs/08_PITCH.md) §7).
+for a store build; and the IMD whitelisting request itself ([`docs/07_PITCH.md`](docs/07_PITCH.md) §7).
 
 ## Important
 

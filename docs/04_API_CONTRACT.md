@@ -145,7 +145,7 @@ The server does not reply to `location`; the next `warning_issued` simply uses t
 Everything in this section is **optional**: with no Firebase configuration the backend keeps the
 registry, logs every intended send and delivers nothing, and the app does not have to call these
 routes at all. The WebSocket above is unchanged and remains the demo transport. Design and
-rationale: [`docs/09_PUSH_NOTIFICATIONS.md`](09_PUSH_NOTIFICATIONS.md).
+rationale: [`docs/08_PUSH_NOTIFICATIONS.md`](08_PUSH_NOTIFICATIONS.md).
 
 ```jsonc
 Device      { "token": "<fcm registration token>", "platform": "android|ios|web",

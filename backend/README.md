@@ -141,7 +141,7 @@ Render free plan gives you.
 
 The WebSocket above only reaches an app that is **open**. `services/push.py` is the second
 delivery path, for a phone whose app is closed. Design, message schema and the security notes:
-[`../docs/09_PUSH_NOTIFICATIONS.md`](../docs/09_PUSH_NOTIFICATIONS.md).
+[`../docs/08_PUSH_NOTIFICATIONS.md`](../docs/08_PUSH_NOTIFICATIONS.md).
 
 **With no configuration** (the default, and what CI runs) the transport is `noop`: devices can
 still register, every admin broadcast is logged as `push (noop): warning_issued → N device(s)`

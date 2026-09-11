@@ -1,4 +1,4 @@
-"""Push transport + device registry (S3 — design in `docs/09_PUSH_NOTIFICATIONS.md`).
+"""Push transport + device registry (S3 — design in `docs/08_PUSH_NOTIFICATIONS.md`).
 
 `api/ws.py` only reaches an app that is **open**. This module is the second delivery path: the
 same four broadcasts `api/admin.py` fires on the socket are also handed to a `PushTransport`,
@@ -280,7 +280,7 @@ def fcm_body(message: PushMessage) -> dict[str, Any]:
     from the catalogue it already ships (a `notification` block would arrive in whatever language
     the server picked). `android.priority=high` wakes a backgrounded app; the APNs block is the
     iOS background push (`content-available: 1` must be sent at priority 5 — Apple rejects 10).
-    See `docs/09_PUSH_NOTIFICATIONS.md` §Android / iOS delivery.
+    See `docs/08_PUSH_NOTIFICATIONS.md` §Android / iOS delivery.
     """
     return {
         "message": {

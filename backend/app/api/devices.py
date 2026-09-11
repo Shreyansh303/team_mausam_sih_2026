@@ -1,7 +1,7 @@
 """POST /me/devices · DELETE /me/devices/{token} (04 §Devices — optional, S3).
 
 Registering a token is what lets a **closed** app be woken by a warning; see
-`docs/09_PUSH_NOTIFICATIONS.md`. With no transport configured the rows are still kept and the
+`docs/08_PUSH_NOTIFICATIONS.md`. With no transport configured the rows are still kept and the
 noop transport logs each intended send, so the whole flow is exercisable with zero credentials.
 """
 

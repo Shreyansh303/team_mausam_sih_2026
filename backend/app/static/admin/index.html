@@ -459,7 +459,7 @@
     state.scenario = s.scenario;
     state.now_override = s.now_override;
     $("clients").textContent = s.connected_clients;
-    // S3 — registered push devices reach an app that is closed (docs/09_PUSH_NOTIFICATIONS.md).
+    // S3 — registered push devices reach an app that is closed (docs/08_PUSH_NOTIFICATIONS.md).
     $("devices").textContent =
       "push devices: " + (s.devices || 0) + " \u00b7 transport " + (s.push_transport || "noop");
     $("conn").textContent = "connected · " + s.scenario;

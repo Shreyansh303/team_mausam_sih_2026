@@ -205,7 +205,7 @@ The WebSocket only reaches an app that is open. The production path is **FCM pus
 transport, device registry (`POST /me/devices`) and data-only message schema are implemented and
 tested; with no Firebase credentials the transport is `noop` and nothing leaves the process. The
 app-side wiring waits on a Firebase project because `google-services.json` cannot be committed.
-Design and rollout: [09_PUSH_NOTIFICATIONS.md](09_PUSH_NOTIFICATIONS.md).
+Design and rollout: [08_PUSH_NOTIFICATIONS.md](08_PUSH_NOTIFICATIONS.md).
 
 ### 3.8 Admin demo console
 
@@ -312,7 +312,8 @@ so the server can add more.
 | [04_API_CONTRACT.md](04_API_CONTRACT.md) | REST + WebSocket contract (normative) |
 | [05_BACKEND_SPEC.md](05_BACKEND_SPEC.md) | backend layout, exact provider requests, derived-metric formulas, scenarios |
 | [06_MOBILE_SPEC.md](06_MOBILE_SPEC.md) | app layout, screens, renderers, offline, i18n, the home-screen widget |
-| [09_PUSH_NOTIFICATIONS.md](09_PUSH_NOTIFICATIONS.md) | FCM push: why the WebSocket is not enough, transport, message schema, rollout |
+| [07_PITCH.md](07_PITCH.md) | the pitch in long form: problem, solution, feasibility, impact, future scope |
+| [08_PUSH_NOTIFICATIONS.md](08_PUSH_NOTIFICATIONS.md) | FCM push: why the WebSocket is not enough, transport, message schema, rollout |
 | [QA_REPORT.md](QA_REPORT.md) | end-to-end walk of the demo script, measurements, defects found and fixed |
 | [DEVIATIONS.md](DEVIATIONS.md) | where the implementation deviates from the numbered specs |
 | [../backend/README.md](../backend/README.md) | backend configuration, console, push, ranker v2, IMD whitelisting, deploy |

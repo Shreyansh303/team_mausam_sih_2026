@@ -23,13 +23,13 @@ IMD's public warning colour conventions and no IMD logos.
 
 ### Where the content comes from
 
-- **Slide text and every number on it:** [`../docs/08_PITCH.md`](../docs/08_PITCH.md), the pitch
+- **Slide text and every number on it:** [`../docs/07_PITCH.md`](../docs/07_PITCH.md), the pitch
   document the deck was generated from. Each measured figure there names where it was measured;
   the evidence file is [`../docs/QA_REPORT.md`](../docs/QA_REPORT.md).
 - **Finale-deck slide content** (the denser, slide-by-slide layout with a source next to every
-  claim): [`../docs/10_SIH_DECK_CONTENT.md`](../docs/10_SIH_DECK_CONTENT.md).
+  claim): [`../docs/09_SIH_DECK_CONTENT.md`](../docs/09_SIH_DECK_CONTENT.md).
 - **Sourced external impact statistics** for the impact slide, each with its citation:
-  [`../docs/11_IMPACT_NUMBERS.md`](../docs/11_IMPACT_NUMBERS.md).
+  [`../docs/10_IMPACT_NUMBERS.md`](../docs/10_IMPACT_NUMBERS.md).
 
 ### Requirements
 
@@ -37,7 +37,7 @@ IMD's public warning colour conventions and no IMD logos.
 - The file name identifies the team and the problem statement: `TeamMausam_SIH2026_PS26076.pptx`.
 - Before the final print, re-run the two test suites (`pytest -q` in `backend/`,
   `flutter test` in `app/`) and update the two test counts on slide 4 if they have moved
-  (see the note at the top of `../docs/10_SIH_DECK_CONTENT.md`).
+  (see the note at the top of `../docs/09_SIH_DECK_CONTENT.md`).
 - If the deck ever grows past what the repository host accepts, the viewer link below is the
   fallback.
 - Test any external link while logged out or in an incognito window.
