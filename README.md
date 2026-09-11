@@ -36,11 +36,12 @@ a warning is pushed over a WebSocket, works offline from cache, and speaks Engli
 
 **Team members** (contributions are visible in the git history)
 
-| Name | Role | GitHub |
-|---|---|---|
-| `<MEMBER_NAME>` | `<ROLE>` | `<GITHUB_HANDLE>` |
-| `<MEMBER_NAME>` | `<ROLE>` | `<GITHUB_HANDLE>` |
-| `<MEMBER_NAME>` | `<ROLE>` | `<GITHUB_HANDLE>` |
+- Shreyansh Jain
+- Anushka Gupta
+- Dhruv Sihag
+- Ashish Kumar
+- Shivangi
+- Yash Panchal
 
 ## 2. Problem Statement
 

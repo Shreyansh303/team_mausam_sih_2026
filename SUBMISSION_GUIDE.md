@@ -20,7 +20,7 @@ Repository: <https://github.com/Shreyansh303/team_mausam_sih_2026>
 | System architecture | done | `README.md` §6; reviewer-facing overview in `docs/architecture.md` |
 | Repository structure | done | `README.md` §7; also below |
 | Setup and run instructions that work | done | `README.md` §11–12; long form for every platform in `docs/RUNNING.md`; Windows toolchain in `docs/SETUP_WINDOWS.md` |
-| Team members and roles | **PENDING** | `README.md` §1 — placeholder table; no member list is recorded anywhere else in the repository |
+| Team members are listed | done | `README.md` §1 — six names; also named at the end of `docs/07_PITCH.md`. Individual contributions are visible in the git history |
 | Screenshots | done | `assets/screenshots/` (63 PNG files) with the index `assets/screenshots/README.md`; a selection is embedded in `README.md` §10 |
 | Final PPT in `submission/` | done | `submission/TeamMausam_SIH2026_PS26076.pptx` (six slides, speaker notes), described in `submission/PRESENTATION.md` and linked from `README.md` §8 |
 | Drive/OneDrive link to the PPT (only if too large) | done (optional) | Google Drive folder linked from `submission/PRESENTATION.md` §External presentation link and `README.md` §8 — the file is 1.4 MB and tracked, so the link is a convenience |
@@ -120,7 +120,7 @@ check `git status` before every push anyway.
 
 | Question from the template | README section |
 |---|---|
-| Which problem statement is it for, and who built it? | §1 Project Information — PS ID, title, organisation, theme, category, and the team table (**fill in the member placeholders**) |
+| Which problem statement is it for, and who built it? | §1 Project Information — PS ID, title, organisation, theme, category, and the six team members |
 | What is the problem, and why does it matter? | §2 Problem Statement |
 | What is the proposed solution? | §3 Proposed Solution |
 | What are the key features? | §4 Key Features |
@@ -132,11 +132,7 @@ check `git status` before every push anyway.
 
 ## Before submission
 
-1. **Fill the last placeholder.** Team members and roles in `README.md` §1 — no member list is
-   recorded anywhere in this repository, so the table is still `<MEMBER_NAME>` / `<ROLE>` /
-   `<GITHUB_HANDLE>`. Search the tree for `<MEMBER_NAME>` to confirm none remain. The demo-video
-   and presentation links are already filled in.
-2. **Run the two test suites** and confirm both pass:
+1. **Run the two test suites** and confirm both pass:
 
    ```bash
    cd backend && .venv/bin/python -m pytest -q        # Windows: .venv\Scripts\python -m pytest -q
@@ -145,13 +141,13 @@ check `git status` before every push anyway.
 
    Both suites run fully offline. If the counts have moved since the deck was made, update
    slide 4 (`submission/PRESENTATION.md` §Requirements).
-3. **Check the repository logged out.** Open
+2. **Check the repository logged out.** Open
    <https://github.com/Shreyansh303/team_mausam_sih_2026> in a private/incognito window and
    confirm the README renders, the screenshots in §10 display, and
    `submission/TeamMausam_SIH2026_PS26076.pptx` downloads.
-4. **Check every external link logged out** — the demo video and, if used, the deck link — in
+3. **Check every external link logged out** — the demo video and, if used, the deck link — in
    the same private window.
-5. **Check for secrets one last time:** `git status` shows no `.env`, `google-services.json`,
+4. **Check for secrets one last time:** `git status` shows no `.env`, `google-services.json`,
    keystore or `key.properties`; `git ls-files | grep -i env` returns only `backend/.env.example`.
-6. **Confirm CI is green** on the default branch: the `backend` and `flutter` workflows under
+5. **Confirm CI is green** on the default branch: the `backend` and `flutter` workflows under
    `.github/workflows/`.

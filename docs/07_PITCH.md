@@ -320,9 +320,8 @@ Priority order; the same four are listed in the top-level `README.md` §13 Futur
 | Repository | <https://github.com/Shreyansh303/team_mausam_sih_2026> |
 
 **Team Mausam** — Smart India Hackathon 2026, PS 26076 (MoES / IMD), category Software, theme Smart
-Automation. *(Team roster: to be filled in by the team before submission — no member list is
-recorded anywhere in this repository, and this document will not invent one. Individual
-contributions are visible in the git history.)*
+Automation. Team members: Shreyansh Jain, Anushka Gupta, Dhruv Sihag, Ashish Kumar, Shivangi,
+Yash Panchal. *(Individual contributions are visible in the git history.)*
 
 **Disclaimer, to be repeated on the title slide.** This is a **Team Mausam prototype built for
 SIH 2026. It is not an IMD product and is not affiliated with or endorsed by IMD or MoES.** It uses
