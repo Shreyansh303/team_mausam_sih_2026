@@ -1,0 +1,4 @@
+# The backend's runtime dependencies (FastAPI service in backend/).
+# `pip install -r requirements.txt` from the repo root installs the same set as
+# `pip install -r backend/requirements.txt`; use backend/requirements-dev.txt to also run the tests.
+-r backend/requirements.txt
