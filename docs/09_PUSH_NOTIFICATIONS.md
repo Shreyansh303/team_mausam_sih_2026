@@ -1,4 +1,4 @@
-# 09 · Push notifications (FCM) — S3 design
+# 09 · Push notifications (FCM) — design
 
 Status: **backend built, app wiring pending a Firebase project.** The transport, the device
 registry and the message schema are implemented and tested in `backend/`; nothing in `app/`
@@ -29,7 +29,7 @@ The two paths carry the *same* messages, and the app must tolerate receiving bot
 ## 2. The transport swap
 
 The server already had exactly one place where alerts fan out: `api/admin.py` writes the row,
-drops the snapshot cache, then broadcasts. S3 adds one line per broadcast — the same message also
+drops the snapshot cache, then broadcasts. Push adds one line per broadcast — the same message also
 goes to `services/push.py`:
 
 ```
@@ -194,7 +194,7 @@ exists. Add that when iOS is actually shipped; today the prototype is Android-fi
 
 **Ordering.** Push and socket may both deliver the same warning. The app must key on
 `warning.id`, ignore a duplicate, and ignore unknown `data.type` values so a later server can add
-one (the same rule already applied to the WebSocket in B2b).
+one (the same rule already applies to the WebSocket).
 
 ## 7. Sequence
 

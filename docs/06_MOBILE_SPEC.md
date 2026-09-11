@@ -14,7 +14,7 @@ toolchain + Chrome OK; `flutter build web` and `flutter build apk --debug` succe
 flutter_riverpod, go_router, dio, shared_preferences, path_provider, connectivity_plus,
 geolocator, permission_handler, flutter_map, latlong2, fl_chart, intl + flutter_localizations
 (`flutter gen-l10n` via `l10n.yaml`), web_socket_channel, share_plus, url_launcher,
-flutter_animate, package_info_plus, cached_network_image, **home_widget** (S2, Android home-screen
+flutter_animate, package_info_plus, cached_network_image, **home_widget** (Android home-screen
 widget — Android-only, imported behind a conditional import so the web build never sees its
 `dart:io`). Card re-rank animation: use
 `animated_reorderable_list` (or `great_list_view`) if it builds on the installed Flutter; otherwise a
@@ -32,7 +32,7 @@ app/lib/
   data/ api_client.dart (Dio, auth interceptor, lang header, error mapping)
         models/ (hand-written fromJson: user, location, place, warning, card, home_response, snapshot subset)
         cache/ json_file_cache.dart (per key file under app documents dir; get/put with timestamp)
-        widget/ widget_snapshot.dart + home_widget_bridge.dart{,_io,_stub} (S2 — the Android home-screen widget's payload and its platform bridge)
+        widget/ widget_snapshot.dart + home_widget_bridge.dart{,_io,_stub} (the Android home-screen widget's payload and its platform bridge)
         repositories/ auth_repo, profile_repo, home_repo (cache-first + refresh), places_repo, locations_repo, events_repo (batched, flushed every 10 s or on background), radar_repo
         ws/ alerts_socket.dart (reconnect w/ backoff, pong, exposes stream)
   features/
@@ -75,7 +75,7 @@ card, Restore hidden cards (if any). Each sends the event and refreshes home.
 - Offline: connectivity banner; all actions that need network are disabled with tooltip.
 
 ## Renderers (kind → what to draw)
-hero: big temp, condition icon, feels-like, hi/lo, 4 micro-stats (humidity, wind, UV, AQI), sunrise/sunset strip, "All clear" pill or warning pill · warnings: list of severity-coloured tiles with validity, tap → detail · nowcast: 3-h text with severity chip · hourly: horizontal 24-h strip (icon, temp, rain %) · daily: 7 rows (icon, hi/lo bar, rain %) · radar: small `flutter_map` with latest RainViewer frame + "Open map" · gauge: semicircular gauge with category colour and value (aqi CPCB colours, comfort, soil moisture) · metric: value + unit + category + one-line advice (+ tiny sparkline if hourly present) · advice_list: icon + title + detail rows (packing grouped per place) · timeline: horizontal bar of windows with verdict colours and labels, rows **sorted by start time** and any window on a later day prefixed with its day ("Tomorrow 07:00 – 09:00") — docs/02 card 22 publishes each window's *next occurrence*, so after 09:00 the morning drop is tomorrow and payload order no longer matches the bar (C1); and `data.advice` below them unless it repeats `insight.detail`, which the shell already prints (C1) · alert: severity tile with level, peak time, advice bullets · sea: sea-state badge, wave height/period, SST, swim/surf pills, 24-h wave sparkline · tides: 24-h tide curve with high/low markers, plus its own "Estimated" chip **only when the host is not already showing one** (C1: the card shell and the detail header both draw it from `card.estimated`, so an unconditional chip appeared twice on one card) · places: horizontal cards per saved place (local time, temp, icon, hi/lo, severity dot) · bar_chart: daily mm/probability bars with focus day highlighted · generic: title/subtitle/insight + key-value grid of `data` scalars (never crash on unknown cards).
+hero: big temp, condition icon, feels-like, hi/lo, 4 micro-stats (humidity, wind, UV, AQI), sunrise/sunset strip, "All clear" pill or warning pill · warnings: list of severity-coloured tiles with validity, tap → detail · nowcast: 3-h text with severity chip · hourly: horizontal 24-h strip (icon, temp, rain %) · daily: 7 rows (icon, hi/lo bar, rain %) · radar: small `flutter_map` with latest RainViewer frame + "Open map" · gauge: semicircular gauge with category colour and value (aqi CPCB colours, comfort, soil moisture) · metric: value + unit + category + one-line advice (+ tiny sparkline if hourly present) · advice_list: icon + title + detail rows (packing grouped per place) · timeline: horizontal bar of windows with verdict colours and labels, rows **sorted by start time** and any window on a later day prefixed with its day ("Tomorrow 07:00 – 09:00") — docs/02 card 22 publishes each window's *next occurrence*, so after 09:00 the morning drop is tomorrow and payload order no longer matches the bar (QA fix); and `data.advice` below them unless it repeats `insight.detail`, which the shell already prints (QA fix) · alert: severity tile with level, peak time, advice bullets · sea: sea-state badge, wave height/period, SST, swim/surf pills, 24-h wave sparkline · tides: 24-h tide curve with high/low markers, plus its own "Estimated" chip **only when the host is not already showing one** (QA fix: the card shell and the detail header both draw it from `card.estimated`, so an unconditional chip appeared twice on one card) · places: horizontal cards per saved place (local time, temp, icon, hi/lo, severity dot) · bar_chart: daily mm/probability bars with focus day highlighted · generic: title/subtitle/insight + key-value grid of `data` scalars (never crash on unknown cards).
 
 ## i18n
 ARB for chrome; backend localizes card content via `lang`. Locale persisted in settings; changing it
@@ -89,13 +89,13 @@ icon (simple cloud/sun glyph in IMD blue, generated as PNG in repo — no IMD lo
 `MausamWidgetProvider` receiver and its `android.appwidget.provider` meta-data (see §Home-screen
 widget).
 
-> **minSdk note (B0).** Flutter 3.47 runs `MinSdkVersionMigration` on every Android build, which
+> **minSdk note.** Flutter 3.47 runs `MinSdkVersionMigration` on every Android build, which
 > rewrites any hardcoded `minSdk` of 16–23 back to `minSdk = flutter.minSdkVersion`. A pinned 23
 > therefore cannot survive a build. `flutter.minSdkVersion` is 24 and Flutter warns below 24
 > (`warnMinSdkVersion = 24`, `errorMinSdkVersion = 23`), so the app targets **Android 7.0+**.
-> Do not re-pin 23 — it will be silently reverted. Recorded in `docs/PROGRESS.md` > Deviations.
+> Do not re-pin 23 — it will be silently reverted. Recorded in `docs/DEVIATIONS.md`.
 
-## Home-screen widget (Android, phase S2)
+## Home-screen widget (Android)
 A launcher widget that shows the last `/home` payload without opening the app: the **hero** card
 (temperature, condition, location, how old the reading is) and the **top pinned card** (title +
 one-line insight, in its severity colour). Package: `home_widget` ^0.9.4; provider class
@@ -106,7 +106,8 @@ one-line insight, in its severity colour). Package: `home_widget` ^0.9.4; provid
   compact JSON blob and written through `HomeWidgetBridge` into the plugin's shared storage
   (`HomeWidgetPreferences`), followed by an update broadcast. Selection: `hero` as-is; pinned =
   `pinned.first`, else `cards.first`. A `warnings` card takes the IMD `color_hex` from its payload,
-  everything else the severity band from §theme; `estimated` travels with it (CLAUDE.md §6).
+  everything else the severity band from §theme; `estimated` travels with it (docs/00 principle 6,
+  honest data).
   Alongside the snapshot the app stores what a Flutter-less process needs to refresh on its own:
   backend URL, guest token, lat/lon, personas, language, units.
 - **Background refresh.** `MausamWidgetWorker` (Android `WorkManager`, unique periodic work, ~60

@@ -43,6 +43,11 @@ Users may select **1–3 personas** (first selected = primary). Everyone also ge
    Open-Meteo otherwise); modelled values (tides, pollen, traffic) are labelled "Estimated".
 7. **Server-driven.** The backend decides card order, content and copy; IMD could add a card
    without an app release.
+8. **Not an IMD product.** This is a Team Mausam prototype: app id `com.teammausam.mausam_app`,
+   display name "Mausam Personalized (Team Mausam prototype)", IMD's public colour conventions
+   for warnings but no IMD logos or branding, and no claim of IMD or MoES endorsement.
+9. **No secrets in the repository.** The default setup needs no API key; optional keys and
+   service-account files live in an untracked `.env` or outside the tree, never in git.
 
 ## What will impress judges (and how we show it)
 - Complete coverage: **all 8 personas × every bullet** in the PS maps to a card (see 02).

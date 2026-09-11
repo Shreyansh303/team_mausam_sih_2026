@@ -4,7 +4,7 @@
 **Category: Software · Theme: Smart Automation · Team Mausam**
 
 This is the source text for the idea-presentation deck
-(`docs/TeamMausam_SIH2026_PS26076.pptx`) and for anything a team member has to say out loud.
+(`submission/TeamMausam_SIH2026_PS26076.pptx`) and for anything a team member has to say out loud.
 **Every number below is measured, not estimated**, and each one names where it was measured.
 The evidence file is [`QA_REPORT.md`](QA_REPORT.md) — an end-to-end walk of the judge demo script
 against a live backend and the real app build, verdict **PASS**. If a claim is not in this document,
@@ -198,7 +198,7 @@ looking at the demo*, and all nine are fixed, each with a regression test that f
 | Learning: "Show less" taps to demote a card out of the feed | **3** (rank 3 → 8, score 0.470 → 0.268) | QA_REPORT step 6c |
 | Release APK | **62 496 756 B**, 3 ABIs, minSdk 24 / targetSdk 36 | QA_REPORT §Release APK |
 | CI | `backend` and `flutter` workflows both green on GitHub; the flutter job uploads a release APK and a web bundle | `.github/workflows/` |
-| QA screenshots | **40** (`docs/screenshots/c1_*.png`) | QA_REPORT |
+| QA screenshots | **40** (`assets/screenshots/c1_*.png`) | QA_REPORT |
 
 **Operational viability.** Zero-setup by design: no API key, no Docker daemon, no database server
 for the demo, SQLite on first boot, and a Docker/Render path for deployment. The engine has no I/O,
@@ -211,7 +211,7 @@ leaves the process.
 |---|---|
 | **IMD APIs need whitelisting** and answer `401` from any un-approved host | `providers/imd.py` is written against the real endpoints, detects the `401`, backs off 10 min and falls through to Open-Meteo. `README.md` §IMD integration path documents the exact request to file (static IP/domain, the four endpoints, the rate, and a request for the unpublished district-id list). The moment access is granted, `GET /health` reports `imd = available` and IMD warnings merge ahead of everything else — **no code change**. |
 | A judged demo depends on the network | The offline path is a *feature* and is on the demo script: kill the backend and the home still renders from cache with an honest freshness chip; clear the cache too and it falls back to a bundled sample payload that labels itself "Sample data". |
-| Modelled values could be mistaken for observations | `"source": "estimated"` on the value, an **Estimated** chip in the UI, and a disclaimer on tides. Enforced by convention (CLAUDE.md §6) and visible in QA_REPORT step 4d. |
+| Modelled values could be mistaken for observations | `"source": "estimated"` on the value, an **Estimated** chip in the UI, and a disclaimer on tides. Enforced by convention (docs/00 principle 6, honest data) and visible in QA_REPORT step 4d. |
 | A ranker that cannot be explained cannot be operated | Every card ships ≤ 4 reasons; the formula is normative in docs/03 and asserted by nine engine tests including determinism, warning-pinning, coastal gating and persona coverage. |
 | Learning could bury a safety-critical card | The engagement term is bounded at ±0.25 and urgency ≥ 0.8 pins regardless. A user cannot dismiss their way out of a red warning. |
 
@@ -272,15 +272,15 @@ run, and photographed per persona in QA_REPORT step 3.
 
 ## 7 · Future scope
 
-Priority order, all four scoped in `docs/07_PHASES.md` §Stretch and `docs/PROGRESS.md`.
+Priority order; the same four are listed in the top-level `README.md` §13 Future Scope.
 
-1. **S3 · FCM as the production alert transport.** The WebSocket is the demoable stand-in and proves
+1. **FCM as the production alert transport.** The WebSocket is the demoable stand-in and proves
    the re-rank path end to end, but it only reaches an app that is open. Firebase Cloud Messaging
    delivers the same `warning_issued` payload to a backgrounded or closed app; the server-side
    broadcast point already exists (one place in the admin router), so this is a transport swap plus
    a Firebase project, not an architecture change. **This is the one that matters for a real
    deployment** — a warning that only reaches foregrounded apps is not a warning system.
-2. **S1 · ML ranker v2.** Logistic regression over the events already being logged, predicting
+2. **ML ranker v2.** Logistic regression over the events already being logged, predicting
    P(tap) from persona / daypart / season / urgency / coastal / card-type features, blended as
    `score += 0.2 · (p_tap − 0.5)` behind an `ENGINE_ML=1` flag, with the deterministic v1 formula
    staying as the fallback and the floor. Specified in docs/03 §Learning v2. The bound matters: an
@@ -289,11 +289,11 @@ Priority order, all four scoped in `docs/07_PHASES.md` §Stretch and `docs/PROGR
    per-key fallback); completing them and adding the remaining scheduled languages is translation
    work, not engineering — the pipeline, the parity test and the fallback are already in place, and
    `test/l10n_test.dart` fails the build if a locale drifts.
-4. **S2 · Android home-screen widget.** The single highest-visibility surface for a weather app, and
+4. **Android home-screen widget.** The single highest-visibility surface for a weather app, and
    the payload it needs (`hero` plus the top pinned card) is already exactly what `/home` returns
    under `?lite=1`.
 
-**Smaller, near-term items** already identified and recorded in `docs/PROGRESS.md`:
+**Smaller, near-term items** already identified:
 
 - A **physical-device smoke test** of the release APK — first launch, the location-permission
   prompt, GPS onboarding and background event flushing are the only paths the web build cannot
@@ -315,8 +315,8 @@ Priority order, all four scoped in `docs/07_PHASES.md` §Stretch and `docs/PROGR
 | Scoring formulas, explainability, learning, required tests | [`03_PERSONALIZATION_ENGINE.md`](03_PERSONALIZATION_ENGINE.md) |
 | REST + WebSocket contract (normative for both sides) | [`04_API_CONTRACT.md`](04_API_CONTRACT.md) |
 | **End-to-end QA walk — every number in §5** | [`QA_REPORT.md`](QA_REPORT.md) |
-| Build state, deviations, per-phase handover notes | [`PROGRESS.md`](PROGRESS.md) |
-| Screenshots (40 from the QA walk) | `docs/screenshots/c1_*.png` |
+| Where the build deviates from the specs, and why | [`DEVIATIONS.md`](DEVIATIONS.md) |
+| Screenshots (40 from the QA walk) | `assets/screenshots/c1_*.png` |
 | Repository | <https://github.com/Shreyansh303/team_mausam_sih_2026> |
 
 **Team Mausam** — Smart India Hackathon 2026, PS 26076 (MoES / IMD), category Software, theme Smart

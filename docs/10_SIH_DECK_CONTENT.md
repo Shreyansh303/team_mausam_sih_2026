@@ -34,7 +34,7 @@ Team Name               – Team Mausam
 > MoES. Uses IMD's public warning colour conventions, no IMD logos.
 
 **Visual:** one phone mock at right showing the Parent home screen
-(`docs/screenshots/c1_step03_persona_parent.png`), nothing else. Let slide 2 do the talking.
+(`assets/screenshots/c1_step03_persona_parent.png`), nothing else. Let slide 2 do the talking.
 
 ---
 
@@ -234,7 +234,7 @@ calendar · **10 scenario overlays** for demo. ✅
 |---|---|
 | **IMD APIs need whitelisting**, answer `401` from any un-approved host | `providers/imd.py` is written against the real endpoints, detects the 401, backs off 10 min, falls through. `README.md` documents the exact request to file. On approval `/health` reports `imd = available` and IMD warnings merge first — **no code change**. |
 | A judged demo depends on the network | The offline path **is a demo step**: kill the backend, the home still renders from cache with an honest freshness chip; clear the cache too and it falls back to a bundled sample that labels itself "Sample data". |
-| Modelled values mistaken for observations | `"source": "estimated"` + **Estimated** chip + tides disclaimer. Enforced by convention (CLAUDE.md §6), photographed in QA step 4d. |
+| Modelled values mistaken for observations | `"source": "estimated"` + **Estimated** chip + tides disclaimer. Enforced by convention (docs/00 principle 6, honest data), photographed in QA step 4d. |
 | A ranker that cannot be explained cannot be operated | ≤ 4 reasons per card; formula normative in docs/03; **9 engine tests** including determinism, warning-pinning, coastal gating, persona coverage. |
 | Learning could bury a safety-critical card | Engagement bounded **±0.25**; urgency ≥ 0.8 pins regardless. **A user cannot dismiss their way out of a red warning.** |
 
@@ -354,7 +354,7 @@ Mirror the reference deck: clickable tiles, competitor analysis, proof documents
 | **API contract** — REST + WebSocket, normative for both sides | `docs/04_API_CONTRACT.md` |
 | **Card catalog** — all 33 cards, affinities, gates, urgency rules | `docs/02_CARD_CATALOG.md` |
 | **Push design** — FCM as production alert transport | `docs/09_PUSH_NOTIFICATIONS.md` |
-| **63 screenshots** — every persona, scenario, offline, Hindi | `docs/screenshots/` |
+| **63 screenshots** — every persona, scenario, offline, Hindi | `assets/screenshots/` |
 
 ### STANDARDS & SCIENCE WE IMPLEMENT (not invented — cite them)
 

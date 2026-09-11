@@ -18,8 +18,8 @@ with the proper HTTP status (400 validation, 401 auth, 404, 429, 502 upstream, 5
 | GET | `/me/card-prefs` | ✓ | `{pins:[type], hidden:[type]}` |
 | PUT | `/me/card-prefs` | ✓ | same body → same |
 | POST | `/me/reset-learning` | ✓ | clears engagement + prefs → `{ok:true}` |
-| POST | `/me/devices` | ✓ | *(optional, S3)* `{token, platform?, lat?, lon?, lang?}` → `Device` — register this handset's push token |
-| DELETE | `/me/devices/{token}` | ✓ | *(optional, S3)* `{ok:true}` — unregister one of **your own** tokens |
+| POST | `/me/devices` | ✓ | *(optional)* `{token, platform?, lat?, lon?, lang?}` → `Device` — register this handset's push token |
+| DELETE | `/me/devices/{token}` | ✓ | *(optional)* `{ok:true}` — unregister one of **your own** tokens |
 | GET | `/me/places` | ✓ | `Place[]` |
 | POST | `/me/places` | ✓ | `{name, lat, lon, country, country_code, admin1, admin2, kind}` → `Place` (max 8) |
 | DELETE | `/me/places/{id}` | ✓ | `{ok:true}` |
@@ -36,7 +36,7 @@ with the proper HTTP status (400 validation, 401 auth, 404, 429, 502 upstream, 5
 | POST | `/admin/warnings` | admin | `{severity, hazard, title, description, district?, state?, lat?, lon?, radius_km=75, ttl_minutes=120}` → `Warning`; broadcasts on WS |
 | DELETE | `/admin/warnings/{id}` | admin | `{ok:true}`; broadcasts `warning_cleared` |
 | POST | `/admin/reset-user` `{user_id}` | admin | `{ok:true}` |
-| GET | `/admin/devices` | admin | *(optional, S3)* `{transport, count, devices:[AdminDevice]}` — registered push devices |
+| GET | `/admin/devices` | admin | *(optional)* `{transport, count, devices:[AdminDevice]}` — registered push devices |
 | GET | `/admin/console` | – (key entered in page) | HTML demo console |
 | WS | `/ws/alerts?token=&lat=&lon=` | ✓ | live alerts (below) |
 
@@ -140,7 +140,7 @@ filter in `/home`: district match, state match for `cyclone|heatwave|cold_wave`,
 `radius_km`. `hello.server_time` is the demo clock when one is set, else real server time in IST.
 The server does not reply to `location`; the next `warning_issued` simply uses the new position.
 
-## Devices and push (optional — S3)
+## Devices and push (optional)
 
 Everything in this section is **optional**: with no Firebase configuration the backend keeps the
 registry, logs every intended send and delivers nothing, and the app does not have to call these
@@ -185,7 +185,7 @@ ignore a message it already handled — push and socket can both deliver the sam
 `meta` optional `{location_id, position}`. Batch ≤ 100. `pin/unpin/hide/unhide` also update
 card-prefs server-side so the app does not need a second call.
 
-### Ranker v2 (S1, additive — nothing here changes an existing field)
+### Ranker v2 (additive — nothing here changes an existing field)
 With `ENGINE_ML=1` the backend also blends a learned term into `Card.score` and can add **one new
 reason code** to `Card.reasons`:
 

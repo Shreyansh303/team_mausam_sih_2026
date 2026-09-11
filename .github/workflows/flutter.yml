@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Pinned to the toolchain the app was built with (app/pubspec.yaml, docs/PROGRESS.md → H0).
+  # Pinned to the toolchain the app was built with (app/pubspec.yaml).
   FLUTTER_VERSION: "3.47.2"
 
 jobs:

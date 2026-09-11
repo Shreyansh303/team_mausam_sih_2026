@@ -61,7 +61,7 @@ Stored per user per card type (guests included via their guest token). `dismiss`
 Effect is immediate on next `/home`. `hide` removes the card until `unhide`. Visible in demo after
 2 dismisses (−0.12) or 1 pin (pinned).
 
-## Learning (v2, shipped as S1 — behind `ENGINE_ML=1`)
+## Learning (v2, shipped behind `ENGINE_ML=1`)
 Per-user logistic regression predicting `p_tap` from the events already logged by `POST /events`,
 blended into the score as `score += 0.2 * (p_tap - 0.5)`. **v1 is the default and the fallback**:
 with `ENGINE_ML=0` (the default) `/home` is byte-identical to v1 and `engine/ml.py` is never

@@ -333,8 +333,8 @@ $env:HTTP_PROXY  = 'http://proxy.example:8080'
 ### 7.9 `java.io.IOException: Unable to establish loopback connection` from Gradle
 
 **In a normal user terminal this does not happen — Gradle and `flutter build apk` work
-out of the box.** It only shows up inside restricted/automation shells (the Claude Code tool
-sandbox, some CI containers, and machines where a security product filters `%LOCALAPPDATA%\Temp`).
+out of the box.** It only shows up inside restricted shells (some CI containers, and machines
+where a security product filters `%LOCALAPPDATA%\Temp`).
 
 Root cause (confirmed with a 10-line JDK repro, not guesswork): JDK 17's `Selector.open()` builds
 its internal pipe from an **AF_UNIX socket pair**, and it creates the socket file in
@@ -375,7 +375,7 @@ Downloads in `D:\sdk\_downloads` are reused, so a re-install is much faster than
 
 ## 8. Pointing the app at the backend over the LAN
 
-`app/lib/core/config.dart` (added in phase B1) picks a default backend URL per platform:
+`app/lib/core/config.dart` picks a default backend URL per platform:
 
 | Where the app runs | Default backend URL |
 |---|---|
