@@ -9,36 +9,6 @@ prototype: one laptop, one phone (or a Chrome tab), and a backend running locall
 
 The link is public — it needs no sign-in and no access request.
 
-## The demo script it follows
-
-The recording walks the five-minute demo script the project is built around, reproduced below. The
-script itself is [`../docs/00_VISION.md`](../docs/00_VISION.md) §Judge demo script, and
-[`../docs/QA_REPORT.md`](../docs/QA_REPORT.md) walks the same ten steps with a screenshot of each.
-There is no hardware component.
-
-1. **Onboard** — choose the language, pick **Parent + Commuter**, set the location to **Delhi**
-   (GPS or search).
-2. **Morning home** — set the demo clock to **07:30**: *School commute* and *Commute conditions*
-   rank first, each with its reasons; the hero shows current conditions, with the nowcast and any
-   rain alert below.
-3. **Persona switch** — tap the **Fitness** chip: best workout window, sun times, wind and heat
-   alert move up; then **Health**: AQI, pollen, UV, humidity.
-4. **Coastal switch** — change the location to **Goa**: Sea conditions, Tides (marked
-   **Estimated**) and Water temperature appear; they are gated on the location being coastal.
-5. **Live warning** — from the admin console on the laptop, push
-   **Orange · Thunderstorm with gusty winds** for Delhi: the phone shows the banner and the
-   warning card animates to the top of the feed.
-6. **Explainability and learning** — long-press **Pollen** → *Why am I seeing this?* →
-   *Show less* two or three times → the card drops into "More for you"; **Pin** lifts a card to
-   the top on the next refresh.
-7. **Offline** — switch on airplane mode: the home still renders from cache with the freshness
-   chip ("Updated N min ago").
-8. **Hindi** — switch the language to हिन्दी: the app chrome *and* the card insights are localized.
-9. **Traveller** — saved places **Mumbai + London** → packing suggestions
-   ("Carry a raincoat in London").
-10. **Close on the architecture** — FastAPI engine, the provider fallback chain
-    (IMD → Open-Meteo → estimated), server-driven cards.
-
 ## Evidence without the video
 
 - [`../docs/QA_REPORT.md`](../docs/QA_REPORT.md) — an end-to-end walk of all ten steps above,
