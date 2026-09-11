@@ -151,11 +151,11 @@ changed. Concretely:
 
 ```text
 ┌──────────────── Flutter app (Android / iOS / web) ─────────────────┐
-│ Onboarding → Home (ranked cards) → Detail pages → Map → Places      │
-│ Riverpod · Dio · JSON file cache (offline) · WS client · ARB i18n   │
+│ Onboarding → Home (ranked cards) → Detail pages → Map → Places     │
+│ Riverpod · Dio · JSON file cache (offline) · WS client · ARB i18n  │
 └──────────────▲──────────────────────────────────────▲──────────────┘
-               │ REST  /api/v1  (JSON, < 60 KB)        │ WS /ws/alerts
-┌──────────────┴──────────────────────────────────────┴──────────────┐
+               │ REST  /api/v1  (JSON, < 60 KB)       │ WS /ws/alerts
+┌──────────────┴──────────────────────────────────────┴─────────────-─┐
 │ FastAPI backend                                                     │
 │  api/       health · locations · weather · auth · me · home ·       │
 │             events · admin · ws                                     │
