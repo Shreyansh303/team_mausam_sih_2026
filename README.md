@@ -191,9 +191,10 @@ SUBMISSION_GUIDE.md           how this repository maps to the SIH submission tem
 LICENSE                       MIT
 requirements.txt              pointer to backend/requirements.txt
 submission/
-  PRESENTATION.md             link to the final presentation
+  PRESENTATION.md             the presentation files, slide by slide, and the viewer link
   DEMO.md                     link to the demo video and what it shows
-  TeamMausam_SIH2026_PS26076.pptx   the 6-slide SIH deck
+  TeamMausam_SIH2026_Presentation.pptx  the final 6-slide SIH deck
+  TeamMausam_SIH2026_PS26076.pptx       companion deck built from docs/07_PITCH.md
 assets/screenshots/           63 app screenshots; README.md there indexes them
 docs/
   architecture.md             reviewer-facing architecture overview
@@ -227,7 +228,7 @@ scripts/                      toolchain setup + optional Android emulator (.ps1 
 | Source code | `backend/` (FastAPI) and `app/` (Flutter) |
 | Architecture / technical documentation | `docs/` |
 | Screenshots | `assets/screenshots/` |
-| Final PPT | `submission/TeamMausam_SIH2026_PS26076.pptx` |
+| Final PPT | `submission/TeamMausam_SIH2026_Presentation.pptx` |
 | Demo video link | `submission/DEMO.md` |
 | Project overview | `README.md` |
 | Deviations from spec | `docs/DEVIATIONS.md` |
@@ -235,11 +236,18 @@ scripts/                      toolchain setup + optional Android emulator (.ps1 
 
 ## 8. Final Presentation
 
-The deck is in the repository: [`submission/TeamMausam_SIH2026_PS26076.pptx`](submission/TeamMausam_SIH2026_PS26076.pptx)
-(6 slides, generated from [`docs/07_PITCH.md`](docs/07_PITCH.md); finale content in
-[`docs/09_SIH_DECK_CONTENT.md`](docs/09_SIH_DECK_CONTENT.md)).
+The final deck is in the repository:
+[`submission/TeamMausam_SIH2026_Presentation.pptx`](submission/TeamMausam_SIH2026_Presentation.pptx)
+(6 slides, 7.1 MB) — title and problem statement, solution overview, technical approach,
+feasibility and viability, impact and benefits, research and references.
 
-External viewer link (Google Drive): <https://drive.google.com/drive/u/0/folders/1w29cHLEjk3sNfNN1hwYWn3AOmVcMml2t> — see
+A companion deck is kept alongside it:
+[`submission/TeamMausam_SIH2026_PS26076.pptx`](submission/TeamMausam_SIH2026_PS26076.pptx)
+(6 slides with speaker notes, generated from [`docs/07_PITCH.md`](docs/07_PITCH.md); finale content
+in [`docs/09_SIH_DECK_CONTENT.md`](docs/09_SIH_DECK_CONTENT.md)).
+
+External viewer link (Google Drive), holding the same final deck:
+<https://drive.google.com/drive/u/0/folders/1w29cHLEjk3sNfNN1hwYWn3AOmVcMml2t> — see
 [`submission/PRESENTATION.md`](submission/PRESENTATION.md) for a slide-by-slide summary.
 
 ## 9. Demo Video

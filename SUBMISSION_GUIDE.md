@@ -22,8 +22,8 @@ Repository: <https://github.com/Shreyansh303/team_mausam_sih_2026>
 | Setup and run instructions that work | done | `README.md` §11–12; long form for every platform in `docs/RUNNING.md`; Windows toolchain in `docs/SETUP_WINDOWS.md` |
 | Team members are listed | done | `README.md` §1 — six names; also named at the end of `docs/07_PITCH.md`. Individual contributions are visible in the git history |
 | Screenshots | done | `assets/screenshots/` (63 PNG files) with the index `assets/screenshots/README.md`; a selection is embedded in `README.md` §10 |
-| Final PPT in `submission/` | done | `submission/TeamMausam_SIH2026_PS26076.pptx` (six slides, speaker notes), described in `submission/PRESENTATION.md` and linked from `README.md` §8 |
-| Drive/OneDrive link to the PPT (only if too large) | done (optional) | Google Drive folder linked from `submission/PRESENTATION.md` §External presentation link and `README.md` §8 — the file is 1.4 MB and tracked, so the link is a convenience |
+| Final PPT in `submission/` | done | `submission/TeamMausam_SIH2026_Presentation.pptx` (6 slides, 7.1 MB), with `submission/TeamMausam_SIH2026_PS26076.pptx` (six slides, speaker notes) kept as the companion build; both described in `submission/PRESENTATION.md` and linked from `README.md` §8 |
+| Drive/OneDrive link to the PPT (only if too large) | done (optional) | Google Drive folder linked from `submission/PRESENTATION.md` §External presentation link and `README.md` §8 — the final deck is 7.1 MB and tracked, so the link is a convenience |
 | Demo video link (optional, recommended) | done | YouTube link in `submission/DEMO.md` §Demo video link and `README.md` §9 |
 | Licence | done | `LICENSE` (MIT, Team Mausam) |
 | Python requirements at the root | done | `requirements.txt` → `backend/requirements.txt` |
@@ -40,9 +40,10 @@ team_mausam_sih_2026/
 ├── LICENSE                            MIT
 ├── requirements.txt                   -> backend/requirements.txt
 ├── submission/
-│   ├── PRESENTATION.md                the deck, and where its content comes from
+│   ├── PRESENTATION.md                the decks, and where their content comes from
 │   ├── DEMO.md                        demo video link and the ten-step script it records
-│   └── TeamMausam_SIH2026_PS26076.pptx
+│   ├── TeamMausam_SIH2026_Presentation.pptx   the final deck
+│   └── TeamMausam_SIH2026_PS26076.pptx        companion deck, with speaker notes
 ├── assets/
 │   └── screenshots/                   63 app screenshots + README.md index
 ├── docs/
@@ -58,7 +59,7 @@ team_mausam_sih_2026/
 │   ├── 04_API_CONTRACT.md             REST + WebSocket contract (normative for both sides)
 │   ├── 05_BACKEND_SPEC.md             FastAPI structure, providers, derived metrics, scenarios
 │   ├── 06_MOBILE_SPEC.md              Flutter structure, screens, renderers, offline, i18n
-│   ├── 07_PITCH.md                    pitch text — the source of the deck
+│   ├── 07_PITCH.md                    pitch text — the source of the companion deck
 │   ├── 08_PUSH_NOTIFICATIONS.md       FCM design for the production alert transport
 │   ├── 09_SIH_DECK_CONTENT.md         finale-deck slide-by-slide content
 │   ├── 10_IMPACT_NUMBERS.md           sourced external impact statistics
@@ -80,11 +81,12 @@ team_mausam_sih_2026/
 
 ## Presentation
 
-The final deck is `submission/TeamMausam_SIH2026_PS26076.pptx`; `submission/PRESENTATION.md`
-lists its six slides and the documents each slide draws on (`docs/07_PITCH.md`,
-`docs/09_SIH_DECK_CONTENT.md`, `docs/10_IMPACT_NUMBERS.md`). It also carries a Google Drive viewer
-link for reviewers who would rather open the deck in a browser; the tracked file is the
-authoritative copy.
+The final deck is `submission/TeamMausam_SIH2026_Presentation.pptx`. The companion build
+`submission/TeamMausam_SIH2026_PS26076.pptx` is kept alongside it for its speaker notes.
+`submission/PRESENTATION.md` lists the six slides of each and the documents they draw on
+(`docs/07_PITCH.md`, `docs/09_SIH_DECK_CONTENT.md`, `docs/10_IMPACT_NUMBERS.md`). It also carries a
+Google Drive viewer link for reviewers who would rather open the deck in a browser; the tracked
+file is the authoritative copy.
 
 ## Demo video
 
@@ -139,12 +141,12 @@ check `git status` before every push anyway.
    cd app && flutter analyze && flutter test
    ```
 
-   Both suites run fully offline. If the counts have moved since the deck was made, update
-   slide 4 (`submission/PRESENTATION.md` §Requirements).
+   Both suites run fully offline. If the counts have moved since the companion deck was made,
+   update its slide 4 (`submission/PRESENTATION.md` §Requirements).
 2. **Check the repository logged out.** Open
    <https://github.com/Shreyansh303/team_mausam_sih_2026> in a private/incognito window and
    confirm the README renders, the screenshots in §10 display, and
-   `submission/TeamMausam_SIH2026_PS26076.pptx` downloads.
+   `submission/TeamMausam_SIH2026_Presentation.pptx` downloads.
 3. **Check every external link logged out** — the demo video and, if used, the deck link — in
    the same private window.
 4. **Check for secrets one last time:** `git status` shows no `.env`, `google-services.json`,
