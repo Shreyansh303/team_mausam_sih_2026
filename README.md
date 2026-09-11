@@ -16,12 +16,58 @@ a warning is pushed over a WebSocket, works offline from cache, and speaks Engli
 > and is not affiliated with or endorsed by IMD or MoES.** It uses IMD's public colour conventions
 > for warnings but no IMD logos or branding. The Android app id is `com.teammausam.mausam_app` and
 > its display name is "Mausam Personalized (Team Mausam prototype)". Forecast data comes from
-> Open-Meteo unless an IMD-whitelisted deployment is configured (see
-> [IMD integration path](#imd-integration-path)); anything modelled is labelled **Estimated**.
+> Open-Meteo unless an IMD-whitelisted deployment is configured (see the IMD integration path in
+> [§13 Future Scope](#13-future-scope) and
+> [`backend/README.md`](backend/README.md#imd-integration-needs-whitelisting)); anything modelled
+> is labelled **Estimated**.
 
 ---
 
-## What it does
+## 1. Project Information
+
+- **Project Title:** Mausam Personalized — a persona-aware, self-adapting home screen for the Mausam app
+- **PS ID:** 26076
+- **PS Title:** Development of personalized homepage for 'Mausam' mobile application
+- **Organisation:** Ministry of Earth Sciences (MoES) / India Meteorological Department (IMD)
+- **Category:** Software
+- **Theme:** Smart Automation
+- **Team:** Team Mausam
+- **Repository URL:** <https://github.com/Shreyansh303/team_mausam_sih_2026>
+
+**Team members** (contributions are visible in the git history)
+
+| Name | Role | GitHub |
+|---|---|---|
+| `<MEMBER_NAME>` | `<ROLE>` | `<GITHUB_HANDLE>` |
+| `<MEMBER_NAME>` | `<ROLE>` | `<GITHUB_HANDLE>` |
+| `<MEMBER_NAME>` | `<ROLE>` | `<GITHUB_HANDLE>` |
+
+## 2. Problem Statement
+
+**Development of personalized homepage for 'Mausam' mobile application** (SIH 2026 · PS 26076 ·
+MoES / India Meteorological Department):
+
+- Health-conscious users: Highlight Air Quality Index (AQI), pollen count, UV index, and humidity levels to help users manage allergies, asthma, or skin sensitivity.
+- Outdoor fitness enthusiasts: Show sunrise/sunset times, 'best running hours,' wind speed, and heat alerts to optimize workout planning.
+- Beachgoers & surfers: Display sea conditions, tide timings, wave height, and water temperature for safe and enjoyable beach activities.
+- Travelers: Provide quick access to saved destinations, severe weather alerts for flights, and packing suggestions (e.g., 'Carry a raincoat in London').
+- Parents & families: Emphasize school commute conditions, rain alerts, and severe weather warnings to plan daily routines.
+- Agriculture & gardeners: Show soil moisture, rainfall predictions, frost alerts, and seasonal planting guidance.
+- Commuters: Integrate weather with traffic updates, visibility conditions, and alerts for storms or fog that affect travel.
+- Event planners: Offer extended forecasts, probability of rain, and 'comfort index' for outdoor gatherings or weddings.
+
+A single fixed home screen cannot serve these eight groups at once: the soil moisture a farmer needs
+at dawn is noise to a commuter, and the AQI a parent checks before the school run is buried under a
+7-day forecast a surfer never reads. What matters also changes with the hour, the season, the coast
+and any active warning — so the screen has to be ranked per person and per moment, and say *why*.
+
+## 3. Proposed Solution
+
+A **server-driven, ranked home screen**. The backend knows the user's personas, the location and the
+live conditions; it scores every eligible card as *relevance × context + urgency + learning*, orders
+them, attaches human-readable reasons, localizes the copy and returns the finished screen. The app
+renders what it is given, reports what the user did, and re-fetches when the server says something
+changed. Concretely:
 
 **Eight personas** (users pick 1–3; the first is primary, everyone also gets an implicit `base`):
 
@@ -44,7 +90,8 @@ a warning is pushed over a WebSocket, works offline from cache, and speaks Engli
 - **Explainable.** Every card carries up to four reasons ("Because you follow Parenting",
   "Early-morning window", "AQI is Very Poor right now"); long-press opens *Why am I seeing this?*
 - **Learning.** Taps, expands, pins and dismissals are sent back and adjust the score immediately —
-  a few dismissals demote a card out of the feed, a pin pins it (measured: three, see step 6).
+  a few dismissals demote a card out of the feed, a pin pins it (see step 6 of the walk-through
+  in §12).
 - **Live re-rank.** An orange/red warning pushed from the admin console reaches every connected
   client over `/ws/alerts` in milliseconds; the app shows a banner, re-fetches and animates the
   warning card to the top.
@@ -52,46 +99,56 @@ a warning is pushed over a WebSocket, works offline from cache, and speaks Engli
   with a freshness chip ("Updated 12 min ago"), falling back to a bundled sample payload.
 - **Multilingual.** English and Hindi are complete (604 backend strings each, plus 353 app-chrome
   strings); Marathi, Tamil and Bengali are partial (54 backend / 69 app keys) with per-key fallback
-  to English. Card copy, advice, window reasons, crop actions and even date labels are localized
-  server-side.
+  to English. Card copy, advice, reasons, crop actions and date labels are localized server-side.
 - **Honest data.** Tides, pollen and traffic are modelled — they carry `"source": "estimated"` and
   the UI shows an **Estimated** chip. Estimates are never presented as observations.
 
-## Screenshots
+## 4. Key Features
 
-**The same morning, eight different home screens** — one backend, one location, only the personas
-change:
+- 33 card types covering every bullet of the problem statement, each with a persona affinity, a
+  data precondition, an insight rule and an urgency rule (`docs/02_CARD_CATALOG.md`).
+- Deterministic scoring engine: `0.5 · relevance · context + 0.5 · urgency + learning`, fully
+  unit-tested, same input → same screen (`docs/03_PERSONALIZATION_ENGINE.md`).
+- Urgency beats preference: any card with urgency ≥ 0.8 (an orange/red warning) is pinned above
+  everything the user has chosen.
+- Context multipliers for time of day, weekday/weekend, IMD season and coastal/inland gating —
+  tides never show at midnight or inland.
+- "Why am I seeing this?" sheet: up to four localized reasons per card, plus pin / hide / show-less actions.
+- Learning loop: engagement events batched to `POST /events`, blended as `0.25 · tanh(x/8)` — bounded,
+  so taps never outrank a warning.
+- Live re-rank over `/ws/alerts`: banner plus animated card move when a warning affecting the user is issued.
+- Offline-first: last `/home` payload cached on device with a freshness chip; bundled sample as last resort.
+- Low-bandwidth mode (`lite=1`, 13.5 KB) and accessibility: large text, screen-reader labels, ≥ 48 dp targets.
+- Server-side localization: English and Hindi complete; Marathi, Tamil, Bengali partial with per-key fallback.
+- Honest data: modelled tides, pollen and traffic carry `"source": "estimated"` and an **Estimated** chip.
+- Admin demo console: ten scenario overlays (heatwave, cyclone, dense fog, frost…), demo clock, warning push.
+- Android home-screen widget (4x1 / 4x2) showing the hero reading and the top pinned card.
+- Provider chain IMD → Open-Meteo → estimated, every value recording its `source`; the IMD client is ready.
 
-| Parent | Commuter | Health |
-|---|---|---|
-| ![Parent](docs/screenshots/c1_step03_persona_parent.png) | ![Commuter](docs/screenshots/c1_step03_persona_commuter.png) | ![Health](docs/screenshots/c1_step03_persona_health.png) |
+## 5. Technology Stack
 
-| Fitness | Beach | Agriculture |
-|---|---|---|
-| ![Fitness](docs/screenshots/c1_step03_persona_fitness.png) | ![Beach](docs/screenshots/c1_step03_persona_beach.png) | ![Agriculture](docs/screenshots/c1_step03_persona_agriculture.png) |
+- **Mobile app:** Flutter (stable 3.47.x) · Riverpod · go_router · Dio · flutter_map with OSM
+  tiles · fl_chart · intl/ARB localization · JSON file cache · WebSocket client · Android
+  app-widget (Kotlin).
+- **Backend:** FastAPI on Python 3.13 · Pydantic v2 · httpx · SQLAlchemy 2 · JWT (HS256) with
+  guest tokens and a demo OTP (`123456`) · pure-Python ranking engine · optional logistic-regression
+  ranker behind `ENGINE_ML=1`.
+- **Data & storage:** SQLite by default (`backend/data/mausam.db`), PostgreSQL via `DATABASE_URL`;
+  in-process TTL cache (forecast 10 min, air 15 min, marine 30 min, geocode 24 h), Redis via
+  `REDIS_URL`.
+- **Live alerts:** WebSocket `/ws/alerts` (demoable, no Firebase project needed); Firebase Cloud
+  Messaging implemented server-side as the production transport (`docs/09_PUSH_NOTIFICATIONS.md`).
+- **Data sources:** IMD `current_wx_api` / `nowcastapi` / `warnings_district_api` / `aws_data_api`
+  (need IP/domain whitelisting; return `401` otherwise) · Open-Meteo forecast, air quality, marine
+  and geocoding (keyless) · BigDataCloud reverse geocoding (keyless) · RainViewer radar (keyless) ·
+  optional CPCB via data.gov.in and TomTom traffic (free keys; **estimated** without them).
+- **Deployment & CI:** Docker + `infra/docker-compose.yml` · Render free tier via
+  `infra/render.yaml` · GitHub Actions — `backend.yml` runs the offline pytest suite,
+  `flutter.yml` runs analyze/test, builds `app-release.apk` as an artifact and builds web.
 
-| Traveller | Event planner | Offline (cache) |
-|---|---|---|
-| ![Traveller](docs/screenshots/c1_step03_persona_traveler.png) | ![Event planner](docs/screenshots/c1_step03_persona_event_planner.png) | ![Offline home](docs/screenshots/c1_step07_offline_cached.png) |
+## 6. Architecture
 
-**Live re-rank and the rest of the app:**
-
-| Before the warning is pushed | …seconds later, re-ranked | Hindi (`lang=hi`) |
-|---|---|---|
-| ![Before](docs/screenshots/c1_step05_ws_before.png) | ![After the push](docs/screenshots/c1_step05_ws_rerank.png) | ![Hindi](docs/screenshots/c1_step08_hindi_home.png) |
-
-| Radar map | Saved places | Demo sheet |
-|---|---|---|
-| ![Map](docs/screenshots/b2b_map.png) | ![Places](docs/screenshots/c1_step09_places_page.png) | ![Demo sheet](docs/screenshots/c1_extra_demo_sheet.png) |
-
-All shots are the Flutter web build driven against a locally running backend, except the offline
-one (backend killed, rendering from the on-device cache). The `c1_*` set is the end-to-end QA walk
-in [`docs/QA_REPORT.md`](docs/QA_REPORT.md) — 40 shots, one per demo step and variant;
-`docs/screenshots/` also holds earlier per-phase shots and scrolled variants (`b2a_*_scrolled.png`).
-
-## Architecture
-
-```
+```text
 ┌──────────────── Flutter app (Android / iOS / web) ─────────────────┐
 │ Onboarding → Home (ranked cards) → Detail pages → Map → Places      │
 │ Riverpod · Dio · JSON file cache (offline) · WS client · ARB i18n   │
@@ -117,69 +174,149 @@ in [`docs/QA_REPORT.md`](docs/QA_REPORT.md) — 40 shots, one per demo step and 
 (relevance × context + urgency + learning) → localized card payloads → `pinned` / `hero` / `cards` /
 `more_cards`. Measured on an M1 MacBook Air: warm `/home` **2 ms** server-side, **~15 ms** on the
 first request for a location (snapshot cache cold), payload **34.5 KB** (**13.5 KB** under `lite=1`)
-against the < 60 KB / < 400 ms p95 targets in docs/01. The app never computes ranking itself, so IMD
-could add or reorder a card **without an app release**.
+against the < 60 KB / < 400 ms p95 targets in `docs/01_ARCHITECTURE.md`. The app never computes
+ranking itself, so IMD could add or reorder a card **without an app release**.
 
-### Data sources
+Full description: [`docs/architecture.md`](docs/architecture.md). Specifications:
+[`docs/01_ARCHITECTURE.md`](docs/01_ARCHITECTURE.md) (stack, data sources, deployment),
+[`docs/03_PERSONALIZATION_ENGINE.md`](docs/03_PERSONALIZATION_ENGINE.md), [`docs/04_API_CONTRACT.md`](docs/04_API_CONTRACT.md),
+[`docs/05_BACKEND_SPEC.md`](docs/05_BACKEND_SPEC.md) and [`docs/06_MOBILE_SPEC.md`](docs/06_MOBILE_SPEC.md).
 
-| Source | Status | Used for |
-|---|---|---|
-| IMD `current_wx_api` · `nowcastapi` · `warnings_district_api` · `aws_data_api` | **needs IP/domain whitelisting** — returns `401` otherwise; the provider detects this, backs off for 10 min and falls through | station observations, 3-h nowcast, district colour-coded warnings |
-| Open-Meteo forecast | keyless, 200 | current/hourly/daily, UV, visibility, soil moisture & temperature, sunrise/sunset, 16-day |
-| Open-Meteo air quality | keyless, 200 | PM2.5, PM10, O₃, NO₂, SO₂, CO (→ **CPCB** AQI scale) |
-| Open-Meteo marine | keyless, 200 | wave height/period/direction, swell, sea-surface temperature |
-| Open-Meteo geocoding · BigDataCloud reverse geocoding | keyless, 200 | place search (India ranked first), lat/lon → district/state |
-| RainViewer | keyless, 200 | radar frames + tiles (past + nowcast) |
-| CPCB via data.gov.in · TomTom traffic | optional, need a free key | station AQI / real traffic flow; **estimated** without them |
+## 7. Repository Structure
 
-Provider chain per field is **IMD → Open-Meteo → estimated**, and every value records its `source`.
-Details and probe results: [`docs/01_ARCHITECTURE.md`](docs/01_ARCHITECTURE.md).
-
-### Repo map
-
-```
-CLAUDE.md                 working rules for contributors: scope, verification, commit protocol
-docs/                     THE PLAN — specs are normative, code follows docs
-  00_VISION.md            problem statement, personas, principles, judge demo script
-  01_ARCHITECTURE.md      stack decisions, data sources, deployment
-  02_CARD_CATALOG.md      all 33 cards: affinities, data, insight + urgency rules
+```text
+README.md                     project overview (this file)
+SUBMISSION_GUIDE.md           how this repository maps to the SIH submission template
+LICENSE                       MIT
+requirements.txt              pointer to backend/requirements.txt
+submission/
+  PRESENTATION.md             link to the final presentation
+  DEMO.md                     link to the demo video and what it shows
+  TeamMausam_SIH2026_PS26076.pptx   the 6-slide SIH deck
+assets/screenshots/           63 app screenshots; README.md there indexes them
+docs/
+  architecture.md             reviewer-facing architecture overview
+  RUNNING.md                  long-form run guide for every platform
+  DEVIATIONS.md               where the implementation deviates from the numbered specs
+  00_VISION.md                problem statement, personas, product principles, demo script
+  01_ARCHITECTURE.md          stack decisions, data sources (probed), deployment
+  02_CARD_CATALOG.md          all 33 cards: affinities, data, insight + urgency rules
   03_PERSONALIZATION_ENGINE.md  scoring formulas, explainability, learning
-  04_API_CONTRACT.md      REST + WebSocket contract (normative)
-  05_BACKEND_SPEC.md      FastAPI structure, providers, derived-metric formulas
-  06_MOBILE_SPEC.md       Flutter structure, screens, renderers, offline, i18n
-  07_PHASES.md            phase-by-phase work packages
-  08_PITCH.md             SIH idea-presentation content (problem → future scope)
-  09_PUSH_NOTIFICATIONS.md  FCM push design (S3): why the WebSocket is not enough, the
-                          transport swap, message schema, device registry, rollout checklist
-  QA_REPORT.md            end-to-end walk of the judge demo script — verdict PASS
-  TeamMausam_SIH2026_PS26076.pptx   the 6-slide SIH deck, generated from 08_PITCH.md
-  PROGRESS.md             living checklist + per-phase handover notes
-  HANDOFF.md              how to continue this repo cold
-  SETUP_WINDOWS.md        Windows toolchain setup
-  fixtures/               example /home payloads (8 personas + severe + coastal)
-  screenshots/            the images above
-backend/                  FastAPI service (Python 3.13) — see backend/README.md
-app/                      Flutter app (package `mausam_app`)
-infra/                    docker-compose.yml, render.yaml
-scripts/                  toolchain setup (Windows) + optional Android emulator (.ps1 and .sh)
-.github/workflows/        CI: backend pytest (offline) · flutter analyze/test/APK/web
+  04_API_CONTRACT.md          REST + WebSocket contract (normative)
+  05_BACKEND_SPEC.md          FastAPI structure, providers, derived-metric formulas
+  06_MOBILE_SPEC.md           Flutter structure, screens, renderers, offline, i18n, widget
+  08_PITCH.md                 SIH idea-presentation content (problem → future scope)
+  09_PUSH_NOTIFICATIONS.md    FCM push design: transport swap, message schema, device registry
+  10_SIH_DECK_CONTENT.md      slide-by-slide content for the finale deck
+  11_IMPACT_NUMBERS.md        sourced external statistics for the impact slide
+  QA_REPORT.md                end-to-end walk of the demo script — verdict PASS
+  SETUP_WINDOWS.md            Windows toolchain setup (no admin rights)
+  fixtures/                   ten real /home payloads (8 personas + severe + coastal)
+backend/                      FastAPI service (Python 3.13) — see backend/README.md
+app/                          Flutter app (package mausam_app)
+infra/                        docker-compose.yml, render.yaml
+scripts/                      toolchain setup + optional Android emulator (.ps1 and .sh)
+.github/workflows/            CI: backend pytest (offline) · flutter analyze/test/APK/web
 ```
 
----
+**What goes where?**
 
-## Run it yourself
+| Item | Location |
+|---|---|
+| Source code | `backend/` (FastAPI) and `app/` (Flutter) |
+| Architecture / technical documentation | `docs/` |
+| Screenshots | `assets/screenshots/` |
+| Final PPT | `submission/TeamMausam_SIH2026_PS26076.pptx` |
+| Demo video link | `submission/DEMO.md` |
+| Project overview | `README.md` |
+| Deviations from spec | `docs/DEVIATIONS.md` |
+| QA evidence | `docs/QA_REPORT.md` |
 
-Nothing here needs an API key, a Docker daemon or a database server. **Python 3.13** for the
-backend, **Flutter stable (3.47.x)** for the app.
+## 8. Final Presentation
 
-### 1. Backend
+The deck is in the repository: [`submission/TeamMausam_SIH2026_PS26076.pptx`](submission/TeamMausam_SIH2026_PS26076.pptx)
+(6 slides, generated from [`docs/08_PITCH.md`](docs/08_PITCH.md); finale content in
+[`docs/10_SIH_DECK_CONTENT.md`](docs/10_SIH_DECK_CONTENT.md)).
+
+External viewer link (Google Drive): <https://drive.google.com/drive/u/0/folders/1w29cHLEjk3sNfNN1hwYWn3AOmVcMml2t> — see
+[`submission/PRESENTATION.md`](submission/PRESENTATION.md) for a slide-by-slide summary.
+
+## 9. Demo Video
+
+A demo of the prototype: <https://www.youtube.com/watch?v=dAnlxq_2jj8>
+
+See [`submission/DEMO.md`](submission/DEMO.md) for the demo script the recording follows, step by
+step.
+
+## 10. Screenshots / Prototype Photos
+
+**The same morning, three of the eight personas** — one backend, one location, one moment; only
+the selected personas change:
+
+| Parent & families | Health-conscious | Agriculture |
+|---|---|---|
+| ![Parent home screen](assets/screenshots/c1_step03_persona_parent.png) | ![Health home screen](assets/screenshots/c1_step03_persona_health.png) | ![Agriculture home screen](assets/screenshots/c1_step03_persona_agriculture.png) |
+| *School run* and commute first | AQI, pollen, UV, humidity first | soil moisture, rain outlook, planting |
+
+**A warning arrives, and the feed re-ranks itself — plus Hindi:**
+
+| Before the warning is pushed | …seconds later, re-ranked | Hindi (`lang=hi`) |
+|---|---|---|
+| ![Feed before the warning](assets/screenshots/c1_step05_ws_before.png) | ![Feed after the warning, re-ranked](assets/screenshots/c1_step05_ws_rerank.png) | ![Home screen in Hindi](assets/screenshots/c1_step08_hindi_home.png) |
+
+**Offline, and honest about modelled data:**
+
+| Offline, rendered from cache | Tides, labelled **Estimated** |
+|---|---|
+| ![Offline home screen from cache](assets/screenshots/c1_step07_offline_cached.png) | ![Tide card with the Estimated chip](assets/screenshots/c1_step04_coastal_tides_estimated.png) |
+
+All shots are the Flutter web build driven against a locally running backend, except the offline
+one (backend stopped, rendering from the on-device cache). The `c1_*` set is the end-to-end QA walk
+in [`docs/QA_REPORT.md`](docs/QA_REPORT.md) — 40 shots, one per demo step and variant. The other
+five personas, the radar map, saved places, the demo sheet and low-bandwidth mode are all in the
+full index of 63 images: [`assets/screenshots/README.md`](assets/screenshots/README.md).
+
+## 11. Installation
+
+**Prerequisites.** Python 3.13 for the backend; Flutter stable 3.47.x for the app
+(<https://docs.flutter.dev/get-started/install>, then `flutter doctor`); JDK 17 and the Android SDK
+only if you want to build an APK — running the app in Chrome needs neither. Nothing needs an API
+key, a Docker daemon or a database server.
 
 ```bash
+git clone https://github.com/Shreyansh303/team_mausam_sih_2026.git
+cd team_mausam_sih_2026
+
+# backend — creates a venv and installs runtime + test dependencies
 cd backend
 python -m venv .venv
 .venv/bin/python -m pip install -r requirements-dev.txt   # Windows: .venv\Scripts\python
-.venv/bin/python -m pytest -q                             # → 348 passed (fully offline)
-.venv/bin/python -m uvicorn app.main:app --reload --port 8000
+cd ..
+
+# app
+cd app && flutter pub get && cd ..
+```
+
+The root `requirements.txt` is a pointer to `backend/requirements.txt` (same runtime set from the
+repository root); `backend/requirements-dev.txt` adds what the tests need.
+
+**Verify the installation:**
+
+```bash
+(cd backend && .venv/bin/python -m pytest -q)   # → 386 passed, fully offline
+(cd app && flutter analyze)                     # → No issues found!
+(cd app && flutter test)                        # → 125 passed
+```
+
+The backend suite replays upstream payloads through `respx`, so it needs no network and no key.
+Windows toolchain (user-space install, no admin rights): [`docs/SETUP_WINDOWS.md`](docs/SETUP_WINDOWS.md).
+
+## 12. Run
+
+**(a) Backend**
+
+```bash
+cd backend && .venv/bin/python -m uvicorn app.main:app --reload --port 8000
 ```
 
 | What | URL |
@@ -190,10 +327,7 @@ python -m venv .venv
 | Live alerts | `ws://localhost:8000/ws/alerts?token=&lat=28.61&lon=77.21` |
 
 Routers are mounted at `/api/v1` **and** at the root, so `curl http://localhost:8000/health` works
-too. SQLite is created on first boot at `backend/data/mausam.db`. Config, env vars and the Docker /
-Render deploy path: [`backend/README.md`](backend/README.md).
-
-Smoke test with a guest token:
+too. SQLite is created on first boot at `backend/data/mausam.db`. Smoke test with a guest token:
 
 ```bash
 TOKEN=$(curl -s -X POST http://localhost:8000/api/v1/auth/guest | python3 -c "import sys,json;print(json.load(sys.stdin)['token'])")
@@ -201,355 +335,84 @@ curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8000/api/v1/home?lat=28.61&lon=77.21&personas=parent,commuter&now_override=$(date +%F)T07:30:00+05:30"
 ```
 
-`$(date +%F)` is deliberate — the demo clock has to land inside the 48-h forecast window or the
-*ranking* moves while the *reading* stays on the live observation (see [Judge demo
-script](#judge-demo-script-5-minutes)). A hardcoded date makes the clock look like it does nothing.
+`$(date +%F)` is deliberate: the demo clock has to land inside the 48-h forecast window, otherwise
+the *ranking* moves while the *reading* stays on the live observation.
 
-### 2. App
-
-**Never used Flutter before?** Install the SDK once —
-<https://docs.flutter.dev/get-started/install> — pick **stable 3.47.x**, then run
-`flutter doctor`. For option (a) you only need the **Chrome** tick; options (b)–(d) also need the
-**Android toolchain** tick (Android Studio's SDK + a JDK 17; `flutter doctor --android-licenses`
-accepts the licences). Nothing below needs administrator rights except the emulator's one-time
-virtualization step in (d).
+**(b) App in Chrome** — the fastest loop, no Android toolchain:
 
 ```bash
-cd app
-flutter pub get
-flutter analyze          # "No issues found!"
-flutter test             # 103 green, incl. the fixture contract test
+cd app && flutter run -d chrome        # r = hot reload, R = restart, q = quit
 ```
 
-**(a) Chrome — the fastest loop, no Android toolchain.**
+The default backend URL is `http://localhost:8000`. If the app shows a **"Sample data"** banner it
+could not reach the backend — start it (a) or fix **Settings → Backend URL**.
 
-```bash
-cd app && flutter run -d chrome
-```
+**(c) APK.** Download `app-release-apk` from the repository's
+[Actions → flutter](https://github.com/Shreyansh303/team_mausam_sih_2026/actions/workflows/flutter.yml)
+run (sign in to GitHub first), or build it: `cd app && flutter build apk --release` →
+`app/build/app/outputs/flutter-apk/app-release.apk` (~62.5 MB, all ABIs, debug-signed, fine for a demo).
+On a real phone the Android default backend URL (`http://10.0.2.2:8000`) is the emulator's host alias
+and resolves to nothing, so bake the real origin in with `--dart-define=BACKEND_URL=http://<laptop-LAN-IP>:8000`
+(or a deployed `https://` origin). Pass the origin only — the app appends `/api/v1` and derives
+`ws://`/`wss://` itself — and **Settings → Backend URL** still overrides it at runtime.
 
-Press `r` to hot-reload, `R` to restart, `q` to quit. The default backend URL is
-`http://localhost:8000`; if the app shows "Sample data" it could not reach the backend — start it
-(step 1) or fix **Settings → Backend URL**.
+**(d) Everything else** — phone over USB, Android emulator, the home-screen widget, iOS, and the
+backend-URL rules per platform (LAN IP, firewall) are in [`docs/RUNNING.md`](docs/RUNNING.md). Windows
+toolchain: [`docs/SETUP_WINDOWS.md`](docs/SETUP_WINDOWS.md). Docker / Render deploy: [`backend/README.md`](backend/README.md#deploy).
 
-**(b) A real Android phone over USB — the best demo.**
+**Demo walk-through (about 5 minutes)** — backend running, admin console open on a laptop, app
+open on a phone or in Chrome:
 
-1. On the phone: **Settings → About phone → tap "Build number" seven times** to unlock
-   *Developer options*, then **Developer options → USB debugging → on**.
-2. Plug it into the laptop with a **data** cable and accept the *Allow USB debugging?* RSA prompt
-   on the phone (tick "always allow").
-3. Check the laptop can see it, then run:
-
-```bash
-cd app && flutter devices        # your handset should be listed, e.g. "SM_A155F (mobile)"
-cd app && flutter run            # or: flutter run -d <device-id> when more than one is attached
-```
-
-If `flutter devices` shows nothing, re-plug the cable, confirm the prompt on screen, and run
-`adb devices` (`unauthorized` = the prompt was not accepted; `no permissions` on Linux = add the
-udev rule). Then set **Settings → Backend URL** in the app to `http://<your-laptop-LAN-IP>:8000`
-(see (g)) — a phone cannot reach the laptop's `localhost`.
-
-**(c) Install the APK directly** (no Flutter toolchain on the machine that installs it).
-
-*From CI, no build needed:* open the repo's
-[**Actions → flutter**](https://github.com/Shreyansh303/team_mausam_sih_2026/actions/workflows/flutter.yml)
-run for the commit you want → **Artifacts → `app-release-apk`** → download and unzip →
-`app-release.apk`. (GitHub requires you to be signed in to download artifacts.)
-
-*Or build it yourself:*
-
-```bash
-cd app && flutter build apk --release      # ~2 min warm; debug signing, fine for a demo
-# → app/build/app/outputs/flutter-apk/app-release.apk   (62.5 MB, all ABIs)
-adb install -r build/app/outputs/flutter-apk/app-release.apk
-# a debug build also works and is what you want for logs:
-cd app && flutter build apk --debug        # → app-debug.apk (~168 MB)
-```
-
-*To bake the backend URL into the build* — **do this for any APK you hand to someone else.**
-On Android the app otherwise defaults to `http://10.0.2.2:8000`, which is the *emulator's* alias for
-the host loopback and resolves to nothing on a real phone: the app falls back to its bundled sample
-payload and shows a "Sample data" banner. `--dart-define=BACKEND_URL=<origin>` sets the default
-origin at compile time (`app/lib/core/config.dart`), so the app talks to a real backend on first
-launch with no trip through Settings:
-
-```bash
-# phone and laptop on the same Wi-Fi — use the LAN IP, never localhost.
-# find it with: ipconfig (Windows) · ipconfig getifaddr en0 (macOS) · hostname -I (Linux)
-cd app && flutter build apk --release --dart-define=BACKEND_URL=http://192.168.1.20:8000
-
-# or a deployed backend
-cd app && flutter build apk --release --dart-define=BACKEND_URL=https://<service>.onrender.com
-```
-
-Pass the **origin only** — the app appends `/api/v1` and derives `ws://`/`wss://` itself. Confirm it
-landed by searching the compiled Dart snapshot — the APK is a zip, so grepping the `.apk` itself
-finds nothing:
-
-```bash
-cd app/build/app/outputs/flutter-apk
-unzip -o -q app-release.apk 'lib/arm64-v8a/libapp.so' -d /tmp/apkcheck
-grep -ac 'http://192.168.1.20:8000' /tmp/apkcheck/lib/arm64-v8a/libapp.so   # 1 = baked in
-```
-
-**Settings → Backend URL still overrides it**, which
-is what you want when the laptop's DHCP lease changes the IP. Serving over plain `http://` works
-because `android:usesCleartextTraffic="true"` is set for the prototype; a real deployment should be
-HTTPS and drop that flag.
-
-To install without `adb`, copy the `.apk` to the phone and open it — Android asks you to allow
-"install unknown apps" for the file manager first. The app is signed with the **debug** key
-(`flutter build apk --release` falls back to it when no keystore is configured), so it installs
-side-by-side with nothing and can be uninstalled normally.
-
-*To sign it with your own key* (needed only to publish), create a keystore **outside the repo** and
-point `app/android/key.properties` at it — both are gitignored, and `app/android/app/build.gradle.kts`
-picks the key up on the next `--release` build (it prints a warning when the file is absent):
-
-```bash
-keytool -genkey -v -keystore ~/mausam-release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias mausam
-# app/android/key.properties — storeFile absolute, or relative to app/android/app/
-printf 'storeFile=%s\nstorePassword=CHANGEME\nkeyAlias=mausam\nkeyPassword=CHANGEME\n' ~/mausam-release.jks > app/android/key.properties
-```
-
-The first Gradle run downloads ~2.7 GB and takes several minutes. If the Gradle **wrapper** itself
-fails to download its distribution, see the workaround in `docs/PROGRESS.md` → "Notes for next
-phase → H0".
-
-**(d) Android emulator — optional, and the least-travelled path.** It needs a ~1.5 GB system image
-plus the emulator package, so skip it unless you have no phone. Helper scripts create and boot an
-AVD called `mausam_pixel`:
-
-```powershell
-# Windows (PowerShell 5.1+)
-.\scripts\setup_android_emulator.ps1      # sdkmanager: emulator + system image; avdmanager: AVD
-.\scripts\run_emulator.ps1                # boots it and waits for sys.boot_completed
-```
-
-```bash
-# macOS / Linux
-./scripts/setup_android_emulator.sh       # picks arm64-v8a on Apple Silicon, x86_64 otherwise
-./scripts/run_emulator.sh
-```
-
-```bash
-cd app && flutter run -d emulator-5554    # backend URL: http://10.0.2.2:8000
-```
-
-**One-time administrator step for the emulator on Windows:** hardware acceleration needs the
-**Windows Hypervisor Platform** feature (Windows Features, or
-`dism /online /Enable-Feature /FeatureName:HypervisorPlatform /All` from an elevated prompt, then
-reboot) **and** virtualization enabled in the BIOS/UEFI (Intel VT-x / AMD SVM). Without it the
-emulator either refuses to start or is unusably slow. macOS needs nothing; Linux needs KVM
-(`sudo apt install qemu-kvm`, add yourself to the `kvm` group). This is the only step in the whole
-repo that asks for admin rights — the setup script's header repeats it.
-
-**(e) The home-screen widget** (Android, optional). Once the app is installed and has loaded the
-feed once, long-press an empty spot on the home screen → **Widgets** → **Mausam Personalized**, and
-drag the 4x1 or 4x2 tile out. It shows the last `/home` payload — temperature, condition, location,
-how old the reading is, and the top pinned card in its severity colour — refreshes itself about once
-an hour, and opens the app (or that card's detail) when tapped. Details and limits:
-[`docs/06_MOBILE_SPEC.md`](docs/06_MOBILE_SPEC.md) §Home-screen widget.
-
-**(f) iOS** builds and simulators require **macOS with Xcode** (plus CocoaPods and a simulator
-runtime — `sudo gem install cocoapods`, and install a runtime from Xcode → Settings → Components).
-The code is platform-neutral and `flutter run -d iphone` works once `flutter doctor` is happy about
-Xcode, but there is no iOS build in CI and judges are expected to use the Android APK or Chrome.
-
-**(g) Backend URL rules.** The app stores the backend **origin** only (it appends `/api/v1` and
-derives `ws://`/`wss://` itself), and **Settings → Backend URL** overrides the default:
-
-| Where the app runs | Backend URL |
-|---|---|
-| Flutter web / desktop on the same machine | `http://localhost:8000` |
-| Android **emulator** on the same machine | `http://10.0.2.2:8000` |
-| Real Android phone on the same Wi-Fi | `http://<laptop-LAN-IP>:8000` |
-| Deployed backend | `https://<service>.onrender.com` |
-
-Find the LAN IP with `ipconfig` (Windows, "IPv4 Address"), `ipconfig getifaddr en0` (macOS) or
-`hostname -I` (Linux) — something like `192.168.1.23`. Start the backend so it listens on that
-interface (`uvicorn app.main:app --host 0.0.0.0 --port 8000`), keep the phone on the **same Wi-Fi**,
-and check `http://<laptop-LAN-IP>:8000/api/v1/health` in the phone's browser before blaming the app.
-A firewall prompt on first run must be allowed for private networks. `CORS_ORIGINS=*` is the
-default, so Flutter web works with no proxy.
-
-**CI.** [`.github/workflows/backend.yml`](.github/workflows/backend.yml) runs the offline pytest
-suite on every push/PR that touches `backend/`;
-[`.github/workflows/flutter.yml`](.github/workflows/flutter.yml) runs `flutter analyze`,
-`flutter test`, `flutter build apk --release` (uploading `app-release.apk` as an artifact) and
-`flutter build web` on every push/PR that touches `app/`.
-
-**OS differences in one line:** the venv interpreter is `backend/.venv/bin/python` on macOS/Linux
-and `backend\.venv\Scripts\python.exe` on Windows; on Windows also read
-[`docs/SETUP_WINDOWS.md`](docs/SETUP_WINDOWS.md) and `scripts/setup_flutter_windows.ps1` (user-space
-toolchain install, no admin rights) plus `CLAUDE.md` §8 for the Gradle `TEMP` recipe. macOS/Linux
-need none of that.
-
----
-
-## Judge demo script (≈5 minutes)
-
-Backend running, admin console open on a laptop, app open on a phone or in Chrome.
-
-1. **Onboard** — language → pick **Parent + Commuter** → location **Delhi** (GPS, search or a
-   popular city).
-2. **Morning home** — set the demo clock to **07:30** (app demo sheet, admin console, or
-   `?now_override=<today>T07:30:00+05:30`). Use **today's** date: the backend only moves the
-   *reading* to a demo hour it has a forecast row for, and leaves the live observation standing
-   otherwise, so a stale date makes the clock look like it does nothing. *School run* and
-   *Commute conditions* rank first,
-   each with its reasons; hero shows current conditions, nowcast and any rain alert below.
-3. **Switch persona** — tap the **Fitness** chip: best workout window, sun times, wind and heat
-   alert move up. Then **Health**: AQI, pollen, UV, humidity.
-4. **Change location to Goa** — sea conditions, tides (**Estimated**) and water temperature appear;
-   they are gated on the location being coastal.
-5. **Push a warning** — admin console → preset **Orange thunderstorm — Delhi** → *Push warning*. The
-   app receives `warning_issued` with `affects_you: true`, shows the banner and **animates the
-   warning card to the top**. Delete the row to revert (or let its TTL expire).
-6. **Show the learning** — long-press *Pollen* → *Why am I seeing this?* → *Show less*. Each tap
-   subtracts from the card's score (docs/03: `0.25·tanh(x/8)`, so two taps are −0.16) and the sheet
-   shows the running count; keep tapping until it drops into "More for you" — **two taps move it,
-   three usually push it over**, because how far it has to fall depends on the cards around it.
-   *Pin* is the instant one: the card jumps to the top on the next refresh, *Unpin* puts it back.
+1. **Onboard** — language → pick **Parent + Commuter** → location **Delhi** (GPS, search or a popular city).
+2. **Morning home** — set the demo clock to **07:30 today** (app demo sheet, admin console or `now_override`); *School run* and *Commute conditions* rank first, each with its reasons.
+3. **Switch persona** — tap **Fitness**: workout window, sun times, wind and heat alert move up; then **Health**: AQI, pollen, UV, humidity.
+4. **Change location to Goa** — sea conditions, tides (**Estimated**) and water temperature appear; they are gated on the location being coastal.
+5. **Push a warning** — admin console → preset **Orange thunderstorm — Delhi** → *Push warning*; the app shows the banner and animates the warning card to the top.
+6. **Show the learning** — long-press *Pollen* → *Why am I seeing this?* → *Show less* two or three times until it drops into "More for you"; *Pin* sends a card to the top on the next refresh.
 7. **Offline** — airplane mode: the home still renders from cache with "Updated N min ago".
 8. **Hindi** — switch language; chrome *and* card copy/insights are localized.
-9. **Traveller** — saved places Mumbai + London → packing suggestions ("Carry a raincoat in
-   London") and flight-risk alerts.
+9. **Traveller** — saved places Mumbai + London → packing suggestions ("Carry a raincoat in London") and flight-risk alerts.
 10. Close on the architecture: server-driven cards, provider fallback chain, explainable engine.
 
-**Scenario overlays** replace live weather with a scripted situation — `heatwave`, `cyclone`,
-`dense_fog`, `frost`, `severe_aqi`, `thunderstorm`, `heavy_rain`, `monsoon_flood`, `clear_pleasant`,
-`live`. Set one globally from the admin console, or per request:
+Scenario overlays (`heatwave`, `cyclone`, `dense_fog`, `frost`, `severe_aqi`, `thunderstorm`,
+`heavy_rain`, `monsoon_flood`, `clear_pleasant`, `live`) replace live weather with a scripted
+situation, globally from the admin console or per request with `?scenario=`. Full script and
+scenario details: [`docs/00_VISION.md`](docs/00_VISION.md) and [`docs/RUNNING.md`](docs/RUNNING.md).
 
-```bash
-# scenario + demo clock on a single request (both also accepted by /weather/snapshot)
-curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8000/api/v1/home?lat=28.61&lon=77.21&personas=commuter&scenario=dense_fog"
-curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8000/api/v1/home?lat=28.61&lon=77.21&personas=parent&now_override=$(date +%F)T07:30:00+05:30"
-```
+## 13. Future Scope
 
-`now_override` is ISO-8601; a value without an offset is read as IST. `POST /admin/now-override`
-with `{"now": null}` clears the demo clock. Keep the date inside the 48-h forecast window — today
-or tomorrow: outside it the *ranking* still moves but the reading stays on the live observation
-rather than inventing one (the app's demo sheet builds its presets on today for this reason). Full script: [`docs/00_VISION.md`](docs/00_VISION.md).
+- **Push notifications as the production alert transport.** The WebSocket proves the re-rank path
+  end to end but only reaches an app that is open. The Firebase Cloud Messaging transport, device
+  registry and message schema are implemented on the backend
+  ([`docs/09_PUSH_NOTIFICATIONS.md`](docs/09_PUSH_NOTIFICATIONS.md)); the app-side wiring waits on a
+  Firebase project.
+- **ML ranker v2.** A logistic-regression model over the engagement events already being logged
+  predicts P(tap) and is blended as `score += 0.2 · (p_tap − 0.5)` behind `ENGINE_ML=1`, with the
+  deterministic formula as the fallback and the floor — bounded, so it can never bury a warning
+  ([`backend/README.md`](backend/README.md#ranker-v2-ml)).
+- **Android home-screen widget** — shipped: a 4x1 / 4x2 tile with the hero reading and the top
+  pinned card, refreshed about hourly ([`docs/06_MOBILE_SPEC.md`](docs/06_MOBILE_SPEC.md)).
+- **More languages.** Marathi, Tamil and Bengali are started with per-key fallback; completing them
+  and adding the other scheduled languages is translation work — the pipeline and the parity test
+  are in place.
 
----
+**IMD integration path.** Every `https://mausam.imd.gov.in/api/*` endpoint answers `401 — your
+IP/domain needs to be whitelisted` from a host IMD has not approved, so the prototype runs on
+Open-Meteo by default. `backend/app/providers/imd.py` is written against the real endpoints
+(`current_wx_api`, `nowcastapi`, `warnings_district_api`, `aws_data_api`), detects the 401, backs
+off for 10 minutes and falls through; once the deployment's static IP or domain is whitelisted and
+the district ids are filled in, `GET /health` reports `providers.imd = "available"` and IMD warnings
+merge ahead of scenario and admin ones. The request details and the switch-over steps are in
+[`backend/README.md`](backend/README.md#imd-integration-needs-whitelisting).
 
-## API at a glance
+**Near-term items:** a physical-device smoke test of the release APK (first launch, the
+location-permission prompt, GPS onboarding and background event flushing are what the web build cannot
+exercise); deploying the backend from `infra/render.yaml`; a release keystore and `key.properties`
+for a store build; and the IMD whitelisting request itself ([`docs/08_PITCH.md`](docs/08_PITCH.md) §7).
 
-Base URL `{BACKEND}/api/v1`. JSON UTF-8, metric units, times ISO-8601 **in the location's**
-timezone. Auth is `Authorization: Bearer <jwt>` (guest or OTP user). Contract:
-[`docs/04_API_CONTRACT.md`](docs/04_API_CONTRACT.md) — it is normative for both sides.
+## Important
 
-| Method | Path | Auth | Purpose |
-|---|---|---|---|
-| GET | `/health` | – | status, version, provider availability, active scenario + demo clock |
-| POST | `/auth/guest` · `/auth/request-otp` · `/auth/verify-otp` | – | JWT guest / demo OTP (`123456`), guest merge |
-| GET/PUT | `/me` · `/me/profile` · `/me/card-prefs` · `/me/places` | ✓ | profile, personas, pins/hides, saved places (max 8) |
-| POST | `/me/reset-learning` | ✓ | clear engagement + prefs |
-| GET | `/locations/search` · `/locations/reverse` · `/locations/popular` | – | place search (India first), reverse geocode, curated cities |
-| **GET** | **`/home`** | ✓ | **the personalized home** — `lat`/`lon` or `place_id`, `lang`, `personas`, `now_override`, `scenario`, `event_date`, `lite=1` |
-| GET | `/weather/snapshot` · `/weather/radar` · `/weather/scenarios` | – | full snapshot, RainViewer frames, scenario list |
-| POST | `/events` | ✓ | engagement batch ≤ 100 (`impression, tap, expand, dismiss, pin, unpin, hide, unhide`) |
-| GET/POST/DELETE | `/admin/state` · `/admin/scenario` · `/admin/now-override` · `/admin/warnings[/{id}]` · `/admin/reset-user` | `X-Admin-Key` | demo control; pushing/clearing a warning broadcasts on the WebSocket |
-| GET | `/admin/console` | – | the single-file demo console (asks for the key itself) |
-| WS | `/ws/alerts?token=&lat=&lon=` | ✓ | live alerts |
-
-`/home` returns `{generated_at, location, context, banner, pinned[], hero, cards[], more_cards[],
-hidden_types[], freshness, sources, engine}`; each `Card` carries `type, title, subtitle, size,
-renderer, urgency, severity, score, reasons[], insight, data, actions[], personas[], source,
-estimated`.
-
-**WebSocket messages.** Server → client: `hello`, `ping` (every 30 s), `warning_issued` (with
-`affects_you` computed from the client's coordinates), `warning_cleared`, `scenario_changed`,
-`now_override`. Client → server: `pong` and `{"type":"location","lat":…,"lon":…}`. The app re-fetches
-`/home` and animates the diff on `warning_issued && affects_you`, `scenario_changed` and
-`now_override`; unknown types are ignored so the server can add more.
-
-## Personalization engine in 10 lines
-
-Pure, deterministic Python in `backend/app/engine/` — no I/O, so it is fully unit-tested
-([`docs/03_PERSONALIZATION_ENGINE.md`](docs/03_PERSONALIZATION_ENGINE.md)).
-
-1. **Gate** — drop cards the user hid, and cards whose precondition fails (coastal for tides, an
-   active warning for the warnings card, a saved place for packing, `feels_like ≥ 35` for heat).
-2. **Relevance** — the strongest persona affinity for the card, plus 15 % of the other personas'
-   contributions (so a Parent + Commuter sees genuinely blended cards, not two stacked lists).
-3. **Context multiplier** — time of day × season, clamped to 0.4–1.6: the school run ×1.5 at dawn on
-   a weekday, AQI ×1.2 in winter, tides never at midnight.
-4. **Urgency** — computed from the data itself: AQI Very Poor 0.75, red heatwave warning 1.0, dense
-   fog 0.8, calm sea 0.
-5. **Learning** — `0.25 · tanh((taps + 2·expands + 3·pins − 3·dismisses)/8)`, i.e. ±0.25.
-6. **Score** = `0.5 · relevance · context + 0.5 · urgency + learning`.
-7. **Pinned** = user-pinned, or urgency ≥ 0.8 — so an orange/red warning outranks every preference.
-8. **Order** — pinned (by urgency) → `current_conditions` hero → top 8 by score → the rest into
-   "More for you"; ties broken by catalog order, so the same input always produces the same screen.
-9. **Explain** — up to four reasons per card from seven families (`persona:`, `urgency:`, `time:`,
-   `season:`, `location:`, `engagement:`, `pinned:`), localized server-side.
-10. **Test** — determinism, warning-pinning, coastal gating, persona switching, time-of-day, the
-    dismiss/pin effect and per-persona coverage are all asserted in `backend/tests/`.
-
----
-
-## Project status
-
-| Phase | Scope | State |
-|---|---|---|
-| A1 | Backend data layer: providers, derived metrics, snapshot, city/coastal/planting data | ✅ done |
-| A2 | Engine, 33 card builders, `/home`, auth, profile, places, events, en/hi i18n | ✅ done |
-| A3 | Live alerts (`/ws/alerts`), admin console, Docker/Render, backend CI | ✅ done |
-| B0 | Flutter toolchain + scaffold | ✅ done |
-| B1 | App foundation: models, API client, cache, onboarding, home shell, 6 renderers | ✅ done |
-| B2a | All 15 renderers + a detail page per renderer | ✅ done |
-| B2b | Animations, events pipeline, why-sheet actions, places, map, settings, demo sheet, WS client, low-bandwidth, a11y, full l10n, icon/splash | ✅ done |
-| B3 | Live-backend integration, backend i18n fixes, release APK, Flutter CI workflow | ✅ done |
-| C1 | End-to-end QA against the judge demo script — **verdict PASS**, 9 defects found and fixed ([`docs/QA_REPORT.md`](docs/QA_REPORT.md)) | ✅ done |
-| C2 | README pass, pitch content ([`docs/08_PITCH.md`](docs/08_PITCH.md)) and the SIH deck | ✅ done |
-| S1–S4 | Stretch: ML ranker v2 · home-screen widget · FCM push · more languages | ⬜ |
-
-**Last verified gates** (2026-09-09, macOS/Apple Silicon): backend `pytest -q` → **348 passed**
-(offline — upstream payloads are replayed through `respx`, so CI needs no network or key); app
-`flutter analyze` clean, `flutter test` → **103 passed**, `flutter build web` ✓. The release APK
-(`app-release.apk`, **62 496 756 B**, 3 ABIs, minSdk 24 / targetSdk 36) was built and verified in
-B3 and re-checked statically in C1; it has **not** been installed on a physical device — no phone
-or emulator image is available on this machine, so everything on-screen in this repo was observed
-in the **web build plus a static APK check**, never on a handset. The end-to-end walk of all ten
-demo steps, ten scenarios, Hindi, offline, learning and low-bandwidth is
-[`docs/QA_REPORT.md`](docs/QA_REPORT.md). The checklist is
-[`docs/PROGRESS.md`](docs/PROGRESS.md) — it is the source of truth, not this table.
-
-**Roadmap / stretch:** **S1** ML ranker v2 (logistic regression on logged events, blended as
-`score += 0.2·(p_tap − 0.5)`, behind `ENGINE_ML=1`) · **S2** Android home-screen widget ·
-**S3** FCM push as the production alert transport, the WebSocket being the demoable stand-in
-([`docs/09_PUSH_NOTIFICATIONS.md`](docs/09_PUSH_NOTIFICATIONS.md) — backend transport, device
-registry and design doc are done; the app wiring waits on a Firebase project) ·
-**S4** more languages beyond en/hi/mr/ta/bn.
-
-## IMD integration path
-
-Every `https://mausam.imd.gov.in/api/*` endpoint answers `401 — your IP/domain needs to be
-whitelisted` from a host IMD has not approved, so the prototype runs on Open-Meteo by default.
-`providers/imd.py` is already written against the real endpoints and switches over the moment access
-is granted:
-
-1. Write to IMD (Data Supply / Web Services, or the nearest Regional Meteorological Centre) with the
-   deployment's **static public IP or domain**, the organisation and purpose, the four endpoints
-   used (`current_wx_api`, `nowcastapi`, `warnings_district_api`, `aws_data_api`), the request rate
-   (this backend caches IMD responses for 10 minutes per station), and a contact. Ask for the
-   **district id list** too — IMD does not publish it.
-2. Keep `IMD_ENABLED=1` and fill the `district_id` values in `backend/app/data/imd_ids.json`
-   (station ids for 35 cities are already there).
-3. `GET /health` then reports `providers.imd = "available"`, snapshots record `sources.imd`, and IMD
-   warnings merge **ahead of** scenario and admin ones.
-
-Until then the chain is IMD → Open-Meteo → estimated, exactly as documented, and nothing in the demo
-depends on IMD being reachable. Details: [`backend/README.md`](backend/README.md#imd-integration-needs-whitelisting).
-
-## Team
-
-**Team Mausam** — Smart India Hackathon 2026, problem statement **26076** (Ministry of Earth
-Sciences / India Meteorological Department), category Software, theme Smart Automation.
-Repository: <https://github.com/Shreyansh303/team_mausam_sih_2026>. Contributions are visible in the
-git history. No licence file has been added yet, so no licence is granted; contact the team before
-reusing the code.
+- Keep this repository accessible to the reviewers for the duration of the evaluation.
+- Never upload passwords, API keys, tokens or `.env` files with secrets. The default setup needs no
+  key; optional keys live in an untracked `.env` (see `backend/.env.example`).
+- Licence: MIT — see [`LICENSE`](LICENSE).
